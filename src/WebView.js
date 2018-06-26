@@ -123,10 +123,7 @@ class WebView extends EventEmitter {
 
     _initWebView(params) {
         this.url = params.url ? params.url : '';
-        this.addEventListener('navStateChanged', params.onNavStateChanged);
-        this.addEventListener('newTabRequest', params.onNewTab);
         this.onLabelScriptInjected = params.onLabelScriptInjected ? params.onLabelScriptInjected : null;
-
         this.isLoading = false;
         // partition assignment shoud be before any assignment of src
         this.webView.partition = params.partition ? params.partition : '';
@@ -160,7 +157,6 @@ class WebView extends EventEmitter {
 
     handleLoadStop = () => {
         this.isLoading = false;
-
         if (this.onLabelScriptInjected && !this._scriptInjectionAttempted) {
             // Try to inject title-update-messaging script
             this.webView.executeScript(
@@ -175,8 +171,13 @@ class WebView extends EventEmitter {
 
     handleLoadAbort = (ev) => {
         ev.preventDefault();
-        let top = ev.isTopLevel ? "top " : "";
-        console.warn("The " + top + "load has aborted with error " + ev.code + " : " + ev.reason + ' url = ' + ev.url);
+        if (ev.isTopLevel) {
+            const reason = ev.reason;
+            this.emitEvent('loadAbort', {reason});
+        }
+        else {
+            console.warn("The load has aborted with error " + ev.code + " : " + ev.reason + ' url = ' + ev.url);
+        }
     }
 
     handlePermissionRequest = () => {

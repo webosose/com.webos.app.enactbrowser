@@ -47,11 +47,15 @@ class TabsReduxStore {
     }
 
     setTitle = (id, title) => {
-        this.store.dispatch(updateTabState(id, {title: title}));
+        this.store.dispatch(updateTabState(id, {title}));
     }
 
     setIcon = (id, icon) => {
-        this.store.dispatch(updateTabState(id, {icon: icon}));
+        this.store.dispatch(updateTabState(id, {icon}));
+    }
+
+    setError = (id, error) => {
+        this.store.dispatch(updateTabState(id, {error}));
     }
 
     setNavState = (id, navState) => {

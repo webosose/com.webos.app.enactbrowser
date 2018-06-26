@@ -141,12 +141,8 @@ class BrowserBase {
         state.title = TabTitles.INITIAL_WEBVIEW_TITLE;
 
         const obj = this;
-        this.webViews[state.id] = new WebView({
+        const webview = this.webViews[state.id] = new WebView({
             url: state.navState.url,
-            onNavStateChanged: (navState) => {
-                const tab = obj.tabs.getTab(state.id);
-                tab.setNavState(navState);
-            },
             // Chromium creates distinct renderer process for each webview with
             // different partition name, but doesn't keep session between tabs.
             // I.e. you have entered login/pass for some website, if you want
@@ -154,13 +150,27 @@ class BrowserBase {
             // again.
             // partition: BrowserConsts.WEBVIEW_PARTITION_PREF + state.id,
             partition: 'persist:default',
-            onNewTab: this._handleNewTab,
             onLabelScriptInjected: (results) => {
                     this._handleWebviewLabelScriptInjected(state.id, results);
                 },
             zoomFactor: this.zoomFactor,
             activeState: this.defaultWebviewState
         });
+        webview.addEventListener('navStateChanged', (navState) => {
+            const tab = obj.tabs.getTab(state.id);
+            if (tab.state.error) {
+                if (tab.state.navState.url !== navState.url) {
+                    tab.setError(null);
+                }
+            }
+            tab.setNavState(navState);
+        });
+        webview.addEventListener('newTabRequest', obj._handleNewTab);
+        webview.addEventListener('loadAbort', (ev) => {
+            const tab = obj.tabs.getTab(state.id);
+            tab.setError(ev.reason);
+        });
+
         return state;
     }
 

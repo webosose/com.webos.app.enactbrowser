@@ -49,6 +49,16 @@ class Tab {
         });
     }
 
+    setError(error) {
+        if (this.state.error !== error) {
+            this.tabs.store.setError(this.state.id, error);
+            this.tabs.emitEvent('update', {
+                state: updateState(this),
+                diff: {error}
+            });
+        }
+    }
+
     setNavState(newNavState) {
         const difference = diff(this.state.navState, newNavState);
         if (difference) {
@@ -194,7 +204,8 @@ class TabsBase extends EventEmitter {
                 url: ''
             },
             title: null,
-            icon: null
+            icon: null,
+            error: null
         };
     }
 
