@@ -16,7 +16,7 @@ import css from './HistoryItem.less';
 class HistoryItemBase extends Component {
 	static propTypes = {
 		index: PropTypes.number,
-		id: PropTypes.oneOf(PropTypes.number, PropTypes.string),
+		id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 		onClick: PropTypes.func,
 		selected: PropTypes.bool,
 		time: PropTypes.object,
