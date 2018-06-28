@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="browser.css">
+    <script src="browser-api.js"></script>
+    <script src="browser-ui.js"></script>
+  </head>
+  <body>
+    <!-- Global overlay for intercepting click events on webview to close dropdowns-->
+    <div id="global_overlay"></div>
+    <div id="controls" class="controls">
+      <div class="toolbar">
+        <button id="back" class="history-button animated-button" title="Go Back">
+          <img class="animated-button__img-hover" src="assets/default_200_percent/browser_back_hover.png" />
+          <img class="animated-button__img-normal" src="assets/default_200_percent/browser_back_normal.png" />
+          <img class="animated-button__img-disabled" src="assets/default_200_percent/browser_back_disabled.png" />
+        </button>
+
+        <button id="forward" class="history-button animated-button" title="Go Forward">
+          <img class="animated-button__img-hover" src="assets/default_200_percent/browser_forward_hover.png" />
+          <img class="animated-button__img-normal" src="assets/default_200_percent/browser_forward_normal.png" />
+          <img class="animated-button__img-disabled" src="assets/default_200_percent/browser_forward_disabled.png" />
+        </button>
+
+        <form id="omnibox-form" class="omnibox">
+          <img class="omnibox__state-img" src="assets/default_200_percent/omnibox_http_selected.png" />
+          <input id="omnibox__url-input" class="omnibox__url-input" type="text" value="http://www.google.com/">
+
+          <button id="omnibox__add-to-favourites" type="button" class="omnibox__button animated-button" title="Add to favourites">
+            <img class="animated-button__img-hover" src="assets/default_200_percent/favorite_hover.png" />
+            <img class="animated-button__img-normal" src="assets/default_200_percent/favorite_selected.png" />
+            <img class="animated-button__img-disabled" src="assets/default_200_percent/favorite_disabled.png" />
+          </button>
+
+          <div>
+            <button id="omnibox__go-button" form="omnibox-form" type="submit" class="omnibox__button animated-button" title="Search" value="omnibox-multibutton">
+              <img class="animated-button__img-hover" src="assets/default_200_percent/browser_go_hover.png" />
+              <img class="animated-button__img-normal" src="assets/default_200_percent/browser_go_selected.png" />
+            </button>
+            <button id="omnibox__stop-button" type="button" class="omnibox__button animated-button" title="Stop loading">
+              <img class="animated-button__img-hover" src="assets/default_200_percent/browser_stop_hover.png" />
+              <img class="animated-button__img-normal" src="assets/default_200_percent/browser_stop_selected.png" />
+              <img class="animated-button__img-disabled" src="assets/default_200_percent/browser_stop_disabled.png" />
+            </button>
+            <button id="omnibox__reload-button" type="button" class="omnibox__button animated-button" title="Relaod page">
+              <img class="animated-button__img-hover" src="assets/default_200_percent/browser_reload_hover.png" />
+              <img class="animated-button__img-normal" src="assets/default_200_percent/browser_reload_selected.png" />
+              <img class="animated-button__img-disabled" src="assets/default_200_percent/browser_reload_disabled.png" />
+            </button>
+          </div>
+
+        </form>
+
+        <button class="icon-button animated-button" title="PIP">
+          <img class="animated-button__img-hover" src="assets/default_200_percent/btn_pip_hover.png" />
+          <img class="animated-button__img-normal" src="assets/default_200_percent/btn_pip_normal.png" />
+          <img class="animated-button__img-disabled" src="assets/default_200_percent/btn_pip_disabled.png" />
+        </button>
+
+        <button class="icon-button animated-button" title="Zoom">
+          <img class="animated-button__img-hover" src="assets/default_200_percent/browser_zoom_hover.png" />
+          <img class="animated-button__img-normal" src="assets/default_200_percent/browser_zoom_normal.png" />
+          <img class="animated-button__img-disabled" src="assets/default_200_percent/browser_zoom_disabled.png" />
+        </button>
+
+        <button id="tools-dropdown" class="icon-button animated-button dropdown" title="Tools">
+          <img class="animated-button__img-hover dropdown-img" src="assets/default_200_percent/browser_tools_hover.png" />
+          <img class="animated-button__img-normal dropdown-img" src="assets/default_200_percent/browser_tools_normal.png" />
+          <div id="tools-dropdown__content" class="dropdown__content  dropdown__content--center">
+              <div class="dropdown__item dropdown__item--disabled">History</div>
+              <div class="dropdown__item dropdown__item--normal">Bookmarks</div>
+              <div class="dropdown__item dropdown__item--normal">Settings</div>
+              <div class="dropdown__item dropdown__item--disabled">Encoding</div>
+          </div>
+        </button>
+
+        <button class="icon-button animated-button" title="Fullscreen">
+          <img class="animated-button__img-hover" src="assets/default_200_percent/browser_fullscreen_hover.png" />
+          <img class="animated-button__img-normal" src="assets/default_200_percent/browser_fullscreen_normal.png" />
+        </button>
+
+      </div>
+    </div>
+
+  </body>
+</html>

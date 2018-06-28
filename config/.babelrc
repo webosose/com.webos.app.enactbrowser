@@ -1,0 +1,9 @@
+{
+	"presets": [["env", {"modules": false}], "stage-0"],
+	"plugins": ["dev-expression", "syntax-dynamic-import"],
+	"env": {
+		"production": {
+			"plugins": ["transform-class-properties"]
+		}
+	}
+}

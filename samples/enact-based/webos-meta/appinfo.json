@@ -1,0 +1,36 @@
+{
+	"id": "com.webos.app.enactbrowser",
+	"version": "1.0.0",
+	"vendor": "LG Electronics, Inc.",
+	"type": "native_appshell",
+	"title": "Web Browser",
+	"iconColor": "#009999",
+	"icon": "webbrowser_icon.png",
+	"largeIcon": "webbrowser_icon.png",
+	"miniicon": "webbrowser_icon.png",
+	"bgImage": "webbrowser_splash.png",
+	"splashBackground": "webbrowser_splash.png",
+	"main": "index.html",
+	"deeplinkingParams": "{\"contentTarget\": \"$CONTENTID\"}",
+	"handlesRelaunch": true,
+	"requiredMemory": 300,
+	"bootLaunchParams": {
+		"BGMode": "1"
+	},
+	"mimeTypes": [
+		{
+			"mime": "text/html",
+			"extension": "html",
+			"stream": true
+		},
+		{
+			"scheme": "http"
+		},
+		{
+			"scheme": "https"
+		}
+	],
+	"accessibility": {
+		"supportsAudioGuidance": true
+	}
+}

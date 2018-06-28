@@ -1,0 +1,43 @@
+/* ExitFullScreenButton.less */
+
+.topArea {
+	position: absolute;
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	height: 1px;
+}
+
+.invisible {
+	display: none;
+}
+
+.hide {
+	-webkit-animation: hideAnimation 0.2s linear forwards;
+}
+
+.show {
+	-webkit-animation: showAnimation 0.2s linear forwards;
+}
+
+@-webkit-keyframes hideAnimation {
+	0% {
+		-webkit-transform: translate3d(0, 50%, 0);
+		transform: translate3d(0, 50%, 0);
+	}
+	100% {
+		-webkit-transform: translate3d(0, -100%, 0);
+		transform: translate3d(0, -100%, 0);
+	}
+}
+
+@-webkit-keyframes showAnimation {
+	0% {
+		-webkit-transform: translate3d(0, -100%, 0);
+		transform: translate3d(0, -100%, 0);
+	}
+	100% {
+		-webkit-transform: translate3d(0, 50%, 0);
+		transform: translate3d(0, 50%, 0);
+	}
+}

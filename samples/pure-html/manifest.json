@@ -1,0 +1,14 @@
+{
+  "manifest_version": 2,
+  "name": "Browser Sample",
+  "minimum_chrome_version": "35.0.0.0",
+  "version": "0.1",
+  "app": {
+    "background": {
+      "scripts": ["main.js"]
+    }
+  },
+  "permissions": [
+    "webview"
+  ]
+}

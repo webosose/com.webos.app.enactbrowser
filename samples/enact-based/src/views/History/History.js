@@ -1,0 +1,199 @@
+/**
+ * Contains the declaration for the History component.
+ *
+ */
+
+import Button from '@enact/moonstone/Button';
+import {connect} from 'react-redux';
+import Notification from '@enact/moonstone/Notification';
+import PropTypes from 'prop-types';
+import React, {Component} from 'react';
+import ri from '@enact/ui/resolution';
+import VirtualList from '@enact/moonstone/VirtualList';
+
+import HistoryItem from './HistoryItem';
+import {selectAllHistory, deselectAllHistory} from '../../actions';
+
+import css from './History.less';
+
+class HistoryBase extends Component {
+
+	static propTypes = {
+		browser: PropTypes.object,
+		data: PropTypes.array,
+		deselectAllHistory: PropTypes.func,
+		isSelectedTab: PropTypes.bool,
+		selectAllHistory: PropTypes.func,
+		selected: PropTypes.array
+	}
+
+	constructor (props) {
+		super(props);
+		this.state = {
+			deletePopupOpen: false
+		};
+
+		this.retrieveHistory();
+	}
+
+	componentWillReceiveProps (nextProps) {
+		if (!this.props.isSelectedTab && nextProps.isSelectedTab) {
+			this.retrieveHistory();
+		}
+		if (this.props.data !== nextProps.data) {
+			this.viewData = this.manipulateData(nextProps.data);
+		}
+	}
+
+	viewData = null;
+
+	retrieveHistory = () => {
+		let now = new Date(Date.now());
+		let monthAgo = new Date(now.getTime() - 2628000000);
+		this.props.browser.history.retrieveByDate(monthAgo, now);
+	}
+
+	renderItem = ({index, ...rest}) => {
+		const {viewData: data} = this;
+
+		return (
+			<HistoryItem
+				{...rest}
+				id={data[index].id}
+				index={index}
+				onClick={this.onClick}
+				title={data[index].title}
+				time={data[index].date}
+				url={data[index].url}
+			/>
+		)
+	}
+
+	manipulateData = (data) => {
+		if (data.length) {
+			const manipulatedData = data.slice();
+
+			manipulatedData.unshift({
+				id: 'date',
+				title: data[0].date.toDateString(),
+				time: '',
+				url: ''
+			});
+
+			for (let i = 0; i < data.length - 1; i++) {
+				if (data[i].date.toDateString() !== data[i + 1].date.toDateString()) {
+					const targetIndex = manipulatedData.indexOf(data[i + 1]);
+					manipulatedData.splice(targetIndex, 0, {
+						id: 'date',
+						title: data[i + 1].date.toDateString(),
+						time: '',
+						url: ''
+					});
+				}
+			}
+			return manipulatedData;
+		}
+
+		return [];
+	}
+
+	onClick = (ev) => {
+		const
+			{browser} = this.props,
+			i = ev.currentTarget.dataset.index;
+
+		if (!isNaN(i)) {
+			const url = this.viewData[i].url;
+			browser.navigate(url);
+		}
+	}
+
+	onSelectAll = () => {
+		const {data} = this.props;
+		if (data.length === this.props.hasSelection) {
+			this.props.deselectAllHistory();
+		} else {
+			const ids = [];
+			for (let i = 0; i < data.length; i++) {
+				ids.push(data[i].id);
+			}
+			this.props.selectAllHistory(ids);
+		}
+	}
+
+	onDelete = () => {
+		this.setState({deletePopupOpen: true});
+	}
+
+	onDeleteYes = () => {
+		const obj = this;
+		this.props.browser.history.clearByIds(
+			this.props.selected,
+			() => {
+				obj.retrieveHistory();
+			}
+		);
+		//this.props.browser.history.clearAll();
+		this.setState({deletePopupOpen: false});
+	}
+
+	onDeleteNo = () => {
+		this.setState({deletePopupOpen: false});
+	}
+
+	render () {
+		const {data, hasSelection, ...rest} = this.props;
+
+		delete rest.browser;
+		delete rest.deselectAllHistory;
+		delete rest.isSelectedTab;
+		delete rest.selectAllHistory;
+		delete rest.selected;
+
+		return (
+			<div className={css.history} {...rest}>
+				<Button css={css} onClick={this.onSelectAll} disabled={!data.length} small>{(data.length && data.length === hasSelection) ? 'Deselect All' : 'Select All'}</Button>
+				<Button css={css} onClick={this.onDelete} disabled={!data.length || !hasSelection} small>Delete</Button>
+				<Notification
+					open={this.state.deletePopupOpen}
+					noAutoDismiss
+				>
+					<span>{(data.length === hasSelection) ?
+						'Do you want to delete all history?'
+						: 'Do you want to delete the selected history?'}</span>
+					<buttons>
+						<Button onClick={this.onDeleteNo}>No</Button>
+						<Button onClick={this.onDeleteYes}>Yes</Button>
+					</buttons>
+				</Notification>
+				{
+					(this.viewData && this.viewData.length > 0) ?
+						<VirtualList
+							dataSize={this.viewData.length}
+							focusableScrollbar
+							itemRenderer={this.renderItem}
+							className={css.list}
+							itemSize={ri.scale(70)}
+						/>
+					: <div>There is no history.</div>
+				}
+			</div>
+		);
+	}
+}
+
+const mapStateToProps = ({historyState, historyUIState}) => ({
+	data: historyState.retrievedData,
+	hasSelection: historyUIState.selected.length,
+	selected: historyUIState.selected
+});
+
+const mapDispatchToProps = (dispatch) => ({
+	selectAllHistory: (ids) => dispatch(selectAllHistory(ids)),
+	deselectAllHistory: () => dispatch(deselectAllHistory()),
+});
+
+const History = connect(mapStateToProps, mapDispatchToProps)(HistoryBase);
+
+export default History;
+export {History};

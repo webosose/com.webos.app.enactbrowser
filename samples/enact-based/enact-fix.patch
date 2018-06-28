@@ -1,0 +1,20 @@
+--- a/node_modules/@enact/i18n/src/Loader.js	2018-04-03 12:53:28.632266017 +0300
++++ b/node_modules/@enact/i18n/src/Loader.js	2018-04-03 12:53:43.628266017 +0300
+@@ -24,7 +24,7 @@
+     var req;
+     (0, _xhr.default)({
+       url: url,
+-      sync: true,
++      sync: false,
+       beforeSend: function beforeSend(r) {
+         return req = r;
+       }
+@@ -358,7 +358,7 @@
+   // star means attempt to load everything because there was no manifest in that dir
+ 
+ 
+-  if (this.manifest[_root] === '*' || this.manifest[_root].indexOf(path) !== -1) {
++  if (this.manifest[_root] === '*' || this.manifest[_root] && this.manifest[_root].indexOf(path) !== -1) {
+     // util.print('true\n');
+     return true;
+   } // util.print('false\n');

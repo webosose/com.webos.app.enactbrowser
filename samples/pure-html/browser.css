@@ -1,0 +1,401 @@
+/*
+  .font-overwrite color + size;
+*/
+
+/* ----- MISO ------ */
+@font-face {
+  font-family: "Moonstone Miso";
+  src: local("LG Display-Regular");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Moonstone Miso";
+  src: local("Miso"), url(assets/fonts/Miso/Miso-Regular.ttf) format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  unicode-range: U+20-7E, U+A0-107, U+10C-113, U+116-11B, U+11E-11F, U+122-123, U+128-12B, U+12E-133, U+136-137, U+139-148, U+14C-14D, U+150-15B, U+15E-165, U+168-16B, U+16E-173, U+178-17E, U+18F, U+192, U+1C4-1DC, U+1F1, U+1F3, U+1F8-1F9, U+218-21B, U+259, U+2C6-2C7, U+2D8-2DD, U+300-304, U+306-308, U+30A-30C, U+312, U+323, U+326-328, U+1E44-1E45, U+1E62-1E63, U+1EB8-1EB9, U+1ECA-1ECD, U+1EE4-1EE5, U+2013-2014, U+2018-201A, U+201C-201E, U+2020-2022, U+2026, U+2030, U+2039-203A, U+203E, U+20AC, U+2122, U+2205, U+2302;
+}
+@font-face {
+  font-family: "Moonstone Miso";
+  src: local("LG Display-Regular");
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Moonstone Miso";
+  src: local("Miso"), url(assets/fonts/Miso/Miso-Regular.ttf) format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  unicode-range: U+20-7E, U+A0-107, U+10C-113, U+116-11B, U+11E-11F, U+122-123, U+128-12B, U+12E-133, U+136-137, U+139-148, U+14C-14D, U+150-15B, U+15E-165, U+168-16B, U+16E-173, U+178-17E, U+18F, U+192, U+1C4-1DC, U+1F1, U+1F3, U+1F8-1F9, U+218-21B, U+259, U+2C6-2C7, U+2D8-2DD, U+300-304, U+306-308, U+30A-30C, U+312, U+323, U+326-328, U+1E44-1E45, U+1E62-1E63, U+1EB8-1EB9, U+1ECA-1ECD, U+1EE4-1EE5, U+2013-2014, U+2018-201A, U+201C-201E, U+2020-2022, U+2026, U+2030, U+2039-203A, U+203E, U+20AC, U+2122, U+2205, U+2302;
+}
+@font-face {
+  font-family: "Moonstone Miso";
+  src: local("LG Display-Light");
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Moonstone Miso";
+  src: local("Miso"), url(assets/fonts/Miso/Miso-Bold.ttf) format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  unicode-range: U+20-7E, U+A0-107, U+10C-113, U+116-11B, U+11E-11F, U+122-123, U+128-12B, U+12E-133, U+136-137, U+139-148, U+14C-14D, U+150-15B, U+15E-165, U+168-16B, U+16E-173, U+178-17E, U+18F, U+192, U+1C4-1DC, U+1F1, U+1F3, U+1F8-1F9, U+218-21B, U+259, U+2C6-2C7, U+2D8-2DD, U+300-304, U+306-308, U+30A-30C, U+312, U+323, U+326-328, U+1E44-1E45, U+1E62-1E63, U+1EB8-1EB9, U+1ECA-1ECD, U+1EE4-1EE5, U+2013-2014, U+2018-201A, U+201C-201E, U+2020-2022, U+2026, U+2030, U+2039-203A, U+203E, U+20AC, U+2122, U+2205, U+2302;
+}
+/* ----- Museo Sans ------ */
+@font-face {
+  font-family: "MuseoSans";
+  src: local("LG Display-Regular");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "MuseoSans";
+  src: local("Museo Sans"), url(assets/fonts/MuseoSans/MuseoSans-Medium.ttf) format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  unicode-range: U+20-7E, U+A0-17F, U+18F, U+192, U+1C4-1DC, U+1F1, U+1F3, U+1F8-1F9, U+218-21B, U+259, U+2C6-2C7, U+2D8-2DD, U+300-304, U+306-308, U+30A-30C, U+323, U+326-328, U+3BC, U+1E44-1E45, U+1E62-1E63, U+1E9E, U+1EB8-1EB9, U+1ECA-1ECD, U+1EE4-1EE5, U+2009, U+2013-2014, U+2018-201A, U+201C-201E, U+2020-2022, U+2026, U+2030, U+2039-203A, U+2044, U+2070, U+2074-2079, U+2080-2089, U+20AC, U+2122, U+2212, U+221E, U+2248, U+2260, U+2264-2265, U+FB00-FB04;
+}
+@font-face {
+  font-family: "MuseoSans";
+  src: local("LG Display-Light");
+  font-weight: 100;
+  font-style: normal;
+}
+@font-face {
+  font-family: "MuseoSans";
+  src: local("Museo Sans"), url(assets/fonts/MuseoSans/MuseoSans-Thin.ttf) format("truetype");
+  font-weight: 100;
+  font-style: normal;
+  unicode-range: U+20-7E, U+A0-17F, U+18F, U+192, U+1C4-1DC, U+1F1, U+1F3, U+1F8-1F9, U+218-21B, U+259, U+2C6-2C7, U+2D8-2DD, U+300-304, U+306-308, U+30A-30C, U+323, U+326-328, U+3BC, U+1E44-1E45, U+1E62-1E63, U+1E9E, U+1EB8-1EB9, U+1ECA-1ECD, U+1EE4-1EE5, U+2009, U+2013-2014, U+2018-201A, U+201C-201E, U+2020-2022, U+2026, U+2030, U+2039-203A, U+2044, U+2070, U+2074-2079, U+2080-2089, U+20AC, U+2122, U+2212, U+221E, U+2248, U+2260, U+2264-2265, U+FB00-FB04;
+}
+@font-face {
+  font-family: "MuseoSans";
+  src: local("LG Display-Light");
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: "MuseoSans";
+  src: local("Museo Sans"), url(assets/fonts/MuseoSans/MuseoSans-Light.ttf) format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  unicode-range: U+20-7E, U+A0-17F, U+18F, U+192, U+1C4-1DC, U+1F1, U+1F3, U+1F8-1F9, U+218-21B, U+259, U+2C6-2C7, U+2D8-2DD, U+300-304, U+306-308, U+30A-30C, U+323, U+326-328, U+3BC, U+1E44-1E45, U+1E62-1E63, U+1E9E, U+1EB8-1EB9, U+1ECA-1ECD, U+1EE4-1EE5, U+2009, U+2013-2014, U+2018-201A, U+201C-201E, U+2020-2022, U+2026, U+2030, U+2039-203A, U+2044, U+2070, U+2074-2079, U+2080-2089, U+20AC, U+2122, U+2212, U+221E, U+2248, U+2260, U+2264-2265, U+FB00-FB04;
+}
+@font-face {
+  font-family: "MuseoSans";
+  src: local("LG Display-Regular");
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: "MuseoSans";
+  src: local("Museo Sans"), url(assets/fonts/MuseoSans/MuseoSans-Medium.ttf) format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  unicode-range: U+20-7E, U+A0-17F, U+18F, U+192, U+1C4-1DC, U+1F1, U+1F3, U+1F8-1F9, U+218-21B, U+259, U+2C6-2C7, U+2D8-2DD, U+300-304, U+306-308, U+30A-30C, U+323, U+326-328, U+3BC, U+1E44-1E45, U+1E62-1E63, U+1E9E, U+1EB8-1EB9, U+1ECA-1ECD, U+1EE4-1EE5, U+2009, U+2013-2014, U+2018-201A, U+201C-201E, U+2020-2022, U+2026, U+2030, U+2039-203A, U+2044, U+2070, U+2074-2079, U+2080-2089, U+20AC, U+2122, U+2212, U+221E, U+2248, U+2260, U+2264-2265, U+FB00-FB04;
+}
+@font-face {
+  font-family: "MuseoSans";
+  src: local("LG Display-Regular");
+  font-weight: 500;
+  font-style: italic;
+}
+@font-face {
+  font-family: "MuseoSans";
+  src: local("Museo Sans"), url(assets/fonts/MuseoSans/MuseoSans-MediumItalic.ttf) format("truetype");
+  font-weight: 500;
+  font-style: italic;
+  unicode-range: U+20-7E, U+A0-17F, U+18F, U+192, U+1C4-1DC, U+1F1, U+1F3, U+1F8-1F9, U+218-21B, U+259, U+2C6-2C7, U+2D8-2DD, U+300-304, U+306-308, U+30A-30C, U+323, U+326-328, U+3BC, U+1E44-1E45, U+1E62-1E63, U+1E9E, U+1EB8-1EB9, U+1ECA-1ECD, U+1EE4-1EE5, U+2009, U+2013-2014, U+2018-201A, U+201C-201E, U+2020-2022, U+2026, U+2030, U+2039-203A, U+2044, U+2070, U+2074-2079, U+2080-2089, U+20AC, U+2122, U+2212, U+221E, U+2248, U+2260, U+2264-2265, U+FB00-FB04;
+}
+@font-face {
+  font-family: "MuseoSans";
+  src: local("LG Display-Regular");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "MuseoSans";
+  src: local("Museo Sans"), url(assets/fonts/MuseoSans/MuseoSans-Bold.ttf) format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  unicode-range: U+20-7E, U+A0-17F, U+18F, U+192, U+1C4-1DC, U+1F1, U+1F3, U+1F8-1F9, U+218-21B, U+259, U+2C6-2C7, U+2D8-2DD, U+300-304, U+306-308, U+30A-30C, U+323, U+326-328, U+3BC, U+1E44-1E45, U+1E62-1E63, U+1E9E, U+1EB8-1EB9, U+1ECA-1ECD, U+1EE4-1EE5, U+2009, U+2013-2014, U+2018-201A, U+201C-201E, U+2020-2022, U+2026, U+2030, U+2039-203A, U+2044, U+2070, U+2074-2079, U+2080-2089, U+20AC, U+2122, U+2212, U+221E, U+2248, U+2260, U+2264-2265, U+FB00-FB04;
+}
+@font-face {
+  font-family: "MuseoSans";
+  src: local("LG Display-Regular");
+  font-weight: 700;
+  font-style: italic;
+}
+@font-face {
+  font-family: "MuseoSans";
+  src: local("Museo Sans"), url(assets/fonts/MuseoSans/MuseoSans-BoldItalic.ttf) format("truetype");
+  font-weight: 700;
+  font-style: italic;
+  unicode-range: U+20-7E, U+A0-17F, U+18F, U+192, U+1C4-1DC, U+1F1, U+1F3, U+1F8-1F9, U+218-21B, U+259, U+2C6-2C7, U+2D8-2DD, U+300-304, U+306-308, U+30A-30C, U+323, U+326-328, U+3BC, U+1E44-1E45, U+1E62-1E63, U+1E9E, U+1EB8-1EB9, U+1ECA-1ECD, U+1EE4-1EE5, U+2009, U+2013-2014, U+2018-201A, U+201C-201E, U+2020-2022, U+2026, U+2030, U+2039-203A, U+2044, U+2070, U+2074-2079, U+2080-2089, U+20AC, U+2122, U+2212, U+221E, U+2248, U+2260, U+2264-2265, U+FB00-FB04;
+}
+@font-face {
+  font-family: "MuseoSans";
+  src: local("LG Display-Regular");
+  font-weight: 900;
+  font-style: normal;
+}
+@font-face {
+  font-family: "MuseoSans";
+  src: local("Museo Sans"), url(assets/fonts/MuseoSans/MuseoSans-Black.ttf) format("truetype");
+  font-weight: 900;
+  font-style: normal;
+  unicode-range: U+20-7E, U+A0-17F, U+18F, U+192, U+1C4-1DC, U+1F1, U+1F3, U+1F8-1F9, U+218-21B, U+259, U+2C6-2C7, U+2D8-2DD, U+300-304, U+306-308, U+30A-30C, U+323, U+326-328, U+3BC, U+1E44-1E45, U+1E62-1E63, U+1E9E, U+1EB8-1EB9, U+1ECA-1ECD, U+1EE4-1EE5, U+2009, U+2013-2014, U+2018-201A, U+201C-201E, U+2020-2022, U+2026, U+2030, U+2039-203A, U+2044, U+2070, U+2074-2079, U+2080-2089, U+20AC, U+2122, U+2212, U+221E, U+2248, U+2260, U+2264-2265, U+FB00-FB04;
+}
+@font-face {
+  font-family: "MuseoSans";
+  src: local("LG Display-Regular");
+  font-weight: 900;
+  font-style: italic;
+}
+@font-face {
+  font-family: "MuseoSans";
+  src: local("Museo Sans"), url(assets/fonts/MuseoSans/MuseoSans-BlackItalic.ttf) format("truetype");
+  font-weight: 900;
+  font-style: italic;
+  unicode-range: U+20-7E, U+A0-17F, U+18F, U+192, U+1C4-1DC, U+1F1, U+1F3, U+1F8-1F9, U+218-21B, U+259, U+2C6-2C7, U+2D8-2DD, U+300-304, U+306-308, U+30A-30C, U+323, U+326-328, U+3BC, U+1E44-1E45, U+1E62-1E63, U+1E9E, U+1EB8-1EB9, U+1ECA-1ECD, U+1EE4-1EE5, U+2009, U+2013-2014, U+2018-201A, U+201C-201E, U+2020-2022, U+2026, U+2030, U+2039-203A, U+2044, U+2070, U+2074-2079, U+2080-2089, U+20AC, U+2122, U+2212, U+221E, U+2248, U+2260, U+2264-2265, U+FB00-FB04;
+}
+/* ----- Moonstone (Icons) ------ */
+@font-face {
+  font-family: "Moonstone Icons";
+  src: local("Moonstone"), url(assets/fonts/Moonstone.ttf) format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+/* ----- LG Dingbats (Icons) ------ */
+@font-face {
+  font-family: "LG Icons";
+  src: local("LG Display_Dingbat");
+  font-weight: normal;
+  font-style: normal;
+}
+/* ----- LG Display ------ */
+@font-face {
+  /* We want "LG Display" to map to the bold variant, since that was originally the only option */
+  font-family: "Moonstone LG Display";
+  src: local("LG Display-Regular");
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Moonstone LG Display";
+  src: local("LG Display-Regular");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Moonstone LG Display";
+  src: local("LG Display-Light");
+  font-weight: 300;
+  font-style: normal;
+}
+
+* {
+  cursor: url(assets/nrcu_cursor_normal.png), default;
+}
+
+*:active {
+  cursor: url(assets/nrcu_cursor_pressed.png), -webkit-grabbing;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #000000;
+  font-size: 24px;
+  color: #4d4d4d;
+  font-family: "MuseoSans";
+  font-weight: bold;
+}
+
+button,
+input {
+  outline: none;
+}
+
+webview {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.display-none {
+  display: none;
+}
+
+.controls {
+  border-bottom: 2px solid #a2a2a2;
+  -webkit-user-select: none;
+  user-select: none;
+  position: absolute;
+  width: 100%;
+}
+
+.toolbar {
+  padding: 18px  72px;
+  background-color: #000;
+  display: -webkit-flex;
+  align-items: center;
+}
+
+.omnibox {
+  height: 72px;
+  border-radius: 42px;
+  /*border: solid 6px #4e4e4e;*/
+  border: solid 6px #a2a2a2;
+  margin: 0px 42px;
+  padding: 0px 8px;
+  display: -webkit-flex;
+  -webkit-flex: 1;
+  align-items: center;
+  background: #fff;
+}
+
+.omnibox_focused {
+  background: #a2a2a2;
+  border: solid 6px #4e4e4e;
+}
+
+.omnibox__button,
+.omnibox__state-img {
+  height: 42px;
+  width: 42px;
+  margin: 0px 8px;
+}
+
+.omnibox__url-input {
+  -webkit-flex: 1;
+  margin: 0px 8px;
+  border: none;
+  font-size: 200%;
+  color: #4e4e4e;
+  font-family: "MuseoSans";
+}
+
+.history-button {
+  width: 54px;
+  height: 60px;
+  margin: 0px 8px;
+  background: none;
+}
+
+.icon-button {
+  width: 60px;
+  height: 60px;
+  margin: 0px 8px;
+  background: none;
+}
+
+.animated-button {
+  position:relative;
+}
+
+    .animated-button,
+    .animated-button:hover,
+    .animated-button:active,
+    .animated-button:focus {
+      background: none;
+      border: none;
+      padding:0;
+    }
+
+    .animated-button:enabled .animated-button__img-disabled,
+    .animated-button:disabled .animated-button__img-normal,
+    .animated-button:disabled .animated-button__img-hover {
+      display: none;
+    }
+
+    .animated-button__img-normal,
+    .animated-button__img-hover,
+    .animated-button__img-disabled  {
+      position:absolute;
+      left:0;
+      top:0;
+    }
+
+    .animated-button__img-normal,
+    .animated-button__img-hover{
+      -moz-transition: opacity 0.25s ease-in-out;
+      -webkit-transition: opacity 0.25s ease-in-out;
+      transition: opacity 0.25s ease-in-out;
+    }
+
+    .animated-button:not(:hover) .animated-button__img-hover {
+      opacity: 0;
+    }
+
+    .animated-button__img-normal:hover {
+      opacity: 0;
+    }
+
+#global_overlay {
+  display: none;
+  position: absolute;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+}
+
+.dropdown__content {
+  display: none;
+  position: absolute;
+  top:100%;
+  z-index: 2;
+  margin-top: 12px;
+  padding: 12px;
+  border: 12px solid rgba(0, 0, 0, 0.4);
+  border-radius: 24px;
+  -webkit-background-clip: padding;
+  background-clip: padding-box;
+  font-size: 36px;
+  font-family: "MuseoSans";
+  font-weight: bold;
+  background-color: #4e4e4e;
+  color: #fff;
+}
+
+    .dropdown__content:before {
+      position: absolute;
+      bottom: 100%;
+      z-index: 1;
+      width:0px;
+      height: 0px;
+      margin: 0 0 0 -12px;
+      border: 12px solid transparent;
+      border-bottom-color: #4e4e4e;
+      content: '';
+    }
+
+    .dropdown__content--center {
+      transform: translate(-50%, 0);
+    }
+
+    .dropdown__content--left {
+      right: -36px;
+    }
+
+    .dropdown__content--left:before {
+      right: 42px;
+    }
+
+    .dropdown__content--show {
+      display: inline-block;
+    }
+
+    .dropdown__item {
+      padding: 6px 12px;
+    }
+
+    .dropdown__item--normal:hover,
+    .dropdown__item--normal:focus {
+      background: #cf0652;
+    }
+
+    .dropdown__item--disabled {
+      color: #a2a2a2;
+    }

@@ -1,0 +1,31 @@
+/* BookmarkManager.less */
+@import '~@enact/moonstone/styles/skin.less';
+
+.bookmarkManager {
+	height: 75vh;
+	padding: 36px 100px 20px 100px;
+	flex: 1;
+	box-sizing: border-box;
+}
+
+.button {
+	width: 160px;
+	display: inline-block;
+	.applySkins({
+		font-size: 24px;
+		font-weight: 700;
+		color: #4B4B4B;
+		.bg {
+			background-color: white;
+		}
+	});
+}
+
+.list {
+	height: 70%;
+	padding: 20px 10px 10px 10px;
+}
+
+.noItem {
+	margin: 20px;
+}
