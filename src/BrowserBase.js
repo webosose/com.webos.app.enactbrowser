@@ -13,7 +13,6 @@ class BrowserBase {
         this.defaultWebviewState = defaultWebviewState;
         this.webViews = {};
         this.zoomFactor = 1;
-        window.addEventListener('message', this._handleWebviewMessage);
         this.tabs = tabsModel;
         this.tabs.onContentDelete = this._handleContentDelete;
     }
@@ -150,9 +149,6 @@ class BrowserBase {
             // again.
             // partition: BrowserConsts.WEBVIEW_PARTITION_PREF + state.id,
             partition: 'persist:default',
-            onLabelScriptInjected: (results) => {
-                    this._handleWebviewLabelScriptInjected(state.id, results);
-                },
             zoomFactor: this.zoomFactor,
             activeState: this.defaultWebviewState
         });
@@ -169,6 +165,10 @@ class BrowserBase {
         webview.addEventListener('loadAbort', (ev) => {
             const tab = obj.tabs.getTab(state.id);
             tab.setError(ev.reason);
+        });
+        webview.addEventListener('titleChange', (ev) => {
+            const tab = obj.tabs.getTab(state.id);
+            obj._updateTitle(tab, ev.title);
         });
 
         return state;
@@ -204,42 +204,8 @@ class BrowserBase {
         this.tabs.addTab(stateId, selectTab);
     }
 
-    _handleWebviewMessage = (ev) => {
-        if (ev.data) {
-            const data = JSON.parse(ev.data);
-            if (data.id && data.title) {
-                const tab = this.tabs.getTab(data.id);
-                let title =
-                    data.title !== '[no title]' ?
-                    data.title :
-                    tab.state.navState.url;
-                this._updateTitle(tab, title);
-            } else {
-                console.warn(
-                    'Warning: Expected message from guest to contain {name, title}, but got:',
-                    data);
-            }
-        } else {
-            console.warn('Warning: Message from guest contains no data');
-        }
-    }
-
     _updateTitle(tab, title) {
         tab.setTitle(title);
-    }
-
-    _handleWebviewLabelScriptInjected = (id, results) => {
-        if (chrome.runtime.lastError) {
-            console.warn('Warning: Failed to inject title.js : ' + chrome.runtime.lastError.message);
-        } else if (!results || !results.length) {
-            console.warn('Warning: Failed to inject title.js results are empty');
-        } else {
-            // Send a message to the webView so it can get a reference to
-            // the embedder
-            const data = {'id': id};
-            const webView = this.webViews[id].webView;
-            webView.contentWindow.postMessage(JSON.stringify(data), '*');
-        }
     }
 
     _handleContentDelete = (contentId) => {
