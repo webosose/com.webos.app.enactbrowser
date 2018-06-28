@@ -5,6 +5,7 @@
  */
 
 import {contextTypes} from '@enact/i18n/I18nDecorator';
+import platform from '@enact/webos/platform';
 import React, {Component} from 'react';
 
 import {Browser} from '../../NevaLib/BrowserModel';
@@ -82,13 +83,17 @@ class Main extends Component {
 								tooltipText="Full Screen"
 								type="fullscreenButton"
 							/>
-							<IconButton
-								backgroundOpacity="transparent"
-								className={css.button}
-								onClick={this.onClose}
-								tooltipText="Exit App"
-								type="xButton"
-							/>
+							{
+								platform.tv ?
+								<IconButton
+									backgroundOpacity="transparent"
+									className={css.button}
+									onClick={this.onClose}
+									tooltipText="Exit App"
+									type="xButton"
+								/> :
+								null
+							}
 						</div>
 						<TabBar browser={browser} />
 					</div>
