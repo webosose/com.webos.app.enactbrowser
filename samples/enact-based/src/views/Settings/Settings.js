@@ -94,8 +94,14 @@ class SettingsBase extends Component {
 
 	onClearYes = () => {
 		const {browser} = this.props;
+
 		this.setState({clearing: true});
-		browser.clearData().then(() => {
+		Promise.race([
+			browser.clearData(),
+			new Promise((resolve) => {
+				setTimeout(() => {resolve();}, 3000);
+			})
+		]).then(() => {
 			this.setState({clearPopupOpen: false, clearing: false});
 		});
 	}
