@@ -1,13 +1,11 @@
-import config from './Config.js';
 import {TabTypes} from 'js-browser-lib/TabsConsts';
 
 class RendererPerTabPolicy {
-    constructor(tabs, webViews) {
+    constructor(tabs, webViews, maxActive, maxSuspended) {
         this.webViews = webViews;
         this.queue = [];
-        this.maxActive = config.rendererPerTab.maxActiveTabs;
-        this.maxSuspended = config.rendererPerTab.maxSuspendedTabs;
-        this.maxNotDeactivated = this.maxActive + this.maxSuspended;
+        this.maxActive = maxActive;
+        this.maxSuspended = maxSuspended;
         tabs.addEventListener('select', this._handleTabSelect);
         tabs.addEventListener('delete', this._handleTabDelete);
     }
@@ -31,9 +29,10 @@ class RendererPerTabPolicy {
         if (this.queue.length > this.maxActive) {
             this.webViews[this.queue[this.maxActive]].suspend();
         }
-        if (this.queue.length > this.maxNotDeactivated) {
-            this.webViews[this.queue[this.maxNotDeactivated]].deactivate();
-            this.queue.pop();
+        const maxNotDeactivated = this.maxActive + this.maxSuspended;
+        if (this.queue.length > maxNotDeactivated) {
+            const lastId = this.queue.pop();
+            this.webViews[lastId].deactivate();
         }
     }
 

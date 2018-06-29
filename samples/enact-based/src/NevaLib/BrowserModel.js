@@ -13,7 +13,7 @@ import MostVisited from './MostVisited';
 import PreviousSessionTabs from './PreviousSessionTabs';
 import RecentlyClosed from './RecentlyClosed';
 import {ReduxTabs as TabsModel} from './Tabs';
-import RendererPerTabPolicy from './RendererPerTabPolicy';
+import createTabPolicy from './TabPolicyFactory';
 import SearchService from './SearchService';
 import {Settings, SettingsConsts} from './Settings';
 
@@ -48,7 +48,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
         browser.recentlyClosed = new RecentlyClosed(store, db, tabsModel);
         browser.mostVisited = new MostVisited(store, db, tabsModel, browser.webViews);
         browser.searchService = new SearchService();
-        browser.tabPolicy = new RendererPerTabPolicy(tabsModel, this.webViews);
+        browser.tabPolicy = createTabPolicy(tabsModel, this.webViews);
 
         db.open(DB_NAME)
         .then(() => {

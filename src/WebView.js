@@ -87,6 +87,7 @@ class WebView extends EventEmitter {
     }
 
     activate() {
+        console.log('ACTIVATE ' + this.rootId);
         if (this.activeState === 'deactivated' && this.rootId) {
             document.getElementById(this.rootId).appendChild(this.webView);
         }
@@ -97,6 +98,7 @@ class WebView extends EventEmitter {
     }
 
     suspend() {
+        console.log('SUSPEND ' + this.rootId);
         if (this.activeState === 'activated') {
             if (this.webView.suspend) {
                this.webView.suspend();
@@ -112,6 +114,7 @@ class WebView extends EventEmitter {
     }
 
     deactivate() {
+        console.log('DEACTIVATE ' + this.rootId);
         if (this.activeState !== 'deactivated') {
             document.getElementById(this.rootId).removeChild(this.webView);
             this.activeState = 'deactivated';

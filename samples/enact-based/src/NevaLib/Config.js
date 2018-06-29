@@ -21,7 +21,13 @@ const config = {
     'rendererPerTab':{
         'maxActiveTabs': 1,
         'maxSuspendedTabs': 2
+    },
+    'memoryManager': {
+        'maxSuspendedNormal': 3,
+        'maxSuspendedLow': 1,
+        'maxSuspendedCritical': 0
     }
+
 }
 
 export default config;
