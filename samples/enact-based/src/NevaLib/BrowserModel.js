@@ -67,12 +67,15 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
     }
 
     initializeTabs() {
+        let hasTargetInLaunchParams = false;
         if (chrome.app.launchArgs) {
             const launchArgs = JSON.parse(chrome.app.launchArgs);
             if (launchArgs.target) {
+                hasTargetInLaunchParams = true;
                 this.tabs.addTab(this._createWebView(launchArgs.target));
             }
-        } else {
+        }
+        if (!hasTargetInLaunchParams) {
             const startupPage = this.settings.getStartupPage();
             if (startupPage === SettingsConsts.NEW_TAB_PAGE) {
                 this.createTab(TabTypes.NEW_TAB_PAGE);
