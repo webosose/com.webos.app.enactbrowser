@@ -99,11 +99,12 @@ class SettingsBase extends Component {
 		Promise.race([
 			browser.clearData(),
 			new Promise((resolve) => {
-				setTimeout(() => {resolve();}, 3000);
+				setTimeout(resolve, 3000);
 			})
-		]).then(() => {
-			this.setState({clearPopupOpen: false, clearing: false});
-		});
+		]).then(
+			this.setState({clearPopupOpen: false, clearing: false}),
+			this.setState({clearPopupOpen: false, clearing: false})
+		);
 	}
 
 	onClearNo = () => {
