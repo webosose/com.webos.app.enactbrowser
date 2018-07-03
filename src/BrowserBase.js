@@ -163,12 +163,18 @@ class BrowserBase {
         });
         webview.addEventListener('newTabRequest', obj._handleNewTab);
         webview.addEventListener('loadAbort', (ev) => {
-            const tab = obj.tabs.getTab(state.id);
-            tab.setError(ev.reason);
+            if (ev.reason !== 'ERR_ABORTED') {
+                const tab = obj.tabs.getTab(state.id);
+                tab.setError(ev.reason);
+            }
         });
         webview.addEventListener('titleChange', (ev) => {
             const tab = obj.tabs.getTab(state.id);
             obj._updateTitle(tab, ev.title);
+        });
+        webview.addEventListener('iconChange', (ev) => {
+            const tab = obj.tabs.getTab(state.id);
+            tab.setIcon(ev.icon);
         });
 
         return state;

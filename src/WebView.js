@@ -1,4 +1,6 @@
 /*global window*/
+/*global XMLHttpRequest*/
+
 import {EventEmitter} from './Utilities';
 
 class WebviewMessageProxy {
@@ -28,6 +30,28 @@ class WebviewMessageProxy {
 
 let msgProxy = null;
 
+function getFavicon(url, callback) {
+    const matches = url.match(/^(.*:\/\/[^\/]*)/);
+    if (matches) {
+        const requestUrl = matches[0] + '/favicon.ico';
+        const xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4 &&
+                xhr.status === 200 &&
+                xhr.response) {
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    callback(ev.target.result);
+                }
+                reader.readAsDataURL(xhr.response);
+            }
+        };
+        xhr.responseType = "blob";
+        xhr.open('GET', requestUrl, true);
+        xhr.send();
+    }
+}
+
 // webview wrapper, which handles some code boilerplate
 // events:
 // navStateChanged (new nav state)
@@ -42,6 +66,7 @@ class WebView extends EventEmitter {
         this._scriptInjectionAttempted = false;
         this.rootId = null;
         this.activeState = activeState;
+        this.isAborted = false;
         // This code handles specific behavior of React
         // If we create webview and assign properties to it before first app render finished
         // this properties will be overwritten after this render
@@ -169,9 +194,11 @@ class WebView extends EventEmitter {
 
     handleLoadStart = (ev) => {
         if (ev.isTopLevel) {
+            this.isAborted = false;
             if (this.url !== ev.url) {
                 this._scriptInjectionAttempted = false;
                 this.emitEvent('titleChange', {title: ev.url});
+                this.emitEvent('iconChange', {icon: null});
             }
             this.url = ev.url;
             this.isLoading = true;
@@ -180,12 +207,19 @@ class WebView extends EventEmitter {
     }
 
     handleLoadCommit = (ev) => {
-        if (ev.isTopLevel && !this._scriptInjectionAttempted) {
+        if (ev.isTopLevel &&
+            !this._scriptInjectionAttempted &&
+            !this.isAborted) {
             // Try to inject title-update-messaging script
             this.webView.executeScript(
                 {'file': 'resources/label.js'},
                 this.handleWebviewLabelScriptInjected
             );
+            getFavicon(this.url, (binaryImg) => {
+                if (binaryImg) {
+                    this.emitEvent('iconChange', {icon: binaryImg});
+                }
+            });
             this._scriptInjectionAttempted = true;
         }
         if (ev.isTopLevel && this.url !== ev.url) {
@@ -202,6 +236,7 @@ class WebView extends EventEmitter {
     handleLoadAbort = (ev) => {
         ev.preventDefault();
         if (ev.isTopLevel) {
+            this.isAborted = true;
             const reason = ev.reason;
             this.emitEvent('loadAbort', {reason});
         }
