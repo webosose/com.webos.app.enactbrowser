@@ -24,6 +24,7 @@ const Tab = kind({
 	name: 'Tab',
 	propTypes: {
 		closable: PropTypes.bool,
+		error: PropTypes.string,
 		index: PropTypes.number,
 		isLoading: PropTypes.bool,
 		selected: PropTypes.bool,
@@ -39,7 +40,7 @@ const Tab = kind({
 		className: 'tab'
 	},
 	computed: {
-		iconClassName: ({type}) => {
+		iconClassName: ({error, type}) => {
 			if (type === TabTypes.NEW_TAB_PAGE) {
 				return css.newtabFavicon;
 			} else if (type === TabTypes.HISTORY) {
@@ -50,6 +51,8 @@ const Tab = kind({
 				return css.settingsFavicon;
 			} else if (type === TabTypes.SITE_FILTERING) {
 				return css.parentalFavicon;
+			} else if (error) {
+				return css.errorFavicon;
 			} else {
 				return css.defaultFavicon;
 			}

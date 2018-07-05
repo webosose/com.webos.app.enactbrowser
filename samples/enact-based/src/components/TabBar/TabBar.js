@@ -68,11 +68,12 @@ class TabBarBase extends Component {
 					browser={browser}
 					closable={closable}
 					data-id={i}
+					error={tabStates[id].error}
 					index={i}
-					isLoading={tabStates[id].navState.isLoading}
+					isLoading={tabStates[id].navState.isLoading && !tabStates[id].error}
 					key={i}
 					selected={i === selectedIndex}
-					title={tabStates[id] ? $L(tabStates[id].title) : null}
+					title={tabStates[id].error ? tabStates[id].navState.url : $L(tabStates[id].title)}
 					type={tabStates[id] ? $L(tabStates[id].type) : null}
 				/>
 			);

@@ -11,6 +11,7 @@ import ri from '@enact/ui/resolution';
 
 import BookmarkBar from '../../components/BookmarkBar';
 import BookmarkManager from '../BookmarkManager';
+import ErrorPage from '../ErrorPage';
 import History from '../History';
 import NewTabPage from '../NewTabPage';
 import Settings from '../Settings';
@@ -67,7 +68,13 @@ const ContentViewBase = kind({
 							if (!fullScreen && alwaysShowBookmarks) {
 								style.top = ri.scale(269) + 'px';
 							}
-							return <WebView style={style} key={id} id={id} webView={browser.webViews[id]} className={css.webView} />;
+
+							return [
+								<WebView style={style} key={id} id={id} webView={browser.webViews[id]} className={css.webView} />,
+								tabs[id].error ?
+									<ErrorPage style={style} key="err" errorMsg={tabs[id].error} /> :
+									null
+							];
 						}
 						case TabTypes.NEW_TAB_PAGE:
 							return <NewTabPage style={style} key={id} browser={browser} isSelectedTab={id === selectedId} />;
