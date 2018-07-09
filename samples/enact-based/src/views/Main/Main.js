@@ -5,7 +5,6 @@
  */
 
 import {contextTypes} from '@enact/i18n/I18nDecorator';
-import platform from '@enact/webos/platform';
 import React, {Component} from 'react';
 
 import {Browser} from '../../NevaLib/BrowserModel';
@@ -84,7 +83,7 @@ class Main extends Component {
 								type="fullscreenButton"
 							/>
 							{
-								platform.tv ?
+								(typeof window === 'object' && window.navigator.userAgent.indexOf('SmartTV') > -1) ?
 								<IconButton
 									backgroundOpacity="transparent"
 									className={css.button}
