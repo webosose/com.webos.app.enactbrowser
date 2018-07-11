@@ -69,6 +69,7 @@ class TabBarBase extends Component {
 					closable={closable}
 					data-id={i}
 					error={tabStates[id].error}
+					iconUrl={tabStates[id] ? tabStates[id].icon : null}
 					index={i}
 					isLoading={tabStates[id].navState.isLoading && !tabStates[id].error}
 					key={i}

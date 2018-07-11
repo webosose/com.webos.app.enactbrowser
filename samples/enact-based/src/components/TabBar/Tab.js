@@ -25,6 +25,7 @@ const Tab = kind({
 	propTypes: {
 		closable: PropTypes.bool,
 		error: PropTypes.string,
+		iconUrl: PropTypes.string,
 		index: PropTypes.number,
 		isLoading: PropTypes.bool,
 		selected: PropTypes.bool,
@@ -68,7 +69,7 @@ const Tab = kind({
 			browser.selectTab(index);
 		}
 	},
-	render: ({closable, onClose, isLoading, onSelect, title, iconClassName, ...rest}) => {
+	render: ({closable, onClose, iconUrl, isLoading, onSelect, title, iconClassName, ...rest}) => {
 		delete rest.browser;
 		delete rest.selected;
 		delete rest.index;
@@ -77,10 +78,14 @@ const Tab = kind({
 		return (
 			<SpottableLi {...rest} onClick={onSelect}>
 				{
-					(isLoading) ?
+					isLoading ?
 					<Spinner className={css.spinner} transparent />
 					:
 					<div
+						style={iconUrl ? {
+							backgroundImage: 'url(' + iconUrl + ')',
+							backgroundSize: 'contain'
+						} : {}}
 						className={classNames(css.tabFavicon, iconClassName)}
 					/>
 				}
