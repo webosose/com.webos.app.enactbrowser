@@ -19,7 +19,7 @@ const config = {
     },
     'restorePrevSessionPolicy':'onlyLastTab', /*onlyLastTab || allTabs*/
     'rendererPerTab':{
-        'maxActiveTabs': 2,
+        'maxActiveTabs': 1,
         'maxSuspendedTabs': 2
     }
 }
