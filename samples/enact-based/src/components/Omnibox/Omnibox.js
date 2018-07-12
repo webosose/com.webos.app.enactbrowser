@@ -44,6 +44,7 @@ class OmniboxBase extends Component {
 	onNavigate = (ev) => {
 		ev.preventDefault();
 		this.isEditing = false;
+		this.prevOpen = false;
 		this.setState({open: false});
 
 		const {browser} = this.props;
