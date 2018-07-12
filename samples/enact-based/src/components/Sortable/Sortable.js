@@ -96,9 +96,6 @@ const SortableHoC = hoc((config, Wrapped) => {
 			this.dragged.style.display = 'none';
 			this.over = e.currentTarget;
 
-			console.log('onDragEnter ' + this.dragged.dataset.id);
-			console.log('onDragEnter ' + this.over.dataset.id);
-
 			if (placeholder.previousSibling === this.over) {
 				parent.insertBefore(placeholder, this.over);
 			} else {
