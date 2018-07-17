@@ -12,6 +12,7 @@
     "webview",
     "storage",
     "https://*/*",
-    "http://*/*"
+    "http://*/*",
+    "fullscreen"
   ]
 }

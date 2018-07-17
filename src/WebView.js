@@ -191,7 +191,7 @@ class WebView extends EventEmitter {
         this.webView.addEventListener('loadstop', this.handleLoadStop);
         this.webView.addEventListener('loadabort', this.handleLoadAbort);
         this.webView.addEventListener('newwindow', this.handleNewWindow);
-        this.webView.addEventListener('permissionrequest', this.handleNewWindow);
+        this.webView.addEventListener('permissionrequest', this.handlePermissionRequest);
         this.webView.setZoom(params.zoomFactor ? params.zoomFactor : 1);
     }
 
@@ -237,7 +237,6 @@ class WebView extends EventEmitter {
     }
 
     handleLoadAbort = (ev) => {
-        ev.preventDefault();
         if (ev.isTopLevel) {
             this.isAborted = true;
             const reason = ev.reason;
@@ -248,8 +247,14 @@ class WebView extends EventEmitter {
         }
     }
 
-    handlePermissionRequest = () => {
-        console.warn("Permission request recieved");
+    handlePermissionRequest = (ev) => {
+        switch (ev.permission) {
+            case 'fullscreen':
+                ev.request.allow();
+                break;
+            default:
+                console.warn("Permission request recieved: " + ev.permission);
+        }
     }
 
     handleNewWindow = (ev)  => {
