@@ -69,12 +69,15 @@ const ContentViewBase = kind({
 								style.top = ri.scale(269) + 'px';
 							}
 
-							return [
-								<WebView style={style} key={id} id={id} webView={browser.webViews[id]} className={css.webView} />,
-								tabs[id].error ?
-									<ErrorPage style={style} key="err" errorMsg={tabs[id].error} /> :
-									null
-							];
+							return (
+								<div key={id}>
+									<WebView style={style} id={id} webView={browser.webViews[id]} className={css.webView} />
+									{ tabs[id].error ?
+										<ErrorPage style={style} errorMsg={tabs[id].error} /> :
+										null
+									}
+								</div>
+							);
 						}
 						case TabTypes.NEW_TAB_PAGE:
 							return <NewTabPage style={style} key={id} browser={browser} isSelectedTab={id === selectedId} />;
