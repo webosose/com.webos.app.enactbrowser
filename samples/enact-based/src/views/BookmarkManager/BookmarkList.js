@@ -6,6 +6,7 @@
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
+import Spotlight from '@enact/spotlight';
 
 import BookmarkItem from './BookmarkItem';
 import Sortable from '../../components/Sortable';
@@ -36,6 +37,7 @@ class BookmarkListBase extends Component {
 		if (!isNaN(i)) {
 			const url = data[i].url;
 			browser.navigate(url);
+			Spotlight.pause();
 			this.props.deselectAllBookmarks();
 		}
 	}

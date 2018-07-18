@@ -12,6 +12,7 @@ import React, {Component} from 'react';
 
 import {BrowserIconButton as IconButton} from '../BrowserIconButton';
 import Tab from './Tab';
+import {TabTypes} from '../../NevaLib/BrowserModel';
 import Sortable from '../Sortable';
 
 import css from './TabBar.less';
@@ -54,6 +55,34 @@ class TabBarBase extends Component {
 		ids: PropTypes.array,
 	}
 
+	componentWillReceiveProps (nextProps) {
+		if (this.props.selectedIndex !== nextProps.selectedIndex) {
+			const
+				{browser, ids} = this.props,
+				prevSelectedId = ids[this.props.selectedIndex],
+				webViewToBlur = browser.webViews[prevSelectedId];
+
+				if (webViewToBlur) {
+					webViewToBlur.webView.blur();
+				}
+		}
+	}
+
+	componentDidUpdate (prevProps) {
+		const
+			{browser, selectedIndex, tabStates, ids} = this.props,
+			prevSelectedId = ids[prevProps.selectedIndex],
+			selectedId = ids[selectedIndex],
+			selectedTab = tabStates[selectedId];
+
+		// Focusing the current webview started loading / when selected a tab
+		if (selectedTab && selectedTab.type === TabTypes.WEBVIEW) {
+			if (prevSelectedId !== selectedIndex || selectedTab.navState.isLoading) {
+				browser.webViews[selectedId].webView.focus();
+			}
+		}
+	}
+
 	tabs = () => {
 		const {browser, component: TabElem, numOfTabs, selectedIndex, tabStates, ids} = this.props;
 		let
@@ -75,7 +104,7 @@ class TabBarBase extends Component {
 					key={i}
 					selected={i === selectedIndex}
 					title={tabStates[id].error ? tabStates[id].navState.url : $L(tabStates[id].title)}
-					type={tabStates[id] ? $L(tabStates[id].type) : null}
+					type={tabStates[id] ? tabStates[id].type : null}
 				/>
 			);
 		}

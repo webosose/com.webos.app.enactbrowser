@@ -25,6 +25,7 @@ class OmniboxBase extends Component {
 		isLoading: PropTypes.bool,
 		reloadDisabled: PropTypes.bool,
 		searchEngine: PropTypes.string,
+		selectedId: PropTypes.string,
 		selectedIndex: PropTypes.number,
 		url: PropTypes.string,
 		urlSuggestions: PropTypes.array
@@ -41,6 +42,15 @@ class OmniboxBase extends Component {
 	prevOpen = false
 	isEditing = false
 
+	componentWillReceiveProps (nextProps) {
+		if (this.props.selectedIndex !== nextProps.selectedIndex ||
+			(!this.isEditing && !this.state.open) ||
+			(this.props.url === '' && nextProps.url !== '')) {
+			this.isEditing = false;
+			this.setState({value: nextProps.url});
+		}
+	}
+
 	onNavigate = (ev) => {
 		ev.preventDefault();
 		this.isEditing = false;
@@ -53,18 +63,36 @@ class OmniboxBase extends Component {
 		if (!browser.searchService.possiblyUrl(url)) {
 			url = browser.searchService.getSearchUrl(url);
 		}
-		browser.navigate(url);
+		this.pauseAndNavigate(url);
+
+	}
+
+	pauseAndNavigate = (url) => {
+		this.props.browser.navigate(url);
+		Spotlight.pause();
 	}
 
 	onChange = (ev) => {
 		this.prevOpen = this.state.open;
 		this.isEditing = true;
+		// Trick to prevent focus on popup content after opening the popup
+		if (!this.prevOpen) {
+			Spotlight.setPointerMode(true);
+		}
 		this.setState({value: ev.value, open: ev.value.length > 0});
 		this.props.browser.mostVisited.getSuggestions(ev.value, 5);
 	}
 
-	onReloadStop = () => {
+	onClose = () => {
+		if(Spotlight.getPointerMode()) {
+			this.setState({open: false});
+		}
+	}
+
+	onReloadStop = (ev) => {
 		this.props.browser.reloadStop();
+		Spotlight.pause();
+		ev.stopPropagation();
 	}
 
 	onBookmarkAdd = () => {
@@ -73,23 +101,6 @@ class OmniboxBase extends Component {
 
 	onBookmarkRemove = () => {
 		this.props.browser.removeBookmark();
-	}
-
-	componentWillReceiveProps (nextProps) {
-		if (this.props.selectedIndex !== nextProps.selectedIndex ||
-			(!this.isEditing && !this.state.open) ||
-			(this.props.url === '' && nextProps.url !== '')) {
-			this.isEditing = false;
-			this.setState({value: nextProps.url});
-		}
-	}
-
-	componentDidUpdate () {
-		if (this.prevOpen !== this.state.open) {
-			setTimeout(() => {
-				document.querySelector('input').focus();
-			}, 0);
-		}
 	}
 
 	getOmniboxIcon = () => {
@@ -110,18 +121,8 @@ class OmniboxBase extends Component {
 		}
 	}
 
-	closeSuggestion = () => {
-		this.setState({open: false});
-	}
-
 	spotSuggested = () => {
 		Spotlight.focus('suggestedList');
-	}
-
-	setSpotlightRestrict = () => {
-		Spotlight.set('suggestedList', {
-			restrict: 'self-first'
-		});
 	}
 
 	onClickSuggestedItems = (ev) => {
@@ -133,9 +134,9 @@ class OmniboxBase extends Component {
 
 		if (!isNaN(i)) {
 			if (i === '0') {
-				browser.navigate(browser.searchService.getSearchUrl(this.state.value));
+				this.pauseAndNavigate(browser.searchService.getSearchUrl(this.state.value));
 			} else {
-				browser.navigate(urlSuggestions[i - 1].url);
+				this.pauseAndNavigate(urlSuggestions[i - 1].url);
 			}
 		}
 	}
@@ -168,13 +169,16 @@ class OmniboxBase extends Component {
 				data-index={0}
 				icon="searchButton"
 				onClick={this.onClickSuggestedItems}
-				onSpotlightUp={this.setSpotlightRestrict}
 				title={`${this.props.searchEngine} Search`}
 				url={this.state.value}
 			/>
 			{this.getSuggestedItems()}
 		</div>
 	)
+
+	onClick = (ev) => {
+		ev.stopPropagation();
+	}
 
 	render () {
 		const
@@ -185,6 +189,7 @@ class OmniboxBase extends Component {
 		delete rest.browser;
 		delete rest.dispatch;
 		delete rest.searchEngine;
+		delete rest.selectedId;
 		delete rest.selectedIndex;
 		delete rest.url;
 		delete rest.urlSuggestions;
@@ -192,17 +197,18 @@ class OmniboxBase extends Component {
 		return (
 			<form {...rest} className={css.form} onSubmit={this.onNavigate}>
 				<ContextualPopupInput
-					autoFocus
+					autoFocus={open}
 					className={css.inputBox}
+					dismissOnEnter
+					onClick={this.onClick}
 					onChange={this.onChange}
-					onClose={this.closeSuggestion}
+					onClose={this.onClose}
 					onSpotlightDown={this.spotSuggested}
-					value={value}
 					open={open}
-					popupComponent={this.renderPopup}
 					popupClassName={css.popup}
+					popupComponent={this.renderPopup}
 					popupSpotlightId="suggestedList"
-					spotlightRestrict="self-only"
+					value={value}
 				/>
 				<IconButton
 					backgroundOpacity="transparent"
@@ -246,6 +252,7 @@ const mapStateToProps = ({tabsState, bookmarksState, browserState, settingsState
 				isLoading: navState.isLoading,
 				reloadDisabled: (type !== TabTypes.WEBVIEW),
 				searchEngine: settingsState.searchEngine,
+				selectedId: ids[selectedIndex],
 				selectedIndex,
 				url: navState.url,
 				urlSuggestions: browserState.urlSuggestions

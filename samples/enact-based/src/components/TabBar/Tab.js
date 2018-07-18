@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Spinner from '@enact/moonstone/Spinner';
 import Spottable from '@enact/spotlight/Spottable';
+import Spotlight from '@enact/spotlight';
 
 import {BrowserIconButton as IconButton} from '../BrowserIconButton';
 import {TabTypes} from '../../NevaLib/BrowserModel';
@@ -23,6 +24,7 @@ const
 const Tab = kind({
 	name: 'Tab',
 	propTypes: {
+		browser: PropTypes.object,
 		closable: PropTypes.bool,
 		error: PropTypes.string,
 		iconUrl: PropTypes.string,
@@ -65,8 +67,12 @@ const Tab = kind({
 			ev.stopPropagation();
 			browser.closeTab(index);
 		},
-		onSelect: (ev, {browser, index}) => {
-			browser.selectTab(index);
+		onSelect: (ev, {browser, index, selected}) => {
+			if (!selected) {
+				browser.selectTab(index);
+				Spotlight.pause();
+				ev.stopPropagation();
+			}
 		}
 	},
 	render: ({closable, onClose, iconUrl, isLoading, onSelect, title, iconClassName, ...rest}) => {

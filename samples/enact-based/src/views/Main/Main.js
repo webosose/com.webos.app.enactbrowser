@@ -6,6 +6,7 @@
 
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import React, {Component} from 'react';
+import Spotlight from '@enact/spotlight';
 
 import {Browser} from '../../NevaLib/BrowserModel';
 
@@ -62,6 +63,10 @@ class Main extends Component {
 		this.state.browser.shutdown();
 	}
 
+	onClick = () => {
+		Spotlight.resume();
+	}
+
 	render () {
 		const
 			props = Object.assign({}, this.props),
@@ -73,7 +78,7 @@ class Main extends Component {
 			<div {...props}>
 			{
 				!fullScreen ? (
-					<div>
+					<div onClick={this.onClick}>
 						<div className={css['flexbox-row']}>
 							<NavigationBox browser={browser} />
 							<Omnibox browser={browser} />

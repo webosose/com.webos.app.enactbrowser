@@ -9,6 +9,7 @@ import Notification from '@enact/moonstone/Notification';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ri from '@enact/ui/resolution';
+import Spotlight from '@enact/spotlight';
 import VirtualList from '@enact/moonstone/VirtualList';
 
 import HistoryItem from './HistoryItem';
@@ -105,6 +106,7 @@ class HistoryBase extends Component {
 		if (!isNaN(i)) {
 			const url = this.viewData[i].url;
 			browser.navigate(url);
+			Spotlight.pause();
 		}
 	}
 

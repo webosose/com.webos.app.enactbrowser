@@ -6,6 +6,7 @@
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
+import Spotlight from '@enact/spotlight';
 
 import {Bookmark} from '../../components/BookmarkBar';
 import RecentlyClosed from './RecentlyClosed';
@@ -76,13 +77,18 @@ class NewTabPageBase extends Component {
 
 	onClickMostVisited = (ev) => {
 		const
-			{browser, mostVisited} = this.props,
+			{mostVisited} = this.props,
 			i = ev.currentTarget.dataset.index;
 
 		if (!isNaN(i)) {
 			const url = mostVisited[i].url;
-			browser.navigate(url);
+			this.pauseAndNavigate(url);
 		}
+	}
+
+	pauseAndNavigate = (url) => {
+		this.props.browser.navigate(url);
+		Spotlight.pause();
 	}
 
 	retrieveRecentlyClosed = () => {
@@ -111,12 +117,12 @@ class NewTabPageBase extends Component {
 
 	onClickRecentlyClosed = (ev) => {
 		const
-			{browser, recentlyClosed} = this.props,
+			{recentlyClosed} = this.props,
 			i = ev.currentTarget.dataset.index;
 
 		if (!isNaN(i)) {
 			const url = recentlyClosed[i].url;
-			browser.navigate(url);
+			this.pauseAndNavigate(url);
 		}
 	}
 
