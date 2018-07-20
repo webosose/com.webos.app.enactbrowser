@@ -13,6 +13,7 @@ class BrowserBase {
         this.defaultWebviewState = defaultWebviewState;
         this.webViews = {};
         this.zoomFactor = 1;
+        this.useragentOverride = null;
         this.tabs = tabsModel;
         this.tabs.onContentDelete = this._handleContentDelete;
     }
@@ -150,7 +151,8 @@ class BrowserBase {
             // partition: BrowserConsts.WEBVIEW_PARTITION_PREF + state.id,
             partition: 'persist:default',
             zoomFactor: this.zoomFactor,
-            activeState: this.defaultWebviewState
+            activeState: this.defaultWebviewState,
+            useragentOverride: this.useragentOverride
         });
         webview.addEventListener('navStateChanged', (navState) => {
             const tab = obj.tabs.getTab(state.id);

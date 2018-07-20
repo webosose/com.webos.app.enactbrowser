@@ -70,6 +70,9 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
         let hasTargetInLaunchParams = false;
         if (chrome.app.launchArgs) {
             const launchArgs = JSON.parse(chrome.app.launchArgs);
+            if (launchArgs['override_user_agent_string']) {
+                this.useragentOverride = launchArgs['override_user_agent_string'];
+            }
             if (launchArgs.target) {
                 hasTargetInLaunchParams = true;
                 this.tabs.addTab(this._createWebView(launchArgs.target));
