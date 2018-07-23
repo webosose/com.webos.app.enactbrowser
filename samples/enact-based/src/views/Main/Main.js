@@ -28,10 +28,14 @@ class Main extends Component {
 	constructor (props) {
 		super(props);
 		let fullScreen = false;
+		this.showExitButton = false;
 		if (typeof chrome === 'object' && chrome.app.launchArgs) {
 			const launchArgs = JSON.parse(chrome.app.launchArgs);
 			if (launchArgs.fullMode) {
 				fullScreen = true;
+			}
+			if (launchArgs.override_user_agent_string) {
+				this.showExitButton = launchArgs.override_user_agent_string.indexOf('SmartTV') > -1
 			}
 		}
 		this.state = {
@@ -83,7 +87,7 @@ class Main extends Component {
 								type="fullscreenButton"
 							/>
 							{
-								(typeof window === 'object' && window.navigator.userAgent.indexOf('SmartTV') > -1) ?
+								this.showExitButton ?
 								<IconButton
 									backgroundOpacity="transparent"
 									className={css.button}
