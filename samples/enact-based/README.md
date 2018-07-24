@@ -1,240 +1,82 @@
-This project was bootstrapped with [enact-dev](https://github.com/enyojs/enact-dev).
+# Summary
+A web browser for webOS Open Source Edition.
 
-Below you will find some information on how to perform common tasks.  
-You can find the most recent version of this guide [here](https://github.com/enyojs/enact-dev/blob/master/global-cli/template/README.md).
+# Description
+The browser is composed of two parts, 1) platform agnostic browser UI written on top of Enact framework and 2) a separate js library to support webview component, data binding, tab management policy, and platform-specific integration.
 
-## Folder Structure
+# Features
+* Basic navigation via address bar, backward/forward button
+* History
+* Bookmark
+* Most visited sites
+* Recently closed sites
+* Preferences
+* Startup page selection
+* Search engine selection
+* Some customized layout options
 
-After creation, your project should look like this:
+# Installation
+## How to build
+Before building the app, the following tools and libraries are required:
 
 ```
-my-app/
-  README.md
-  .gitignore
-  .eslintignore
-  node_modules/
-  package.json
-  src/
-    App/
-      App.js
-      App.less
-      package.json
-    components/
-    views/
-      MainPanel.js
-    index.js
+* Node
+* NPM
 ```
 
-For the project to build, **these files must exist with exact filenames**:
-
-* `package.json` is the core package manifest for the project
-* `src/index.js` is the JavaScript entry point.
-
-You can delete or rename the other files.
-
-You can update the `license` entry in `package.json` to match the license of your choice. For more
-information on licenses, please see the [npm documentation](https://docs.npmjs.com/files/package.json#license).
-
-## Available Scripts
-
-In the project directory, you can run:
-
-### `npm run serve`
-
-Builds and serves the app in the development mode.<br>
-Open [http://localhost:8080](http://localhost:8080) to view it in the browser.
-
-The page will reload if you make edits.<br>
-
-### `npm run pack` and `npm run pack-p`
-
-Builds the project in the working directory. Specifically, `pack` builds in development mode with code un-minified and with debug code included, whereas `pack-p` builds in production mode, with everything minified and optimized for performance. Be sure to avoid shipping or performance testing on development mode builds.
-
-### `npm run watch`
-
-Builds the project in development mode and keeps watch over the project directory. Whenever files are changed, added, or deleted, the project will automatically get rebuilt using an active shared cache to speed up the process. This is similar to the `serve` task, but without the http server.
-
-### `npm run clean`
-
-Deletes previous build fragments from ./dist.
-
-### `npm run lint`
-
-Runs the Enact configuration of Eslint on the project for syntax analysis.
-
-### `npm run test`, `npm run test-json`, and `npm run test-watch`
-
-These tasks will execute all valid tests (files that end in `-specs.js`) that are within the project directory. The `test` is a standard execution pass, `test-json` uses a json reporter for output, and `test-watch` will set up a watcher to re-execute tests when files change.
-
-## Enact Build Options
-
-The enact-dev tool will check the project's `package.json` looking for an optional `enact` object for a few customization options:
-
-* `template` _[string]_ - Filepath to an alternate HTML template to use with the [Webpack html-webpack-plugin](https://github.com/ampedandwired/html-webpack-plugin).
-* `isomorphic` _[boolean|string]_ - If `true`, it indicates the default entrypoint is isomorphic-compatible (and can be built via the `--isomorphic` enact-dev flag). If the value is a string, then it will use that value as a filepath to a custom isomorphic-compatible entrypoint.
-* `title` _[string]_ - Title text that should be put within the HTML's `<title></title>` tags. Note: if this is a webOS-project, the title by default will be auto-detected from the appinfo.json content.
-* `ri` _[object]_ - Resolution independence options to be forwarded to the [LESS plugin](https://github.com/enyojs/less-plugin-resolution-independence).
-* `node` _[object]_ - Configuration settings for polyfilling NodeJS built-ins. See `node` [webpack option](https://webpack.github.io/docs/configuration.html#node).
-* `proxy` _[string]_ - Proxy target during project `serve` to be used within the [http-proxy-middleware](https://github.com/chimurai/http-proxy-middleware).
-
-For example:
-```js
-{
-  ...
-  "enact": {
-    "isomorphic": true,
-    "ri": {
-      "baseSize":24
-    }
-  }
-  ...
-} 
-```
-
-## Displaying Lint Output in the Editor
-
-Some editors, including Sublime Text, Atom, and Visual Studio Code, provide plugins for ESLint.
-
-They are not required for linting. You should see the linter output right in your terminal as well as the browser console. However, if you prefer the lint results to appear right in your editor, there are some extra steps you can do.
-
-You would need to install an ESLint plugin for your editor first.
-
->**A note for Atom `linter-eslint` users**
-
->If you are using the Atom `linter-eslint` plugin, make sure that **Use global ESLint installation** option is checked:
-
-><img src="http://i.imgur.com/yVNNHJM.png" width="300">
-
-Then, you will need to install some packages *globally*:
+Also, the Enact command line tool must be installed globally. Use the following command to install it:
 
 ```sh
-npm install -g enyojs/eslint-config-enact eslint-plugin-react eslint-plugin-babel babel-eslint eslint
-
+npm install -g @enact/cli
 ```
 
-We recognize that this is suboptimal, but it is currently required due to the way we hide the ESLint dependency. The ESLint team is already [working on a solution to this](https://github.com/eslint/eslint/issues/3458) so this may become unnecessary in a couple of months.
-
-## Installing a Dependency
-
-The generated project includes Enact (and all its libraries). It also includes React and ReactDOM.  For test writing, both Sinon and Enzyme are as development dependencies. You may install other dependencies with `npm`:
-
+After you get all the tools and libraries, go to below path.
 ```
-npm install --save <package-name>
+com.webos.app.enactbrowser/samples/enact-based/
 ```
 
-## Importing a Component
-
-This project setup supports ES6 modules thanks to Babel.  
-While you can still use `require()` and `module.exports`, we encourage you to use [`import` and `export`](http://exploringjs.com/es6/ch_modules.html) instead.
-
-For example:
-
-### `Button.js`
-
-```js
-import kind from '@enact/core/kind';
-
-const Button = kind({
-  render() {
-    // ...
-  }
-});
-
-export default Button; // Don’t forget to use export default!
+Build the app with below command.
+```
+npm run build
 ```
 
-### `DangerButton.js`
+## How to set up development environment on PC
+This app is a chrome extension, you can load it to Chrome as a extension and run it on Chrome browser as well as inspect it.
+1) Build the app
+2) Load the built app on "chrome://extensions"
 
+# Usage
+## On target device
+1) Turn on the device
+2) Connect to the internet
+3) Press windows key to see the app list
+4) Click on "Web Browser" icon
 
-```js
-import kind from '@enact/core/kind';
-import Button from './Button'; // Import a component from another file
+## On PC
+1) Launch Chrome and go to "chrome://apps"
+2) Launch the app named "Enact-based Browser Sample"
 
-const DangerButton = kind({
-  render(props) {
-    return <Button {...props} color="red" />;
-  }
-});
+# Author
+- Mikyung Kim (mikyung27.kim@lge.com)
+- Alexey Domokurov (alexey.domokurov@lge.com)
 
-export default DangerButton;
-```
+# Copyright and License Information
 
-Be aware of the [difference between default and named exports](http://stackoverflow.com/questions/36795819/react-native-es-6-when-should-i-use-curly-braces-for-import/36796281#36796281). It is a common source of mistakes.
+Unless otherwise specified, all content, including all source code files and
+documentation files in this repository are:
 
-We suggest that you stick to using default imports and exports when a module only exports a single thing (for example, a component). That’s what you get when you use `export default Button` and `import Button from './Button'`.
+Copyright (c) 2018 LG Electronics, Inc.
 
-Named exports are useful for utility modules that export several functions. A module may have at most one default export and as many named exports as you like.
+Unless otherwise specified or set forth in the NOTICE file, all content,
+including all source code files and documentation files in this repository are:
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this content except in compliance with the License.
+You may obtain a copy of the License at
 
-Learn more about ES6 modules:
+http://www.apache.org/licenses/LICENSE-2.0
 
-* [When to use the curly braces?](http://stackoverflow.com/questions/36795819/react-native-es-6-when-should-i-use-curly-braces-for-import/36796281#36796281)
-* [Exploring ES6: Modules](http://exploringjs.com/es6/ch_modules.html)
-* [Understanding ES6: Modules](https://leanpub.com/understandinges6/read#leanpub-auto-encapsulating-code-with-modules)
-
-## Adding a LESS or CSS Stylesheet
-
-This project setup uses [Webpack](https://webpack.github.io/) for handling all assets. Webpack offers a custom way of “extending” the concept of `import` beyond JavaScript. To express that a JavaScript file depends on a LESS/CSS file, you need to **import the CSS from the JavaScript file**:
-
-### `Button.less`
-
-```css
-.button {
-  padding: 20px;
-}
-```
-
-### `Button.js`
-
-```js
-import kind from '@enact/core/kind';
-import styles './Button.css'; // Tell Webpack that Button.js uses these styles
-
-const Button = kind({
-  render() {
-    // You can use them as regular CSS styles
-    return <div className={styles['button']} />;
-  }
-}
-```
-
-Upon importing a css/less files, the resulting object will be a mapping of class names from that document. This allows correct access to the class name string regardless how the build process mangles it up.
-
-In development, expressing dependencies this way allows your styles to be reloaded on the fly as you edit them. In production, all CSS files will be concatenated into a single minified `.css` file in the build output.
-
-Additionally, this system setup supports [CSS module spec](https://github.com/css-modules/css-modules) with allows for compositional CSS classes and inheritance of styles.
-
-## Adding Images and Custom Fonts
-
-With Webpack, using static assets like images and fonts works similarly to CSS.
-
-You can **`import` an image right in a JavaScript module**. This tells Webpack to include that image in the bundle. Unlike CSS imports, importing an image or a font gives you a string value. This value is the final image path you can reference in your code.
-
-Here is an example:
-
-```js
-import kind from '@enact/core/kind';
-import logo from './logo.png'; // Tell Webpack this JS file uses this image
-
-console.log(logo); // /logo.84287d09.png
-
-const Header = kind({
-  render: function() {
-    // Import result is the URL of your image
-    return <img src={logo} alt="Logo" />;
-  }
-});
-
-export default Header;
-```
-
-This is currently required for local images. This ensures that when the project is built, webpack will correctly move the images into the build folder, and provide us with correct paths.
-
-This works in LESS/CSS too:
-
-```css
-.logo {
-  background-image: url(./logo.png);
-}
-```
-
-Webpack finds all relative module references in CSS (they start with `./`) and replaces them with the final paths from the compiled bundle. If you make a typo or accidentally delete an important file, you will see a compilation error, just like when you import a non-existent JavaScript module. The final filenames in the compiled bundle are generated by Webpack from content hashes.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.

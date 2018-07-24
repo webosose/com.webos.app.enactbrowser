@@ -1,7 +1,7 @@
 {
   "name": "com.webos.app.browser",
   "version": "1.0.0",
-  "description": "A general template for an Enact Moonstone application.",
+  "description": "A enact based web browser",
   "author": "",
   "main": "src/index.js",
   "scripts": {
@@ -19,7 +19,7 @@
     "test-json": "enact test start --single-run --browsers PhantomJS --reporters json",
     "test-watch": "enact test start --browsers PhantomJS"
   },
-  "license": "UNLICENSED",
+  "license": "Apache-2.0",
   "private": true,
   "repository": "",
   "enact": {
