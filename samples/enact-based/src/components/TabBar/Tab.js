@@ -24,7 +24,6 @@ import kind from '@enact/core/kind';
 import {MarqueeDecorator} from '@enact/moonstone/Marquee';
 import PropTypes from 'prop-types';
 import React from 'react';
-import Spinner from '@enact/moonstone/Spinner';
 import Spottable from '@enact/spotlight/Spottable';
 import Spotlight from '@enact/spotlight';
 
@@ -45,7 +44,6 @@ const Tab = kind({
 		error: PropTypes.string,
 		iconUrl: PropTypes.string,
 		index: PropTypes.number,
-		isLoading: PropTypes.bool,
 		selected: PropTypes.bool,
 		title: PropTypes.string || PropTypes.number,
 		type: PropTypes.string // or icon
@@ -91,7 +89,7 @@ const Tab = kind({
 			}
 		}
 	},
-	render: ({closable, onClose, iconUrl, isLoading, onSelect, title, iconClassName, ...rest}) => {
+	render: ({closable, onClose, iconUrl, onSelect, title, iconClassName, ...rest}) => {
 		delete rest.browser;
 		delete rest.selected;
 		delete rest.index;
@@ -99,18 +97,13 @@ const Tab = kind({
 
 		return (
 			<SpottableLi {...rest} onClick={onSelect}>
-				{
-					isLoading ?
-					<Spinner className={css.spinner} transparent />
-					:
-					<div
-						style={iconUrl ? {
-							backgroundImage: 'url(' + iconUrl + ')',
-							backgroundSize: 'contain'
-						} : {}}
-						className={classNames(css.tabFavicon, iconClassName)}
-					/>
-				}
+				<div
+					style={iconUrl ? {
+						backgroundImage: 'url(' + iconUrl + ')',
+						backgroundSize: 'contain'
+					} : {}}
+					className={classNames(css.tabFavicon, iconClassName)}
+				/>
 				<TitleDiv className={css.tabTitle} marqueeOn="hover">{title}</TitleDiv>
 				{
 					closable &&

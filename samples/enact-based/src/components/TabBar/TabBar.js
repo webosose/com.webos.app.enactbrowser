@@ -116,7 +116,6 @@ class TabBarBase extends Component {
 					error={tabStates[id].error}
 					iconUrl={tabStates[id] ? tabStates[id].icon : null}
 					index={i}
-					isLoading={tabStates[id].navState.isLoading && !tabStates[id].error}
 					key={i}
 					selected={i === selectedIndex}
 					title={tabStates[id].error ? tabStates[id].navState.url : $L(tabStates[id].title)}
