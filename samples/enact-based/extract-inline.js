@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 // Copyright (c) 2018 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,8 +15,6 @@
 // limitations under the License.
 //
 // SPDX-License-Identifier: Apache-2.0
-
-#!/usr/bin/env node
 
 'use strict';
 
@@ -35,8 +35,9 @@ fs.readdirSync(dir).forEach(f => {
 		const file = path.join(dir, f);
 		let first = true;
 		let html = fs.readFileSync(file, {encoding: 'UTF8'});
+		match[1] = match[1] || 'update';
 		html = html.replace(/(<script[^>]*>)([\s\S]*?)(<\/script>)/g, function(m, openTag, innerScript, closeTag) {
-			if (innerScript.trim().length > 0 && (first || match[1])) {
+			if (innerScript.trim().length > 0) {
 				let out = path.join(startup, match[1] + '.js');
 				if (first) {
 					out = startupJS;
