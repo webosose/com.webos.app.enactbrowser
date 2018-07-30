@@ -234,7 +234,7 @@ class WebView extends EventEmitter {
             !this.isAborted) {
             // Try to inject title-update-messaging script
             this.webView.executeScript(
-                {'file': 'resources/label.js'},
+                {'file': 'label.js'},
                 this.handleWebviewLabelScriptInjected
             );
             getFavicon(this.url, (binaryImg) => {

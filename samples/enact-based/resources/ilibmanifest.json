@@ -3,7 +3,6 @@
 		"en/appinfo.json",
 		"en/strings.json",
 		"ko/appinfo.json",
-		"ko/strings.json",
-		"label.js"
+		"ko/strings.json"
 	]
 }
