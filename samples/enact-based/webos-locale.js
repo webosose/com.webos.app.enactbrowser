@@ -16,7 +16,7 @@
 
 (function() {
 	var localeBundles = [
-		'/usr/share/javascript/ilib/localedata/' + navigator.language + '.js',
+		'ilibdata/' + navigator.language + '.js',
 		'localedata/' + navigator.language + '.js'
 	];
 	for(var i=0; i<localeBundles.length; i++) {
