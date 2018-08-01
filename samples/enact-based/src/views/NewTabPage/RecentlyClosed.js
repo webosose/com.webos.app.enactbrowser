@@ -36,7 +36,9 @@ class RecentlyClosed extends Component {
 		if (!this.state.showing) {
 			this.props.onClick();
 		}
-		this.setState({showing: !this.state.showing});
+		this.setState((prevState) => ({
+			showing: !prevState.showing
+		}));
 	}
 
 	render () {

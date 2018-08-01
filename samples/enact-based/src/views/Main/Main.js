@@ -67,6 +67,19 @@ class Main extends Component {
 		this.setState({browser});
 	}
 
+	componentDidUpdate () {
+		const
+			{browser} = this.state,
+			selectedId = browser.tabs.getSelectedId();
+
+		if (browser.webViews[selectedId]) {
+			Spotlight.pause();
+			browser.webViews[selectedId].webView.focus();
+		} else {
+			Spotlight.resume();
+		}
+	}
+
 	onFullScreen = () => {
 		this.setState({fullScreen: true});
 	}
@@ -83,6 +96,18 @@ class Main extends Component {
 		Spotlight.resume();
 	}
 
+	onMouseLeave = () => {
+		const
+			{browser} = this.state,
+			selectedId = browser.tabs.getSelectedId();
+
+		if (browser.webViews[selectedId]) {
+			Spotlight.pause();
+		} else {
+			Spotlight.resume();
+		}
+	}
+
 	render () {
 		const
 			props = Object.assign({}, this.props),
@@ -94,7 +119,7 @@ class Main extends Component {
 			<div {...props}>
 			{
 				!fullScreen ? (
-					<div onClick={this.onClick}>
+					<div onClick={this.onClick} onMouseLeave={this.onMouseLeave}>
 						<div className={css['flexbox-row']}>
 							<NavigationBox browser={browser} />
 							<Omnibox browser={browser} />
