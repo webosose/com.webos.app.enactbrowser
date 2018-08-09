@@ -27,20 +27,29 @@ class WebviewMessageProxy {
     }
 
     sendMessage(webview, message, callback) {
-        let data = Object.assign({id: this.counter.toString()}, message);
+        let data = Object.assign({
+                id: this.counter,
+                isNeva: true
+            },
+            message
+        );
         this.requests[data.id] = {webview, callback};
         this.counter++;
         webview.contentWindow.postMessage(JSON.stringify(data), '*');
+        return data.id;
     }
 
     handleWebviewMessage = (ev) => {
         if (ev.data) {
             const data = JSON.parse(ev.data);
             this.requests[data.id].callback(data);
-            delete this.requests[data.id];
         } else {
             console.warn('Warning: Message from guest contains no data');
         }
+    }
+
+    removeMessageListener(id) {
+        delete this.requests[id];
     }
 }
 
@@ -77,12 +86,14 @@ class WebView extends EventEmitter {
         super();
         if (!msgProxy) { // initializing global object, as it uses window
             msgProxy = new WebviewMessageProxy();
+            console.log(msgProxy);
         }
         this.webView = document.createElement('webview');
         this._scriptInjectionAttempted = false;
         this.rootId = null;
         this.activeState = activeState;
         this.isAborted = false;
+        this.msgListenerId = null;
         // This code handles specific behavior of React
         // If we create webview and assign properties to it before first app render finished
         // this properties will be overwritten after this render
@@ -190,6 +201,13 @@ class WebView extends EventEmitter {
                 resolve();
             });
         });
+    }
+
+    // should be called before webview destruction to prevent memory leak
+    beforeWebviewDelete() {
+        if (this.msgListenerId !== null) {
+            msgProxy.removeMessageListener(this.msgListenerId);
+        }
     }
 
     _isWebViewLoaded() {

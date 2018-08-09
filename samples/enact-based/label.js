@@ -19,57 +19,50 @@ var webviewTitleInjectionComplete = false;
   // Prevent multiple injection
   if (!webviewTitleInjectionComplete) {
     var embedder = null;
-    var tabId = null;
-    var listenersAreBound = false;
-    var title = null;
-    var postTitle = (function() {
-      return function(e) {
-        title = document.title;
-        var data = {
-          'id': tabId,
-          'title': title || '[no title]'
-        };
-        embedder.postMessage(JSON.stringify(data), '*');
+    var listenerId = null;
+    var observer = null;
+    var postTitle = function(e) {
+      var data = {
+        'id': listenerId,
+        'title': document.title || '[no title]'
       };
-    }());
-    var bindEmbedder = function(e) {
-      embedder = e.source;
-    };
-    var bindTabName = function(e) {
-      if (e.data) {
-        var data = JSON.parse(e.data);
-        if (data.id) {
-          tabId = data.id;
-        } else {
-          console.warn('Warning: Message from embedder contains no tab id');
-        }
-      } else {
-          console.warn('Warning: Message from embedder contains no data');
-      }
+      embedder.postMessage(JSON.stringify(data), '*');
     };
 
     // Wait for message that gives us a reference to the embedder
     window.addEventListener('message', function(e) {
-      if (!listenersAreBound) {
-        // Bind data
-        bindEmbedder(e);
-        bindTabName(e);
+      if (!embedder && e.data) {
+        var data = JSON.parse(e.data);
+
+        if (!data || !data.isNeva) {
+          return;
+        }
+
+        // bind embedder
+        embedder = e.source;
+        // bind webview id
+        listenerId = data.id;
 
         // Notify the embedder of every title change
         var titleElement = document.querySelector('title');
         if (titleElement) {
           titleElement.addEventListener('change', postTitle);
+          observer = new window.WebKitMutationObserver(function(mutations) {
+              mutations.forEach(function(mutation) {
+                  console.log('new title:', mutation.target.textContent);
+                  postTitle();
+              });
+          });
+          observer.observe(titleElement, {
+            subtree: true,
+            characterData: true,
+            childList: true
+          });
         } else {
           console.warn('Warning: No <title> element to bind to');
-          postTitle();
         }
 
-        // Ensure initial title notification
-        if (title === null) {
-          postTitle();
-        }
-
-        listenersAreBound = true;
+        postTitle();
       }
     });
   }

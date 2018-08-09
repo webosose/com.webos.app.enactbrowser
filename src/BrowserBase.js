@@ -233,7 +233,10 @@ class BrowserBase {
     }
 
     _handleContentDelete = (contentId) => {
-        delete this.webViews[contentId];
+        if (this.webViews[contentId]) {
+            this.webViews[contentId].beforeWebviewDelete();
+            delete this.webViews[contentId];
+        }
     }
 
 }
