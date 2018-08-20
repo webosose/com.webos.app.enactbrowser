@@ -14,10 +14,10 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-var webviewTitleInjectionComplete = false;
+var webviewHostInjectionComplete = false;
 (function() {
   // Prevent multiple injection
-  if (!webviewTitleInjectionComplete) {
+  if (!webviewHostInjectionComplete) {
     var embedder = null;
     var listenerId = null;
     var observer = null;
@@ -63,6 +63,13 @@ var webviewTitleInjectionComplete = false;
         }
 
         postTitle();
+      }
+    });
+
+    // handles 'Esc' button to exit from fullscreen entered from guest page
+    document.addEventListener('keydown', function (ev) {
+      if (ev.keyCode === 27 && document.webkitIsFullScreen) {
+        document.webkitExitFullscreen();
       }
     });
   }

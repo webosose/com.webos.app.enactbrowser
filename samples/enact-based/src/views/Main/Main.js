@@ -22,6 +22,7 @@
 
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import React, {Component} from 'react';
+import ReactDOM from 'react-dom';
 import Spotlight from '@enact/spotlight';
 
 import {Browser} from '../../NevaLib/BrowserModel';
@@ -65,27 +66,68 @@ class Main extends Component {
 		const browser = new Browser(this.props.store, maxTab);
 		// eslint-disable-next-line react/no-did-mount-set-state
 		this.setState({browser});
+
+		document.onwebkitfullscreenchange = this.onFullscreenChange.bind(this);
+		document.addEventListener('keydown', this.onKeyDown);
 	}
 
 	componentDidUpdate () {
-		const
-			{browser} = this.state,
-			selectedId = browser.tabs.getSelectedId();
+		const selectedWebview = this.getSelectedWebview();
 
-		if (browser.webViews[selectedId]) {
+		if (selectedWebview) {
 			Spotlight.pause();
-			browser.webViews[selectedId].webView.focus();
+			selectedWebview.focus();
 		} else {
 			Spotlight.resume();
 		}
 	}
 
+	getSelectedWebview = () => {
+		const
+			{browser} = this.state,
+			selectedId = browser.tabs.getSelectedId();
+
+		if (browser.webViews[selectedId]) {
+			return browser.webViews[selectedId].webView;
+		} else {
+			return null;
+		}
+	}
+
 	onFullScreen = () => {
-		this.setState({fullScreen: true});
+		const webview = this.getSelectedWebview();
+
+		if (webview) {
+			webview.webkitRequestFullscreen();
+		} else {
+			this.setState({fullScreen: true});
+		}
 	}
 
 	onExitFullScreen = () => {
-		this.setState({fullScreen: false});
+		if (document.webkitFullscreenElement) {
+			document.webkitExitFullscreen();
+		} else {
+			this.setState({fullScreen: false});
+		}
+	}
+
+	onKeyDown = (ev) => {
+		if (ev.keyCode === 27) { // ESC
+			if (document.webkitFullscreenElement) {
+				document.webkitExitFullscreen();
+			} else {
+				this.setState({fullScreen: false});
+			}
+		}
+	}
+
+	onFullscreenChange = () => {
+		if (document.webkitFullscreenElement) {
+			this.setState({fullScreen: true});
+		} else {
+			this.setState({fullScreen: false});
+		}
 	}
 
 	onClose = () => {
@@ -97,11 +139,7 @@ class Main extends Component {
 	}
 
 	onMouseLeave = () => {
-		const
-			{browser} = this.state,
-			selectedId = browser.tabs.getSelectedId();
-
-		if (browser.webViews[selectedId]) {
+		if (this.getSelectedWebview()) {
 			Spotlight.pause();
 		} else {
 			Spotlight.resume();
@@ -111,7 +149,8 @@ class Main extends Component {
 	render () {
 		const
 			props = Object.assign({}, this.props),
-			{browser, fullScreen} = this.state;
+			{browser, fullScreen} = this.state,
+			webview = browser.tabs ? this.getSelectedWebview() : null;
 
 		delete props.store;
 
@@ -149,7 +188,16 @@ class Main extends Component {
 				) : null
 			}
 				<ContentView browser={browser} fullScreen={fullScreen} />
+			{
+				webview ? ReactDOM.createPortal(
+					<div>
+						<style>{`@import "main.css";`}</style>
+						<ExitFullScreenButton fullScreen={fullScreen} onExitFullScreen={this.onExitFullScreen} />
+					</div>,
+					webview.shadowRoot
+				) :
 				<ExitFullScreenButton fullScreen={fullScreen} onExitFullScreen={this.onExitFullScreen} />
+			}
 			</div>
 		);
 	}
