@@ -79,8 +79,11 @@ function getFavicon(url, callback) {
 
 // webview wrapper, which handles some code boilerplate
 // events:
-// navStateChanged (new nav state)
-// newTabRequest
+// - navStateChanged (new nav state)
+// - newWindowRequest
+// - titleChange
+// - iconChange
+// - loadAbort
 class WebView extends EventEmitter {
     constructor({activeState, ...rest}) {
         super();
@@ -293,16 +296,12 @@ class WebView extends EventEmitter {
                 break;
             default:
                 console.warn("Permission request recieved: " + ev.permission);
+                ev.request.deny();
         }
     }
 
     handleNewWindow = (ev)  => {
-        ev.preventDefault();
-
-        const disposition = ev.windowOpenDisposition;
-        if (disposition == 'new_background_tab' || disposition == 'new_foreground_tab') {
-            this.emitEvent('newTabRequest', ev);
-        }
+        this.emitEvent('newWindowRequest', ev);
     }
 
     handleWebviewLabelScriptInjected = (results) => {

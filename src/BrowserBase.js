@@ -177,7 +177,7 @@ class BrowserBase {
             }
             tab.setNavState(navState);
         });
-        webview.addEventListener('newTabRequest', obj._handleNewTab);
+        webview.addEventListener('newWindowRequest', obj._handleNewWindowRequest);
         webview.addEventListener('loadAbort', (ev) => {
             const isError =
                 ev.reason !== 'ERR_ABORTED' &&
@@ -229,10 +229,25 @@ class BrowserBase {
     }
 
     // handles new tab request from webView
-    _handleNewTab = (ev) => {
-        const stateId = this._createWebView(ev.targetUrl);
-        const selectTab = ev.windowOpenDisposition === 'new_foreground_tab';
-        this.tabs.addTab(stateId, selectTab);
+    _handleNewWindowRequest = (ev) => {
+        if (this.tabs.maxTabs === this.tabs.count() &&
+            this.tabs.maxTabs !== 0) {
+            ev.window.discard();
+            return;
+        }
+
+        let selectNewTab = false;
+        switch (ev.windowOpenDisposition) {
+            case 'new_foreground_tab':
+                selectNewTab = true;
+            case 'new_background_tab':
+                const state = this._createWebView(ev.targetUrl);
+                this.tabs.addTab(state, selectNewTab);
+                break;
+            default:
+                console.warn('New tab request ' + ev.windowOpenDisposition + ' is discarded');
+                ev.window.discard();
+        }
     }
 
     _updateTitle(tab, title) {

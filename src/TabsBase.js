@@ -117,8 +117,7 @@ class TabsBase extends EventEmitter {
     addTab(tabState, setSelected = true) {
         let index = this.getIndexById(tabState.id);
         if (!this.hasTab(tabState.id)) {
-            const ids = this.store.getIds();
-            if (ids.length !== this.maxTabs || this.maxTabs === 0) {
+            if (this.count() !== this.maxTabs || this.maxTabs === 0) {
                 this.store.add(tabState, setSelected);
                 this.emitEvent('add', {state: tabState});
             } else {
@@ -137,7 +136,7 @@ class TabsBase extends EventEmitter {
         const contentId = this.getIdByIndex(index);
         const state = this.getTab(contentId).state;
         let selectedIndex = this.store.getSelectedIndex();
-        const idsLength = this.store.getIds().length;
+        const idsLength = this.count();
 
         this.store.close(index, selectedIndex);
         if (selectedIndex >= index) {
@@ -161,7 +160,7 @@ class TabsBase extends EventEmitter {
 
     replaceTab(index, newState) {
         const oldId = this.store.getIds()[index];
-        if (index < this.store.getIds().length) {
+        if (index < this.count()) {
             const oldState = this.getTab(oldId).state;
             this.store.replace(index, newState);
             this.emitEvent('replace', {index, state: newState, oldState});
@@ -207,6 +206,10 @@ class TabsBase extends EventEmitter {
 
     hasTab(contentId) {
         return !!this.store.getTabs()[contentId];
+    }
+
+    count() {
+        return this.store.getIds().length;
     }
 
     static createTabState(id, type) {
