@@ -192,6 +192,12 @@ class BrowserBase {
             const tab = obj.tabs.getTab(state.id);
             tab.setIcon(ev.icon);
         });
+        // This code overrides webview's behavior of reseting zoom on navigation
+        webview.addEventListener('zoomChange', (ev) => {
+            if (ev.newZoomFactor !== obj.zoomFactor) {
+                webview.setZoom(obj.zoomFactor);
+            }
+        });
 
         return state;
     }

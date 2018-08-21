@@ -86,7 +86,6 @@ class WebView extends EventEmitter {
         super();
         if (!msgProxy) { // initializing global object, as it uses window
             msgProxy = new WebviewMessageProxy();
-            console.log(msgProxy);
         }
         this.webView = document.createElement('webview');
         this._scriptInjectionAttempted = false;
@@ -174,6 +173,7 @@ class WebView extends EventEmitter {
     }
 
     setZoom(zoomFactor) {
+        this.zoomFactor = zoomFactor;
         this.webView.setZoom(zoomFactor);
     }
 
@@ -225,6 +225,8 @@ class WebView extends EventEmitter {
         this.webView.addEventListener('loadstop', this.handleLoadStop);
         this.webView.addEventListener('loadabort', this.handleLoadAbort);
         this.webView.addEventListener('newwindow', this.handleNewWindow);
+        this.webView.addEventListener('zoomchange', (ev) =>
+            this.emitEvent('zoomChange', ev));
         this.webView.addEventListener('permissionrequest', this.handlePermissionRequest);
         this.webView.setZoom(params.zoomFactor ? params.zoomFactor : 1);
         if (params.useragentOverride) {
