@@ -172,10 +172,8 @@ class BrowserBase {
         });
         webview.addEventListener('navStateChanged', (navState) => {
             const tab = obj.tabs.getTab(state.id);
-            if (tab.state.error) {
-                if (tab.state.navState.url !== navState.url) {
-                    tab.setError(null);
-                }
+            if (tab.state.error && !webview.isAborted) {
+                tab.setError(null);
             }
             tab.setNavState(navState);
         });

@@ -234,37 +234,38 @@ class WebView extends EventEmitter {
 
     handleLoadStart = (ev) => {
         if (ev.isTopLevel) {
-            this.isAborted = false;
             if (this.url !== ev.url) {
                 this._scriptInjectionAttempted = false;
                 this.emitEvent('titleChange', {title: ev.url});
                 this.emitEvent('iconChange', {icon: null});
             }
+
             this.url = ev.url;
+            this.isAborted = false;
             this.isLoading = true;
             this.emitEvent('navStateChanged', this.getNavState());
         }
     }
 
     handleLoadCommit = (ev) => {
-        if (ev.isTopLevel &&
-            !this._scriptInjectionAttempted &&
-            !this.isAborted) {
-            // Try to inject title-update-messaging script
-            this.webView.executeScript(
-                {'file': 'label.js'},
-                this.handleWebviewLabelScriptInjected
-            );
-            getFavicon(this.url, (binaryImg) => {
-                if (binaryImg) {
-                    this.emitEvent('iconChange', {icon: binaryImg});
-                }
-            });
-            this._scriptInjectionAttempted = true;
-        }
-        if (ev.isTopLevel && this.url !== ev.url) {
-            this.url = ev.url;
-            this.emitEvent('navStateChanged', this.getNavState());
+        if (ev.isTopLevel && !this.isAborted) {
+            if (!this._scriptInjectionAttempted) {
+                // Try to inject title-update-messaging script
+                this.webView.executeScript(
+                    {'file': 'label.js'},
+                    this.handleWebviewLabelScriptInjected
+                );
+                getFavicon(this.url, (binaryImg) => {
+                    if (binaryImg) {
+                        this.emitEvent('iconChange', {icon: binaryImg});
+                    }
+                });
+                this._scriptInjectionAttempted = true;
+            }
+            if (this.url !== ev.url) {
+                this.url = ev.url;
+                this.emitEvent('navStateChanged', this.getNavState());
+            }
         }
     }
 
@@ -276,8 +277,7 @@ class WebView extends EventEmitter {
     handleLoadAbort = (ev) => {
         if (ev.isTopLevel) {
             this.isAborted = true;
-            const reason = ev.reason;
-            this.emitEvent('loadAbort', {reason});
+            this.emitEvent('loadAbort', {reason: ev.reason});
         }
         else {
             console.warn("The load has aborted with error " + ev.code + " : " + ev.reason + ' url = ' + ev.url);
