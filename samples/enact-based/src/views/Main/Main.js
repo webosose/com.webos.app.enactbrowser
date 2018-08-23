@@ -141,7 +141,7 @@ class Main extends Component {
 	onMouseLeave = () => {
 		if (this.getSelectedWebview()) {
 			Spotlight.pause();
-		} else {
+		} else if (document.activeElement.tagName !== 'INPUT') {
 			Spotlight.resume();
 		}
 	}
