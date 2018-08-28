@@ -18,26 +18,34 @@ class WebviewMessageProxy {
         window.addEventListener('message', this.handleWebviewMessage);
     }
 
-    sendMessage(webview, message, callback) {
-        let data = Object.assign({
-                id: this.counter,
-                isNeva: true
-            },
-            message
-        );
-        this.requests[data.id] = {webview, callback};
-        this.counter++;
-        webview.contentWindow.postMessage(JSON.stringify(data), '*');
-        return data.id;
+    sendMessage(id, webview, message, callback) {
+        if (!this.requests[id]) {
+            console.warn('Can\'t send message for webview, as it doesn\'t have msgListenerId');
+            return;
+        }
+
+        const
+            action = message.action,
+            isNeva = true;
+        if (callback) {
+            this.requests[id][action] = {webview, callback};
+        }
+        webview.contentWindow.postMessage(
+            Object.assign({id, isNeva}, message), '*');
     }
 
     handleWebviewMessage = (ev) => {
-        if (ev.data) {
-            const data = JSON.parse(ev.data);
-            this.requests[data.id].callback(data);
+        const data = ev.data;
+        if (data) {
+            this.requests[data.id][data.action].callback(data);
         } else {
             console.warn('Warning: Message from guest contains no data');
         }
+    }
+
+    addMessageListener() {
+        this.requests[this.counter] = {};
+        return this.counter++;
     }
 
     removeMessageListener(id) {
@@ -47,6 +55,8 @@ class WebviewMessageProxy {
 
 let msgProxy = null;
 
+// workaround to obtain favicon of a website
+// in most cases it works
 function getFavicon(url, callback) {
     const matches = url.match(/^(.*:\/\/[^\/]*)/);
     if (matches) {
@@ -233,6 +243,7 @@ class WebView extends EventEmitter {
         if (ev.isTopLevel) {
             if (this.url !== ev.url) {
                 this._scriptInjectionAttempted = false;
+                this._scriptInjected = false;
                 this.emitEvent('titleChange', {title: ev.url});
                 this.emitEvent('iconChange', {icon: null});
             }
@@ -304,16 +315,22 @@ class WebView extends EventEmitter {
         } else {
             // Send a message to the webView so it can get a reference to
             // the embedder
+            this._scriptInjected = true;
+            this.msgListenerId = msgProxy.addMessageListener();
             const obj = this;
-            msgProxy.sendMessage(this.webView, {}, (data) => {
-                if (data.title !== '[no title]') {
-                    obj.emitEvent('titleChange', {title: data.title});
-                }
-                else {
-                    console.warn(
-                        'Warning: Expected message from guest to contain {title}, but got:',
-                        data);
-                }
+            msgProxy.sendMessage(
+                this.msgListenerId,
+                this.webView,
+                {action: 'getTitle'},
+                (data) => {
+                    if (data.title && data.title !== '[no title]') {
+                        obj.emitEvent('titleChange', {title: data.title});
+                    }
+                    else {
+                        console.warn(
+                            'Warning: Expected message from guest to contain title, but got:',
+                            data);
+                    }
             });
         }
     }
