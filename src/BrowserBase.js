@@ -179,7 +179,10 @@ class BrowserBase {
         });
         webview.addEventListener('newTabRequest', obj._handleNewTab);
         webview.addEventListener('loadAbort', (ev) => {
-            if (ev.reason !== 'ERR_ABORTED') {
+            const isError =
+                ev.reason !== 'ERR_ABORTED' &&
+                webview.activeState !== 'deactivated';
+            if (isError) {
                 const tab = obj.tabs.getTab(state.id);
                 tab.setError(ev.reason);
             }
