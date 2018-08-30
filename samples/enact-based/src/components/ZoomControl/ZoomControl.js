@@ -56,7 +56,7 @@ class ZoomControlBase extends Component {
 		super(props);
 		this.state = {
 			isOpened: false,
-			zoom: zoomFactors.indexOf(1)
+			zoom: zoomFactors.indexOf(props.browser.zoomFactor? props.browser.zoomFactor : 1)
 		}
 	}
 
