@@ -19,7 +19,7 @@
     "test-json": "enact test start --single-run --browsers PhantomJS --reporters json",
     "test-watch": "enact test start --browsers PhantomJS"
   },
-  "license": "Apache-2.0",
+  "license": "LicenseRef-EnactBrowser-Evaluation",
   "private": true,
   "repository": "",
   "enact": {
