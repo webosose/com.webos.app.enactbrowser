@@ -36,6 +36,7 @@ class BookmarkManagerBase extends Component {
 	constructor (props) {
 		super(props);
 		this.state = {
+			completePopupOpen: false,
 			deletePopupOpen: false
 		};
 	}
@@ -72,7 +73,10 @@ class BookmarkManagerBase extends Component {
 		}
 
 		this.props.deselectAllBookmarks();
-		this.setState({deletePopupOpen: false});
+		this.setState({completePopupOpen: true, deletePopupOpen: false});
+		setTimeout(() => {
+			this.setState({completePopupOpen: false})
+		}, 1500);
 	}
 
 	onDeleteNo = () => {
@@ -100,6 +104,12 @@ class BookmarkManagerBase extends Component {
 						<Button onClick={this.onDeleteNo}>No</Button>
 						<Button onClick={this.onDeleteYes}>Yes</Button>
 					</buttons>
+				</Notification>
+				<Notification
+					open={this.state.completePopupOpen}
+					noAutoDismiss
+				>
+					<span>{'Selected bookmark(s) have been deleted.'}</span>
 				</Notification>
 				{
 					(data.length > 0) ?

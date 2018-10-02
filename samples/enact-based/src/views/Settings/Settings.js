@@ -63,6 +63,7 @@ class SettingsBase extends Component {
 			siteFilteringOpen: false,
 			clearPopupOpen: false,
 			clearing: false,
+			completePopupOpen: false,
 			matchedPin: 'yet'
 		}
 	}
@@ -101,7 +102,9 @@ class SettingsBase extends Component {
 	}
 
 	onClearYes = () => {
-		const {browser} = this.props;
+		const
+			{browser} = this.props,
+			obj = this;
 
 		this.setState({clearing: true});
 		Promise.race([
@@ -110,8 +113,18 @@ class SettingsBase extends Component {
 				setTimeout(resolve, 3000);
 			})
 		]).then(
-			this.setState({clearPopupOpen: false, clearing: false}),
-			this.setState({clearPopupOpen: false, clearing: false})
+			() => {
+				obj.setState({clearPopupOpen: false, clearing: false, completePopupOpen: true});
+				setTimeout(() => {
+					obj.setState({completePopupOpen: false});
+				}, 1500);
+			},
+			() => {
+				obj.setState({clearPopupOpen: false, clearing: false, completePopupOpen: true});
+				setTimeout(() => {
+					obj.setState({completePopupOpen: false});
+				}, 1500);
+			}
 		);
 	}
 
@@ -224,6 +237,12 @@ class SettingsBase extends Component {
 								<Button onClick={this.onClearYes}>Yes</Button>
 							</buttons>
 						}
+					</Notification>
+					<Notification
+						open={this.state.completePopupOpen}
+						noAutoDismiss
+					>
+						<span>{'All browsing data has been deleted.'}</span>
 					</Notification>
 
 					<Button onClick={this.onClearBrowsingData} css={css} small>Clear browsing data</Button>

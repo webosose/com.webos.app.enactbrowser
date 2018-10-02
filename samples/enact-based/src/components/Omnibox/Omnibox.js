@@ -14,6 +14,7 @@
 import {connect} from 'react-redux';
 import ContextualPopupDecorator from '@enact/moonstone/ContextualPopupDecorator';
 import Input from '@enact/moonstone/Input';
+import Notification from '@enact/moonstone/Notification';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import Spotlight from '@enact/spotlight';
@@ -42,7 +43,9 @@ class OmniboxBase extends Component {
 	constructor (props) {
 		super(props);
 		this.state = {
+			addBookmarkCompleted: false,
 			open: false,
+			removeBookmarkCompleted: false,
 			value: props.url ? props.url : ''
 		}
 	}
@@ -105,10 +108,18 @@ class OmniboxBase extends Component {
 
 	onBookmarkAdd = () => {
 		this.props.browser.addBookmark();
+		this.setState({addBookmarkCompleted: true});
+		setTimeout(() => {
+			this.setState({addBookmarkCompleted: false});
+		}, 1500);
 	}
 
 	onBookmarkRemove = () => {
 		this.props.browser.removeBookmark();
+		this.setState({removeBookmarkCompleted: true});
+		setTimeout(() => {
+			this.setState({removeBookmarkCompleted: false});
+		}, 1500);
 	}
 
 	getOmniboxIcon = () => {
@@ -191,7 +202,7 @@ class OmniboxBase extends Component {
 	render () {
 		const
 			{isLoading, reloadDisabled, isBookmarked, ...rest} = this.props,
-			{value, open} = this.state;
+			{addBookmarkCompleted, value, open, removeBookmarkCompleted} = this.state;
 
 		delete rest.bookmarksData;
 		delete rest.browser;
@@ -203,45 +214,59 @@ class OmniboxBase extends Component {
 		delete rest.urlSuggestions;
 
 		return (
-			<form {...rest} className={css.form} onSubmit={this.onNavigate}>
-				<ContextualPopupInput
-					autoFocus={open}
-					className={css.inputBox}
-					dismissOnEnter
-					onClick={this.onClick}
-					onChange={this.onChange}
-					onClose={this.onClose}
-					onSpotlightDown={this.spotSuggested}
-					open={open}
-					popupClassName={css.popup}
-					popupComponent={this.renderPopup}
-					popupSpotlightId="suggestedList"
-					value={value}
-				/>
-				<IconButton
-					backgroundOpacity="transparent"
-					className={css.headButton}
-					type={this.getOmniboxIcon()}
-				/>
-				{reloadDisabled ?
-					null :
+			<div {...rest} className={css.div}>
+				<form className={css.form} onSubmit={this.onNavigate}>
+					<ContextualPopupInput
+						autoFocus={open}
+						className={css.inputBox}
+						dismissOnEnter
+						onClick={this.onClick}
+						onChange={this.onChange}
+						onClose={this.onClose}
+						onSpotlightDown={this.spotSuggested}
+						open={open}
+						popupClassName={css.popup}
+						popupComponent={this.renderPopup}
+						popupSpotlightId="suggestedList"
+						value={value}
+					/>
 					<IconButton
 						backgroundOpacity="transparent"
-						className={css.bookmarkButton}
-						tooltipText={isBookmarked ? "Remove Bookmark" : "Add Bookmark"}
-						onClick={isBookmarked ? this.onBookmarkRemove : this.onBookmarkAdd}
-						type={isBookmarked ? "removeBookmarkButton" : "addBookmarkButton"}
+						className={css.headButton}
+						type={this.getOmniboxIcon()}
 					/>
-				}
-				<IconButton
-					backgroundOpacity="transparent"
-					className={css.reloadStopButton}
-					tooltipText="Refresh"
-					onClick={this.onReloadStop}
-					disabled={reloadDisabled}
-					type={isLoading ? "closeButton" : "reloadButton"}
-				/>
-			</form>
+					{reloadDisabled ?
+						null :
+						<IconButton
+							backgroundOpacity="transparent"
+							className={css.bookmarkButton}
+							tooltipText={isBookmarked ? "Remove Bookmark" : "Add Bookmark"}
+							onClick={isBookmarked ? this.onBookmarkRemove : this.onBookmarkAdd}
+							type={isBookmarked ? "removeBookmarkButton" : "addBookmarkButton"}
+						/>
+					}
+					<IconButton
+						backgroundOpacity="transparent"
+						className={css.reloadStopButton}
+						tooltipText="Refresh"
+						onClick={this.onReloadStop}
+						disabled={reloadDisabled}
+						type={isLoading ? "closeButton" : "reloadButton"}
+					/>
+				</form>
+				<Notification
+					open={addBookmarkCompleted}
+					noAutoDismiss
+				>
+					<span>{'Bookmark has been added.'}</span>
+				</Notification>
+				<Notification
+					open={removeBookmarkCompleted}
+					noAutoDismiss
+				>
+					<span>{'Bookmark has been deleted.'}</span>
+				</Notification>
+			</div>
 		);
 	}
 }

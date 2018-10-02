@@ -39,6 +39,7 @@ class HistoryBase extends Component {
 	constructor (props) {
 		super(props);
 		this.state = {
+			completePopupOpen: false,
 			deletePopupOpen: false
 		};
 
@@ -141,6 +142,10 @@ class HistoryBase extends Component {
 			this.props.selected,
 			() => {
 				obj.retrieveHistory();
+				obj.setState({completePopupOpen: true});
+				setTimeout(() => {
+					obj.setState({completePopupOpen: false})
+				}, 1500);
 			}
 		);
 		//this.props.browser.history.clearAll();
@@ -175,6 +180,12 @@ class HistoryBase extends Component {
 						<Button onClick={this.onDeleteNo}>No</Button>
 						<Button onClick={this.onDeleteYes}>Yes</Button>
 					</buttons>
+				</Notification>
+				<Notification
+					open={this.state.completePopupOpen}
+					noAutoDismiss
+				>
+					<span>{'Selected history has been deleted.'}</span>
 				</Notification>
 				{
 					(this.viewData && this.viewData.length > 0) ?
