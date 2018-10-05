@@ -11,6 +11,7 @@
  *
  */
 
+import $L from '@enact/i18n/$L';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
@@ -146,7 +147,7 @@ class NewTabPageBase extends Component {
 		return (
 			<div className={css.newTabPage} style={style}>
 				<div {...rest}>
-					<div className={css.title}>Most Visited Sites</div>
+					<div className={css.title}>{$L('Most Visited Sites')}</div>
 					<div className={css.sites}>
 						{this.mostVisitedSites()}
 					</div>

@@ -11,6 +11,7 @@
  *
  */
 
+import $L from '@enact/i18n/$L';
 import {connect} from 'react-redux';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
@@ -64,7 +65,7 @@ const NavigationBoxBase = kind({
 					backgroundOpacity="transparent"
 					disabled={!canGoBack}
 					onClick={onBack}
-					tooltipText="Previous"
+					tooltipText={$L('Previous')}
 					type="backButton"
 				/>
 				<IconButton
@@ -72,7 +73,7 @@ const NavigationBoxBase = kind({
 					className={css.button}
 					disabled={!canGoForward}
 					onClick={onForward}
-					tooltipText="Next"
+					tooltipText={$L('Next')}
 					type="forwardButton"
 				/>
 			</div>
