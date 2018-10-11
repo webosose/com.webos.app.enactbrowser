@@ -85,6 +85,10 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
                 hasTargetInLaunchParams = true;
                 this.tabs.addTab(this._createWebView(launchArgs.target));
             }
+            if (launchArgs.newtab) {
+                hasTargetInLaunchParams = true;
+                this.createTab(TabTypes.NEW_TAB_PAGE);
+            }
         }
         if (!hasTargetInLaunchParams) {
             const startupPage = this.settings.getStartupPage();
