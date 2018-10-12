@@ -60,8 +60,7 @@ class Main extends Component {
 		// eslint-disable-next-line react/no-did-mount-set-state
 		this.setState({browser});
 
-		document.onwebkitfullscreenchange = this.onFullscreenChange.bind(this);
-		document.addEventListener('keydown', this.onKeyDown);
+		document.addEventListener('webkitfullscreenchange', this.onFullscreenChange);
 	}
 
 	componentDidUpdate () {
@@ -91,7 +90,10 @@ class Main extends Component {
 		const webview = this.getSelectedWebview();
 
 		if (webview) {
-			webview.webkitRequestFullscreen();
+			// requesting fullscreen for parent of webview to be able to stack
+			// it with fullscreen from guest page (i.e. when you press
+			// fullscreen in youtube player).
+			webview.parentElement.webkitRequestFullscreen();
 		} else {
 			this.setState({fullScreen: true});
 		}
@@ -99,28 +101,22 @@ class Main extends Component {
 
 	onExitFullScreen = () => {
 		if (document.webkitFullscreenElement) {
+			this.exitFullscreenWasPressed = true;
 			document.webkitExitFullscreen();
 		} else {
 			this.setState({fullScreen: false});
 		}
 	}
 
-	onKeyDown = (ev) => {
-		if (ev.keyCode === 27) { // ESC
-			if (document.webkitFullscreenElement) {
-				document.webkitExitFullscreen();
-			} else {
-				this.setState({fullScreen: false});
-			}
-		}
-	}
-
 	onFullscreenChange = () => {
-		if (document.webkitFullscreenElement) {
+		if (document.webkitFullscreenElement && this.exitFullscreenWasPressed) {
+			document.webkitExitFullscreen();
+		} else if (document.webkitFullscreenElement) {
 			this.setState({fullScreen: true});
 		} else {
 			this.setState({fullScreen: false});
 		}
+		this.exitFullscreenWasPressed = false;
 	}
 
 	onClose = () => {
