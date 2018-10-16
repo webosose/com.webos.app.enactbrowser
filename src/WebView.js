@@ -233,6 +233,8 @@ class WebView extends EventEmitter {
         this.webView.addEventListener('zoomchange', (ev) =>
             this.emitEvent('zoomChange', ev));
         this.webView.addEventListener('permissionrequest', this.handlePermissionRequest);
+        this.webView.addEventListener('dialog', (ev) =>
+            this.emitEvent('dialog', ev));
         this.webView.setZoom(params.zoomFactor ? params.zoomFactor : 1);
         if (params.useragentOverride) {
             this.webView.setUserAgentOverride(params.useragentOverride);
