@@ -11,6 +11,7 @@
  *
  */
 
+import $L from '@enact/i18n/$L';
 import {connect} from 'react-redux';
 import ContextualPopupDecorator from '@enact/moonstone/ContextualPopupDecorator';
 import Picker from '@enact/moonstone/Picker'
@@ -90,7 +91,7 @@ class ZoomControlBase extends Component {
 			<ZoomPopupButton
 				backgroundOpacity="transparent"
 				className={css.zoomButton}
-				tooltipText="Zoom"
+				tooltipText={$L('Zoom')}
 				open={this.state.isOpened}
 				direction="down"
 				popupComponent={this.renderPopup}

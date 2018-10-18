@@ -11,6 +11,7 @@
  *
  */
 
+import $L from '@enact/i18n/$L';
 import Button from '@enact/moonstone/Button';
 import {connect} from 'react-redux';
 import Notification from '@enact/moonstone/Notification';
@@ -91,25 +92,25 @@ class BookmarkManagerBase extends Component {
 
 		return (
 			<div className={css.bookmarkManager} {...rest}>
-				<Button css={css} onClick={this.onSelectAll} disabled={!data.length} small>{(data.length && data.length === hasSelection) ? 'Deselect All' : 'Select All'}</Button>
-				<Button css={css} onClick={this.onDelete} disabled={!data.length || !hasSelection} small>Delete</Button>
+				<Button css={css} onClick={this.onSelectAll} disabled={!data.length} small>{(data.length && data.length === hasSelection) ? $L('DESELECT ALL') : $L('SELECT ALL')}</Button>
+				<Button css={css} onClick={this.onDelete} disabled={!data.length || !hasSelection} small>{$L('Delete')}</Button>
 				<Notification
 					open={this.state.deletePopupOpen}
 					noAutoDismiss
 				>
 					<span>{(data.length === hasSelection) ?
-						'Do you want to delete all bookmarks?'
-						: 'Do you want to delete the selected bookmark(s)?'}</span>
+						$L('Do you want to delete all bookmarks?')
+						: $L('Do you want to delete the selected bookmark(s)?')}</span>
 					<buttons>
-						<Button onClick={this.onDeleteNo}>No</Button>
-						<Button onClick={this.onDeleteYes}>Yes</Button>
+						<Button onClick={this.onDeleteNo}>{$L('NO')}</Button>
+						<Button onClick={this.onDeleteYes}>{$L('YES')}</Button>
 					</buttons>
 				</Notification>
 				<Notification
 					open={this.state.completePopupOpen}
 					noAutoDismiss
 				>
-					<span>{'Selected bookmark(s) have been deleted.'}</span>
+					<span>{$L('Selected bookmark(s) have been deleted.')}</span>
 				</Notification>
 				{
 					(data.length > 0) ?
@@ -118,9 +119,7 @@ class BookmarkManagerBase extends Component {
 					</Scroller>
 					:
 					<div className={css.noItem}>
-						{'There is no bookmark.'}
-						<br />
-						{'If you\'re on a webpage you\'d like to bookmark, simply click the button at the end of the address bar.'}
+						{$L('There is no bookmark.')}
 					</div>
 				}
 			</div>

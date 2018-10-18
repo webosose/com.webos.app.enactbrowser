@@ -12,6 +12,7 @@
  *
  */
 
+import $L from '@enact/i18n/$L';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
@@ -156,7 +157,7 @@ class Main extends Component {
 								backgroundOpacity="transparent"
 								className={css.button}
 								onClick={this.onFullScreen}
-								tooltipText="Full Screen"
+								tooltipText={$L('Full screen')}
 								type="fullscreenButton"
 							/>
 							{
@@ -165,7 +166,7 @@ class Main extends Component {
 									backgroundOpacity="transparent"
 									className={css.button}
 									onClick={this.onClose}
-									tooltipText="Exit App"
+									tooltipText={$L('Exit app')}
 									type="xButton"
 								/> :
 								null

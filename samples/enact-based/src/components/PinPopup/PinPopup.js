@@ -11,6 +11,7 @@
  *
  */
 
+import $L from '@enact/i18n/$L';
 import Button from '@enact/moonstone/Button';
 import Dialog from '@enact/moonstone/Dialog';
 import Input from '@enact/moonstone/Input';
@@ -83,11 +84,11 @@ class PinPopup extends Component {
 				open={open}
 				showCloseButton
 				onClose={this.onClose}
-				title={matched === 'incorrect' ? "Check Password" : "Enter PIN"}
+				title={matched === 'incorrect' ? $L('Check Password') : $L('Enter PIN')}
 				titleBelow={
 					matched === 'incorrect' ?
-					"Incorrect password. Please enter correct password." :
-					"Please enter the parental control PIN."
+					$L('Incorrect password. Please enter correct password.') :
+					$L('Please enter the parental control PIN.')
 				}
 			>
 				<form className={css.form} onSubmit={this.onSubmitPinCode}>
@@ -99,11 +100,11 @@ class PinPopup extends Component {
 						value={this.state.pinValue}
 					/>
 				</form>
-				<Button className={css.ok} onClick={this.onSubmitPinCode}>OK</Button>
+				<Button className={css.ok} onClick={this.onSubmitPinCode}>{$L('OK')}</Button>
 				<div className={css.guide}>
-					Use the pointer or number keys in your remote.
+					{$L('Use the pointer or number keys in your remote.')}
 					<br />
-					Press the back key to erase the number.
+					{$L('Press the back key to erase the number.')}
 				</div>
 				<br />
 				<br />

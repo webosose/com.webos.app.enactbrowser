@@ -11,6 +11,7 @@
  *
  */
 
+import $L from '@enact/i18n/$L';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -32,7 +33,7 @@ const ErrorPage = kind({
 	render: ({errorMsg, ...rest}) => (
 		<div {...rest}>
 			<div className={css.errorIcon} />
-			<div className={css.errorTitle}>{'Cannot open the page.'}</div>
+			<div className={css.errorTitle}>{$L('This webpage is not available')}</div>
 			<div className={css.errorCode}>{errorMsg}</div>
 		</div>
 	)
