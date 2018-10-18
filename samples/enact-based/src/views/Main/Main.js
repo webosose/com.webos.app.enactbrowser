@@ -22,6 +22,7 @@ import {Browser} from '../../NevaLib/BrowserModel';
 
 import {BrowserIconButton as IconButton} from '../../components/BrowserIconButton';
 import ContentView from '../ContentView';
+import Dialog from '../../components/Dialog';
 import ExitFullScreenButton from '../../components/ExitFullScreenButton';
 import Menu from '../../components/Menu';
 import NavigationBox from '../../components/NavigationBox';
@@ -51,6 +52,7 @@ class Main extends Component {
 		}
 		this.state = {
 			browser: {},
+			dialog: null,
 			fullScreen
 		};
 	}
@@ -61,6 +63,7 @@ class Main extends Component {
 		this.setState({browser});
 
 		document.addEventListener('webkitfullscreenchange', this.onFullscreenChange);
+		document.addEventListener('dialog', this.onDialog);
 	}
 
 	componentDidUpdate () {
@@ -84,6 +87,15 @@ class Main extends Component {
 		} else {
 			return null;
 		}
+	}
+
+	onDialogClose = () => {
+		this.setState({dialog: null});
+	}
+
+	onDialog = (ev) => {
+		ev.preventDefault();
+		this.setState({dialog: ev});
 	}
 
 	onFullScreen = () => {
@@ -138,7 +150,7 @@ class Main extends Component {
 	render () {
 		const
 			props = Object.assign({}, this.props),
-			{browser, fullScreen} = this.state,
+			{browser, dialog, fullScreen} = this.state,
 			webview = browser.tabs ? this.getSelectedWebview() : null;
 
 		delete props.store;
@@ -186,6 +198,15 @@ class Main extends Component {
 					webview.shadowRoot
 				) :
 				<ExitFullScreenButton fullScreen={fullScreen} onExitFullScreen={this.onExitFullScreen} />
+			}
+			{
+				dialog ?
+				<Dialog
+					dialog={dialog}
+					onOK={this.onDialogClose}
+					onCancel={this.onDialogClose}
+				/>
+				: null
 			}
 			</div>
 		);
