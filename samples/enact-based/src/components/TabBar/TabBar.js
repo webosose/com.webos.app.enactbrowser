@@ -11,7 +11,6 @@
  *
  */
 
-import $L from '@enact/i18n/$L';
 import {connect} from 'react-redux';
 import classNames from 'classnames';
 import kind from '@enact/core/kind';
@@ -110,7 +109,7 @@ class TabBarBase extends Component {
 					index={i}
 					key={i}
 					selected={i === selectedIndex}
-					title={tabStates[id].error ? tabStates[id].navState.url : $L(tabStates[id].title)}
+					title={tabStates[id].error ? tabStates[id].navState.url : tabStates[id].title}
 					type={tabStates[id] ? tabStates[id].type : null}
 				/>
 			);

@@ -11,7 +11,6 @@
  *
  */
 
-import $L from '@enact/i18n/$L';
 import ContextualPopupDecorator from '@enact/moonstone/ContextualPopupDecorator';
 import Item from '@enact/moonstone/Item';
 import React, {Component} from 'react';
@@ -31,9 +30,9 @@ class Menu extends Component {
 
 	renderPopup = () => (
 		<div onClick={this.closeMenu}>
-			<Item onClick={this.openHistory}>{$L('History')}</Item>
-			<Item onClick={this.openBookmarks}>{$L('Bookmarks')}</Item>
-			<Item onClick={this.openSettings}>{$L('Settings')}</Item>
+			<Item onClick={this.openHistory}>History</Item>
+			<Item onClick={this.openBookmarks}>Bookmarks</Item>
+			<Item onClick={this.openSettings}>Settings</Item>
 		</div>
 	)
 
@@ -72,7 +71,7 @@ class Menu extends Component {
 				onClose={this.closeMenu}
 				open={this.state.isOpened}
 				popupComponent={this.renderPopup}
-				tooltipText={$L('Menu')}
+				tooltipText="Menu"
 				type="menuButton"
 				{...props}
 			/>

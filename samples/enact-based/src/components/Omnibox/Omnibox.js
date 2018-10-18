@@ -11,7 +11,6 @@
  *
  */
 
-import $L from '@enact/i18n/$L';
 import {connect} from 'react-redux';
 import ContextualPopupDecorator from '@enact/moonstone/ContextualPopupDecorator';
 import Input from '@enact/moonstone/Input';
@@ -189,7 +188,7 @@ class OmniboxBase extends Component {
 				data-index={0}
 				icon="searchButton"
 				onClick={this.onClickSuggestedItems}
-				title={`${this.props.searchEngine} ${$L('Search')}`}
+				title={`${this.props.searchEngine} Search`}
 				url={this.state.value}
 			/>
 			{this.getSuggestedItems()}
@@ -241,7 +240,7 @@ class OmniboxBase extends Component {
 						<IconButton
 							backgroundOpacity="transparent"
 							className={css.bookmarkButton}
-							tooltipText={isBookmarked ? $L('Delete from bookmarks') : $L('Add to bookmarks')}
+							tooltipText={isBookmarked ? "Remove Bookmark" : "Add Bookmark"}
 							onClick={isBookmarked ? this.onBookmarkRemove : this.onBookmarkAdd}
 							type={isBookmarked ? "removeBookmarkButton" : "addBookmarkButton"}
 						/>
@@ -249,7 +248,7 @@ class OmniboxBase extends Component {
 					<IconButton
 						backgroundOpacity="transparent"
 						className={css.reloadStopButton}
-						tooltipText={$L('Refresh')}
+						tooltipText="Refresh"
 						onClick={this.onReloadStop}
 						disabled={reloadDisabled}
 						type={isLoading ? "closeButton" : "reloadButton"}
@@ -259,13 +258,13 @@ class OmniboxBase extends Component {
 					open={addBookmarkCompleted}
 					noAutoDismiss
 				>
-					<span>{$L('Bookmark has been added.')}</span>
+					<span>{'Bookmark has been added.'}</span>
 				</Notification>
 				<Notification
 					open={removeBookmarkCompleted}
 					noAutoDismiss
 				>
-					<span>{$L('Bookmark has been deleted.')}</span>
+					<span>{'Bookmark has been deleted.'}</span>
 				</Notification>
 			</div>
 		);

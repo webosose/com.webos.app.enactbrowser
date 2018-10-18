@@ -11,7 +11,6 @@
  *
  */
 
-import $L from '@enact/i18n/$L';
 import BodyText from '@enact/moonstone/BodyText';
 import Button from '@enact/moonstone/Button';
 import {connect} from 'react-redux';
@@ -33,8 +32,8 @@ const OnOffButton = kind({
 	render: (props) => {
 		return (
 			<ToggleButton
-				toggleOffLabel={$L('Off')}
-				toggleOnLabel={$L('On')}
+				toggleOffLabel='Off'
+				toggleOnLabel='On'
 				small
 				{...props}
 			/>
@@ -172,7 +171,7 @@ class SettingsBase extends Component {
 		return (
 			<Scroller {...rest} className={css.scroller}>
 				<div className={classes}>
-					<BodyText>{$L('On Startup')}</BodyText>
+					<BodyText>On Startup</BodyText>
 					<div className={css.indent}>
 						<Group
 							childComponent={RadioItem}
@@ -183,21 +182,21 @@ class SettingsBase extends Component {
 							onSelect={this.onSelectStartupOption}
 						>
 							{[
-								$L('Open the New Tab page'),
-								$L('Continue where I left off'),
-								$L('Home page:')
+								'Open the New Tab page',
+								'Continue where I left off',
+								'Home page'
 							]}
 						</Group>
 						<ExpandableInput
 							disabled={(startupOption !== 2)}
-							title={$L('Enter URL')}
+							title="Home page url"
 							value={this.state.value}
 							onChange={this.onChange}
 							onClose={this.onClose}
 						/>
 					</div>
 
-					<BodyText>{$L('Search Engines')}</BodyText>
+					<BodyText>Search engine</BodyText>
 					<div className={css.indent}>
 						<Group
 							childComponent={RadioItem}
@@ -210,15 +209,15 @@ class SettingsBase extends Component {
 							{searchEngines}
 						</Group>
 					</div>
-					<BodyText className={css.menu}>{$L('Always Show Bookmarks Bar')}</BodyText>
+					<BodyText className={css.menu}>Always Show Bookmarks Bar</BodyText>
 					<OnOffButton onClick={this.onToggleShowBookmarks} selected={alwaysShowBookmarks} />
 					<br />
 
-					{/*<BodyText className={css.menu}>{$L('Private Browsing')}</BodyText>
+					{/*<BodyText className={css.menu}>Private Browsing</BodyText>
 					<OnOffButton onClick={this.onTogglePrivateBrowsing} selected={privateBrowsing} />
 					<br />*/}
 
-					{/*<BodyText className={css.menu}>{$L('Site Filtering')}</BodyText>
+					{/*<BodyText className={css.menu}>Site Filtering</BodyText>
 					<OnOffButton onClick={this.startSiteFiltering} selected={(siteFiltering !== 'off')} />
 					<br />*/}
 
@@ -227,15 +226,15 @@ class SettingsBase extends Component {
 						noAutoDismiss
 					>
 						{this.state.clearing ?
-							<span>{$L('Clearing all browsing data...')}</span>
+							<span>{'Clearing all browsing data...'}</span>
 							:
-							<span>{$L('Do you want to clear all browsing data?')}</span>
+							<span>{'Do you want to clear all browsing data?'}</span>
 						}
 						{this.state.clearing ?
 							null :
 							<buttons>
-								<Button onClick={this.onClearNo}>{$L('NO')}</Button>
-								<Button onClick={this.onClearYes}>{$L('YES')}</Button>
+								<Button onClick={this.onClearNo}>No</Button>
+								<Button onClick={this.onClearYes}>Yes</Button>
 							</buttons>
 						}
 					</Notification>
@@ -243,10 +242,10 @@ class SettingsBase extends Component {
 						open={this.state.completePopupOpen}
 						noAutoDismiss
 					>
-						<span>{$L('All browsing data has been deleted.')}</span>
+						<span>{'All browsing data has been deleted.'}</span>
 					</Notification>
 
-					<Button onClick={this.onClearBrowsingData} css={css} small>{$L('CLEAR BROWSING DATA')}</Button>
+					<Button onClick={this.onClearBrowsingData} css={css} small>Clear browsing data</Button>
 
 					{/*<PinPopup open={siteFilteringOpen} onClose={this.onClosePinPopup} onSubmit={this.onSubmitPinCode} matched={matchedPin} />*/}
 				</div>

@@ -11,7 +11,6 @@
  *
  */
 
-import $L from '@enact/i18n/$L';
 import Button from '@enact/moonstone/Button';
 import {connect} from 'react-redux';
 import Notification from '@enact/moonstone/Notification';
@@ -168,25 +167,25 @@ class HistoryBase extends Component {
 
 		return (
 			<div className={css.history} {...rest}>
-				<Button css={css} onClick={this.onSelectAll} disabled={!data.length} small>{(data.length && data.length === hasSelection) ? $L('DESELECT ALL') : $L('SELECT ALL')}</Button>
-				<Button css={css} onClick={this.onDelete} disabled={!data.length || !hasSelection} small>{$L('Delete')}</Button>
+				<Button css={css} onClick={this.onSelectAll} disabled={!data.length} small>{(data.length && data.length === hasSelection) ? 'Deselect All' : 'Select All'}</Button>
+				<Button css={css} onClick={this.onDelete} disabled={!data.length || !hasSelection} small>Delete</Button>
 				<Notification
 					open={this.state.deletePopupOpen}
 					noAutoDismiss
 				>
 					<span>{(data.length === hasSelection) ?
-						$L('Do you want to delete all history?')
-						: $L('Do you want to delete the selected history?')}</span>
+						'Do you want to delete all history?'
+						: 'Do you want to delete the selected history?'}</span>
 					<buttons>
-						<Button onClick={this.onDeleteNo}>{$L('NO')}</Button>
-						<Button onClick={this.onDeleteYes}>{$L('YES')}</Button>
+						<Button onClick={this.onDeleteNo}>No</Button>
+						<Button onClick={this.onDeleteYes}>Yes</Button>
 					</buttons>
 				</Notification>
 				<Notification
 					open={this.state.completePopupOpen}
 					noAutoDismiss
 				>
-					<span>{$L('Selected history has been deleted.')}</span>
+					<span>{'Selected history has been deleted.'}</span>
 				</Notification>
 				{
 					(this.viewData && this.viewData.length > 0) ?
@@ -197,7 +196,7 @@ class HistoryBase extends Component {
 							className={css.list}
 							itemSize={ri.scale(70)}
 						/>
-					: <div>{$L('There is no history.')}</div>
+					: <div>There is no history.</div>
 				}
 			</div>
 		);

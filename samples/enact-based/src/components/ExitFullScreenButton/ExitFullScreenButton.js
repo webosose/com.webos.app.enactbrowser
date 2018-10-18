@@ -11,7 +11,6 @@
  *
  */
 
-import $L from '@enact/i18n/$L';
 import {Button} from '@enact/moonstone/Button';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
@@ -84,7 +83,7 @@ class ExitFullScreenButton extends Component {
 						onClick={this.props.onExitFullScreen}
 						onMouseEnter={this.onMouseEnter}
 					>
-					{$L('Exit Full Screen')}
+					Exit Full Screen
 					</Button>
 					: null
 				}
