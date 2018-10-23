@@ -1,0 +1,10 @@
+{
+    "id": "com.webos.app.enactbrowser",
+    "version": "1.1.0",
+    "roleFiles": [
+        "/usr/share/luna-service2/roles.d/com.webos.app.enactbrowser.app.json"
+    ],
+    "clientPermissionFiles": [
+        "/usr/share/luna-service2/client-permissions.d/com.webos.app.enactbrowser.app.json"
+    ]
+}

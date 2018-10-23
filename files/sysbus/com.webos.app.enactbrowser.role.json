@@ -1,0 +1,15 @@
+{
+    "appId": "com.webos.app.enactbrowser",
+    "type": "regular",
+    "allowedNames": [
+        "com.webos.app.enactbrowser-*"
+    ],
+    "permissions": [
+        {
+            "service": "com.webos.app.enactbrowser-*",
+            "outbound": [
+                "*"
+            ]
+        }
+    ]
+}
