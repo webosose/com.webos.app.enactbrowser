@@ -98,20 +98,40 @@ class TabBarBase extends Component {
 			closable = numOfTabs > 1;
 
 		for (let i = 0; i < numOfTabs; i++) {
-			const id = ids[i];
+			const
+				tabState = tabStates[ids[i]],
+				error = tabState ? tabState.error : null,
+				type = tabState ? tabState.type : null;
+			let title = '';
+
+			if (tabState) {
+				if (type === 'history') {
+					title = $L('History');
+				} else if (type === 'bookmarks') {
+					title = $L('Bookmarks');
+				} else if (type === 'settings') {
+					title = $L('Settings');
+				} else if (type === 'newTabPage') {
+					title = $L('New Tab');
+				} else if (error || tabState.title === 'Loading...') {
+					title = tabState.navState.url;
+				} else {
+					title = tabState.title;
+				}
+			}
 
 			tabs.push(
 				<TabElem
 					browser={browser}
 					closable={closable}
 					data-id={i}
-					error={tabStates[id].error}
-					iconUrl={tabStates[id] ? tabStates[id].icon : null}
+					error={error}
+					iconUrl={tabState ? tabState.icon : null}
 					index={i}
 					key={i}
 					selected={i === selectedIndex}
-					title={tabStates[id].error ? tabStates[id].navState.url : $L(tabStates[id].title)}
-					type={tabStates[id] ? tabStates[id].type : null}
+					title={title}
+					type={type}
 				/>
 			);
 		}
