@@ -56,6 +56,7 @@ class IndexedDb {
         const dbVersion = 3;
         return new Promise((resolve, reject) => {
             if (typeof window === 'object') {
+                let dbShouldInit = false;
                 const idbOpenDBRequest = window.indexedDB.open(dbName, dbVersion);
 
                 idbOpenDBRequest.onupgradeneeded = (ev) => {
@@ -77,13 +78,14 @@ class IndexedDb {
                             }
                         }
                     };
+                    dbShouldInit = true;
                 }
 
                 idbOpenDBRequest.onsuccess = (ev) => {
                     nevaIdbLogOn &&
                         console.log('--- DBConnection::open::%s::onsuccess', dbName);
                     thisDBConnection.db = ev.target.result;
-                    resolve(ev.target.result);
+                    resolve(dbShouldInit);
                 }
 
                 idbOpenDBRequest.onerror = (ev) => {

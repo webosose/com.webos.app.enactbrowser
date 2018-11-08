@@ -44,10 +44,12 @@ class BookmarksBase {
         this.maxBookmarks = maxBookmarks;
     }
 
-    initialize(defaults = {}) {
-        const storage = this.storage;
-        return storage.initialize(defaults)
-            .then(() => storage.getAll())
+    initialize(defaults = null) {
+        let initDb = defaults !== null ?
+            this.storage.initialize(defaults) :
+            Promise.resolve();
+        return initDb
+            .then(() => this.storage.getAll())
             .then((result) => {
                 this.store.set(result);
                 return result;

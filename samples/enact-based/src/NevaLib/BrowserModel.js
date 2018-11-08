@@ -59,11 +59,11 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
         browser.tabPolicy = createTabPolicy(tabsModel, this.webViews);
 
         db.open(DB_NAME)
-        .then(() => {
-            history.initialize();
+        .then((dbShouldInit) => {
+            //history.initialize();
             return Promise.all([
                 browser.settings.initialize(config.defaultSettings),
-                bookmarks.initialize(config.defaultBookmarks),
+                bookmarks.initialize(dbShouldInit ? config.defaultBookmarks : null),
                 browser.recentlyClosed.initialize()
             ]);
         })
