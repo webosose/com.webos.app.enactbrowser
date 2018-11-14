@@ -243,17 +243,23 @@ class WebView extends EventEmitter {
 
     handleLoadStart = (ev) => {
         if (ev.isTopLevel) {
+            let titleIconChange = false;
             if (this.url !== ev.url) {
                 this._scriptInjectionAttempted = false;
                 this._scriptInjected = false;
-                this.emitEvent('titleChange', {title: ev.url});
-                this.emitEvent('iconChange', {icon: null});
+                titleIconChange = true;
             }
 
             this.url = ev.url;
             this.isAborted = false;
             this.isLoading = true;
             this.emitEvent('navStateChanged', this.getNavState());
+
+            if (titleIconChange) {
+                // events for changing title and icon should be after navState
+                this.emitEvent('titleChange', {title: ev.url});
+                this.emitEvent('iconChange', {icon: null});
+            }
         }
     }
 
