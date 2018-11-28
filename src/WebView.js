@@ -92,7 +92,7 @@ class WebView extends EventEmitter {
         if (!msgProxy) { // initializing global object, as it uses window
             msgProxy = new WebviewMessageProxy();
         }
-        this.webView = document.createElement('webview');
+        this.nativeWebview = document.createElement('webview');
         this._scriptInjectionAttempted = false;
         this.rootId = null;
         this.activeState = activeState;
@@ -113,17 +113,17 @@ class WebView extends EventEmitter {
     insertIntoDom(rootId) {
         this.rootId = rootId;
         if (this.activeState === 'activated') {
-            document.getElementById(rootId).appendChild(this.webView);
+            document.getElementById(rootId).appendChild(this.nativeWebview);
         }
     }
 
     activate() {
         console.log('ACTIVATE ' + this.rootId);
         if (this.activeState === 'deactivated' && this.rootId) {
-            document.getElementById(this.rootId).appendChild(this.webView);
+            document.getElementById(this.rootId).appendChild(this.nativeWebview);
         }
-        else if (this.activeState === 'suspended' && this.webView.resume) {
-            this.webView.resume();
+        else if (this.activeState === 'suspended' && this.nativeWebview.resume) {
+            this.nativeWebview.resume();
         }
         this.activeState = 'activated';
     }
@@ -131,8 +131,8 @@ class WebView extends EventEmitter {
     suspend() {
         console.log('SUSPEND ' + this.rootId);
         if (this.activeState === 'activated') {
-            if (this.webView.suspend) {
-               this.webView.suspend();
+            if (this.nativeWebview.suspend) {
+               this.nativeWebview.suspend();
             }
             else {
                 console.warn('Suspend/resume extension is not implemeted');
@@ -147,44 +147,44 @@ class WebView extends EventEmitter {
     deactivate() {
         console.log('DEACTIVATE ' + this.rootId);
         if (this.activeState !== 'deactivated') {
-            document.getElementById(this.rootId).removeChild(this.webView);
+            document.getElementById(this.rootId).removeChild(this.nativeWebview);
             this.activeState = 'deactivated';
         }
     }
 
     navigate(url) {
-        this.webView.src = url;
+        this.nativeWebview.src = url;
     }
 
     reloadStop() {
         if (this.isLoading) {
-            this.webView.stop();
+            this.nativeWebview.stop();
         }
         else {
-            this.webView.reload();
+            this.nativeWebview.reload();
         }
     }
 
     back() {
-        if (this.webView.canGoBack()) {
-            this.webView.back();
+        if (this.nativeWebview.canGoBack()) {
+            this.nativeWebview.back();
         }
     }
 
     forward() {
-        if (this.webView.canGoForward()) {
-            this.webView.forward();
+        if (this.nativeWebview.canGoForward()) {
+            this.nativeWebview.forward();
         }
     }
 
     setZoom(zoomFactor) {
         this.zoomFactor = zoomFactor;
-        this.webView.setZoom(zoomFactor);
+        this.nativeWebview.setZoom(zoomFactor);
     }
 
     captureVisibleRegion(params) {
         return new Promise((resolve) => {
-            this.webView.captureVisibleRegion(params, (dataUrl) => {
+            this.nativeWebview.captureVisibleRegion(params, (dataUrl) => {
                 resolve(dataUrl);
             });
         });
@@ -192,8 +192,8 @@ class WebView extends EventEmitter {
 
     getNavState() {
         return {
-            canGoBack: this.webView.canGoBack(),
-            canGoForward: this.webView.canGoForward(),
+            canGoBack: this.nativeWebview.canGoBack(),
+            canGoForward: this.nativeWebview.canGoForward(),
             isLoading: this.isLoading,
             url: this.url
         };
@@ -202,7 +202,7 @@ class WebView extends EventEmitter {
     // Clears browsing data for the webview partition
     clearData(options, types) {
         return new Promise((resolve) => {
-            this.webView.clearData(options, types, () => {
+            this.nativeWebview.clearData(options, types, () => {
                 resolve();
             });
         });
@@ -216,28 +216,28 @@ class WebView extends EventEmitter {
     }
 
     _isWebViewLoaded() {
-        return this.webView && Object.getOwnPropertyNames(this.webView).length !== 0;
+        return this.nativeWebview && Object.getOwnPropertyNames(this.nativeWebview).length !== 0;
     }
 
     _initWebView(params) {
         this.url = params.url ? params.url : '';
         this.isLoading = false;
         // partition assignment shoud be before any assignment of src
-        this.webView.partition = params.partition ? params.partition : '';
-        this.webView.src = this.url;
-        this.webView.addEventListener('loadstart', this.handleLoadStart);
-        this.webView.addEventListener('loadcommit', this.handleLoadCommit);
-        this.webView.addEventListener('loadstop', this.handleLoadStop);
-        this.webView.addEventListener('loadabort', this.handleLoadAbort);
-        this.webView.addEventListener('newwindow', this.handleNewWindow);
-        this.webView.addEventListener('zoomchange', (ev) =>
+        this.nativeWebview.partition = params.partition ? params.partition : '';
+        this.nativeWebview.src = this.url;
+        this.nativeWebview.addEventListener('loadstart', this.handleLoadStart);
+        this.nativeWebview.addEventListener('loadcommit', this.handleLoadCommit);
+        this.nativeWebview.addEventListener('loadstop', this.handleLoadStop);
+        this.nativeWebview.addEventListener('loadabort', this.handleLoadAbort);
+        this.nativeWebview.addEventListener('newwindow', this.handleNewWindow);
+        this.nativeWebview.addEventListener('zoomchange', (ev) =>
             this.emitEvent('zoomChange', ev));
-        this.webView.addEventListener('permissionrequest', this.handlePermissionRequest);
-        this.webView.addEventListener('dialog', (ev) =>
+        this.nativeWebview.addEventListener('permissionrequest', this.handlePermissionRequest);
+        this.nativeWebview.addEventListener('dialog', (ev) =>
             this.emitEvent('dialog', ev));
-        this.webView.setZoom(params.zoomFactor ? params.zoomFactor : 1);
+        this.nativeWebview.setZoom(params.zoomFactor ? params.zoomFactor : 1);
         if (params.useragentOverride) {
-            this.webView.setUserAgentOverride(params.useragentOverride);
+            this.nativeWebview.setUserAgentOverride(params.useragentOverride);
         }
     }
 
@@ -267,7 +267,7 @@ class WebView extends EventEmitter {
         if (ev.isTopLevel && !this.isAborted) {
             if (!this._scriptInjectionAttempted) {
                 // Try to inject title-update-messaging script
-                this.webView.executeScript(
+                this.nativeWebview.executeScript(
                     {'file': 'label.js'},
                     this.handleWebviewLabelScriptInjected
                 );
@@ -321,14 +321,14 @@ class WebView extends EventEmitter {
         } else if (!results || !results.length) {
             console.warn('Warning: Failed to inject title.js results are empty');
         } else {
-            // Send a message to the webView so it can get a reference to
+            // Send a message to the nativeWebview so it can get a reference to
             // the embedder
             this._scriptInjected = true;
             this.msgListenerId = msgProxy.addMessageListener();
             const obj = this;
             msgProxy.sendMessage(
                 this.msgListenerId,
-                this.webView,
+                this.nativeWebview,
                 {action: 'getTitle'},
                 (data) => {
                     if (data.title && data.title !== '[no title]') {

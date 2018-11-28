@@ -129,13 +129,13 @@ class BrowserBase {
             // other way there won't be any effect
             webView.addEventListener('navStateChanged', () => {
                 webView.clearData(options, types).then(() => {
-                    if (document.body.contains(webView.webView)) {
-                        document.body.removeChild(webView.webView);
+                    if (document.body.contains(webView.nativeWebview)) {
+                        document.body.removeChild(webView.nativeWebview);
                     }
                     resolve();
                 });
             });
-            document.body.appendChild(webView.webView);
+            document.body.appendChild(webView.nativeWebview);
         });
     }
 
