@@ -32,8 +32,8 @@ const HistoryMixin = (superclass) => (class extends superclass {
         ]);
     }
 
-    _createWebView(url) {
-        const state = super._createWebView(url);
+    _createWebView(url, window) {
+        const state = super._createWebView(url, window);
 
         const browser = this;
         this.webViews[state.id].addEventListener('navStateChanged', (navState) => {

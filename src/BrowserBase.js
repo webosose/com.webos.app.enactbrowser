@@ -139,18 +139,18 @@ class BrowserBase {
         });
     }
 
-    _createWebView(url) {
+    _createWebView(url, newWindow = null) {
         let state = TabsModel.createTabState(
             IdGenerator.getNextId(),
             TabTypes.WEBVIEW
         );
 
         state.navState.url = url ? getUrlWithPrefix(url) : 'about:blank';
-        state.title = TabTitles.INITIAL_WEBVIEW_TITLE;
+        state.title = url;
 
         const obj = this;
         const webview = this.webViews[state.id] = new WebView({
-            url: state.navState.url,
+            url: !newWindow ? state.navState.url : null,
             // Chromium creates distinct renderer process for each webview with
             // different partition name, but doesn't keep session between tabs.
             // I.e. you have entered login/pass for some website, if you want
@@ -159,8 +159,10 @@ class BrowserBase {
             // partition: BrowserConsts.WEBVIEW_PARTITION_PREF + state.id,
             partition: 'persist:default',
             zoomFactor: this.zoomFactor,
-            activeState: this.defaultWebviewState,
-            useragentOverride: this.useragentOverride
+            // Hack to fix advertisement self closing bpopunder tabs
+            activeState: newWindow ? 'activated' : this.defaultWebviewState,
+            useragentOverride: this.useragentOverride,
+            newWindow: newWindow
         });
         webview.addEventListener('navStateChanged', (navState) => {
             const tab = obj.tabs.getTab(state.id);
@@ -192,6 +194,9 @@ class BrowserBase {
             if (ev.newZoomFactor !== obj.zoomFactor) {
                 webview.setZoom(obj.zoomFactor);
             }
+        });
+        webview.addEventListener('close', (ev) => {
+            obj.closeTab(obj.tabs.getIndexById(state.id));
         });
 
         return state;
@@ -233,11 +238,11 @@ class BrowserBase {
             case 'new_foreground_tab':
                 selectNewTab = true;
             case 'new_background_tab':
-                const state = this._createWebView(ev.targetUrl);
+                const state = this._createWebView(ev.targetUrl, ev.window);
                 this.tabs.addTab(state, selectNewTab);
                 break;
             default:
-                console.warn('New tab request ' + ev.windowOpenDisposition + ' is discarded');
+                console.warn('New window request ' + ev.windowOpenDisposition + ' is discarded');
                 ev.window.discard();
         }
     }

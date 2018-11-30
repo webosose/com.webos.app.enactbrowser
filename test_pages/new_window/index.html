@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Data url test page</title>
+		<script type='text/javascript'>
+			function openNewForegroundTab() {
+				'use strict';
+				var newWindowRef = window.open('https://google.com');
+				setTimeout(() => newWindowRef.close(), 5000);
+			}
+			function openInCurrentTab() {
+				'use strict';
+				window.open('https://google.com', '_self');
+			}
+		</script>
+	</head>
+	<body>
+		<h1>Open new foregrand tab by script and then auto close it</h1>
+		<button onclick='openNewForegroundTab()'>Open new tab</button>
+		<h1>Open google in current tab by script</h1>
+		<button onclick='openInCurrentTab()'>Open google</button>
+	</body>
+</html>

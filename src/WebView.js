@@ -98,6 +98,7 @@ class WebView extends EventEmitter {
         this.activeState = activeState;
         this.isAborted = false;
         this.msgListenerId = null;
+
         // This code handles specific behavior of React
         // If we create webview and assign properties to it before first app render finished
         // this properties will be overwritten after this render
@@ -224,7 +225,15 @@ class WebView extends EventEmitter {
         this.isLoading = false;
         // partition assignment shoud be before any assignment of src
         this.nativeWebview.partition = params.partition ? params.partition : '';
-        this.nativeWebview.src = this.url;
+
+        if (!params.newWindow) {
+            this.nativeWebview.src = this.url;
+        }
+        else {
+            params.newWindow.attach(this.nativeWebview);
+        }
+
+        this.nativeWebview.addEventListener('close', this.handleClose);
         this.nativeWebview.addEventListener('loadstart', this.handleLoadStart);
         this.nativeWebview.addEventListener('loadcommit', this.handleLoadCommit);
         this.nativeWebview.addEventListener('loadstop', this.handleLoadStop);
@@ -239,6 +248,10 @@ class WebView extends EventEmitter {
         if (params.useragentOverride) {
             this.nativeWebview.setUserAgentOverride(params.useragentOverride);
         }
+    }
+
+    handleClose = (ev) => {
+        this.emitEvent('close', ev);
     }
 
     handleLoadStart = (ev) => {
