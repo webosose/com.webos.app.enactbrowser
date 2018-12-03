@@ -43,8 +43,6 @@ class IdbOrderedStorage {
     // initFunction return value:
     //     promise with number of initilized entries
     initialize(initFunction) {
-        const thisStorage = this;
-
         return this.db.transaction('readwrite', this.storeName, (store) => {
             return store.request('count', []).then((results) => {
                 let count = results[1];
@@ -53,7 +51,7 @@ class IdbOrderedStorage {
             });
         })
         .then((count) => {
-            thisStorage._count = count;
+            this._count = count;
             return count;
         });
     }
@@ -96,9 +94,8 @@ class IdbOrderedStorage {
         if (pos >= this._count) {
           return this.add(item);
         }
-        const thisStorage = this;
         return this.db.transaction('readwrite', this.storeName, (store) => {
-            const promise = _rangeRequest(store, pos, thisStorage._count - 1);
+            const promise = _rangeRequest(store, pos, this._count - 1);
             return promise.then((result) => {
                 const values = result[1];
                 const requests = [];
@@ -107,7 +104,7 @@ class IdbOrderedStorage {
 
                 requests.push(store.request('add', [{pos, ...item}]));
                 return Promise.all(requests).then((result) => {
-                    thisStorage._count++;
+                    this._count++;
                     return result;
                 });
             });
@@ -115,7 +112,6 @@ class IdbOrderedStorage {
     }
 
     move(from, to) {
-        const thisStorage = this;
         return this.db.transaction('readwrite', this.storeName, (store) =>
             _rangeRequest(store, from, to)
             .then((result) => {
@@ -123,7 +119,7 @@ class IdbOrderedStorage {
                 const requests = [];
 
                 const movedPos = from > to ? values.length - 1 : 0;
-                values[movedPos].pos = thisStorage.count();
+                values[movedPos].pos = this.count();
                 requests.push(store.request('put', [values[movedPos]]));
 
                 if (from > to) {
@@ -143,13 +139,12 @@ class IdbOrderedStorage {
 
     remove(ids) {
         return this.db.transaction('readwrite', this.storeName, (store) => {
-            const thisStorage = this;
             const requests = [];
             ids.forEach((id) => {
                 requests.push(store.request('delete', [id]));
             });
             return Promise.all(requests).then((result) => {
-                thisStorage._count -= ids.length;
+                this._count -= ids.length;
                 return result;
             });
         });

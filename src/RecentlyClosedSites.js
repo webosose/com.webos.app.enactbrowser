@@ -30,9 +30,8 @@ class RecentlyClosedSites {
     }
 
     remove(id) {
-        const rct = this;
         this.storage.remove(id).then((result) => {
-            rct.count--;
+            this.count--;
             return Promise.resolve(result);
         });
     }

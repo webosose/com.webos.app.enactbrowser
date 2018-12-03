@@ -338,14 +338,13 @@ class WebView extends EventEmitter {
             // the embedder
             this._scriptInjected = true;
             this.msgListenerId = msgProxy.addMessageListener();
-            const obj = this;
             msgProxy.sendMessage(
                 this.msgListenerId,
                 this.nativeWebview,
                 {action: 'getTitle'},
                 (data) => {
                     if (data.title && data.title !== '[no title]') {
-                        obj.emitEvent('titleChange', {title: data.title});
+                        this.emitEvent('titleChange', {title: data.title});
                     }
                     else {
                         console.warn(

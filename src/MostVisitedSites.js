@@ -129,13 +129,12 @@ class MostVisitedSites {
 
     handleTabUpdate = (ev) => {
         if (ev.diff.navState && ev.diff.navState.isLoading === false) {
-            const mostVisited = this;
             this.storage.add({
                     url:  ev.state.navState.url,
                     title:  ev.state.title
             }).then((entry) => {
-                if (mostVisited.thumbnails) {
-                    mostVisited.tryAddThumbnail(ev.state, entry);
+                if (this.thumbnails) {
+                    this.tryAddThumbnail(ev.state, entry);
                 }
             });
         }

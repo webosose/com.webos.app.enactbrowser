@@ -64,7 +64,6 @@ class HistoryBase {
     }
 
     clearByIds(ids, oncomplete) {
-        const obj = this;
         this.storage.clearByIds(ids, oncomplete);
     }
 

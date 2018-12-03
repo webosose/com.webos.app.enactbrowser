@@ -148,7 +148,6 @@ class BrowserBase {
         state.navState.url = url ? getUrlWithPrefix(url) : 'about:blank';
         state.title = url;
 
-        const obj = this;
         const webview = this.webViews[state.id] = new WebView({
             url: !newWindow ? state.navState.url : null,
             // Chromium creates distinct renderer process for each webview with
@@ -165,38 +164,38 @@ class BrowserBase {
             newWindow: newWindow
         });
         webview.addEventListener('navStateChanged', (navState) => {
-            const tab = obj.tabs.getTab(state.id);
+            const tab = this.tabs.getTab(state.id);
             if (tab.state.error && !webview.isAborted) {
                 tab.setError(null);
             }
             tab.setNavState(navState);
         });
-        webview.addEventListener('newWindowRequest', obj._handleNewWindowRequest);
+        webview.addEventListener('newWindowRequest', this._handleNewWindowRequest);
         webview.addEventListener('loadAbort', (ev) => {
             const isError =
                 ev.reason !== 'ERR_ABORTED' &&
                 webview.activeState !== 'deactivated';
             if (isError) {
-                const tab = obj.tabs.getTab(state.id);
+                const tab = this.tabs.getTab(state.id);
                 tab.setError(ev.reason);
             }
         });
         webview.addEventListener('titleChange', (ev) => {
-            const tab = obj.tabs.getTab(state.id);
-            obj._updateTitle(tab, ev.title);
+            const tab = this.tabs.getTab(state.id);
+            this._updateTitle(tab, ev.title);
         });
         webview.addEventListener('iconChange', (ev) => {
-            const tab = obj.tabs.getTab(state.id);
+            const tab = this.tabs.getTab(state.id);
             tab.setIcon(ev.icon);
         });
         // This code overrides webview's behavior of reseting zoom on navigation
         webview.addEventListener('zoomChange', (ev) => {
-            if (ev.newZoomFactor !== obj.zoomFactor) {
-                webview.setZoom(obj.zoomFactor);
+            if (ev.newZoomFactor !== this.zoomFactor) {
+                webview.setZoom(this.zoomFactor);
             }
         });
         webview.addEventListener('close', (ev) => {
-            obj.closeTab(obj.tabs.getIndexById(state.id));
+            this.closeTab(this.tabs.getIndexById(state.id));
         });
 
         return state;

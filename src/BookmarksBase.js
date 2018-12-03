@@ -70,10 +70,9 @@ class BookmarksBase {
             if (pos === undefined) {
                 pos = this.storage.count();
             }
-            const thisBookmarks = this;
             return this.storage.add(url, title, icon, pos)
                 .then((result) => {
-                    thisBookmarks.store.add(url, title, icon, pos); //?move to UI
+                    this.store.add(url, title, icon, pos); //?move to UI
                     return result;
                 });
         }
