@@ -43,17 +43,14 @@ class IdbOrderedStorage {
     // initFunction return value:
     //     promise with number of initilized entries
     initialize(initFunction) {
-        return this.db.transaction('readwrite', this.storeName, (store) => {
-            return store.request('count', []).then((results) => {
-                let count = results[1];
-                return initFunction(store, count)
-                    .then((newCount) => [results[0], newCount]);
-            });
-        })
-        .then((count) => {
-            this._count = count;
-            return count;
-        });
+        return this.db.transaction('readwrite', this.storeName, (store) =>
+            store.request('count', [])
+            .then(([requestSource, count]) => initFunction(store, count))
+            .then((newCount) => {
+                this._count = newCount;
+                return [null, newCount];
+            })
+        );
     }
 
     count() {
@@ -139,14 +136,30 @@ class IdbOrderedStorage {
 
     remove(ids) {
         return this.db.transaction('readwrite', this.storeName, (store) => {
-            const requests = [];
+            const deleteRequests = [];
             ids.forEach((id) => {
-                requests.push(store.request('delete', [id]));
+                deleteRequests.push(store.request('delete', [id]));
             });
-            return Promise.all(requests).then((result) => {
-                this._count -= ids.length;
-                return result;
-            });
+            const deleteItems = Promise.all(deleteRequests);
+
+            const rearrangePositions = ([,values]) => {
+                const updateRequests = [];
+                values.forEach((value, index) => {
+                    if (value.pos !== index) {
+                        value.pos = index;
+                        updateRequests.push(store.request('put', [value]));
+                    }
+                });
+                return Promise.all(updateRequests);
+            };
+
+            return deleteItems
+                .then(() => store.request('getAll', [], 'pos'))
+                .then(rearrangePositions)
+                .then((result) => {
+                    this._count -= ids.length;
+                    return result;
+                });
         });
     }
 
