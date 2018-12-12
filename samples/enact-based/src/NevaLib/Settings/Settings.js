@@ -34,10 +34,25 @@ const SettingsConsts = {
     HOME_PAGE: 'homePage'
 };
 
+const setStore = (store, values) => {
+    store.dispatch(setStartupPage(values[SettingsKeys.STARTUP_PAGE_KEY]));
+    store.dispatch(setHomePageUrl(values[SettingsKeys.HOME_PAGE_URL_KEY]));
+    store.dispatch(setSearchEngine(values[SettingsKeys.SEARCH_ENGINE_KEY]));
+    store.dispatch(setAlwaysShowBookmarks(values[SettingsKeys.ALWAYS_SHOW_BOOKMARKS_KEY]));
+    store.dispatch(setPrivateBrowsing(values[SettingsKeys.PRIVATE_BROWSING_KEY]));
+    store.dispatch(setSiteFiltering(values[SettingsKeys.SITE_FILTERING_KEY]));
+    store.dispatch(setPinNumber(values[SettingsKeys.PIN_NUMBER_KEY]));
+}
+
 // Reference implementation of settings
 class Settings extends SettingsBase {
     constructor(reduxStore, indexedDb, browser) {
-        super(new SettingsIdbStorage(indexedDb));
+        const storage = new SettingsIdbStorage(indexedDb);
+        super(storage);
+        indexedDb.didOpen.push(() => {
+            return storage.getAll()
+            .then((values) => setStore(reduxStore, values));
+        });
         this.store = reduxStore;
         this.browser = browser;
     }
@@ -46,13 +61,7 @@ class Settings extends SettingsBase {
         const store = this.store;
         return super.initialize(defaults)
             .then((initializedValues) => {
-                store.dispatch(setStartupPage(initializedValues[SettingsKeys.STARTUP_PAGE_KEY]));
-                store.dispatch(setHomePageUrl(initializedValues[SettingsKeys.HOME_PAGE_URL_KEY]));
-                store.dispatch(setSearchEngine(initializedValues[SettingsKeys.SEARCH_ENGINE_KEY]));
-                store.dispatch(setAlwaysShowBookmarks(initializedValues[SettingsKeys.ALWAYS_SHOW_BOOKMARKS_KEY]));
-                store.dispatch(setPrivateBrowsing(initializedValues[SettingsKeys.PRIVATE_BROWSING_KEY]));
-                store.dispatch(setSiteFiltering(initializedValues[SettingsKeys.SITE_FILTERING_KEY]));
-                store.dispatch(setPinNumber(initializedValues[SettingsKeys.PIN_NUMBER_KEY]));
+                setStore(this.store, initializedValues);
                 return initializedValues;
             });
     }

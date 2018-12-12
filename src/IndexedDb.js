@@ -37,6 +37,7 @@ class Store {
 class IndexedDb {
     constructor() {
         this.stores = {};
+        this.didOpen = [];
         this.db = null;
     }
 
@@ -56,7 +57,7 @@ class IndexedDb {
         const dbVersion = 3;
         return new Promise((resolve, reject) => {
             if (typeof window === 'object') {
-                let dbShouldInit = false;
+                let dbHasUpgraded = false;
                 const idbOpenDBRequest = window.indexedDB.open(dbName, dbVersion);
 
                 idbOpenDBRequest.onupgradeneeded = (ev) => {
@@ -78,14 +79,23 @@ class IndexedDb {
                             }
                         }
                     };
-                    dbShouldInit = true;
+                    dbHasUpgraded = true;
                 }
 
                 idbOpenDBRequest.onsuccess = (ev) => {
                     nevaIdbLogOn &&
                         console.log('--- DBConnection::open::%s::onsuccess', dbName);
                     thisDBConnection.db = ev.target.result;
-                    resolve(dbShouldInit);
+
+                    const didOpenPromises = [];
+                    this.didOpen.forEach((fn) => {
+                        didOpenPromises.push(fn(dbHasUpgraded));
+                    });
+
+                    Promise.all(didOpenPromises)
+                    .then(() => {
+                        resolve(dbHasUpgraded);
+                    });
                 }
 
                 idbOpenDBRequest.onerror = (ev) => {

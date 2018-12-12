@@ -14,15 +14,14 @@ class RecentlyClosedSites {
         this.maxTabsToStore = maxTabsToStore;
         this.count = null;
         this.earliestId = null;
+        this.storage.db.didOpen.push(() =>
+            this.storage.getAll().then((result) => {
+                this.count = result.length;
+                return undefined;
+            })
+        );
         tabs.addEventListener('delete', this.handleTabDelete);
         tabs.addEventListener('replace', this.handleTabReplace);
-    }
-
-    initialize() {
-        this.storage.getAll().then((result) => {
-            this.count = result.length;
-            return Promise.resolve(result);
-        });
     }
 
     getAll() {

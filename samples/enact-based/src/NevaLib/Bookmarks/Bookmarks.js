@@ -74,6 +74,13 @@ class Bookmarks extends BookmarksBase {
             new BookmarksIdbStorage(indexedDb),
             MAX_BOOKMARKS
         );
+        indexedDb.didOpen.push(() => {
+            return this.storage.getAll()
+            .then((result) => {
+                this.store.set(result);
+                return result;
+            });
+        });
     }
 }
 
