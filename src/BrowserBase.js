@@ -9,7 +9,7 @@
 /*global chrome*/
 /*global window*/
 /*global document*/
-import {getUrlWithPrefix} from './Utilities';
+import {getUrlWithPrefix, fetchFaviconAsDataUrl} from './Utilities';
 import {BrowserConsts} from './BrowserConsts.js';
 import {TabTitles, TabTypes} from './TabsConsts';
 import WebView from './WebView.js';
@@ -185,8 +185,15 @@ class BrowserBase {
             this._updateTitle(tab, ev.title);
         });
         webview.addEventListener('iconChange', (ev) => {
-            const tab = this.tabs.getTab(state.id);
-            tab.setIcon(ev.icon);
+            if (ev.favicons) {
+                fetchFaviconAsDataUrl(ev.favicons, ev.rootUrl)
+                .then((dataUrl) => {
+                    this.tabs.getTab(state.id).setIcon(dataUrl);
+                });
+            }
+            else {
+                this.tabs.getTab(state.id).setIcon(null);
+            }
         });
         // This code overrides webview's behavior of reseting zoom on navigation
         webview.addEventListener('zoomChange', (ev) => {

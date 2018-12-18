@@ -8,10 +8,12 @@
 
 /* main of utilities */
 
+import fetchFaviconAsDataUrl from './Favicon';
 import getUrlWithPrefix from './UrlPrefix';
 import EventEmitter from './EventEmitter';
 
 export {
+    fetchFaviconAsDataUrl,
     getUrlWithPrefix,
     EventEmitter
 };

@@ -8,6 +8,7 @@
 
 var webviewHostInjectionComplete = false;
 (function() {
+  'use strict';
   // Prevent multiple injection
   if (!webviewHostInjectionComplete) {
     var actions = {};
@@ -22,7 +23,7 @@ var webviewHostInjectionComplete = false;
       };
       embedder.postMessage(data, '*');
     };
-    actions["getTitle"] = function(ev) {
+    actions['getTitle'] = function(ev) {
       var data = ev.data;
       // bind embedder
       var embedder = ev.source;
@@ -48,6 +49,29 @@ var webviewHostInjectionComplete = false;
       }
 
       postTitle(embedder);
+    };
+
+    actions['getFavicons'] = function(ev) {
+      var links = document.querySelectorAll('link[rel*="icon"]');
+
+      var favicons = [];
+      links.forEach(function(link) {
+        favicons.push({
+          rel: link.getAttribute('rel'),
+          type: link.getAttribute('type'),
+          sizes: link.getAttribute('sizes'),
+          // unlike getAttribute('href') returns absolute url
+          href: link.href
+        });
+      });
+
+      var data = {
+        id: ev.data.id,
+        rootUrl: window.location.origin + '/',
+        favicons: favicons,
+        action: ev.data.action
+      };
+      ev.source.postMessage(data, '*');
     };
 
     // Wait for message that gives us a reference to the embedder

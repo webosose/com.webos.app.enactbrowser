@@ -55,30 +55,6 @@ class WebviewMessageProxy {
 
 let msgProxy = null;
 
-// workaround to obtain favicon of a website
-// in most cases it works
-function getFavicon(url, callback) {
-    const matches = url.match(/^(.*:\/\/[^\/]*)/);
-    if (matches) {
-        const requestUrl = matches[0] + '/favicon.ico';
-        const xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = () => {
-            if (xhr.readyState === 4 &&
-                xhr.status === 200 &&
-                xhr.response) {
-                const reader = new FileReader();
-                reader.onload = (ev) => {
-                    callback(ev.target.result);
-                }
-                reader.readAsDataURL(xhr.response);
-            }
-        };
-        xhr.responseType = "blob";
-        xhr.open('GET', requestUrl, true);
-        xhr.send();
-    }
-}
-
 // webview wrapper, which handles some code boilerplate
 // events:
 // - navStateChanged (new nav state)
@@ -271,7 +247,7 @@ class WebView extends EventEmitter {
             if (titleIconChange) {
                 // events for changing title and icon should be after navState
                 this.emitEvent('titleChange', {title: ev.url});
-                this.emitEvent('iconChange', {icon: null});
+                this.emitEvent('iconChange', {favicons: null});
             }
         }
     }
@@ -284,11 +260,6 @@ class WebView extends EventEmitter {
                     {'file': 'label.js'},
                     this.handleWebviewLabelScriptInjected
                 );
-                getFavicon(this.url, (binaryImg) => {
-                    if (binaryImg) {
-                        this.emitEvent('iconChange', {icon: binaryImg});
-                    }
-                });
                 this._scriptInjectionAttempted = true;
             }
             if (this.url !== ev.url) {
@@ -351,7 +322,19 @@ class WebView extends EventEmitter {
                             'Warning: Expected message from guest to contain title, but got:',
                             data);
                     }
-            });
+                }
+            );
+            msgProxy.sendMessage(
+                this.msgListenerId,
+                this.nativeWebview,
+                {action: 'getFavicons'},
+                (data) => {
+                    this.emitEvent(
+                        'iconChange',
+                        {favicons: data.favicons, rootUrl: data.rootUrl}
+                    );
+                }
+            );
         }
     }
 }

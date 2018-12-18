@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Favicon fetching test</title>
+        <link rel="icon" sizes="32x32" type="image/gif" href="/icons/icon.gif" />
+        <link rel="icon" sizes="32x32" type="image/png" href="/icons/icon.png" />
+        <link rel="icon" type="image/x-icon" href="second" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="apple">
+        <link rel="shortcut icon" href="ie6" />
+        <link rel="address bar icon" href="low ie" />
+    </head>
+    <body>
+        <h1>Favicon fetching tests</h1>
+        <table>
+            <tr>
+                <th style="width: 6em">Link</th>
+                <th>Test description</th>
+            </tr>
+            <tr>
+                <td><a href="/unique_png.html">test 1</a></td>
+                <td>
+<b>Given:</b> set of icons, with only one with <code>type="image/png"</code><br />
+<b>Expected:</b> Blue PNG icon of size 32x32 is loaded as tab icon <img style="vertical-align: middle" src="/icons/icon.png" />
+                </td>
+            </tr>
+            <tr>
+                <td><a href="/no_png.html">test 2</a></td>
+                <td>
+<b>Given:</b> set of icons, no png but some 32x32 pixels images.<br />
+<b>Expected:</b> Blue GIF icon of size 32x32 is loaded as tab icon <img style="vertical-align: middle" src="/icons/icon.gif" />
+                </td>
+            </tr>
+            <tr>
+                <td><a href="/png72.html">test 3</a></td>
+                <td>
+<b>Given:</b> set of icons, one png of size 72x72 pixels and some other icons of 32x32.<br />
+<b>Expected:</b> Blue PNG icon of size 72x72 is loaded as tab icon <img style="vertical-align: middle" src="/icons/icon72.png" />
+                </td>
+            </tr>
+            <tr>
+                <td><a href="/multi_size_ico.html">test 4</a></td>
+                <td>
+<b>Given:</b> set of icons, no png icons. No icons of size 32x32, except multisize .ico of "16x16 32x32 48x48"<br />
+<b>Expected:</b> Blue multisize ICO is loaded as tab icon <img style="vertical-align: middle" src="/icons/icon.ico" />
+                </td>
+            </tr>
+            <tr>
+                <td><a href="/default_favicon.html">test 5</a></td>
+                <td>
+<b>Given:</b> No icon links<br />
+<b>Expected:</b> Green ICO icon is loaded as tab icon from default root location '/favicon.ico'<img style="vertical-align: middle" src="/favicon.ico" />
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>
