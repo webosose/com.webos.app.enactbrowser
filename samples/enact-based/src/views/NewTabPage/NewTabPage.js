@@ -50,6 +50,11 @@ class NewTabPageBase extends Component {
 			this.retrieveRecentlyClosed();
 			this.retrieveMostVisited();
 		}
+		else if (this.props.isSelectedTab &&
+		         this.props.mostVisited.length !== nextProps.mostVisited.length) {
+			// user has deleted most visited site
+			this.retrieveMostVisited();
+		}
 	}
 
 	retrieveMostVisited = () => {
