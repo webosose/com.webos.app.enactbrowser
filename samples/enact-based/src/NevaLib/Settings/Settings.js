@@ -58,7 +58,6 @@ class Settings extends SettingsBase {
     }
 
     initialize(defaults) {
-        const store = this.store;
         return super.initialize(defaults)
             .then((initializedValues) => {
                 setStore(this.store, initializedValues);
