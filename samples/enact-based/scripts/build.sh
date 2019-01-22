@@ -13,4 +13,4 @@ ENACT_DEV=${ENACT_DEV:-enact}
 $ENACT_NPM install
 git apply enact-fix.patch
 $ENACT_DEV pack $1
-cp label.js manifest.json background.js dist
+cp label.js manifest.json background.js webos-locale.js defaults.js dist

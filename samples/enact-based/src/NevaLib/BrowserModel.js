@@ -1,4 +1,4 @@
-// Copyright (c) 2018 LG Electronics, Inc.
+// Copyright (c) 2018-2019 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -15,7 +15,7 @@ import {HistoryMixin} from 'js-browser-lib/HistoryMixin';
 import {TabTitles, TabTypes} from 'js-browser-lib/TabsConsts';
 
 import Bookmarks from './Bookmarks';
-import config from './Config.js';
+import Config from './Config';
 import History from './History';
 import MostVisited from './MostVisited';
 import PreviousSessionTabs from './PreviousSessionTabs';
@@ -24,6 +24,7 @@ import {ReduxTabs as TabsModel} from './Tabs';
 import createTabPolicy from './TabPolicyFactory';
 import SearchService from './SearchService';
 import {Settings, SettingsConsts} from './Settings';
+import {getDefaults} from './BrowserDefaults'
 
 Object.assign(TabTitles, {
     SITE_FILTERING_TITLE: 'Site Filtering'
@@ -50,15 +51,25 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
             tabsModel,
             defaultWebviewState: 'deactivated'
         });
+
         const browser = this;
+        browser.config = new Config();
         browser.settings = new Settings(store, db, browser);
-        browser.prevSessionTabs = new PreviousSessionTabs(this, db);
+        browser.prevSessionTabs = undefined;
         browser.recentlyClosed = new RecentlyClosed(store, db, tabsModel);
         browser.mostVisited = new MostVisited(store, db, tabsModel, browser.webViews);
         browser.searchService = new SearchService();
-        browser.tabPolicy = createTabPolicy(tabsModel, this.webViews);
+        browser.tabPolicy = undefined;
 
-        db.open(DB_NAME)
+
+        browser.config.initialize(getDefaults().config)
+        .then(() => {
+            browser.prevSessionTabs = new PreviousSessionTabs(
+                browser, db, browser.config.restorePrevSessionPolicy);
+            browser.tabPolicy = createTabPolicy(
+                tabsModel, browser.webViews, browser.config);
+            return db.open(DB_NAME);
+        })
         .then((dbHasCreated) => {
             if (dbHasCreated) {
                 return browser.initializeWithDefaults();
@@ -75,9 +86,10 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
     }
 
     initializeWithDefaults() {
+        const defaults = getDefaults();
         return Promise.all([
-            this.settings.initialize(config.defaultSettings),
-            this.bookmarks.initialize(config.defaultBookmarks)
+            this.settings.initialize(defaults.settings),
+            this.bookmarks.initialize(defaults.bookmarks)
         ]);
     }
 

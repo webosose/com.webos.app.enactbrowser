@@ -1,4 +1,4 @@
-// Copyright (c) 2018 LG Electronics, Inc.
+// Copyright (c) 2018-2019 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -9,10 +9,9 @@
 import PreviousTabs from 'js-browser-lib/PreviousTabs';
 import PreviousTabsIdbStorage from 'js-browser-lib/PreviousTabsIdbStorage';
 import LastSelectedTab from 'js-browser-lib/LastSelectedTab';
-import config from './Config.js';
 
 class PreviousSessionTabs {
-    constructor(browser, db, policy = config.restorePrevSessionPolicy) {
+    constructor(browser, db, policy) {
         this.browser = browser;
         this.policyImpl = null;
         switch (policy) {

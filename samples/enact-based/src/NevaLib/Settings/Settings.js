@@ -1,4 +1,4 @@
-// Copyright (c) 2018 LG Electronics, Inc.
+// Copyright (c) 2018-2019 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -7,7 +7,7 @@
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
 import SettingsBase from 'js-browser-lib/SettingsBase';
-import {SettingsIdbStorage} from 'js-browser-lib/SettingsIdbStorage';
+import {IdbKeyValueStorage} from 'js-browser-lib/IdbKeyValueStorage';
 import {
     setStartupPage,
     setHomePageUrl,
@@ -17,6 +17,8 @@ import {
     setSiteFiltering,
     setPinNumber
 } from  './actions.js';
+
+const STORE_NAME = 'settings';
 
 const SettingsKeys = {
     STARTUP_PAGE_KEY: 'startupPage',
@@ -47,7 +49,7 @@ const setStore = (store, values) => {
 // Reference implementation of settings
 class Settings extends SettingsBase {
     constructor(reduxStore, indexedDb, browser) {
-        const storage = new SettingsIdbStorage(indexedDb);
+        const storage = new IdbKeyValueStorage(STORE_NAME, indexedDb);
         super(storage);
         indexedDb.didOpen.push(() => {
             return storage.getAll()
