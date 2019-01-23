@@ -38,6 +38,10 @@ const
 		height: '100vh'
 	}
 
+const shouldShowUIErrorPage = (config, error) => {
+	return error && (!config.useBuiltInErrorPages || error === 'RENDERER_CRASHED');
+}
+
 const ContentViewBase = kind({
 	name: 'ContentView',
 	propTypes: {
@@ -80,7 +84,7 @@ const ContentViewBase = kind({
 							return (
 								<div key={id}>
 									<WebView style={style} id={id} webView={browser.webViews[id]} className={css.webView} />
-									{ tabs[id].error ?
+									{ shouldShowUIErrorPage(browser.config, tabs[id].error) ?
 										<ErrorPage style={style} errorMsg={tabs[id].error} /> :
 										null
 									}
