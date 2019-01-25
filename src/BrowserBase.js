@@ -204,6 +204,10 @@ class BrowserBase {
         webview.addEventListener('close', (ev) => {
             this.closeTab(this.tabs.getIndexById(state.id));
         });
+        webview.addEventListener('exit', (ev) => {
+            const tab = this.tabs.getTab(state.id);
+            tab.setError('RENDERER_CRASHED');
+        });
 
         return state;
     }

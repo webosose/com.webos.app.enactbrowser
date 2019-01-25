@@ -210,6 +210,7 @@ class WebView extends EventEmitter {
         }
 
         this.nativeWebview.addEventListener('close', this.handleClose);
+        this.nativeWebview.addEventListener('exit', this.handleExit);
         this.nativeWebview.addEventListener('loadstart', this.handleLoadStart);
         this.nativeWebview.addEventListener('loadcommit', this.handleLoadCommit);
         this.nativeWebview.addEventListener('loadstop', this.handleLoadStop);
@@ -228,6 +229,13 @@ class WebView extends EventEmitter {
 
     handleClose = (ev) => {
         this.emitEvent('close', ev);
+    }
+
+    handleExit = (ev) => {
+        this.emitEvent('exit', {
+            processID: ev.processID,
+            reason: ev.reason
+        });
     }
 
     handleLoadStart = (ev) => {
