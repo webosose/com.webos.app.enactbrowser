@@ -1,4 +1,4 @@
-// Copyright (c) 2018 LG Electronics, Inc.
+// Copyright (c) 2018-2019 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -192,6 +192,10 @@ class WebView extends EventEmitter {
         }
     }
 
+    terminate() {
+        return this.nativeWebview.terminate();
+    }
+
     _isWebViewLoaded() {
         return this.nativeWebview && Object.getOwnPropertyNames(this.nativeWebview).length !== 0;
     }
@@ -199,7 +203,7 @@ class WebView extends EventEmitter {
     _initWebView(params) {
         this.url = params.url ? params.url : '';
         this.isLoading = false;
-        // partition assignment shoud be before any assignment of src
+        // partition assignment should be before any assignment of src
         this.nativeWebview.partition = params.partition ? params.partition : '';
 
         if (!params.newWindow) {
@@ -221,6 +225,8 @@ class WebView extends EventEmitter {
         this.nativeWebview.addEventListener('permissionrequest', this.handlePermissionRequest);
         this.nativeWebview.addEventListener('dialog', (ev) =>
             this.emitEvent('dialog', ev));
+        this.nativeWebview.addEventListener('responsive', (ev) => this.emitEvent('responsive', ev));
+        this.nativeWebview.addEventListener('unresponsive', (ev) => this.emitEvent('unresponsive', ev));
         this.nativeWebview.setZoom(params.zoomFactor ? params.zoomFactor : 1);
         if (params.useragentOverride) {
             this.nativeWebview.setUserAgentOverride(params.useragentOverride);

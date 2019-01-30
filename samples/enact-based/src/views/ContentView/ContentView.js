@@ -39,7 +39,7 @@ const
 	}
 
 const shouldShowUIErrorPage = (config, error) => {
-	return error && (!config.useBuiltInErrorPages || error === 'RENDERER_CRASHED');
+	return error && (!config.useBuiltInErrorPages || error === 'RENDERER_CRASHED' || error === 'PAGE_UNRESPONSIVE');
 }
 
 const ContentViewBase = kind({

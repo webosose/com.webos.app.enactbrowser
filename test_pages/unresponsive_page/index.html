@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Unresponsive page test</title>
+    </head>
+    <body>
+        <h1>This page should be unresponsive for about 40 seconds</h1>
+        <h1>Browser will report that this page is unresponsive some time after it's loaded (about 30 seconds in Chrome for first appearance)</h1>
+        <script>
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    const start = Date.now();
+                    let current = start;
+                    while (current - start < 40000) {
+                        current = Date.now();
+                    }
+                }, 500);
+            });
+        </script>
+    </body>
+</html>
