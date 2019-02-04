@@ -213,6 +213,18 @@ class WebView extends EventEmitter {
             params.newWindow.attach(this.nativeWebview);
         }
 
+        // Workaround for TV, as browser should show pointer cursor for links
+        // but by default it shows normal pointer
+        if (params.useragentOverride &&
+            params.useragentOverride.indexOf('SmartTV') > -1) {
+            this.nativeWebview.addContentScripts([{
+                name: 'handForLinks',
+                matches: ['http://*/*', 'https://*/*'],
+                css: { code: 'a:-webkit-any-link { cursor: pointer; }' },
+                run_at: 'document_start'
+            }]);
+        }
+
         this.nativeWebview.addEventListener('close', this.handleClose);
         this.nativeWebview.addEventListener('exit', this.handleExit);
         this.nativeWebview.addEventListener('loadstart', this.handleLoadStart);
