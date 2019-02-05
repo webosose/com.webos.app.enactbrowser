@@ -207,6 +207,7 @@ class BrowserBase {
         webview.addEventListener('exit', (ev) => {
             const tab = this.tabs.getTab(state.id);
             tab.setError('RENDERER_CRASHED');
+        });
         webview.addEventListener('responsive', (ev) => {
             this.tabs.getTab(state.id).setError(null);
         });
