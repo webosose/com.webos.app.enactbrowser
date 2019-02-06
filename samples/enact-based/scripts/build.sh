@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -e
 
 ENACT_NPM=${ENACT_NPM:-npm}
 ENACT_DEV=${ENACT_DEV:-enact}
