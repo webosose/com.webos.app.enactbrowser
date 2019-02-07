@@ -1,4 +1,4 @@
-// Copyright (c) 2018 LG Electronics, Inc.
+// Copyright (c) 2018-2019 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -34,6 +34,9 @@ class Menu extends Component {
 			<Item onClick={this.openHistory}>{$L('History')}</Item>
 			<Item onClick={this.openBookmarks}>{$L('Bookmarks')}</Item>
 			<Item onClick={this.openSettings}>{$L('Settings')}</Item>
+			{this.props.browser.devSettingsEnabled &&
+				<Item onClick={this.openDevSettings}>DevSettings</Item>
+			}
 		</div>
 	)
 
@@ -56,6 +59,10 @@ class Menu extends Component {
 
 	openSettings = () => {
 		this.props.browser.openSettings();
+	}
+
+	openDevSettings = () => {
+		this.props.browser.openDevSettings();
 	}
 
 	render () {

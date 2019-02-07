@@ -1,4 +1,4 @@
-// Copyright (c) 2018 LG Electronics, Inc.
+// Copyright (c) 2018-2019 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -19,6 +19,7 @@ import ri from '@enact/ui/resolution';
 
 import BookmarkBar from '../../components/BookmarkBar';
 import BookmarkManager from '../BookmarkManager';
+import DevSettings from '../DevSettings';
 import ErrorPage from '../ErrorPage';
 import History from '../History';
 import NewTabPage from '../NewTabPage';
@@ -91,6 +92,13 @@ const ContentViewBase = kind({
 								</div>
 							);
 						}
+						case TabTypes.DEV_SETTINGS:
+							return <DevSettings
+								style={style}
+								key={id}
+								config={browser.config}
+								tabPolicy={browser.tabPolicy.constructor.name}
+							/>;
 						case TabTypes.NEW_TAB_PAGE:
 							return <NewTabPage style={style} key={id} browser={browser} isSelectedTab={id === selectedId} />;
 						case TabTypes.SETTINGS:

@@ -27,12 +27,19 @@ import {Settings, SettingsConsts} from './Settings';
 import {getDefaults} from './BrowserDefaults'
 
 Object.assign(TabTitles, {
-    SITE_FILTERING_TITLE: 'Site Filtering'
+    SITE_FILTERING_TITLE: 'Site Filtering',
+    DEV_SETTINGS_TITLE: 'Developer Settings'
+});
+
+Object.assign(TabTypes, {
+    DEV_SETTINGS: 'devSettings'
 });
 
 Object.assign(BrowserConsts, {
-    SITE_FILTERING_URL: '',
-    SITE_FILTERING_ID: 'sitefiltering'
+    SITE_FILTERING_URL: 'site-filtering',
+    SITE_FILTERING_ID: 'sitefiltering',
+    DEV_SETTINGS_ID: 'devsettings',
+    DEV_SETTINGS_URL: 'dev-settings'
 });
 
 const DB_NAME = 'BrowserPersistent';
@@ -60,6 +67,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
         browser.mostVisited = new MostVisited(store, db, tabsModel, browser.webViews);
         browser.searchService = new SearchService();
         browser.tabPolicy = undefined;
+        browser.devSettingsEnabled = false;
 
 
         browser.config.initialize(getDefaults().config)
@@ -108,6 +116,9 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
                 hasTargetInLaunchParams = true;
                 this.createTab(TabTypes.NEW_TAB_PAGE);
             }
+            if (launchArgs.devSettings) {
+                this.devSettingsEnabled = true;
+            }
         }
         if (!hasTargetInLaunchParams) {
             const startupPage = this.settings.getStartupPage();
@@ -141,6 +152,9 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
             case TabTypes.BOOKMARKS:
                 this.openBookmarks();
                 break;
+            case TabTypes.DEV_SETTINGS:
+                this.openDevSettings();
+                break;
             default:
                 console.warn('Unknown tab type: ' + type);
         }
@@ -152,6 +166,18 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
             this.mostVisited.removeAll(),
             this.recentlyClosed.removeAll()
         ]);
+    }
+
+    openDevSettings() {
+        this.tabs.addTab(
+            this._createManagePage(
+                BrowserConsts.DEV_SETTINGS_ID,
+                TabTypes.DEV_SETTINGS,
+                TabTitles.DEV_SETTINGS_TITLE,
+                BrowserConsts.DEV_SETTINGS_URL
+                ),
+            true
+        );
     }
 
     openSettings() {

@@ -200,12 +200,16 @@ class Config {
 
     setRestorePrevSessionPolicy(newValue) {
         if ('onlyLastTab' !== newValue && 'allTabs' !== newValue) {
-            return Promise.reject('Should be "onlyLastTab" or "allTabs"');
+            return Promise.reject(`Should be "onlyLastTab" or "allTabs" but was ${newValue}`);
         }
         return this._storage.set({restorePrevSessionPolicy: newValue})
             .then(() => {
                 this._restorePrevSessionPolicy = newValue;
             });
+    }
+
+    get versionString() {
+        return chrome.runtime.getManifest().version_name;
     }
 }
 

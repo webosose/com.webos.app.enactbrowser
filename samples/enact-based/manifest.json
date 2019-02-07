@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
   "name": "Enact-based Browser Sample",
-  "minimum_chrome_version": "35.0.0.0",
   "version": "0.1",
+  "version_name": "v0.1 [build_number_placeholder]",
   "app": {
     "background": {
       "scripts": ["background.js"]
