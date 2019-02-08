@@ -1,4 +1,4 @@
-// Copyright (c) 2018 LG Electronics, Inc.
+// Copyright (c) 2018-2019 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -156,6 +156,7 @@ class TabsBase extends EventEmitter {
             const oldState = this.getTab(oldId).state;
             this.store.replace(index, newState);
             this.emitEvent('replace', {index, state: newState, oldState});
+            this.emitEvent('delete', {state: oldState});
             this._callOnContentDelete(oldId);
             if (this.store.getSelectedIndex() === index) {
                 this.emitEvent('select', {index, state: newState});

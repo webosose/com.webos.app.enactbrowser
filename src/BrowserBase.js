@@ -1,4 +1,4 @@
-// Copyright (c) 2018 LG Electronics, Inc.
+// Copyright (c) 2018-2019 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -202,7 +202,12 @@ class BrowserBase {
             }
         });
         webview.addEventListener('close', (ev) => {
-            this.closeTab(this.tabs.getIndexById(state.id));
+            if (this.tabs.count() !== 1) {
+                this.closeTab(this.tabs.getIndexById(state.id));
+            }
+            else {
+                this.tabs.replaceTab(0, this._createNewTabPage());
+            }
         });
         webview.addEventListener('exit', (ev) => {
             const tab = this.tabs.getTab(state.id);
