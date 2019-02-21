@@ -127,15 +127,15 @@ class BrowserBase {
             });
             // we can't call webview's methods until it inserted into DOM
             // other way there won't be any effect
-            webView.addEventListener('navStateChanged', () => {
+            webView.addEventListener('navstatechanged', () => {
                 webView.clearData(options, types).then(() => {
-                    if (document.body.contains(webView.nativeWebview)) {
-                        document.body.removeChild(webView.nativeWebview);
+                    if (document.body.contains(webView)) {
+                        document.body.removeChild(webView);
                     }
                     resolve();
                 });
             });
-            document.body.appendChild(webView.nativeWebview);
+            document.body.appendChild(webView);
         });
     }
 
@@ -163,30 +163,33 @@ class BrowserBase {
             useragentOverride: this.useragentOverride,
             newWindow: newWindow
         });
-        webview.addEventListener('navStateChanged', (navState) => {
+        webview.addEventListener('navstatechanged', (ev) => {
             const tab = this.tabs.getTab(state.id);
             if (tab.state.error && !webview.isAborted) {
                 tab.setError(null);
             }
-            tab.setNavState(navState);
+            tab.setNavState(ev.detail);
         });
-        webview.addEventListener('newWindowRequest', this._handleNewWindowRequest);
-        webview.addEventListener('loadAbort', (ev) => {
-            const isError =
-                ev.reason !== 'ERR_ABORTED' &&
-                webview.activeState !== 'deactivated';
-            if (isError) {
-                const tab = this.tabs.getTab(state.id);
-                tab.setError(ev.reason);
+        webview.addEventListener('newwindow', this._handleNewWindow);
+        webview.addEventListener('loadabort', (ev) => {
+            if (ev.isTopLevel) {
+                const {reason} = ev;
+                const isError =
+                    reason !== 'ERR_ABORTED' &&
+                    webview.activeState !== 'deactivated';
+                if (isError) {
+                    const tab = this.tabs.getTab(state.id);
+                    tab.setError(reason);
+                }
             }
         });
-        webview.addEventListener('titleChange', (ev) => {
+        webview.addEventListener('titlechange', (ev) => {
             const tab = this.tabs.getTab(state.id);
-            this._updateTitle(tab, ev.title);
+            this._updateTitle(tab, ev.detail.title);
         });
-        webview.addEventListener('iconChange', (ev) => {
-            if (ev.favicons) {
-                fetchFaviconAsDataUrl(ev.favicons, ev.rootUrl)
+        webview.addEventListener('iconchange', (ev) => {
+            if (ev.detail.favicons) {
+                fetchFaviconAsDataUrl(ev.detail.favicons, ev.detail.rootUrl)
                 .then((dataUrl) => {
                     this.tabs.getTab(state.id).setIcon(dataUrl);
                 });
@@ -196,12 +199,12 @@ class BrowserBase {
             }
         });
         // This code overrides webview's behavior of reseting zoom on navigation
-        webview.addEventListener('zoomChange', (ev) => {
+        webview.addEventListener('zoomchange', (ev) => {
             if (ev.newZoomFactor !== this.zoomFactor) {
                 webview.setZoom(this.zoomFactor);
             }
         });
-        webview.addEventListener('close', (ev) => {
+        webview.addEventListener('close', () => {
             if (this.tabs.count() !== 1) {
                 this.closeTab(this.tabs.getIndexById(state.id));
             }
@@ -209,16 +212,18 @@ class BrowserBase {
                 this.tabs.replaceTab(0, this._createNewTabPage());
             }
         });
-        webview.addEventListener('exit', (ev) => {
+        webview.addEventListener('exit', () => {
             const tab = this.tabs.getTab(state.id);
+            // TODO: should reason 'normal' be considered?
             tab.setError('RENDERER_CRASHED');
         });
-        webview.addEventListener('responsive', (ev) => {
+        webview.addEventListener('responsive', () => {
             this.tabs.getTab(state.id).setError(null);
         });
-        webview.addEventListener('unresponsive', (ev) => {
+        webview.addEventListener('unresponsive', () => {
             this.tabs.getTab(state.id).setError('PAGE_UNRESPONSIVE');
         });
+        webview.addEventListener('permissionrequest', this._handlePermissionRequest);
 
         return state;
     }
@@ -247,7 +252,7 @@ class BrowserBase {
     }
 
     // handles new tab request from webView
-    _handleNewWindowRequest = (ev) => {
+    _handleNewWindow = (ev) => {
         if (this.tabs.maxTabs === this.tabs.count() &&
             this.tabs.maxTabs !== 0) {
             ev.window.discard();
@@ -276,6 +281,17 @@ class BrowserBase {
         if (this.webViews[contentId]) {
             this.webViews[contentId].beforeWebviewDelete();
             delete this.webViews[contentId];
+        }
+    }
+
+    _handlePermissionRequest = (ev) => {
+        switch (ev.permission) {
+            case 'fullscreen':
+                ev.request.allow();
+                break;
+            default:
+                console.warn("Permission request recieved: " + ev.permission);
+                ev.request.deny();
         }
     }
 

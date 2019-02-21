@@ -7,9 +7,6 @@
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
 /*global window*/
-/*global XMLHttpRequest*/
-
-import {EventEmitter} from './Utilities';
 
 class WebviewMessageProxy {
     constructor() {
@@ -55,61 +52,30 @@ class WebviewMessageProxy {
 
 let msgProxy = null;
 
-// webview wrapper, which handles some code boilerplate
-// events:
-// - navStateChanged (new nav state)
-// - newWindowRequest
-// - titleChange
-// - iconChange
-// - loadAbort
-class WebView extends EventEmitter {
-    constructor({activeState, ...rest}) {
-        super();
-        if (!msgProxy) { // initializing global object, as it uses window
-            msgProxy = new WebviewMessageProxy();
-        }
-        this.nativeWebview = document.createElement('webview');
-        this._scriptInjectionAttempted = false;
-        this.rootId = null;
-        this.activeState = activeState;
-        this.isAborted = false;
-        this.msgListenerId = null;
-
-        // This code handles specific behavior of React
-        // If we create webview and assign properties to it before first app render finished
-        // this properties will be overwritten after this render
-        if (this._isWebViewLoaded()) {
-            this._initWebView(rest);
-        }
-        else {
-            document.addEventListener('DOMContentLoaded', () => { this._initWebView(params); });
-        }
-    }
-
-    // Shoud be called when DOM is ready
-    insertIntoDom(rootId) {
+const WebViewMixinBase = {
+    insertIntoDom: function WebViewMixin_insertIntoDom(rootId) { // TODO: remove unnecessary function
         this.rootId = rootId;
         if (this.activeState === 'activated') {
-            document.getElementById(rootId).appendChild(this.nativeWebview);
+            document.getElementById(rootId).appendChild(this);
         }
-    }
+    },
 
-    activate() {
+    activate: function WebViewMixin_activate() {
         console.log('ACTIVATE ' + this.rootId);
         if (this.activeState === 'deactivated' && this.rootId) {
-            document.getElementById(this.rootId).appendChild(this.nativeWebview);
+            document.getElementById(this.rootId).appendChild(this); // TODO: change to reload()
         }
-        else if (this.activeState === 'suspended' && this.nativeWebview.resume) {
-            this.nativeWebview.resume();
+        else if (this.activeState === 'suspended' && WebView.prototype.resume) {
+            WebView.prototype.resume.call(this);
         }
         this.activeState = 'activated';
-    }
+    },
 
-    suspend() {
+    suspend: function WebViewMixin_suspend() {
         console.log('SUSPEND ' + this.rootId);
         if (this.activeState === 'activated') {
-            if (this.nativeWebview.suspend) {
-               this.nativeWebview.suspend();
+            if (WebView.prototype.suspend) {
+                WebView.prototype.suspend.call(this);
             }
             else {
                 console.warn('Suspend/resume extension is not implemeted');
@@ -119,105 +85,100 @@ class WebView extends EventEmitter {
         else if (this.activeState === 'deactivated') {
             console.error('Can\'t suspend webview from deactivated state');
         }
-    }
+    },
 
-    deactivate() {
+    deactivate: function WebViewMixin_deactivate() {
         console.log('DEACTIVATE ' + this.rootId);
         if (this.activeState !== 'deactivated') {
-            document.getElementById(this.rootId).removeChild(this.nativeWebview);
+            document.getElementById(this.rootId).removeChild(this); // TODO: change to terminate
             this.activeState = 'deactivated';
         }
-    }
+    },
 
-    navigate(url) {
-        this.nativeWebview.src = url;
-    }
+    navigate: function WebViewMixin_navigate(url) {
+        this.src = url;
+    },
 
-    reloadStop() {
+    reloadStop: function WebViewMixin_reloadStop() {
         if (this.isLoading) {
-            this.nativeWebview.stop();
+            WebView.prototype.stop.call(this);
         }
         else {
-            this.nativeWebview.reload();
+            WebView.prototype.reload.call(this);
         }
-    }
+    },
 
-    back() {
-        if (this.nativeWebview.canGoBack()) {
-            this.nativeWebview.back();
+    back: function WebViewMixin_back() {
+        if (this.canGoBack()) {
+            WebView.prototype.back.call(this);
         }
-    }
+    },
 
-    forward() {
-        if (this.nativeWebview.canGoForward()) {
-            this.nativeWebview.forward();
+    forward: function WebViewMixin_forward() {
+        if (this.canGoForward()) {
+            WebView.prototype.forward.call(this);
         }
-    }
+    },
 
-    setZoom(zoomFactor) {
+    setZoom: function WebViewMixin_setZoom(zoomFactor) {
         this.zoomFactor = zoomFactor;
-        this.nativeWebview.setZoom(zoomFactor);
-    }
+        WebView.prototype.setZoom.call(this, zoomFactor);
+    },
 
-    captureVisibleRegion(params) {
+    captureVisibleRegion: function WebViewMixin_captureVisibleRegion(params) {
         return new Promise((resolve) => {
-            this.nativeWebview.captureVisibleRegion(params, (dataUrl) => {
-                resolve(dataUrl);
+            WebView.prototype.captureVisibleRegion.call(
+                this, params, (dataUrl) => {
+                    resolve(dataUrl);
             });
         });
-    }
+    },
 
-    getNavState() {
+    getNavState: function WebViewMixin_getNavState() {
         return {
-            canGoBack: this.nativeWebview.canGoBack(),
-            canGoForward: this.nativeWebview.canGoForward(),
+            canGoBack: this.canGoBack(),
+            canGoForward: this.canGoForward(),
             isLoading: this.isLoading,
             url: this.url
         };
-    }
+    },
 
     // Clears browsing data for the webview partition
-    clearData(options, types) {
+    clearData: function WebViewMixin_clearData(options, types) {
         return new Promise((resolve) => {
-            this.nativeWebview.clearData(options, types, () => {
-                resolve();
+            WebView.prototype.clearData.call(
+                this, options, types, () => {
+                    resolve();
             });
         });
-    }
+    },
 
     // should be called before webview destruction to prevent memory leak
-    beforeWebviewDelete() {
+    beforeWebviewDelete: function WebViewMixin_beforeWebviewDelete() {
         if (this.msgListenerId !== null) {
             msgProxy.removeMessageListener(this.msgListenerId);
         }
-    }
+    },
 
-    terminate() {
-        return this.nativeWebview.terminate();
-    }
-
-    _isWebViewLoaded() {
-        return this.nativeWebview && Object.getOwnPropertyNames(this.nativeWebview).length !== 0;
-    }
-
-    _initWebView(params) {
+    _initWebView: function WebViewMixin_initWebView(params) {
         this.url = params.url ? params.url : '';
         this.isLoading = false;
         // partition assignment should be before any assignment of src
-        this.nativeWebview.partition = params.partition ? params.partition : '';
+        this.partition = params.partition ? params.partition : '';
 
         if (!params.newWindow) {
-            this.nativeWebview.src = this.url;
+            this.src = this.url;
         }
         else {
-            params.newWindow.attach(this.nativeWebview);
+            params.newWindow.attach(this);
         }
 
         // Workaround for TV, as browser should show pointer cursor for links
         // but by default it shows normal pointer
+        // TODO: move to BrowserBase
         if (params.useragentOverride &&
             params.useragentOverride.indexOf('SmartTV') > -1) {
-            this.nativeWebview.addContentScripts([{
+            this.addContentScripts([{
                 name: 'handForLinks',
                 matches: ['http://*/*', 'https://*/*'],
                 css: { code: 'a:-webkit-any-link { cursor: pointer; }' },
@@ -225,38 +186,19 @@ class WebView extends EventEmitter {
             }]);
         }
 
-        this.nativeWebview.addEventListener('close', this.handleClose);
-        this.nativeWebview.addEventListener('exit', this.handleExit);
-        this.nativeWebview.addEventListener('loadstart', this.handleLoadStart);
-        this.nativeWebview.addEventListener('loadcommit', this.handleLoadCommit);
-        this.nativeWebview.addEventListener('loadstop', this.handleLoadStop);
-        this.nativeWebview.addEventListener('loadabort', this.handleLoadAbort);
-        this.nativeWebview.addEventListener('newwindow', this.handleNewWindow);
-        this.nativeWebview.addEventListener('zoomchange', (ev) =>
-            this.emitEvent('zoomChange', ev));
-        this.nativeWebview.addEventListener('permissionrequest', this.handlePermissionRequest);
-        this.nativeWebview.addEventListener('dialog', (ev) =>
-            this.emitEvent('dialog', ev));
-        this.nativeWebview.addEventListener('responsive', (ev) => this.emitEvent('responsive', ev));
-        this.nativeWebview.addEventListener('unresponsive', (ev) => this.emitEvent('unresponsive', ev));
-        this.nativeWebview.setZoom(params.zoomFactor ? params.zoomFactor : 1);
+        this.addEventListener('loadstart', this.handleLoadStart.bind(this));
+        this.addEventListener('loadcommit', this.handleLoadCommit.bind(this));
+        this.addEventListener('loadstop', this.handleLoadStop.bind(this));
+        this.addEventListener('loadabort', this.handleLoadAbort.bind(this));
+
+        this.setZoom(params.zoomFactor ? params.zoomFactor : 1);
         if (params.useragentOverride) {
-            this.nativeWebview.setUserAgentOverride(params.useragentOverride);
+            this.setUserAgentOverride(params.useragentOverride);
         }
-    }
 
-    handleClose = (ev) => {
-        this.emitEvent('close', ev);
-    }
+    },
 
-    handleExit = (ev) => {
-        this.emitEvent('exit', {
-            processID: ev.processID,
-            reason: ev.reason
-        });
-    }
-
-    handleLoadStart = (ev) => {
+    handleLoadStart: function WebViewMixin_handleLoadStart(ev) {
         if (ev.isTopLevel) {
             let titleIconChange = false;
             if (this.url !== ev.url) {
@@ -268,80 +210,74 @@ class WebView extends EventEmitter {
             this.url = ev.url;
             this.isAborted = false;
             this.isLoading = true;
-            this.emitEvent('navStateChanged', this.getNavState());
+
+            const event = new CustomEvent('navstatechanged', {detail: {...this.getNavState()}});
+            this.dispatchEvent(event);
 
             if (titleIconChange) {
                 // events for changing title and icon should be after navState
-                this.emitEvent('titleChange', {title: ev.url});
-                this.emitEvent('iconChange', {favicons: null});
+                // TODO: move to BrowserBase and remove
+                const event1 = new CustomEvent('titlechange', {detail: {title: ev.url}});
+                this.dispatchEvent(event1);
+
+                const event2 = new CustomEvent('iconchange', {detail: {favicons: null}});
+                this.dispatchEvent(event2);
             }
         }
-    }
+    },
 
-    handleLoadCommit = (ev) => {
+    handleLoadCommit: function WebViewMixin_handleLoadCommit(ev) {
         if (ev.isTopLevel && !this.isAborted) {
             if (!this._scriptInjectionAttempted) {
                 // Try to inject title-update-messaging script
-                this.nativeWebview.executeScript(
+                this.executeScript(
                     {'file': 'label.js'},
-                    this.handleWebviewLabelScriptInjected
+                    this.handleLabelScriptInjected.bind(this)
                 );
                 this._scriptInjectionAttempted = true;
             }
             if (this.url !== ev.url) {
                 this.url = ev.url;
-                this.emitEvent('navStateChanged', this.getNavState());
+                const event = new CustomEvent('navstatechanged', {detail: {...this.getNavState()}});
+                this.dispatchEvent(event);
             }
         }
-    }
+    },
 
-    handleLoadStop = () => {
+    handleLoadStop: function WebViewMixin_handleLoadStop() {
         this.isLoading = false;
-        this.emitEvent('navStateChanged', this.getNavState());
-    }
 
-    handleLoadAbort = (ev) => {
+        const event = new CustomEvent('navstatechanged', {detail: {...this.getNavState()}});
+        this.dispatchEvent(event);
+    },
+
+    handleLoadAbort: function WebViewMixin_handleLoadAbort(ev) {
         if (ev.isTopLevel) {
             this.isAborted = true;
-            this.emitEvent('loadAbort', {reason: ev.reason});
         }
         else {
             console.warn("The load has aborted with error " + ev.code + " : " + ev.reason + ' url = ' + ev.url);
         }
-    }
+    },
 
-    handlePermissionRequest = (ev) => {
-        switch (ev.permission) {
-            case 'fullscreen':
-                ev.request.allow();
-                break;
-            default:
-                console.warn("Permission request recieved: " + ev.permission);
-                ev.request.deny();
-        }
-    }
-
-    handleNewWindow = (ev)  => {
-        this.emitEvent('newWindowRequest', ev);
-    }
-
-    handleWebviewLabelScriptInjected = (results) => {
+    handleLabelScriptInjected: function handleLabelScriptInjected(results) {
         if (chrome.runtime.lastError) {
             console.warn('Warning: Failed to inject title.js : ' + chrome.runtime.lastError.message);
         } else if (!results || !results.length) {
             console.warn('Warning: Failed to inject title.js results are empty');
         } else {
-            // Send a message to the nativeWebview so it can get a reference to
+            // Send a message to the <webview> so it can get a reference to
             // the embedder
             this._scriptInjected = true;
             this.msgListenerId = msgProxy.addMessageListener();
             msgProxy.sendMessage(
                 this.msgListenerId,
-                this.nativeWebview,
+                this,
                 {action: 'getTitle'},
                 (data) => {
                     if (data.title && data.title !== '[no title]') {
-                        this.emitEvent('titleChange', {title: data.title});
+                        const event = new CustomEvent('titlechange', {detail: {title: data.title}});
+                        this.dispatchEvent(event);
                     }
                     else {
                         console.warn(
@@ -352,17 +288,50 @@ class WebView extends EventEmitter {
             );
             msgProxy.sendMessage(
                 this.msgListenerId,
-                this.nativeWebview,
+                this,
                 {action: 'getFavicons'},
                 (data) => {
-                    this.emitEvent(
-                        'iconChange',
-                        {favicons: data.favicons, rootUrl: data.rootUrl}
+                    const event = new CustomEvent(
+                        'iconchange',
+                        {detail: {favicons: data.favicons, rootUrl: data.rootUrl}}
                     );
+                    this.dispatchEvent(event);
                 }
             );
         }
     }
 }
 
-export default WebView;
+function WebViewMixin(webView, {activeState, ...rest}) {
+    Object.assign(webView, WebViewMixinBase);
+
+    // TODO: use local property and Singleton
+    if (!msgProxy) { // initializing global object, as it uses window
+        msgProxy = new WebviewMessageProxy();
+    }
+
+    webView.nativeWebview = webView; // TODO: remove after full refactoring
+    webView._scriptInjectionAttempted = false;
+    webView.rootId = null;
+    webView.activeState = activeState;
+    webView.isAborted = false;
+    webView.msgListenerId = null;
+
+    webView._initWebView(rest);
+
+    return webView;
+}
+
+/*
+    <webview> tag can't be extended via customElement.define(), it seems
+    that when custom <webview> is created it can't insert shadow dom (exception
+    is thrown). The only possible way to extend functionality of <webview> is
+    to add new properties dynamicaly to newly created instance of <webview>.
+    The drawback of this solution is that we can't use <webview> tag in markup.
+    We should create webview via CustomWebView function and insert it to DOM.
+*/
+function CustomWebView(params) {
+    return WebViewMixin(document.createElement('webview'), params);
+}
+
+export default CustomWebView;
