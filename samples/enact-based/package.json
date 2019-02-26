@@ -45,5 +45,8 @@
     "react-dom": "^16.3.2",
     "redux": "^3.7.2",
     "react-redux": "^5.0.7"
+  },
+  "devDependencies": {
+    "minimist": "^1.2.0"
   }
 }
