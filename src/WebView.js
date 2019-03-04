@@ -310,7 +310,6 @@ function WebViewMixin(webView, {activeState, ...rest}) {
         msgProxy = new WebviewMessageProxy();
     }
 
-    webView.nativeWebview = webView; // TODO: remove after full refactoring
     webView._scriptInjectionAttempted = false;
     webView.rootId = null;
     webView.activeState = activeState;

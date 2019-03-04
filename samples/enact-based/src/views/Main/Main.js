@@ -83,7 +83,7 @@ class Main extends Component {
 			selectedId = browser.tabs.getSelectedId();
 
 		if (browser.webViews[selectedId]) {
-			return browser.webViews[selectedId].nativeWebview;
+			return browser.webViews[selectedId];
 		} else {
 			return null;
 		}

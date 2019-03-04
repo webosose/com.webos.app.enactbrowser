@@ -71,7 +71,7 @@ class TabBarBase extends Component {
 				webViewToBlur = browser.webViews[prevSelectedId];
 
 				if (webViewToBlur) {
-					webViewToBlur.nativeWebview.blur();
+					webViewToBlur.blur();
 				}
 		}
 	}
@@ -86,7 +86,7 @@ class TabBarBase extends Component {
 		// Focusing the current webview started loading / when selected a tab
 		if (selectedTab && selectedTab.type === TabTypes.WEBVIEW) {
 			if (prevSelectedId !== selectedIndex || selectedTab.navState.isLoading) {
-				browser.webViews[selectedId].nativeWebview.focus();
+				browser.webViews[selectedId].focus();
 			}
 		}
 	}
