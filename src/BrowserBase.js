@@ -225,6 +225,12 @@ class BrowserBase {
         });
         webview.addEventListener('permissionrequest', this._handlePermissionRequest);
 
+        webview.request.onAuthRequired.addListener(
+            (details, callback) => this._handleAuthRequired(state.id, callback),
+            { urls: ['*://*/'] },
+            [ 'asyncBlocking' ]
+        );
+
         return state;
     }
 
@@ -293,6 +299,24 @@ class BrowserBase {
                 console.warn("Permission request recieved: " + ev.permission);
                 ev.request.deny();
         }
+    }
+
+    _handleAuthRequired = (tabId, callback) => {
+        const tab = this.tabs.getTab(tabId).setAuthDialog({
+            signIn: (username, password) => {
+                callback({
+                    authCredentials: {
+                        username,
+                        password
+                    }
+                });
+                this.tabs.getTab(tabId).setAuthDialog(null);
+            },
+            cancel: () => {
+                callback();
+                this.tabs.getTab(tabId).setAuthDialog(null);
+            }
+        });
     }
 
 }

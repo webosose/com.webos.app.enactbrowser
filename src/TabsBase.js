@@ -78,7 +78,15 @@ class Tab {
         }
     }
 
-
+    setAuthDialog(authDialog) {
+        if (this.state.authDialog !== authDialog) {
+            this.tabs.store.setAuthDialog(this.state.id, authDialog);
+            this.tabs.emitEvent('update', {
+                state: updateState(this),
+                diff: {authDialog}
+            });
+        }
+    }
 }
 
 /**
@@ -217,7 +225,8 @@ class TabsBase extends EventEmitter {
             },
             title: null,
             icon: null,
-            error: null
+            error: null,
+            authDialog: null
         };
     }
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2018 LG Electronics, Inc.
+// Copyright (c) 2018-2019 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -22,6 +22,7 @@ import {Browser} from '../../NevaLib/BrowserModel';
 
 import {BrowserIconButton as IconButton} from '../../components/BrowserIconButton';
 import ContentView from '../ContentView';
+import DialogView from '../DialogView';
 import Dialog from '../../components/Dialog';
 import ExitFullScreenButton from '../../components/ExitFullScreenButton';
 import Menu from '../../components/Menu';
@@ -208,6 +209,7 @@ class Main extends Component {
 				/>
 				: null
 			}
+				<DialogView />
 			</div>
 		);
 	}

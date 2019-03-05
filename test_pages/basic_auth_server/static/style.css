@@ -1,0 +1,17 @@
+.inline-box {
+  display: inline-block;
+  color: #fff;
+  padding: 1em;
+  font-size: 2em;
+}
+.check-js {
+  background-color: #3498db;
+}
+
+.check-css {
+  background-color: #e67e22;
+}
+
+.check-css:after {
+  content: "style.css is loaded";
+}
