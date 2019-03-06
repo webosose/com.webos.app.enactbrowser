@@ -85,7 +85,7 @@ const ContentViewBase = kind({
 							return (
 								<div key={id}>
 									<WebView style={style} id={id} webView={browser.webViews[id]} className={css.webView} />
-									{ shouldShowUIErrorPage(browser.config, tabs[id].error) ?
+									{shouldShowUIErrorPage(browser.config, tabs[id].error) ?
 										<ErrorPage style={style} errorMsg={tabs[id].error} /> :
 										null
 									}

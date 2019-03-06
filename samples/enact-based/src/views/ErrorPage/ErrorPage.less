@@ -10,11 +10,17 @@
 }
 
 .errorIcon {
-	background: url('../../../assets/default/error_generic_big.png') no-repeat;
 	background-size: cover;
+	background-repeat: no-repeat;
 	width: 100px;
 	height: 100px;
 	margin-bottom: 21px;
+	&.normal {
+		background-image: url('../../../assets/default/error_generic_big.png');
+	}
+	&.crash {
+		background-image: url('../../../assets/default/sadtab.png');
+	}
 }
 
 .errorTitle {

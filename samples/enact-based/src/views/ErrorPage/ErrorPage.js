@@ -12,6 +12,7 @@
  */
 
 import $L from '@enact/i18n/$L';
+import classNames from 'classnames';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -30,13 +31,16 @@ const ErrorPage = kind({
 		className: 'errorPage'
 	},
 
-	render: ({errorMsg, ...rest}) => (
-		<div {...rest}>
-			<div className={css.errorIcon} />
-			<div className={css.errorTitle}>{$L('This webpage is not available')}</div>
-			<div className={css.errorCode}>{errorMsg}</div>
-		</div>
-	)
+	render: ({errorMsg, ...rest}) => {
+		const iconClass = classNames(css.errorIcon, errorMsg === 'RENDERER_CRASHED' ? css.crash : css.normal);
+		return (
+			<div {...rest}>
+				<div className={iconClass} />
+				<div className={css.errorTitle}>{$L('This webpage is not available')}</div>
+				<div className={css.errorCode}>{errorMsg}</div>
+			</div>
+		)
+	}
 });
 
 export default ErrorPage;
