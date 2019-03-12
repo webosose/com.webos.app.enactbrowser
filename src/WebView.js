@@ -99,15 +99,6 @@ const WebViewMixinBase = {
         this.src = url;
     },
 
-    reloadStop: function WebViewMixin_reloadStop() {
-        if (this.isLoading) {
-            WebView.prototype.stop.call(this);
-        }
-        else {
-            WebView.prototype.reload.call(this);
-        }
-    },
-
     back: function WebViewMixin_back() {
         if (this.canGoBack()) {
             WebView.prototype.back.call(this);
@@ -132,15 +123,6 @@ const WebViewMixinBase = {
                     resolve(dataUrl);
             });
         });
-    },
-
-    getNavState: function WebViewMixin_getNavState() {
-        return {
-            canGoBack: this.canGoBack(),
-            canGoForward: this.canGoForward(),
-            isLoading: this.isLoading,
-            url: this.url
-        };
     },
 
     // Clears browsing data for the webview partition
@@ -173,22 +155,8 @@ const WebViewMixinBase = {
             params.newWindow.attach(this);
         }
 
-        // Workaround for TV, as browser should show pointer cursor for links
-        // but by default it shows normal pointer
-        // TODO: move to BrowserBase
-        if (params.useragentOverride &&
-            params.useragentOverride.indexOf('SmartTV') > -1) {
-            this.addContentScripts([{
-                name: 'handForLinks',
-                matches: ['http://*/*', 'https://*/*'],
-                css: { code: 'a:-webkit-any-link { cursor: pointer; }' },
-                run_at: 'document_start'
-            }]);
-        }
-
         this.addEventListener('loadstart', this.handleLoadStart.bind(this));
         this.addEventListener('loadcommit', this.handleLoadCommit.bind(this));
-        this.addEventListener('loadstop', this.handleLoadStop.bind(this));
         this.addEventListener('loadabort', this.handleLoadAbort.bind(this));
 
         this.setZoom(params.zoomFactor ? params.zoomFactor : 1);
@@ -200,29 +168,9 @@ const WebViewMixinBase = {
 
     handleLoadStart: function WebViewMixin_handleLoadStart(ev) {
         if (ev.isTopLevel) {
-            let titleIconChange = false;
-            if (this.url !== ev.url) {
-                this._scriptInjectionAttempted = false;
-                this._scriptInjected = false;
-                titleIconChange = true;
-            }
-
-            this.url = ev.url;
+            this._scriptInjectionAttempted = false;
+            this._scriptInjected = false;
             this.isAborted = false;
-            this.isLoading = true;
-
-            const event = new CustomEvent('navstatechanged', {detail: {...this.getNavState()}});
-            this.dispatchEvent(event);
-
-            if (titleIconChange) {
-                // events for changing title and icon should be after navState
-                // TODO: move to BrowserBase and remove
-                const event1 = new CustomEvent('titlechange', {detail: {title: ev.url}});
-                this.dispatchEvent(event1);
-
-                const event2 = new CustomEvent('iconchange', {detail: {favicons: null}});
-                this.dispatchEvent(event2);
-            }
         }
     },
 
@@ -236,19 +184,7 @@ const WebViewMixinBase = {
                 );
                 this._scriptInjectionAttempted = true;
             }
-            if (this.url !== ev.url) {
-                this.url = ev.url;
-                const event = new CustomEvent('navstatechanged', {detail: {...this.getNavState()}});
-                this.dispatchEvent(event);
-            }
         }
-    },
-
-    handleLoadStop: function WebViewMixin_handleLoadStop() {
-        this.isLoading = false;
-
-        const event = new CustomEvent('navstatechanged', {detail: {...this.getNavState()}});
-        this.dispatchEvent(event);
     },
 
     handleLoadAbort: function WebViewMixin_handleLoadAbort(ev) {

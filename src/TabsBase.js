@@ -27,7 +27,7 @@ function diff(base, compared) {
             result[prop] = compared[prop];
         }
     }
-    return changed ? result : undefined;
+    return changed ? result : null;
 }
 
 function updateState(tab) {

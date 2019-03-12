@@ -35,9 +35,9 @@ const HistoryMixin = (superclass) => (class extends superclass {
     _createWebView(url, window) {
         const state = super._createWebView(url, window);
 
-        this.webViews[state.id].addEventListener('navstatechanged', (ev) => {
-            if (ev.detail.isLoading) {
-                this.history.addEntry(ev.detail.url);
+        this.tabs.addEventListener('update', (ev) => {
+            if (ev.diff.navState && 'url' in ev.diff.navState) {
+                this.history.addEntry(ev.diff.navState.url);
             }
         });
 

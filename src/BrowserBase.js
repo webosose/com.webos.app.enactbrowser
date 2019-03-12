@@ -24,6 +24,7 @@ class BrowserBase {
         this.useragentOverride = null;
         this.tabs = tabsModel;
         this.tabs.onContentDelete = this._handleContentDelete;
+        this.tabs.addEventListener('update', this._handleTabsStateUpdate);
     }
 
     initializeTabs() {
@@ -64,9 +65,14 @@ class BrowserBase {
     }
 
     reloadStop() {
-        const webView = this.webViews[this.tabs.getSelectedId()];
-        if (webView) {
-            webView.reloadStop();
+        const
+            {id, navState: {isLoading}} = this.getSelectedTabState(),
+            webView = this.webViews[this.tabs.getSelectedId()];
+        if (isLoading) {
+            webView.stop();
+        }
+        else {
+             webView.reload();
         }
     }
 
@@ -127,7 +133,7 @@ class BrowserBase {
             });
             // we can't call webview's methods until it inserted into DOM
             // other way there won't be any effect
-            webView.addEventListener('navstatechanged', () => {
+            webView.addEventListener('loadstart', () => {
                 webView.clearData(options, types).then(() => {
                     if (document.body.contains(webView)) {
                         document.body.removeChild(webView);
@@ -145,11 +151,11 @@ class BrowserBase {
             TabTypes.WEBVIEW
         );
 
-        state.navState.url = url ? getUrlWithPrefix(url) : 'about:blank';
+        state.navState.url = url ? '' : 'about:blank';
         state.title = url;
 
         const webview = this.webViews[state.id] = new WebView({
-            url: !newWindow ? state.navState.url : null,
+            url: !newWindow ? url : null,
             // Chromium creates distinct renderer process for each webview with
             // different partition name, but doesn't keep session between tabs.
             // I.e. you have entered login/pass for some website, if you want
@@ -158,19 +164,18 @@ class BrowserBase {
             // partition: BrowserConsts.WEBVIEW_PARTITION_PREF + state.id,
             partition: 'persist:default',
             zoomFactor: this.zoomFactor,
-            // Hack to fix advertisement self closing bpopunder tabs
+            // Hack to fix advertisement self closing popunder tabs
             activeState: newWindow ? 'activated' : this.defaultWebviewState,
             useragentOverride: this.useragentOverride,
             newWindow: newWindow
         });
-        webview.addEventListener('navstatechanged', (ev) => {
-            const tab = this.tabs.getTab(state.id);
-            if (tab.state.error && !webview.isAborted) {
-                tab.setError(null);
-            }
-            tab.setNavState(ev.detail);
-        });
+
+        webview.addEventListener('loadstart', (ev) => this._handleLoadStart(state.id, ev));
+        webview.addEventListener('loadcommit', (ev) => this._handleLoadCommit(state.id, ev));
+        webview.addEventListener('contentload', () => this._handleContentLoad(state.id));
+        webview.addEventListener('loadstop', () => this._handleLoadStop(state.id));
         webview.addEventListener('newwindow', this._handleNewWindow);
+
         webview.addEventListener('loadabort', (ev) => {
             if (ev.isTopLevel) {
                 const {reason} = ev;
@@ -317,6 +322,70 @@ class BrowserBase {
                 this.tabs.getTab(tabId).setAuthDialog(null);
             }
         });
+    }
+
+    _handleLoadStart = (tabId, ev) => {
+        if (ev.isTopLevel) {
+            const
+                tab = this.tabs.getTab(tabId),
+                navState = Object.assign({}, tab.state.navState);
+
+            let titleIconChange = false;
+            if (navState.url !== ev.url) {
+                titleIconChange = true;
+            }
+
+            navState.url = ev.url;
+            navState.isLoading = true;
+
+            tab.setNavState(navState);
+
+            if (titleIconChange) {
+                tab.setTitle(ev.url);
+                tab.setIcon(null);
+            }
+        }
+    }
+
+    _handleLoadCommit = (tabId, ev) => {
+        if (ev.isTopLevel) {
+            const
+                tab = this.tabs.getTab(tabId),
+                navState = Object.assign({}, tab.state.navState);
+            if (navState.url !== ev.url) {
+                navState.url = ev.url;
+                tab.setNavState(navState);
+            }
+        }
+    }
+
+    _handleContentLoad = (tabId) => {
+        const
+            tab = this.tabs.getTab(tabId),
+            navState = Object.assign({}, tab.state.navState, {
+                canGoBack: this.webViews[tabId].canGoBack(),
+                canGoForward: this.webViews[tabId].canGoForward()
+            });
+        tab.setNavState(navState);
+    }
+
+    _handleLoadStop = (tabId) => {
+        const tab = this.tabs.getTab(tabId);
+        if (tab.state) {
+            const navState = Object.assign({}, tab.state.navState, {isLoading: false});
+            tab.setNavState(navState);
+        }
+    }
+
+    _handleTabsStateUpdate = (ev) => {
+        if ('navState' in ev.diff) {
+            const
+                id = ev.state.id,
+                tab = this.tabs.getTab(id);
+            if (tab.state.error && !this.webViews[id].isAborted) {
+                tab.setError(null);
+            }
+        }
     }
 
 }

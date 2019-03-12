@@ -202,6 +202,22 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
             TabTitles.SITE_FILTERING_TITLE,
             BrowserConsts.SITE_FILTERING_URL));
     }
+
+    _createWebView(url, windowToAttach) {
+        const state = super._createWebView(url, windowToAttach);
+        // Workaround for TV, as browser should show pointer cursor for links
+        // but by default it shows normal pointer
+        if (this.useragentOverride &&
+            this.useragentOverride.indexOf('SmartTV') > -1) {
+            this.webViews[state.id].addContentScripts([{
+                name: 'handForLinks',
+                matches: ['http://*/*', 'https://*/*'],
+                css: { code: 'a:-webkit-any-link { cursor: pointer; }' },
+                run_at: 'document_start'
+            }]);
+        }
+        return state;
+    }
 }
 
 export {TabTypes, BrowserConsts, Browser};
