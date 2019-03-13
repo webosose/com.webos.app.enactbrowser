@@ -48,7 +48,7 @@ class Main extends Component {
 				fullScreen = true;
 			}
 			if (launchArgs.override_user_agent_string) {
-				this.showExitButton = launchArgs.override_user_agent_string.indexOf('SmartTV') > -1
+				this.showExitButton = launchArgs.override_user_agent_string.indexOf('WebOS') > -1
 			}
 		}
 		this.state = {
