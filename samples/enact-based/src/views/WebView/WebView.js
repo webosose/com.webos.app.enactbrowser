@@ -1,4 +1,4 @@
-// Copyright (c) 2018 LG Electronics, Inc.
+// Copyright (c) 2018-2019 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -7,7 +7,7 @@
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
 /**
- * Contains the declaration for the ContentView component.
+ * Contains the declaration for the WebView component.
  *
  */
 
@@ -31,9 +31,7 @@ class WebView extends Component {
 		delete rest.webView;
 
 		return (
-			<div>
-				<div id={id + WebViewWrapperId} {...rest} />
-			</div>
+			<div id={id + WebViewWrapperId} {...rest} />
 		);
 	}
 }

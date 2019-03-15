@@ -15,7 +15,6 @@
 import $L from '@enact/i18n/$L';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import React, {Component} from 'react';
-import ReactDOM from 'react-dom';
 import Spotlight from '@enact/spotlight';
 
 import {Browser} from '../../NevaLib/BrowserModel';
@@ -24,7 +23,6 @@ import {BrowserIconButton as IconButton} from '../../components/BrowserIconButto
 import ContentView from '../ContentView';
 import DialogView from '../DialogView';
 import Dialog from '../../components/Dialog';
-import ExitFullScreenButton from '../../components/ExitFullScreenButton';
 import Menu from '../../components/Menu';
 import NavigationBox from '../../components/NavigationBox';
 import Omnibox from '../../components/Omnibox';
@@ -40,22 +38,24 @@ class Main extends Component {
 
 	constructor (props) {
 		super(props);
-		let fullScreen = false;
+
+		this.state = {
+			browser: {},
+			dialog: null,
+			fullScreen: false
+		};
+
+		this.fullScreenContentItem = React.createRef();
 		this.showExitButton = false;
 		if (typeof chrome === 'object' && chrome.app.launchArgs) {
 			const launchArgs = JSON.parse(chrome.app.launchArgs);
 			if (launchArgs.fullMode) {
-				fullScreen = true;
+				this.state.fullScreen = true;
 			}
 			if (launchArgs.override_user_agent_string) {
 				this.showExitButton = launchArgs.override_user_agent_string.indexOf('WebOS') > -1
 			}
 		}
-		this.state = {
-			browser: {},
-			dialog: null,
-			fullScreen
-		};
 	}
 
 	componentDidMount () {
@@ -100,28 +100,21 @@ class Main extends Component {
 	}
 
 	onFullScreen = () => {
-		const webview = this.getSelectedWebview();
-
-		if (webview) {
-			// requesting fullscreen for parent of webview to be able to stack
-			// it with fullscreen from guest page (i.e. when you press
-			// fullscreen in youtube player).
-			webview.parentElement.webkitRequestFullscreen();
-		} else {
-			this.setState({fullScreen: true});
-		}
+		this.fullScreenContentItem.current.webkitRequestFullscreen();
 	}
 
 	onExitFullScreen = () => {
 		if (document.webkitFullscreenElement) {
 			this.exitFullscreenWasPressed = true;
 			document.webkitExitFullscreen();
-		} else {
-			this.setState({fullScreen: false});
 		}
 	}
 
 	onFullscreenChange = () => {
+		// First check is needed to handle recursive fullscreen situations.
+		// If we first entered fullscreen from UI and then from video player
+		// then we don't want to exit from fullscreen when pressing exit from
+		// fullscreen from video player.
 		if (document.webkitFullscreenElement && this.exitFullscreenWasPressed) {
 			document.webkitExitFullscreen();
 		} else if (document.webkitFullscreenElement) {
@@ -151,55 +144,45 @@ class Main extends Component {
 	render () {
 		const
 			props = Object.assign({}, this.props),
-			{browser, dialog, fullScreen} = this.state,
-			webview = browser.tabs ? this.getSelectedWebview() : null;
+			{browser, dialog, fullScreen} = this.state;
 
 		delete props.store;
 
 		return (
 			<div {...props}>
-			{
-				!fullScreen ? (
-					<div onClick={this.onClick} onMouseLeave={this.onMouseLeave}>
-						<div className={css['flexbox-row']}>
-							<NavigationBox browser={browser} />
-							<Omnibox browser={browser} />
-							<ZoomControl browser={browser} />
-							<Menu browser={browser}/>
+				<div onClick={this.onClick} onMouseLeave={this.onMouseLeave}>
+					<div className={css['flexbox-row']}>
+						<NavigationBox browser={browser} />
+						<Omnibox browser={browser} />
+						<ZoomControl browser={browser} />
+						<Menu browser={browser}/>
+						<IconButton
+							backgroundOpacity="transparent"
+							className={css.button}
+							onClick={this.onFullScreen}
+							tooltipText={$L('Full screen')}
+							type="fullscreenButton"
+						/>
+						{
+							this.showExitButton ?
 							<IconButton
 								backgroundOpacity="transparent"
 								className={css.button}
-								onClick={this.onFullScreen}
-								tooltipText={$L('Full screen')}
-								type="fullscreenButton"
-							/>
-							{
-								this.showExitButton ?
-								<IconButton
-									backgroundOpacity="transparent"
-									className={css.button}
-									onClick={this.onClose}
-									tooltipText={$L('Exit app')}
-									type="xButton"
-								/> :
-								null
-							}
-						</div>
-						<TabBar browser={browser} />
+								onClick={this.onClose}
+								tooltipText={$L('Exit app')}
+								type="xButton"
+							/> :
+							null
+						}
 					</div>
-				) : null
-			}
-				<ContentView browser={browser} fullScreen={fullScreen} />
-			{
-				webview ? ReactDOM.createPortal(
-					<div>
-						<style>{`@import "main.css";`}</style>
-						<ExitFullScreenButton fullScreen={fullScreen} onExitFullScreen={this.onExitFullScreen} />
-					</div>,
-					webview.shadowRoot
-				) :
-				<ExitFullScreenButton fullScreen={fullScreen} onExitFullScreen={this.onExitFullScreen} />
-			}
+					<TabBar browser={browser} />
+				</div>
+				<ContentView
+					browser={browser}
+					ref={this.fullScreenContentItem}
+					onExitFullScreen={this.onExitFullScreen}
+					fullScreen={fullScreen}
+				/>
 			{
 				dialog ?
 				<Dialog
