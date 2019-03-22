@@ -34,7 +34,8 @@ import SiteFilteringItem from './SiteFilteringItem';
 
 import css from './SiteFiltering.less';
 
-const filteringOptions = ['off', 'Approved Sites', 'Blocked Sites'];
+const filteringOptions = ['off', 'whitelist', 'blacklist'];
+const filteringOptionsText = ['Off', 'Approved Sites', 'Blocked Sites'];
 
 class SiteFilteringBase extends Component {
 	static propTypes = {
@@ -59,7 +60,8 @@ class SiteFilteringBase extends Component {
 		browser.settings.setSiteFiltering(filteringOptions[selected]);
 	}
 
-	renderItem = ({data, index, ...rest}) => {
+	renderItem = ({index, ...rest}) => {
+		const data = this.props.data;
 		return (
 			<SiteFilteringItem
 				{...rest}
@@ -135,7 +137,7 @@ class SiteFilteringBase extends Component {
 					defaultSelected={optionIndex}
 					onSelect={this.onSelectSiteFiltering}
 				>
-					{filteringOptions}
+					{filteringOptionsText}
 				</Group>
 				<div>
 					Approved Sites: Anyone can access the sites on this list.
@@ -205,19 +207,19 @@ class SiteFilteringBase extends Component {
 
 const mapStateToProps = ({settingsState, approvedSitesUIState, blockedSitesUIState}) => {
 	const {siteFiltering} = settingsState;
-	if (siteFiltering === 'Approved Sites') {
+	if (siteFiltering === filteringOptions[1]) {
 		return {
 			siteFiltering,
 			data: settingsState.approvedSites,
 			selected: approvedSitesUIState.selected
 		};
-	} else if (siteFiltering === 'Blocked Sites') {
+	} else if (siteFiltering === filteringOptions[2]) {
 		return {
 			siteFiltering,
 			data: settingsState.blockedSites,
 			selected: blockedSitesUIState.selected
 		};
-	} else if (siteFiltering === 'off') {
+	} else if (siteFiltering === filteringOptions[0]) {
 		return {
 			siteFiltering,
 			data: [],

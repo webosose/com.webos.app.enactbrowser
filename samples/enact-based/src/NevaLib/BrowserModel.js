@@ -16,15 +16,16 @@ import {TabTitles, TabTypes} from 'js-browser-lib/TabsConsts';
 
 import Bookmarks from './Bookmarks';
 import Config from './Config';
+import {getDefaults} from './BrowserDefaults'
 import History from './History';
 import MostVisited from './MostVisited';
 import PreviousSessionTabs from './PreviousSessionTabs';
 import RecentlyClosed from './RecentlyClosed';
-import {ReduxTabs as TabsModel} from './Tabs';
-import createTabPolicy from './TabPolicyFactory';
 import SearchService from './SearchService';
 import {Settings, SettingsConsts} from './Settings';
-import {getDefaults} from './BrowserDefaults'
+import SiteFiltering from './SiteFiltering';
+import {ReduxTabs as TabsModel} from './Tabs';
+import createTabPolicy from './TabPolicyFactory';
 
 Object.assign(TabTitles, {
     SITE_FILTERING_TITLE: 'Site Filtering',
@@ -68,6 +69,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
         browser.searchService = new SearchService();
         browser.tabPolicy = undefined;
         browser.devSettingsEnabled = false;
+        browser.siteFiltering = new SiteFiltering(this.webViews, tabsModel)
 
 
         browser.config.initialize(getDefaults().config)
@@ -87,6 +89,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
             }
         })
         .then(() => {
+            browser.siteFiltering.setMode(browser.settings.getSiteFiltering());
             browser.searchService.engine = browser.settings.getSearchEngine();
             browser.initializeTabs();
         });

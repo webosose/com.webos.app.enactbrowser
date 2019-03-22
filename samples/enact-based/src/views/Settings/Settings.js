@@ -26,6 +26,7 @@ import React, {Component} from 'react';
 import Scroller from '@enact/moonstone/Scroller';
 import ToggleButton from '@enact/moonstone/ToggleButton';
 
+import PinPopup from '../../components/PinPopup';
 import css from './Settings.less';
 
 const OnOffButton = kind({
@@ -158,6 +159,7 @@ class SettingsBase extends Component {
 				startupPage,
 				searchEngine,
 				alwaysShowBookmarks,
+				siteFiltering,
 				...rest
 			} = this.props,
 			classes = classNames(className, css.settings),
@@ -167,7 +169,6 @@ class SettingsBase extends Component {
 		delete rest.dispatch;
 		delete rest.homePageUrl;
 		delete rest.privateBrowsing;
-		delete rest.siteFiltering;
 
 		return (
 			<Scroller {...rest} className={css.scroller}>
@@ -218,9 +219,9 @@ class SettingsBase extends Component {
 					<OnOffButton onClick={this.onTogglePrivateBrowsing} selected={privateBrowsing} />
 					<br />*/}
 
-					{/*<BodyText className={css.menu}>{$L('Site Filtering')}</BodyText>
+					<BodyText className={css.menu}>{$L('Site Filtering')}</BodyText>
 					<OnOffButton onClick={this.startSiteFiltering} selected={(siteFiltering !== 'off')} />
-					<br />*/}
+					<br />
 
 					<Notification
 						open={this.state.clearPopupOpen}
@@ -248,7 +249,13 @@ class SettingsBase extends Component {
 
 					<Button onClick={this.onClearBrowsingData} css={css} small>{$L('CLEAR BROWSING DATA')}</Button>
 
-					{/*<PinPopup open={siteFilteringOpen} onClose={this.onClosePinPopup} onSubmit={this.onSubmitPinCode} matched={matchedPin} />*/}
+					<PinPopup
+						open={this.state.siteFilteringOpen}
+						onClose={this.onClosePinPopup}
+						onSubmit={this.onSubmitPinCode}
+						matched={this.state.matchedPin}
+					/>
+
 				</div>
 			</Scroller>
 		);
