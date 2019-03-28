@@ -1,4 +1,4 @@
-// Copyright (c) 2018 LG Electronics, Inc.
+// Copyright (c) 2018-2019 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -26,6 +26,15 @@ class EventEmitter {
 
     hasEventListener(eventName) {
         return (eventName in this._listeners);
+    }
+
+    removeEventListener(eventName, callback) {
+        if (this._listeners[eventName]) {
+            const pos = this._listeners[eventName].indexOf(callback);
+            if (pos > -1) {
+                this._listeners[eventName].splice(pos, 1);
+            }
+        }
     }
 
     // eventName - event to emit
