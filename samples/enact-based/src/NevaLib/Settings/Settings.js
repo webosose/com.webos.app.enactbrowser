@@ -68,7 +68,7 @@ class Settings extends SettingsBase {
     }
 
     setStartupPage = (opt) => {
-        this.storage.set(SettingsKeys.STARTUP_PAGE_KEY, opt)
+        return this.storage.set(SettingsKeys.STARTUP_PAGE_KEY, opt)
             .then(() => {
                 this.store.dispatch(setStartupPage(opt));
             });
@@ -79,7 +79,7 @@ class Settings extends SettingsBase {
     }
 
     setHomePageUrl = (url) => {
-        this.storage.set(SettingsKeys.HOME_PAGE_URL_KEY, url)
+        return this.storage.set(SettingsKeys.HOME_PAGE_URL_KEY, url)
             .then(() => {
                 this.store.dispatch(setHomePageUrl(url));
             });
@@ -90,7 +90,7 @@ class Settings extends SettingsBase {
     }
 
     setSearchEngine = (searchEngine) => {
-        this.storage.set(SettingsKeys.SEARCH_ENGINE_KEY, searchEngine)
+        return this.storage.set(SettingsKeys.SEARCH_ENGINE_KEY, searchEngine)
             .then(() => {
                 this.store.dispatch(setSearchEngine(searchEngine));
                 this.browser.searchService.engine = searchEngine;
@@ -102,14 +102,14 @@ class Settings extends SettingsBase {
     }
 
     setAlwaysShowBookmarks = (bool) => {
-        this.storage.set(SettingsKeys.ALWAYS_SHOW_BOOKMARKS_KEY, bool)
+        return this.storage.set(SettingsKeys.ALWAYS_SHOW_BOOKMARKS_KEY, bool)
             .then(() => {
                 this.store.dispatch(setAlwaysShowBookmarks(bool));
         })
     }
 
     setPrivateBrowsing = (bool) => {
-        this.storage.set(SettingsKeys.PRIVATE_BROWSING_KEY, bool)
+        return this.storage.set(SettingsKeys.PRIVATE_BROWSING_KEY, bool)
             .then(() => {
                 this.store.dispatch(setPrivateBrowsing(bool));
             });
@@ -120,7 +120,7 @@ class Settings extends SettingsBase {
     }
 
     setSiteFiltering = (opt) => {
-        this.storage.set(SettingsKeys.SITE_FILTERING_KEY, opt)
+        return this.storage.set(SettingsKeys.SITE_FILTERING_KEY, opt)
             .then(() => {
                 this.store.dispatch(setSiteFiltering(opt));
             });
