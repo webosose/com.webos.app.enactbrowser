@@ -14,15 +14,6 @@ function getBrowserDefaults() {
             {url:'http://www.bbc.com/news/', icon:null, title: 'BBC'},
             {url:'https://stackoverflow.com/', icon:null, title: 'Stackoverflow'}
         ],
-        settings: {
-            startupPage: 'newTabPage', /*OR continue OR homePage*/
-            homePageUrl: 'https://www.google.com',
-            searchEngine: 'Google',
-            alwaysShowBookmarks: false,
-            privateBrowsing: false,
-            siteFiltering: 'off',
-            pinNumber: '0000'
-        },
         config: {
             useBuiltInErrorPages: true,
             restorePrevSessionPolicy: 'onlyLastTab', /*OR allTabs*/
@@ -37,6 +28,19 @@ function getBrowserDefaults() {
                 'maxSuspendedLow': 1,
                 'maxSuspendedCritical': 0
             }
+        },
+        settings: {
+            startupPage: 'newTabPage', /*OR continue OR homePage*/
+            homePageUrl: 'https://www.google.com',
+            searchEngine: 'Google',
+            alwaysShowBookmarks: false,
+            privateBrowsing: false,
+            siteFiltering: 'off', /*OR whitelist OR blacklist*/
+            pinNumber: '0000'
+        },
+        sitefiltering: {
+            whitelist: ['*google*', '*://*yandex*'],
+            blacklist: ['*youtube*', '*lenta.ru*']
         }
     };
 }

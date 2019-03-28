@@ -30,6 +30,10 @@ import {
 	selectAllBlockedSites,
 	deselectAllBlockedSites
 } from '../../actions';
+import {
+	setApprovedSites,
+	setBlockedSites
+} from '../../NevaLib/Settings/actions';
 import SiteFilteringItem from './SiteFilteringItem';
 
 import css from './SiteFiltering.less';
@@ -53,11 +57,37 @@ class SiteFilteringBase extends Component {
 			deletePopupOpen: false,
 			urlToAdd: ''
 		};
+		this.loadSiteList();
+	}
+
+	loadSiteList () {
+		const {
+				siteFiltering: filteringMode,
+				browser: {siteFiltering: {filterStorages}}
+			} = this.props;
+
+		if (filteringMode === filteringOptions[1]) {
+			filterStorages[filteringMode].getAll()
+			.then((values) => {
+				this.props.setApprovedSites(values);
+			})
+		}
+		else if (filteringMode === filteringOptions[2]) {
+			filterStorages[filteringMode].getAll()
+			.then((values) => {
+				this.props.setBlockedSites(values);
+			})
+		}
 	}
 
 	onSelectSiteFiltering = ({selected}) => {
-		const {browser} = this.props;
-		browser.settings.setSiteFiltering(filteringOptions[selected]);
+		const
+			{browser: {settings, siteFiltering}} = this.props,
+			newMode = filteringOptions[selected];
+
+		settings.setSiteFiltering(newMode)
+		.then(() => siteFiltering.setMode(newMode))
+		.then(() => this.loadSiteList());
 	}
 
 	renderItem = ({index, ...rest}) => {
@@ -125,6 +155,8 @@ class SiteFilteringBase extends Component {
 		delete rest.selectAllBlockedSites;
 		delete rest.deselectAllApprovedSites;
 		delete rest.deselectAllBlockedSites;
+		delete rest.setApprovedSites;
+		delete rest.setBlockedSites;
 
 		return (
 			<div {...rest} className={css.siteFiltering}>
@@ -149,6 +181,7 @@ class SiteFilteringBase extends Component {
 				{(optionIndex === 2) && <BodyText>Blocked Sites List</BodyText>}
 				{(optionIndex === 1 || optionIndex === 2) &&
 					<div>
+						{/*
 						<Notification
 							open={this.state.deletePopupOpen}
 							noAutoDismiss
@@ -187,6 +220,7 @@ class SiteFilteringBase extends Component {
 								Delete
 							</Button>
 						</form>
+						*/}
 						{
 							(data.length > 0) ?
 								<VirtualList
@@ -229,8 +263,10 @@ const mapStateToProps = ({settingsState, approvedSitesUIState, blockedSitesUISta
 };
 
 const mapDispatchToProps = (dispatch) => ({
+	setApprovedSites: (urls) => dispatch(setApprovedSites(urls)),
 	selectAllApprovedSites: (ids) => dispatch(selectAllApprovedSites(ids)),
 	deselectAllApprovedSites: () => dispatch(deselectAllApprovedSites()),
+	setBlockedSites: (urls) => dispatch(setBlockedSites(urls)),
 	selectAllBlockedSites: (ids) => dispatch(selectAllBlockedSites(ids)),
 	deselectAllBlockedSites: () => dispatch(deselectAllBlockedSites())
 });

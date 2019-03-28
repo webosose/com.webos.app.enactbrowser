@@ -19,8 +19,8 @@ const
 		privateBrowsing: false,
 		pinNumber: '',
 		siteFiltering: '',
-		approvedSites: ['www.google.com', 'www.daum.net', 'www.lg.com'],
-		blockedSites: ['www.naver.com', 'www.netmarble.com']
+		approvedSites: [],
+		blockedSites: []
 	};
 
 function settingsState (state = initialSettingsState, action) {
@@ -68,6 +68,11 @@ function settingsState (state = initialSettingsState, action) {
 		/*
 			Approved sites
 		*/
+		case types.SET_APPROVED_SITES: {
+			return Object.assign({}, state, {
+				approvedSites: [...action.urls]
+			});
+		}
 		case types.ADD_APPROVED_SITE: {
 			return [...state.approvedSites.data, action.url];
 		}
@@ -82,6 +87,11 @@ function settingsState (state = initialSettingsState, action) {
 		/*
 			Blocked sites
 		*/
+		case types.SET_BLOCKED_SITES: {
+			return Object.assign({}, state, {
+				blockedSites: [...action.urls]
+			});
+		}
 		case types.ADD_BLOCKED_SITE: {
 			return [...state.blockedSites.data, action.url];
 		}

@@ -69,7 +69,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
         browser.searchService = new SearchService();
         browser.tabPolicy = undefined;
         browser.devSettingsEnabled = false;
-        browser.siteFiltering = new SiteFiltering(this.webViews, tabsModel)
+        browser.siteFiltering = new SiteFiltering(this.webViews, tabsModel, db);
 
 
         browser.config.initialize(getDefaults().config)
@@ -100,7 +100,8 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
         const defaults = getDefaults();
         return Promise.all([
             this.settings.initialize(defaults.settings),
-            this.bookmarks.initialize(defaults.bookmarks)
+            this.bookmarks.initialize(defaults.bookmarks),
+            this.siteFiltering.initialize(defaults.sitefiltering)
         ]);
     }
 

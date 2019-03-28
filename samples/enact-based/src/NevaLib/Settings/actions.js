@@ -45,6 +45,11 @@ const setSiteFiltering = (option) => ({
 	option
 });
 
+const setApprovedSites = (urls) => ({
+	type: types.SET_APPROVED_SITES,
+	urls
+});
+
 const addApprovedSite = (url) => ({
 	type: types.ADD_APPROVED_SITE,
 	url
@@ -54,6 +59,11 @@ const removeApprovedSites = (urls) => ({
 	type: types.REMOVE_APPROVED_SITES,
 	urls
 })
+
+const setBlockedSites = (urls) => ({
+	type: types.SET_BLOCKED_SITES,
+	urls
+});
 
 const addBlockedSite = (url) => ({
 	type: types.ADD_BLOCKED_SITE,
@@ -73,8 +83,10 @@ export {
 	setPrivateBrowsing,
 	setPinNumber,
 	setSiteFiltering,
+	setApprovedSites,
 	addApprovedSite,
 	removeApprovedSites,
+	setBlockedSites,
 	addBlockedSite,
 	removeBlockedSites
 }
