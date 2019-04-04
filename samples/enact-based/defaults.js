@@ -15,7 +15,7 @@ function getBrowserDefaults() {
             {url:'https://stackoverflow.com/', icon:null, title: 'Stackoverflow'}
         ],
         config: {
-            useBuiltInErrorPages: true,
+            useBuiltInErrorPages: false,
             restorePrevSessionPolicy: 'onlyLastTab', /*OR allTabs*/
             // Limitations for Simple Tab management policy
             simplePolicy: {
