@@ -9,11 +9,8 @@
 class PreviousTabs {
     constructor(storage, tabs) {
         this.storage = storage;
-        tabs.addEventListener('add', this.handleTabAdd);
-        tabs.addEventListener('update', this.handleTabUpdate);
-        tabs.addEventListener('delete', this.handleTabDelete);
-        tabs.addEventListener('move', this.handleTabMove);
-        tabs.addEventListener('replace', this.handleTabReplace);
+        this.tabs = tabs;
+        this.turnOn();
     }
 
     get() {
@@ -22,6 +19,22 @@ class PreviousTabs {
 
     reset() {
         return this.storage.reset();
+    }
+
+    turnOn() {
+        this.tabs.addEventListener('add', this.handleTabAdd);
+        this.tabs.addEventListener('update', this.handleTabUpdate);
+        this.tabs.addEventListener('delete', this.handleTabDelete);
+        this.tabs.addEventListener('move', this.handleTabMove);
+        this.tabs.addEventListener('replace', this.handleTabReplace);
+    }
+
+    turnOff() {
+        this.tabs.removeEventListener('add', this.handleTabAdd);
+        this.tabs.removeEventListener('update', this.handleTabUpdate);
+        this.tabs.removeEventListener('delete', this.handleTabDelete);
+        this.tabs.removeEventListener('move', this.handleTabMove);
+        this.tabs.removeEventListener('replace', this.handleTabReplace);
     }
 
     handleTabAdd = (ev) => {

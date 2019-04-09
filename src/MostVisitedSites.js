@@ -64,7 +64,7 @@ class MostVisitedSites {
         this.thumbnails = thumbnails;
         this.webviews = webviews;
         this.limit = 15;
-        tabs.addEventListener('update', this.handleTabUpdate);
+        this.turnOn();
     }
 
     get(number) {
@@ -125,6 +125,14 @@ class MostVisitedSites {
                 });
             }
         });
+    }
+
+    turnOn() {
+        this.tabs.addEventListener('update', this.handleTabUpdate);
+    }
+
+    turnOff() {
+        this.tabs.removeEventListener('update', this.handleTabUpdate);
     }
 
     handleTabUpdate = (ev) => {

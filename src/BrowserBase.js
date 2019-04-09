@@ -15,10 +15,54 @@ import {TabTitles, TabTypes} from './TabsConsts';
 import WebView from './WebView.js';
 import {IdGenerator, TabsBase as TabsModel} from './TabsBase.js';
 
+class WebViewFactoryBase {
+    constructor(browser) {
+        this.browser = browser;
+    }
+
+    getPartition() {
+        // Chromium creates distinct renderer process for each webview with
+        // different partition name, but doesn't keep session between tabs.
+        // I.e. you have entered login/pass for some website, if you want
+        // open this website on another tab, you shoud enter your credentials
+        // again.
+        return 'persist:default';
+    }
+
+    getState({newWindow}) {
+        // Hack to fix advertisement self closing popunder tabs
+        return newWindow ? 'activated' : this.browser.defaultWebviewState;
+    }
+
+    getUrl({newWindow, url}) {
+        return !newWindow ? url : null;
+    }
+
+    getUserAgentOverride() {
+        return this.browser.useragentOverride;
+    }
+
+    getZoomFactor() {
+        return this.browser.zoomFactor;
+    }
+
+    create(props) {
+        return new WebView({
+            partition: this.getPartition(props),
+            url: this.getUrl(props),
+            zoomFactor: this.getZoomFactor(props),
+            activeState: this.getState(props),
+            useragentOverride: this.getUserAgentOverride(props),
+            newWindow: props.newWindow
+        });
+    }
+}
+
 // We allways have at least one view
 class BrowserBase {
-    constructor ({tabsModel, defaultWebviewState = 'activated'}) {
+    constructor ({tabsModel, defaultWebviewState = 'activated', webViewFactory}) {
         this.defaultWebviewState = defaultWebviewState;
+        this.webViewFactory = webViewFactory || new WebViewFactoryBase(this);
         this.webViews = {};
         this.zoomFactor = 1;
         this.useragentOverride = null;
@@ -40,7 +84,11 @@ class BrowserBase {
     }
 
     closeTab(index) {
-        this.tabs.deleteTab(index);
+        if (this.tabs.count() !== 1) {
+            this.tabs.deleteTab(index);
+        } else {
+            tabs.replaceTab(0, this._createNewTabPage());
+        }
     }
 
     moveTab(_from, _to) {
@@ -56,7 +104,7 @@ class BrowserBase {
             url = userUrl ? getUrlWithPrefix(userUrl) : 'about:blank',
             {type: tabType, id} = this.getSelectedTabState();
         if (tabType !== TabTypes.WEBVIEW) {
-            const newState = this._createWebView(url);
+            const newState = this._createWebViewPage(url);
             this.tabs.replaceTab(this.tabs.store.getSelectedIndex(), newState);
         }
         else {
@@ -145,7 +193,7 @@ class BrowserBase {
         });
     }
 
-    _createWebView(url, newWindow = null) {
+    _createWebViewPage(url, newWindow = null) {
         let state = TabsModel.createTabState(
             IdGenerator.getNextId(),
             TabTypes.WEBVIEW
@@ -154,20 +202,8 @@ class BrowserBase {
         state.navState.url = url ? '' : 'about:blank';
         state.title = url;
 
-        const webview = this.webViews[state.id] = new WebView({
-            url: !newWindow ? url : null,
-            // Chromium creates distinct renderer process for each webview with
-            // different partition name, but doesn't keep session between tabs.
-            // I.e. you have entered login/pass for some website, if you want
-            // open this website on another tab, you shoud enter your credentials
-            // again.
-            // partition: BrowserConsts.WEBVIEW_PARTITION_PREF + state.id,
-            partition: 'persist:default',
-            zoomFactor: this.zoomFactor,
-            // Hack to fix advertisement self closing popunder tabs
-            activeState: newWindow ? 'activated' : this.defaultWebviewState,
-            useragentOverride: this.useragentOverride,
-            newWindow: newWindow
+        const webview = this.webViews[state.id] = this.webViewFactory.create({
+            url, newWindow
         });
 
         webview.addEventListener('loadstart', (ev) => this._handleLoadStart(state.id, ev));
@@ -210,12 +246,7 @@ class BrowserBase {
             }
         });
         webview.addEventListener('close', () => {
-            if (this.tabs.count() !== 1) {
-                this.closeTab(this.tabs.getIndexById(state.id));
-            }
-            else {
-                this.tabs.replaceTab(0, this._createNewTabPage());
-            }
+            this.closeTab(this.tabs.getIndexById(state.id));
         });
         webview.addEventListener('exit', () => {
             const tab = this.tabs.getTab(state.id);
@@ -275,7 +306,7 @@ class BrowserBase {
             case 'new_foreground_tab':
                 selectNewTab = true;
             case 'new_background_tab':
-                const state = this._createWebView(ev.targetUrl, ev.window);
+                const state = this._createWebViewPage(ev.targetUrl, ev.window);
                 this.tabs.addTab(state, selectNewTab);
                 break;
             default:
@@ -390,4 +421,4 @@ class BrowserBase {
 
 }
 
-export {TabTypes, BrowserBase};
+export {TabTypes, BrowserBase, WebViewFactoryBase};

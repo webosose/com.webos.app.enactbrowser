@@ -239,18 +239,18 @@ const WebViewMixinBase = {
 }
 
 function WebViewMixin(webView, {activeState, ...rest}) {
-    Object.assign(webView, WebViewMixinBase);
+    Object.assign(webView, WebViewMixinBase, {
+            activeState,
+            _scriptInjectionAttempted: false,
+            rootId: null,
+            isAborted: false,
+            msgListenerId: null
+        });
 
     // TODO: use local property and Singleton
     if (!msgProxy) { // initializing global object, as it uses window
         msgProxy = new WebviewMessageProxy();
     }
-
-    webView._scriptInjectionAttempted = false;
-    webView.rootId = null;
-    webView.activeState = activeState;
-    webView.isAborted = false;
-    webView.msgListenerId = null;
 
     webView._initWebView(rest);
 

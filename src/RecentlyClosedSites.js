@@ -11,6 +11,7 @@ import {TabTypes} from './TabsConsts';
 class RecentlyClosedSites {
     constructor(storage, tabs, maxTabsToStore = 10) {
         this.storage = storage;
+        this.tabs = tabs;
         this.maxTabsToStore = maxTabsToStore;
         this.count = null;
         this.earliestId = null;
@@ -20,8 +21,8 @@ class RecentlyClosedSites {
                 return undefined;
             })
         );
-        tabs.addEventListener('delete', this.handleTabDelete);
-        tabs.addEventListener('replace', this.handleTabReplace);
+
+        this.turnOn();
     }
 
     getAll() {
@@ -38,6 +39,16 @@ class RecentlyClosedSites {
     removeAll() {
         this.count = 0;
         return this.storage.removeAll();
+    }
+
+    turnOn() {
+        this.tabs.addEventListener('delete', this.handleTabDelete);
+        this.tabs.addEventListener('replace', this.handleTabReplace);
+    }
+
+    turnOff() {
+        this.tabs.removeEventListener('delete', this.handleTabDelete);
+        this.tabs.removeEventListener('replace', this.handleTabReplace);
     }
 
     _addEntry(entry) {

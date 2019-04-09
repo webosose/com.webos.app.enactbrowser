@@ -22,10 +22,9 @@ Tab info structure:
 class LastSelectedTab {
     constructor(db, tabs) {
         this.db = db;
-        db.addObjectStore(STORE_NAME, {keyPath: 'id'}, (store) => {});
         this.tabs = tabs;
-        tabs.addEventListener('select', this.handleTabSelect);
-        tabs.addEventListener('update', this.handleTabUpdate);
+        db.addObjectStore(STORE_NAME, {keyPath: 'id'}, (store) => {});
+        this.turnOn();
     }
 
     get() {
@@ -46,6 +45,16 @@ class LastSelectedTab {
                     url: tab.navState.url
                 }]);
         });
+    }
+
+    turnOn() {
+        this.tabs.addEventListener('select', this.handleTabSelect);
+        this.tabs.addEventListener('update', this.handleTabUpdate);
+    }
+
+    turnOff() {
+        this.tabs.removeEventListener('select', this.handleTabSelect);
+        this.tabs.removeEventListener('update', this.handleTabUpdate);
     }
 
     handleTabSelect = () => {

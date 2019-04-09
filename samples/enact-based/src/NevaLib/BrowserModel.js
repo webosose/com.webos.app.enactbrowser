@@ -8,7 +8,7 @@
 
 /*global chrome*/
 import {BookmarksMixin} from 'js-browser-lib/BookmarksMixin';
-import {BrowserBase} from 'js-browser-lib/BrowserBase';
+import {BrowserBase, WebViewFactoryBase} from 'js-browser-lib/BrowserBase';
 import {BrowserConsts} from 'js-browser-lib/BrowserConsts';
 import {IndexedDb} from 'js-browser-lib/IndexedDb';
 import {HistoryMixin} from 'js-browser-lib/HistoryMixin';
@@ -45,6 +45,20 @@ Object.assign(BrowserConsts, {
 
 const DB_NAME = 'BrowserPersistent';
 
+class WebViewFactory extends WebViewFactoryBase {
+    constructor(browser) {
+        super(browser);
+    }
+
+    getPartition() {
+        if (this.browser.settings.getPrivateBrowsing()) {
+            return 'inmemory-partition'; // should be any name without 'persist:' prefix
+        } else {
+            return super.getPartition();
+        }
+    }
+}
+
 // We allways have at least one view
 class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
     constructor (store, maxTabs) {
@@ -57,10 +71,12 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
             bookmarks,
             history,
             tabsModel,
-            defaultWebviewState: 'deactivated'
+            defaultWebviewState: 'deactivated',
+            webViewFactory: new WebViewFactory(null)
         });
 
         const browser = this;
+        browser.webViewFactory.browser = browser;
         browser.config = new Config();
         browser.settings = new Settings(store, db, browser);
         browser.prevSessionTabs = undefined;
@@ -114,7 +130,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
             }
             if (launchArgs.target) {
                 hasTargetInLaunchParams = true;
-                this.tabs.addTab(this._createWebView(launchArgs.target));
+                this.tabs.addTab(this._createWebViewPage(launchArgs.target));
             }
             if (launchArgs.newtab) {
                 hasTargetInLaunchParams = true;
@@ -139,7 +155,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
     createTab(type = TabTypes.NEW_TAB_PAGE, url) {
         switch (type) {
             case TabTypes.WEBVIEW:
-                this.tabs.addTab(this._createWebView(url));
+                this.tabs.addTab(this._createWebViewPage(url));
                 break;
             case TabTypes.NEW_TAB_PAGE:
                 this.createNewTab();
@@ -207,10 +223,35 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
             BrowserConsts.SITE_FILTERING_URL));
     }
 
-    _createWebView(url, windowToAttach) {
-        const state = super._createWebView(url, windowToAttach);
-        // Workaround for TV, as browser should show pointer cursor for links
-        // but by default it shows normal pointer
+    setPrivateBrowsing(usePrivateBrowsing) {
+        const {tabs, settings, mostVisited, prevSessionTabs} = this;
+        if (usePrivateBrowsing === settings.getPrivateBrowsing()) {
+            return;
+        }
+        // First, we should close all tabs with <webview>
+        for (let i = tabs.count() - 1; i >= 0; i--) {
+            const id = tabs.getIdByIndex(i), tabType = tabs.getTab(id).state.type;
+            if (tabType === TabTypes.WEBVIEW) {
+                this.closeTab(i);
+            }
+        }
+        // Second, we should turn on/off statistics gathering for
+        // for prev session tabs and most visited
+        if (usePrivateBrowsing) {
+            mostVisited.turnOff();
+            prevSessionTabs.turnOff();
+        } else {
+            mostVisited.turnOn();
+            prevSessionTabs.turnOn();
+        }
+        // then we can switch mode
+        return settings.setPrivateBrowsing(usePrivateBrowsing);
+    }
+
+    _createWebViewPage(url, windowToAttach) {
+        const state = super._createWebViewPage(url, windowToAttach);
+        // Workaround for WebOS, as browser should show pointer cursor for
+        // links but by default it shows normal pointer
         if (this.useragentOverride &&
             this.useragentOverride.indexOf('WebOS') > -1) {
             this.webViews[state.id].addContentScripts([{

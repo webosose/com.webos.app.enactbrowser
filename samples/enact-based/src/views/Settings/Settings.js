@@ -96,7 +96,7 @@ class SettingsBase extends Component {
 
 	onTogglePrivateBrowsing = () => {
 		const {browser, privateBrowsing} = this.props;
-		browser.settings.setPrivateBrowsing(!privateBrowsing);
+		browser.setPrivateBrowsing(!privateBrowsing);
 	}
 
 	onClearBrowsingData = () => {
@@ -160,6 +160,7 @@ class SettingsBase extends Component {
 				searchEngine,
 				alwaysShowBookmarks,
 				siteFiltering,
+				privateBrowsing,
 				...rest
 			} = this.props,
 			classes = classNames(className, css.settings),
@@ -168,7 +169,6 @@ class SettingsBase extends Component {
 		delete rest.browser;
 		delete rest.dispatch;
 		delete rest.homePageUrl;
-		delete rest.privateBrowsing;
 
 		return (
 			<Scroller {...rest} className={css.scroller}>
@@ -215,9 +215,9 @@ class SettingsBase extends Component {
 					<OnOffButton onClick={this.onToggleShowBookmarks} selected={alwaysShowBookmarks} />
 					<br />
 
-					{/*<BodyText className={css.menu}>{$L('Private Browsing')}</BodyText>
+					<BodyText className={css.menu}>{$L('Private Browsing')}</BodyText>
 					<OnOffButton onClick={this.onTogglePrivateBrowsing} selected={privateBrowsing} />
-					<br />*/}
+					<br />
 
 					<BodyText className={css.menu}>{$L('Site Filtering')}</BodyText>
 					<OnOffButton onClick={this.startSiteFiltering} selected={(siteFiltering !== 'off')} />

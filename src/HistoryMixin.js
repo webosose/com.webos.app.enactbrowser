@@ -23,6 +23,14 @@ const HistoryMixin = (superclass) => (class extends superclass {
     constructor({history, ...rest}) {
         super(rest);
         this.history = history;
+
+        this.tabs.addEventListener('update', (ev) => {
+            if (!this.settings.getPrivateBrowsing()) {
+                if (ev.diff.navState && 'url' in ev.diff.navState) {
+                    this.history.addEntry(ev.diff.navState.url);
+                }
+            }
+        });
     }
 
     clearData() {
@@ -32,29 +40,19 @@ const HistoryMixin = (superclass) => (class extends superclass {
         ]);
     }
 
-    _createWebView(url, window) {
-        const state = super._createWebView(url, window);
-
-        this.tabs.addEventListener('update', (ev) => {
-            if (ev.diff.navState && 'url' in ev.diff.navState) {
-                this.history.addEntry(ev.diff.navState.url);
-            }
-        });
-
-        return state;
-    }
-
-    _updateTitle(tab, title) {
-        super._updateTitle(tab, title);
-        this.history.updateEntryTitle(tab.state.navState.url, title);
-    }
-
     openHistory() {
         this.tabs.addTab(this._createManagePage(
             BrowserConsts.HISTORY_ID,
             TabTypes.HISTORY,
             TabTitles.HISTORY_TITLE,
             BrowserConsts.HISTORY_URL), true);
+    }
+
+    _updateTitle(tab, title) {
+        super._updateTitle(tab, title);
+        if (!this.settings.getPrivateBrowsing()) {
+            this.history.updateEntryTitle(tab.state.navState.url, title);
+        }
     }
 });
 

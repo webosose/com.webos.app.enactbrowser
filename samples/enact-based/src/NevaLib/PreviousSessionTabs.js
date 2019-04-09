@@ -42,6 +42,14 @@ class PreviousSessionTabs {
             }
         })
     }
+
+    turnOn() {
+        this.policyImpl.turnOff();
+    }
+
+    turnOff() {
+        this.policyImpl.turnOn();
+    }
 }
 
 export default PreviousSessionTabs;
