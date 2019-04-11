@@ -35,7 +35,7 @@ class WebViewFactoryBase {
     }
 
     getUrl({newWindow, url}) {
-        return !newWindow ? url : null;
+        return !newWindow ? getUrlWithPrefix(url) : null;
     }
 
     getUserAgentOverride() {
