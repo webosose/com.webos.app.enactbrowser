@@ -65,6 +65,11 @@ class Main extends Component {
 
 		document.addEventListener('webkitfullscreenchange', this.onFullscreenChange);
 		document.addEventListener('dialog', this.onDialog);
+		document.addEventListener('keydown', ({keyCode}) => {
+			if (keyCode === 0x1CD) {
+				browser.back();
+			}
+		});
 	}
 
 	componentDidUpdate () {

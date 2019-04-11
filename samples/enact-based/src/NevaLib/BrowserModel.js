@@ -261,6 +261,19 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
                 run_at: 'document_start'
             }]);
         }
+        // Support for RCU back key, when focus is on <webview>
+        this.webViews[state.id].addContentScripts([{
+            name: 'goBackFromRCU',
+            matches: ['http://*/*', 'https://*/*'],
+            js: { code: `
+                document.addEventListener("keydown", ({keyCode}) => {
+                    if (keyCode === 0x1CD) {
+                        history.back();
+                    }
+                });
+            ` },
+            run_at: 'document_start'
+        }]);
         return state;
     }
 }
