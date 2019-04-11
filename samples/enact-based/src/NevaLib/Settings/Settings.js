@@ -130,6 +130,13 @@ class Settings extends SettingsBase {
         return this.store.getState().settingsState.siteFiltering;
     }
 
+    setPinCode = (code) => {
+        return this.storage.set(SettingsKeys.PIN_NUMBER_KEY, code)
+            .then(() => {
+                this.store.dispatch(setPinNumber(code));
+            });
+    }
+
     matchPinCode = (pinCode) => {
         return this.store.getState().settingsState.pinNumber === pinCode;
     }

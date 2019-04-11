@@ -11,6 +11,7 @@
  *
  */
 
+import $L from '@enact/i18n/$L';
 import BodyText from '@enact/moonstone/BodyText';
 import Button from '@enact/moonstone/Button';
 import {connect} from 'react-redux';
@@ -34,12 +35,17 @@ import {
 	setApprovedSites,
 	setBlockedSites
 } from '../../NevaLib/Settings/actions';
+import PinPopup from '../../components/PinPopup';
 import SiteFilteringItem from './SiteFilteringItem';
 
 import css from './SiteFiltering.less';
 
 const filteringOptions = ['off', 'whitelist', 'blacklist'];
-const filteringOptionsText = ['Off', 'Approved Sites', 'Blocked Sites'];
+const filteringOptionsText = [$L('Off'), $L('Approved Sites'), $L('Blocked Sites')];
+
+function isApproved(option) {
+	return option === filteringOptions[1];
+}
 
 class SiteFilteringBase extends Component {
 	static propTypes = {
@@ -55,6 +61,7 @@ class SiteFilteringBase extends Component {
 		super(props);
 		this.state = {
 			deletePopupOpen: false,
+			resetPinCodePopupOpen: false,
 			urlToAdd: ''
 		};
 		this.loadSiteList();
@@ -97,7 +104,7 @@ class SiteFilteringBase extends Component {
 				{...rest}
 				index={index}
 				url={data[index]}
-				isApproved={this.props.siteFiltering === 'Approved Sites'}
+				isApproved={isApproved(this.props.siteFiltering)}
 			/>
 		)
 	}
@@ -113,7 +120,7 @@ class SiteFilteringBase extends Component {
 	onSelectAll = () => {
 		const
 			{data, selected, siteFiltering} = this.props,
-			isApproved = siteFiltering === 'Approved Sites';
+			isApproved = isApproved(siteFiltering);
 		if (data.length === selected.length) {
 			if (isApproved) {
 				this.props.deselectAllApprovedSites();
@@ -145,6 +152,21 @@ class SiteFilteringBase extends Component {
 		this.setState({deletePopupOpen: false});
 	}
 
+	onOpenResetPinPopup = () => {
+		this.setState({resetPinCodePopupOpen: true});
+	}
+
+	onCloseResetPinPopup = () => {
+		this.setState({resetPinCodePopupOpen: false});
+	}
+
+	onSubmitPinCode = (pinCode) => {
+		this.props.browser.settings.setPinCode(pinCode)
+			.then(() => {
+				this.setState({resetPinCodePopupOpen: false});
+			});
+	}
+
 	render () {
 		const
 			{data, selected, siteFiltering, ...rest} = this.props,
@@ -172,13 +194,13 @@ class SiteFilteringBase extends Component {
 					{filteringOptionsText}
 				</Group>
 				<div>
-					Approved Sites: Anyone can access the sites on this list.
+					{$L('Approved Sites: Anyone can access the sites on this list.')}
 					<br />
-					Blocked Sites: Your Safety PIN is required to access these sites.
+					{$L('Blocked Sites: Your Safety PIN is required to access these sites.')}
 				</div>
 				<br />
-				{(optionIndex === 1) && <BodyText>Approved Sites List</BodyText>}
-				{(optionIndex === 2) && <BodyText>Blocked Sites List</BodyText>}
+				{(optionIndex === 1) && <BodyText>{$L('Approved Sites List')}</BodyText>}
+				{(optionIndex === 2) && <BodyText>{$L('Blocked Sites List')}</BodyText>}
 				{(optionIndex === 1 || optionIndex === 2) &&
 					<div>
 						{/*
@@ -234,6 +256,19 @@ class SiteFilteringBase extends Component {
 						}
 					</div>
 				}
+				<Button
+					css={css}
+					onClick={this.onOpenResetPinPopup}
+					small
+				>
+					{$L('Reset pin')}
+				</Button>
+				<PinPopup
+					open={this.state.resetPinCodePopupOpen}
+					onClose={this.onCloseResetPinPopup}
+					onSubmit={this.onSubmitPinCode}
+					matched
+				/>
 			</div>
 		);
 	}
