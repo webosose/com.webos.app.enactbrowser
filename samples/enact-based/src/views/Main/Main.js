@@ -53,7 +53,9 @@ class Main extends Component {
 				this.state.fullScreen = true;
 			}
 			if (launchArgs.override_user_agent_string) {
-				this.showExitButton = launchArgs.override_user_agent_string.indexOf('WebOS') > -1
+				this.showExitButton =
+					launchArgs.override_user_agent_string.indexOf('WebOS') > -1 ||
+					launchArgs.override_user_agent_string.indexOf('Web0S') > -1;
 			}
 		}
 	}

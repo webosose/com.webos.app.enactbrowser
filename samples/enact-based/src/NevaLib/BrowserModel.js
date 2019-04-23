@@ -253,7 +253,8 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
         // Workaround for WebOS, as browser should show pointer cursor for
         // links but by default it shows normal pointer
         if (this.useragentOverride &&
-            this.useragentOverride.indexOf('WebOS') > -1) {
+            (this.useragentOverride.indexOf('WebOS') > -1 ||
+             this.useragentOverride.indexOf('Web0S') > -1)) {
             this.webViews[state.id].addContentScripts([{
                 name: 'handForLinks',
                 matches: ['http://*/*', 'https://*/*'],
