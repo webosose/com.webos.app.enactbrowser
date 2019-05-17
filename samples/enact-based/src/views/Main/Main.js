@@ -115,6 +115,7 @@ class Main extends Component {
 			this.exitFullscreenWasPressed = true;
 			document.webkitExitFullscreen();
 		}
+		this.setState({fullScreen: false});
 	}
 
 	onFullscreenChange = () => {
