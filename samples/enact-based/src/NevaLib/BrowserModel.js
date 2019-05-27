@@ -224,7 +224,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
     }
 
     setPrivateBrowsing(usePrivateBrowsing) {
-        const {tabs, settings, mostVisited, prevSessionTabs} = this;
+        const {tabs, settings, mostVisited, prevSessionTabs, recentlyClosed} = this;
         if (usePrivateBrowsing === settings.getPrivateBrowsing()) {
             return;
         }
@@ -236,13 +236,15 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
             }
         }
         // Second, we should turn on/off statistics gathering for
-        // for prev session tabs and most visited
+        // for prev session tabs, most visited and recently closed
         if (usePrivateBrowsing) {
             mostVisited.turnOff();
             prevSessionTabs.turnOff();
+            recentlyClosed.turnOff();
         } else {
             mostVisited.turnOn();
             prevSessionTabs.turnOn();
+            recentlyClosed.turnOn();
         }
         // then we can switch mode
         return settings.setPrivateBrowsing(usePrivateBrowsing);
