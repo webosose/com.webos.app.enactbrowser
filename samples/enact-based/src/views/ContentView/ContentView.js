@@ -48,7 +48,7 @@ const ContentViewBase = kind({
 
 		return (
 			<div {...rest} className={fullScreen ? css.contentViewFullScreen : css.contentView}>
-				<BookmarkBar browser={browser} showingBookmark={(selectedId && tabs[selectedId].type === TabTypes.NEW_TAB_PAGE) || (alwaysShowBookmarks && !fullScreen)} />
+				<BookmarkBar browser={browser} showingBookmark={(!fullScreen && selectedId && tabs[selectedId].type === TabTypes.NEW_TAB_PAGE) || (alwaysShowBookmarks && !fullScreen)} />
 				{sortedIds.map((id) => {
 					const
 						isSelectedTab = id === selectedId,

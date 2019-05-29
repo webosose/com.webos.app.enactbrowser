@@ -65,7 +65,6 @@ class Main extends Component {
 		// eslint-disable-next-line react/no-did-mount-set-state
 		this.setState({browser});
 
-		document.addEventListener('webkitfullscreenchange', this.onFullscreenChange);
 		document.addEventListener('dialog', this.onDialog);
 		document.addEventListener('keydown', ({keyCode}) => {
 			if (keyCode === 0x1CD) {
@@ -107,30 +106,11 @@ class Main extends Component {
 	}
 
 	onFullScreen = () => {
-		this.fullScreenContentItem.current.webkitRequestFullscreen();
+		this.setState({fullScreen: true});
 	}
 
 	onExitFullScreen = () => {
-		if (document.webkitFullscreenElement) {
-			this.exitFullscreenWasPressed = true;
-			document.webkitExitFullscreen();
-		}
 		this.setState({fullScreen: false});
-	}
-
-	onFullscreenChange = () => {
-		// First check is needed to handle recursive fullscreen situations.
-		// If we first entered fullscreen from UI and then from video player
-		// then we don't want to exit from fullscreen when pressing exit from
-		// fullscreen from video player.
-		if (document.webkitFullscreenElement && this.exitFullscreenWasPressed) {
-			document.webkitExitFullscreen();
-		} else if (document.webkitFullscreenElement) {
-			this.setState({fullScreen: true});
-		} else {
-			this.setState({fullScreen: false});
-		}
-		this.exitFullscreenWasPressed = false;
 	}
 
 	onClose = () => {
@@ -158,7 +138,7 @@ class Main extends Component {
 
 		return (
 			<div {...props}>
-				<div onClick={this.onClick} onMouseLeave={this.onMouseLeave}>
+				{ fullScreen == false && <div onClick={this.onClick} onMouseLeave={this.onMouseLeave}>
 					<div className={css['flexbox-row']}>
 						<NavigationBox browser={browser} />
 						<Omnibox browser={browser} />
@@ -184,7 +164,7 @@ class Main extends Component {
 						}
 					</div>
 					<TabBar browser={browser} />
-				</div>
+				</div> }
 				<ContentView
 					browser={browser}
 					ref={this.fullScreenContentItem}
@@ -200,7 +180,7 @@ class Main extends Component {
 				/>
 				: null
 			}
-				<DialogView />
+				{fullScreen == false && <DialogView />}
 			</div>
 		);
 	}
