@@ -250,8 +250,8 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
         return settings.setPrivateBrowsing(usePrivateBrowsing);
     }
 
-    _createWebViewPage(url, windowToAttach) {
-        const state = super._createWebViewPage(url, windowToAttach);
+    _createWebViewPage(url) {
+        const state = super._createWebViewPage(url);
         // Workaround for WebOS, as browser should show pointer cursor for
         // links but by default it shows normal pointer
         if (this.useragentOverride &&
