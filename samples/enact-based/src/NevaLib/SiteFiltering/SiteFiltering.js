@@ -60,11 +60,13 @@ class SiteFiltering {
 
 	initialize(defaults = null) {
 		const transactionPromises = [];
-		for (let [mode, values] of Object.entries(defaults)) {
-			if (mode in this.filterStorages) {
-				transactionPromises.push(
-					this.filterStorages[mode].setValues(values)
-				);
+		if (defaults) {
+			for (let [mode, values] of Object.entries(defaults)) {
+				if (mode in this.filterStorages) {
+					transactionPromises.push(
+						this.filterStorages[mode].setValues(values)
+					);
+				}
 			}
 		}
 

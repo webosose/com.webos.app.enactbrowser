@@ -166,19 +166,21 @@ class OmniboxBase extends Component {
 			{bookmarksData, urlSuggestions} = this.props,
 			items = [];
 
-		for (let i = 0; i < urlSuggestions.length; i ++) {
-			items.push(
-				<SuggestedItem
-					data-index={i + 1}
-					icon={bookmarksData.some(
-						(bookmark) => bookmark.url === urlSuggestions[i].url
-					) ? "bookmarksButton" : "historyButton"}
-					key={i + 1}
-					onClick={this.onClickSuggestedItems}
-					title={urlSuggestions[i].title}
-					url={urlSuggestions[i].url}
-				/>
-			);
+		if (urlSuggestions) {
+			for (let i = 0; i < urlSuggestions.length; i ++) {
+				items.push(
+					<SuggestedItem
+						data-index={i + 1}
+						icon={bookmarksData.some(
+							(bookmark) => bookmark.url === urlSuggestions[i].url
+						) ? "bookmarksButton" : "historyButton"}
+						key={i + 1}
+						onClick={this.onClickSuggestedItems}
+						title={urlSuggestions[i].title}
+						url={urlSuggestions[i].url}
+					/>
+				);
+			}
 		}
 		return items;
 	}
