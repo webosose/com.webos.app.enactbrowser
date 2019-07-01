@@ -107,6 +107,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
         .then(() => {
             browser.siteFiltering.setMode(browser.settings.getSiteFiltering());
             browser.searchService.engine = browser.settings.getSearchEngine();
+            browser.setStatisticsGathering(browser.settings.getPrivateBrowsing());
             browser.initializeTabs();
         });
 
@@ -223,8 +224,21 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
             BrowserConsts.SITE_FILTERING_URL));
     }
 
+    setStatisticsGathering(usePrivateBrowsing) {
+        const {mostVisited, prevSessionTabs, recentlyClosed} = this;
+        if (usePrivateBrowsing) {
+            mostVisited.turnOff();
+            prevSessionTabs.turnOff();
+            recentlyClosed.turnOff();
+        } else {
+            mostVisited.turnOn();
+            prevSessionTabs.turnOn();
+            recentlyClosed.turnOn();
+        }
+    }
+
     setPrivateBrowsing(usePrivateBrowsing) {
-        const {tabs, settings, mostVisited, prevSessionTabs, recentlyClosed} = this;
+        const {tabs, settings} = this;
         if (usePrivateBrowsing === settings.getPrivateBrowsing()) {
             return;
         }
@@ -237,15 +251,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
         }
         // Second, we should turn on/off statistics gathering for
         // for prev session tabs, most visited and recently closed
-        if (usePrivateBrowsing) {
-            mostVisited.turnOff();
-            prevSessionTabs.turnOff();
-            recentlyClosed.turnOff();
-        } else {
-            mostVisited.turnOn();
-            prevSessionTabs.turnOn();
-            recentlyClosed.turnOn();
-        }
+        this.setStatisticsGathering(usePrivateBrowsing);
         // then we can switch mode
         return settings.setPrivateBrowsing(usePrivateBrowsing);
     }
