@@ -87,7 +87,7 @@ class BrowserBase {
         if (this.tabs.count() !== 1) {
             this.tabs.deleteTab(index);
         } else {
-            tabs.replaceTab(0, this._createNewTabPage());
+            this.tabs.replaceTab(index, this._createNewTabPage());
         }
     }
 
