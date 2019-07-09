@@ -46,16 +46,10 @@ class Main extends Component {
 		};
 
 		this.fullScreenContentItem = React.createRef();
-		this.showExitButton = false;
 		if (typeof chrome === 'object' && chrome.app.launchArgs) {
 			const launchArgs = JSON.parse(chrome.app.launchArgs);
 			if (launchArgs.fullMode) {
 				this.state.fullScreen = true;
-			}
-			if (launchArgs.override_user_agent_string) {
-				this.showExitButton =
-					launchArgs.override_user_agent_string.indexOf('WebOS') > -1 ||
-					launchArgs.override_user_agent_string.indexOf('Web0S') > -1;
 			}
 		}
 	}
@@ -113,10 +107,6 @@ class Main extends Component {
 		this.setState({fullScreen: false});
 	}
 
-	onClose = () => {
-		this.state.browser.shutdown();
-	}
-
 	onClick = () => {
 		Spotlight.resume();
 	}
@@ -151,17 +141,6 @@ class Main extends Component {
 							tooltipText={$L('Full screen')}
 							type="fullscreenButton"
 						/>
-						{
-							this.showExitButton ?
-							<IconButton
-								backgroundOpacity="transparent"
-								className={css.button}
-								onClick={this.onClose}
-								tooltipText={$L('Exit app')}
-								type="xButton"
-							/> :
-							null
-						}
 					</div>
 					<TabBar browser={browser} />
 				</div> }
