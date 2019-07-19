@@ -44,11 +44,11 @@ class PreviousSessionTabs {
     }
 
     turnOn() {
-        this.policyImpl.turnOff();
+        this.policyImpl.turnOn();
     }
 
     turnOff() {
-        this.policyImpl.turnOn();
+        this.policyImpl.turnOff();
     }
 }
 
