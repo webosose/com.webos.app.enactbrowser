@@ -34,7 +34,7 @@ class MemoryManagerTabPolicy {
             Promise.race([
                 new Promise((resolve) => {
                     window.navigator.memorymanager.getMemoryStatus((ev) => {
-                        resolve(ev.currentLevel);
+                        resolve(ev.system.level);
                     });
                 }),
                 new Promise((resolve) => {
