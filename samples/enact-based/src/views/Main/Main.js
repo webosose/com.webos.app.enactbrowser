@@ -128,8 +128,8 @@ class Main extends Component {
 
 		return (
 			<div {...props}>
-				{ fullScreen == false && <div onClick={this.onClick} onMouseLeave={this.onMouseLeave}>
-					<div className={css['flexbox-row']}>
+				<div onClick={this.onClick} onMouseLeave={this.onMouseLeave}>
+					{ fullScreen == false && <div className={css['flexbox-row']}>
 						<NavigationBox browser={browser} />
 						<Omnibox browser={browser} />
 						<ZoomControl browser={browser} />
@@ -141,9 +141,9 @@ class Main extends Component {
 							tooltipText={$L('Full screen')}
 							type="fullscreenButton"
 						/>
-					</div>
-					<TabBar browser={browser} />
-				</div> }
+					</div> }
+					<TabBar fullScreen={fullScreen} browser={browser} />
+				</div>
 				<ContentView
 					browser={browser}
 					ref={this.fullScreenContentItem}

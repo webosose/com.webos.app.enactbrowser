@@ -22,6 +22,7 @@ import {BrowserIconButton as IconButton} from '../BrowserIconButton';
 import Tab from './Tab';
 import {TabTypes} from '../../NevaLib/BrowserModel';
 import Sortable from '../Sortable';
+import Spotlight from '@enact/spotlight';
 
 import css from './TabBar.less';
 
@@ -61,6 +62,7 @@ class TabBarBase extends Component {
 		selectedIndex: PropTypes.number,
 		tabStates: PropTypes.object,
 		ids: PropTypes.array,
+		fullScreen: PropTypes.bool
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -87,7 +89,10 @@ class TabBarBase extends Component {
 		if (selectedTab && selectedTab.type === TabTypes.WEBVIEW) {
 			if (prevSelectedId !== selectedIndex || selectedTab.navState.isLoading) {
 				browser.webViews[selectedId].focus();
+				Spotlight.pause();
 			}
+		} else {
+			Spotlight.resume();
 		}
 	}
 
@@ -153,7 +158,7 @@ class TabBarBase extends Component {
 
 	render = () => {
 		const
-			{className, numOfTabs, ...rest} = this.props,
+			{className, numOfTabs, fullScreen, ...rest} = this.props,
 			classes = classNames(className, css.tabBar);
 
 		delete rest.tabStates;
@@ -166,10 +171,12 @@ class TabBarBase extends Component {
 		delete rest.dispatch;
 
 		return (
+			!fullScreen ?
 			<ul className={classes} {...rest}>
 				{this.tabs()}
 				{numOfTabs < 7 ? <NewTabButton onNew={this.onNew} /> : null}
 			</ul>
+			: null
 		);
 	}
 }
