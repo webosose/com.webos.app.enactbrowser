@@ -13,7 +13,6 @@ import ri from '@enact/ui/resolution';
 
 import BookmarkManager from '../BookmarkManager';
 import DevSettings from '../DevSettings';
-import ErrorPage from '../ErrorPage';
 import History from '../History';
 import NewTabPage from '../NewTabPage';
 import Settings from '../Settings';
@@ -31,10 +30,6 @@ const
         top: '0',
         height: '100vh'
     }
-
-const shouldShowUIErrorPage = (config, error) => {
-    return error && (!config.useBuiltInErrorPages || error === 'RENDERER_CRASHED' || error === 'PAGE_UNRESPONSIVE');
-}
 
 const ContentItem = kind({
     name: 'ContentItem',
@@ -62,13 +57,8 @@ const ContentItem = kind({
                 }
 
                 return (
-                    <div>
-                        <WebView style={style} id={id} webView={browser.webViews[id]} className={css.webView} />
-                        {shouldShowUIErrorPage(browser.config, tabs[id].error) ?
-                            <ErrorPage style={style} errorMsg={tabs[id].error} /> :
-                            null
-                        }
-                    </div>
+                    <WebView style={style} id={id} webView={browser.webViews[id]} className={css.webView}
+                        tabs={tabs} browser={browser} />
                 );
             }
             case TabTypes.DEV_SETTINGS:
