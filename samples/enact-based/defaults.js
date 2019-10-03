@@ -40,7 +40,7 @@ function getBrowserDefaults() {
         },
         sitefiltering: {
             whitelist: ['*google*', '*://*yandex*'],
-            blacklist: ['*youtube*', '*lenta.ru*']
+            blacklist: ['*://www.youtube.*', '*://youtube.*', '*lenta.ru*']
         }
     };
 }
