@@ -142,13 +142,17 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
             }
         }
         if (!hasTargetInLaunchParams) {
-            const startupPage = this.settings.getStartupPage();
-            if (startupPage === SettingsConsts.NEW_TAB_PAGE) {
+            if (this.settings.getPrivateBrowsing()) {
                 this.createTab(TabTypes.NEW_TAB_PAGE);
-            } else if (startupPage === SettingsConsts.CONTINUE) {
-                this.prevSessionTabs.restore();
-            } else if (startupPage === SettingsConsts.HOME_PAGE) {
-                this.createTab(TabTypes.WEBVIEW, this.settings.getHomePageUrl());
+            } else {
+                const startupPage = this.settings.getStartupPage();
+                if (startupPage === SettingsConsts.NEW_TAB_PAGE) {
+                    this.createTab(TabTypes.NEW_TAB_PAGE);
+                } else if (startupPage === SettingsConsts.CONTINUE) {
+                    this.prevSessionTabs.restore();
+                } else if (startupPage === SettingsConsts.HOME_PAGE) {
+                    this.createTab(TabTypes.WEBVIEW, this.settings.getHomePageUrl());
+                }
             }
         }
     }
