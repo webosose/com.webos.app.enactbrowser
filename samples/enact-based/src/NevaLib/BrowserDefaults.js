@@ -25,7 +25,7 @@ function getDefaults() {
                 pinNumber: '0000'
             },
             config: {
-                useBuiltInErrorPages: true,
+                useBuiltInErrorPages: false,
                 restorePrevSessionPolicy: 'onlyLastTab',
                 simplePolicy: {
                     'maxActiveTabs': 1,
