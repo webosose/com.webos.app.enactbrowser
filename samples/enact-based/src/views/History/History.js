@@ -150,6 +150,7 @@ class HistoryBase extends Component {
 			}
 		);
 		//this.props.browser.history.clearAll();
+		this.props.deselectAllHistory();
 		this.setState({deletePopupOpen: false});
 	}
 
