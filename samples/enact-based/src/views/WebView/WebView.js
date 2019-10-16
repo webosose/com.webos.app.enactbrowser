@@ -27,11 +27,9 @@ class WebView extends Component {
 		let tab = this.props.tabs[this.props.id];
 		let err = tab.error;
 		let id_ = this.props.id + WebViewWrapperId;
-		let use_chrom_err_page = this.props.browser.config.useBuiltInErrorPages;
-
-		let show_webview = err === null || use_chrom_err_page
-			|| err === 'RENDERER_CRASHED' || err === 'PAGE_UNRESPONSIVE';
-		let show_error = !show_webview;
+		let use_chrome_err_page = this.props.browser.config.useBuiltInErrorPages;
+		let show_error = err && !use_chrome_err_page;
+		let show_webview = !show_error;
 
 		let webview_elem = document.getElementById(id_);
 		let errpage_elem = document.getElementById(id_ + "errorPage");
@@ -57,9 +55,14 @@ class WebView extends Component {
 		this.showHideWebview();
 	}
 
+	onExit() {
+		this.showHideWebview();
+	}
+
 	componentDidMount () {
 		this.props.webView.insertIntoDom(this.props.id + WebViewWrapperId);
 		this.props.webView.addEventListener('loadcommit', this.onLoadCommit.bind(this));
+		this.props.webView.addEventListener('exit', this.onExit.bind(this));
 	}
 
 	render () {
