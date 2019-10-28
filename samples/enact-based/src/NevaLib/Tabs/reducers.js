@@ -47,15 +47,26 @@ function tabsState (state = initialTabsState, action) {
 		}
 		case types.CLOSE_TAB: {
 			let newTabs;
+			let currentId = state.tabs[state.ids[action.index]];
 
 			delete state.tabs[state.ids[action.index]];
 			newTabs = Object.assign({}, state.tabs);
 			state.ids.splice(action.index, 1);
 
+			let newSelectedIndex = state.ids.indexOf(currentId);
+
+			// currently selected tab was removed => select next right tab
+			if (newSelectedIndex < 0) {
+				// The tab, was pointed to by the current index, was removed, so the current
+				// index should point to the next tab (action.index)
+				// or the last tab (state.ids.length - 1)
+				newSelectedIndex = Math.min(action.index, state.ids.length - 1);
+			}
+
 			return Object.assign({}, state, {
-				selectedIndex: action.newSelectedIndex,
 				ids: [...state.ids],
-				tabs: newTabs
+				tabs: newTabs,
+				selectedIndex: newSelectedIndex
 			});
 		}
 		case types.MOVE_TAB: {

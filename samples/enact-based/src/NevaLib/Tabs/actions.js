@@ -25,10 +25,9 @@ const replaceTab = (index, tab) => ({
 });
 
 // Closes a tab of index
-const closeTab = (index, newSelectedIndex) => ({
+const closeTab = (index) => ({
 	type: types.CLOSE_TAB,
-	index,
-	newSelectedIndex
+	index
 });
 
 // Moves tabs
