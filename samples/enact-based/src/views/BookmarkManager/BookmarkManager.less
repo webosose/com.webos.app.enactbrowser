@@ -1,5 +1,6 @@
 /* BookmarkManager.less */
 @import '~@enact/moonstone/styles/skin.less';
+@import '~@enact/moonstone/styles/variables.less';
 
 .bookmarkManager {
 	height: 75vh;
@@ -22,7 +23,7 @@
 }
 
 .list {
-	height: 70%;
+	height: ~"calc(100vh - " 200px + @moon-button-height + 36px ~")";
 	padding: 20px 10px 10px 10px;
 }
 

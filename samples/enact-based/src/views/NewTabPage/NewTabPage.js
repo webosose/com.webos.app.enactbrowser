@@ -19,17 +19,11 @@ import Spotlight from '@enact/spotlight';
 
 import {Bookmark} from '../../components/BookmarkBar';
 import RecentlyClosed from './RecentlyClosed';
-import SiteItem from './SiteItem';
+import {SiteItem, EmptyItem} from './SiteItem';
 
 import css from './NewTabPage.less';
 
-const
-	placeholder =
-	'data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC' +
-	'9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHN0cm9rZT0iIzU1NSIgZmlsbD0iI2FhYSIg' +
-	'ZmlsbC1vcGFjaXR5PSIwLjIiIHN0cm9rZS1vcGFjaXR5PSIwLjgiIHN0cm9rZS13aWR0aD0iNiIgLz48L3N2Zz' +
-	'4NCg==',
-	numOfMostVisited = 10;
+const numOfMostVisited = 10;
 
 class NewTabPageBase extends Component {
 	static propTypes = {
@@ -81,9 +75,16 @@ class NewTabPageBase extends Component {
 				);
 			} else {
 				sites.push(
-					<SiteItem data-index={i} key={i} source={placeholder} />
+					<SiteItem data-index={i} key={i} />
 				);
 			}
+		}
+
+		// A little hack to align items of the last line to the left with flexbox.
+		for (let j = numOfMostVisited; j < numOfMostVisited * 2 - 2; j++) {
+			sites.push(
+				<EmptyItem key={j} />
+			);
 		}
 
 		return sites;
