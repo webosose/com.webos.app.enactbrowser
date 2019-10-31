@@ -45,7 +45,7 @@ class HistoryItemBase extends Component {
 			return (
 				<div {...rest} className={css.historyItem}>
 					<Checkbox className={css.checkbox} onToggle={this.onToggle} selected={selected} />
-					<Item onClick={onClick} data-index={index} className={css.title}>{`${time.toLocaleTimeString('en-US')} ${title} - ${url}`}</Item>
+					<Item onClick={onClick} data-index={index} className={css.title}>{`${time.toLocaleTimeString(window.navigator ? window.navigator.language : undefined)} ${title} - ${url}`}</Item>
 				</div>
 			);
 		} else {
