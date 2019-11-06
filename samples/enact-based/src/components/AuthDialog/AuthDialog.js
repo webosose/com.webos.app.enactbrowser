@@ -18,7 +18,7 @@ import Notification from '@enact/moonstone/Notification';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
-import css from './AuthDialog.less';
+import css from './AuthDialog.module.less';
 
 class AuthDialog extends Component {
 	static props = {

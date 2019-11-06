@@ -1,4 +1,4 @@
-// Copyright (c) 2018 LG Electronics, Inc.
+// Copyright (c) 2018-2019 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -12,7 +12,7 @@ import React from 'react';
 
 import Main from '../views/Main';
 
-import css from './App.less';
+import css from './App.module.less';
 
 const App = kind({
 	name: 'App',

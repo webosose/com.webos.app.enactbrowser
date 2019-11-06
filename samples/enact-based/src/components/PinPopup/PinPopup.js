@@ -1,4 +1,4 @@
-// Copyright (c) 2018 LG Electronics, Inc.
+// Copyright (c) 2018-2019 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -18,7 +18,7 @@ import Input from '@enact/moonstone/Input';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
-import css from './PinPopup.less';
+import css from './PinPopup.module.less';
 
 class PinPopup extends Component {
 	static propTypes = {
@@ -108,17 +108,17 @@ class PinPopup extends Component {
 				</div>
 				<br />
 				<br />
-				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed} small>0</Button>
-				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed} small>1</Button>
-				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed} small>2</Button>
-				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed} small>3</Button>
-				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed} small>4</Button>
-				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed} small>5</Button>
-				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed} small>6</Button>
-				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed} small>7</Button>
-				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed} small>8</Button>
-				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed} small>9</Button>
-				<Button onClick={this.onNumberKeyPressed} small>Back</Button>
+				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed} size="small">0</Button>
+				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed} size="small">1</Button>
+				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed} size="small">2</Button>
+				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed} size="small">3</Button>
+				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed} size="small">4</Button>
+				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed} size="small">5</Button>
+				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed} size="small">6</Button>
+				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed} size="small">7</Button>
+				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed} size="small">8</Button>
+				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed} size="small">9</Button>
+				<Button onClick={this.onNumberKeyPressed} size="small">Back</Button>
 			</Dialog>
 		);
 	}

@@ -29,7 +29,7 @@ import Omnibox from '../../components/Omnibox';
 import {TabBar} from '../../components/TabBar';
 import ZoomControl from '../../components/ZoomControl';
 
-import css from './Main.less';
+import css from './Main.module.less';
 
 const maxTab = 7;
 

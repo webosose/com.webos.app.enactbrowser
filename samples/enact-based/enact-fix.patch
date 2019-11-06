@@ -1,20 +1,23 @@
---- a/node_modules/@enact/i18n/src/Loader.js	2018-04-03 12:53:28.632266017 +0300
-+++ b/node_modules/@enact/i18n/src/Loader.js	2018-04-03 12:53:43.628266017 +0300
-@@ -24,7 +24,7 @@
+#diff --git a/node_modules/@enact/i18n/src/Loader.js b/node_modules/@enact/i18n/src/Loader.js
+#index ddbfc78..031180c 100644
+--- a/node_modules/@enact/i18n/src/Loader.js
++++ b/node_modules/@enact/i18n/src/Loader.js
+@@ -26,7 +26,7 @@ var getImpl = function getImpl(url, callback, sync) {
      var req;
-     (0, _xhr.default)({
+     (0, _xhr["default"])({
        url: url,
--      sync: true,
+-      sync: sync,
 +      sync: false,
        beforeSend: function beforeSend(r) {
          return req = r;
        }
-@@ -358,7 +358,7 @@
+@@ -405,7 +405,7 @@ EnyoLoader.prototype.loadManifestsSync = function (_root) {
+ EnyoLoader.prototype.isAvailable = function (_root, path) {
+   // util.print('enyo loader: isAvailable ' + path + '? ');
    // star means attempt to load everything because there was no manifest in that dir
- 
- 
 -  if (this.manifest[_root] === '*' || this.manifest[_root].indexOf(path) !== -1) {
 +  if (this.manifest[_root] === '*' || this.manifest[_root] && this.manifest[_root].indexOf(path) !== -1) {
      // util.print('true\n');
      return true;
    } // util.print('false\n');
+

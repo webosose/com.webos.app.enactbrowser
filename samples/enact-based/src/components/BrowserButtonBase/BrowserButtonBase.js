@@ -1,4 +1,4 @@
-// Copyright (c) 2018 LG Electronics, Inc.
+// Copyright (c) 2018-2019 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -11,7 +11,7 @@ import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import componentCss from './BrowserButtonBase.less';
+import componentCss from './BrowserButtonBase.module.less';
 
 const BrowserButtonBase = kind({
 	name: 'BrowserButtonBase',

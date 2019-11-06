@@ -1,0 +1,39 @@
+/* SiteItem.module.less */
+
+.siteItem {
+	width: 100%;
+	height: 100%;
+	margin-right: 9px;
+}
+
+.xbutton {
+	position: absolute;
+	top: 24px;
+	right: 24px;
+}
+
+.container {
+	width: 16vw;
+	height: 45%;
+	max-width: 300px;
+	max-height: 260px;
+	position: relative;
+}
+
+.emptyContainer {
+	display: block;
+	width: 16vw;
+	visibility: hidden;
+}
+
+@media only screen and (max-width: 1500px) {
+	.container {
+		max-height: 180px;
+	}
+}
+
+@media only screen and (max-width: 1024px) {
+	.container {
+		max-height: 128px;
+	}
+}

@@ -1,4 +1,4 @@
-// Copyright (c) 2018 LG Electronics, Inc.
+// Copyright (c) 2018-2019 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -19,7 +19,7 @@ import React, {Component} from 'react';
 
 import {selectBookmark} from '../../actions';
 
-import css from './BookmarkItem.less';
+import css from './BookmarkItem.module.less';
 
 class BookmarkItemBase extends Component {
 	static propTypes = {

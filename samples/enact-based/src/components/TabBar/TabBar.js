@@ -1,4 +1,4 @@
-// Copyright (c) 2018 LG Electronics, Inc.
+// Copyright (c) 2018-2019 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -24,7 +24,7 @@ import {TabTypes} from '../../NevaLib/BrowserModel';
 import Sortable from '../Sortable';
 import Spotlight from '@enact/spotlight';
 
-import css from './TabBar.less';
+import css from './TabBar.module.less';
 
 const placeholder = (typeof document === 'object') ? document.createElement('li') : null;
 

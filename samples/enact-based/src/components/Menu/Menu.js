@@ -17,7 +17,7 @@ import Item from '@enact/moonstone/Item';
 import React, {Component} from 'react';
 
 import BrowserIconButton from '../BrowserIconButton';
-import css from './Menu.less';
+import css from './Menu.module.less';
 
 const MenuPopupButton = ContextualPopupDecorator(BrowserIconButton);
 

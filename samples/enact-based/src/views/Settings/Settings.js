@@ -1,4 +1,4 @@
-// Copyright (c) 2018 LG Electronics, Inc.
+// Copyright (c) 2018-2019 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -27,7 +27,7 @@ import Scroller from '@enact/moonstone/Scroller';
 import ToggleButton from '@enact/moonstone/ToggleButton';
 
 import PinPopup from '../../components/PinPopup';
-import css from './Settings.less';
+import css from './Settings.module.less';
 
 const OnOffButton = kind({
 	name: 'OnOffButton',
@@ -36,7 +36,7 @@ const OnOffButton = kind({
 			<ToggleButton
 				toggleOffLabel={$L('Off')}
 				toggleOnLabel={$L('On')}
-				small
+				size="small"
 				{...props}
 			/>
 		);
@@ -247,7 +247,7 @@ class SettingsBase extends Component {
 						<span>{$L('All browsing data has been deleted.')}</span>
 					</Notification>
 
-					<Button onClick={this.onClearBrowsingData} css={css} small>{$L('CLEAR BROWSING DATA')}</Button>
+					<Button onClick={this.onClearBrowsingData} css={css} size="small">{$L('CLEAR BROWSING DATA')}</Button>
 
 					<PinPopup
 						open={this.state.siteFilteringOpen}

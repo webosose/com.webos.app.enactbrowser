@@ -1,0 +1,42 @@
+/* Settings.module.less */
+@import '~@enact/moonstone/styles/mixins.less';
+@import '~@enact/moonstone/styles/skin.less';
+
+.scroller {
+	height: ~"calc(100vh - " 236px ~")";
+}
+
+.settings {
+	width: 100%;
+	padding: 0 100px 20px 100px;
+	flex: 1;
+	box-sizing: border-box;
+}
+
+.indent {
+	padding-left: 32px;
+}
+
+p {
+	-webkit-margin-after: 16px;
+	-webkit-margin-before: 16px;
+}
+
+.menu {
+	display: inline-block;
+	margin-right: 24px;
+}
+
+.button {
+	width: 320px;
+	margin: 24px 0 0 0;
+	display: inline-block;
+	.applySkins({
+		font-size: 24px;
+		font-weight: 700;
+		color: #4B4B4B;
+		.bg {
+			background-color: white;
+		}
+	});
+}

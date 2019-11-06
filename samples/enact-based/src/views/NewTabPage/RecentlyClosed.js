@@ -1,4 +1,4 @@
-// Copyright (c) 2018 LG Electronics, Inc.
+// Copyright (c) 2018-2019 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -15,7 +15,7 @@ import $L from '@enact/i18n/$L';
 import Button from '@enact/moonstone/Button';
 import React, {Component} from 'react';
 
-import css from './RecentlyClosed.less';
+import css from './RecentlyClosed.module.less';
 
 class RecentlyClosed extends Component {
 	constructor (props) {
@@ -37,7 +37,7 @@ class RecentlyClosed extends Component {
 	render () {
 		return (
 			<div className={css.recentlyClosed}>
-				<Button css={css} onClick={this.onClick} small>{$L('RECENTLY CLOSED') + ' >'}</Button>
+				<Button css={css} onClick={this.onClick} size="small">{$L('RECENTLY CLOSED') + ' >'}</Button>
 				{this.state.showing ? this.props.children : null}
 			</div>
 		);

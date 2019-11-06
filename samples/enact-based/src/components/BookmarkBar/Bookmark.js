@@ -1,4 +1,4 @@
-// Copyright (c) 2018 LG Electronics, Inc.
+// Copyright (c) 2018-2019 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -17,7 +17,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Spottable from '@enact/spotlight/Spottable';
 
-import css from './Bookmark.less';
+import css from './Bookmark.module.less';
 
 const
 	SpottableDiv = Spottable('div'),

@@ -1,4 +1,4 @@
-// Copyright (c) 2018 LG Electronics, Inc.
+// Copyright (c) 2018-2019 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -22,7 +22,7 @@ import Spotlight from '@enact/spotlight';
 import {BrowserIconButton as IconButton} from '../BrowserIconButton';
 import {TabTypes} from '../../NevaLib/BrowserModel';
 
-import css from './Tab.less';
+import css from './Tab.module.less';
 
 const
 	SpottableLi = Spottable('li'),
@@ -104,7 +104,7 @@ const Tab = kind({
 						className={css.tabCloseButton}
 						onClick={onClose}
 						type="tabCloseButton"
-						small
+						size="small"
 					/>
 				}
 			</SpottableLi>

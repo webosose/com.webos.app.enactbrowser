@@ -23,7 +23,7 @@ import Scroller from '@enact/moonstone/Scroller';
 import ToggleButton from '@enact/moonstone/ToggleButton';
 import RangePicker from '@enact/moonstone/RangePicker';
 
-import css from './DevSettings.less';
+import css from './DevSettings.module.less';
 
 const OnOffButton = kind({
 	name: 'OnOffButton',
@@ -32,7 +32,7 @@ const OnOffButton = kind({
 			<ToggleButton
 				toggleOffLabel={$L('Off')}
 				toggleOnLabel={$L('On')}
-				small
+				size="small"
 				{...props}
 			/>
 		);

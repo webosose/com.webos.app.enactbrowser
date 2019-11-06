@@ -1,4 +1,4 @@
-// Copyright (c) 2018 LG Electronics, Inc.
+// Copyright (c) 2018-2019 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -21,7 +21,7 @@ import {Bookmark} from '../../components/BookmarkBar';
 import RecentlyClosed from './RecentlyClosed';
 import {SiteItem, EmptyItem} from './SiteItem';
 
-import css from './NewTabPage.less';
+import css from './NewTabPage.module.less';
 
 const numOfMostVisited = 10;
 

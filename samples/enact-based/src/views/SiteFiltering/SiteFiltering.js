@@ -1,4 +1,4 @@
-// Copyright (c) 2018 LG Electronics, Inc.
+// Copyright (c) 2018-2019 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -38,7 +38,7 @@ import {
 import PinPopup from '../../components/PinPopup';
 import SiteFilteringItem from './SiteFilteringItem';
 
-import css from './SiteFiltering.less';
+import css from './SiteFiltering.module.less';
 
 const filteringOptions = ['off', 'whitelist', 'blacklist'];
 const filteringOptionsText = [$L('Off'), $L('Approved Sites'), $L('Blocked Sites')];
@@ -229,14 +229,14 @@ class SiteFilteringBase extends Component {
 								css={css}
 								onClick={this.onSelectAll}
 								disabled={!data.length}
-								small
+								size="small"
 							>
 								{(data.length && data.length === selected.length) ? 'Deselect All' : 'Select All'}
 							</Button>
 							<Button
 								css={css}
 								onClick={this.onDelete}
-								small
+								size="small"
 								disabled={!data.length || !selected.length}
 							>
 								Delete
@@ -259,7 +259,7 @@ class SiteFilteringBase extends Component {
 				<Button
 					css={css}
 					onClick={this.onOpenResetPinPopup}
-					small
+					size="small"
 				>
 					{$L('Reset pin')}
 				</Button>

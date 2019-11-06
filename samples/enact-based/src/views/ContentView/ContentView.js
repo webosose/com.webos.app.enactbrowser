@@ -21,7 +21,7 @@ import ExitFullScreenButton from '../../components/ExitFullScreenButton';
 import {TabTypes} from '../../NevaLib/BrowserModel';
 import ContentItem from './ContentItem';
 
-import css from './ContentView.less';
+import css from './ContentView.module.less';
 
 const ContentViewBase = kind({
 	name: 'ContentView',

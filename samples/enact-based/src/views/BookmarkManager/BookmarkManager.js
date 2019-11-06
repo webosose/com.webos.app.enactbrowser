@@ -1,4 +1,4 @@
-// Copyright (c) 2018 LG Electronics, Inc.
+// Copyright (c) 2018-2019 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -22,7 +22,7 @@ import Scroller from '@enact/moonstone/Scroller';
 import BookmarkList from './BookmarkList';
 import {selectAllBookmarks, deselectAllBookmarks} from '../../actions';
 
-import css from './BookmarkManager.less';
+import css from './BookmarkManager.module.less';
 
 class BookmarkManagerBase extends Component {
 
@@ -92,8 +92,8 @@ class BookmarkManagerBase extends Component {
 
 		return (
 			<div className={css.bookmarkManager} {...rest}>
-				<Button css={css} onClick={this.onSelectAll} disabled={!data.length} small>{(data.length && data.length === hasSelection) ? $L('DESELECT ALL') : $L('SELECT ALL')}</Button>
-				<Button css={css} onClick={this.onDelete} disabled={!data.length || !hasSelection} small>{$L('Delete')}</Button>
+				<Button css={css} onClick={this.onSelectAll} disabled={!data.length} size="small">{(data.length && data.length === hasSelection) ? $L('DESELECT ALL') : $L('SELECT ALL')}</Button>
+				<Button css={css} onClick={this.onDelete} disabled={!data.length || !hasSelection} size="small">{$L('Delete')}</Button>
 				<Notification
 					open={this.state.deletePopupOpen}
 					noAutoDismiss

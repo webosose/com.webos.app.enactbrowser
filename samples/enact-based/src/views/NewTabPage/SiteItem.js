@@ -1,4 +1,4 @@
-// Copyright (c) 2018 LG Electronics, Inc.
+// Copyright (c) 2018-2019 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -16,11 +16,11 @@ import IconButton from '@enact/moonstone/IconButton';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
-import css from './SiteItem.less';
+import css from './SiteItem.module.less';
 
 const
 	CloseButton = (props) => (
-		<IconButton {...props} className={css.xbutton} small>closex</IconButton>
+		<IconButton {...props} className={css.xbutton} size="small">closex</IconButton>
 	),
 	EmptyItem = (props) => (
 		<div className={css.emptyContainer} {...props} />

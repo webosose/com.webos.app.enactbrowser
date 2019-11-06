@@ -1,4 +1,4 @@
-// Copyright (c) 2018 LG Electronics, Inc.
+// Copyright (c) 2018-2019 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -17,7 +17,7 @@ import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import {Job} from '@enact/core/util';
 
-import css from './ExitFullScreenButton.less';
+import css from './ExitFullScreenButton.module.less';
 
 class ExitFullScreenButton extends Component {
 	static props = {

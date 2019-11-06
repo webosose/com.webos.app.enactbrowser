@@ -1,4 +1,4 @@
-// Copyright (c) 2018 LG Electronics, Inc.
+// Copyright (c) 2018-2019 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -24,7 +24,7 @@ import {BrowserIconButton as IconButton} from '../BrowserIconButton';
 import SuggestedItem from './SuggestedItem';
 import {TabTypes} from '../../NevaLib/BrowserModel';
 
-import css from './Omnibox.less';
+import css from './Omnibox.module.less';
 
 const ContextualPopupInput = ContextualPopupDecorator(Input);
 
