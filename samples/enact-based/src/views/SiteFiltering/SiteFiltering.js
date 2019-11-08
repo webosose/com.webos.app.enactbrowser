@@ -120,9 +120,9 @@ class SiteFilteringBase extends Component {
 	onSelectAll = () => {
 		const
 			{data, selected, siteFiltering} = this.props,
-			isApproved = isApproved(siteFiltering);
+			approved = isApproved(siteFiltering);
 		if (data.length === selected.length) {
-			if (isApproved) {
+			if (approved) {
 				this.props.deselectAllApprovedSites();
 			} else {
 				this.props.deselectAllBlockedSites();
@@ -132,7 +132,7 @@ class SiteFilteringBase extends Component {
 			for (let i = 0; i < data.length; i++) {
 				ids.push(i);
 			}
-			if (isApproved) {
+			if (approved) {
 				this.props.selectAllApprovedSites(ids);
 			} else {
 				this.props.selectAllBlockedSites(ids);

@@ -11,18 +11,32 @@
  *
  */
 
+import kind from '@enact/core/kind';
 import $L from '@enact/i18n/$L';
 import {connect} from 'react-redux';
 import ContextualPopupDecorator from '@enact/moonstone/ContextualPopupDecorator';
 import Picker from '@enact/moonstone/Picker'
+import IconButton from '@enact/moonstone/IconButton'
 import React, {Component} from 'react';
 
-import BrowserIconButton from '../BrowserIconButton';
 import {TabTypes} from '../../NevaLib/BrowserModel';
 
 import css from './ZoomControl.module.less';
 
-const ZoomPopupButton = ContextualPopupDecorator(BrowserIconButton);
+const ZoomIconButton = kind({
+	name: 'ZoomIconButton',
+	render: (props) => (
+		<IconButton
+			tooltipText={$L('Zoom')}
+			size="small"
+			{...props}
+		>
+			plus
+		</IconButton>
+	)
+});
+
+const ZoomPopupButton = ContextualPopupDecorator(ZoomIconButton);
 
 const
 	zoomLabels = [
@@ -89,17 +103,17 @@ class ZoomControlBase extends Component {
 
 		return (
 			<ZoomPopupButton
-				backgroundOpacity="transparent"
-				className={css.zoomButton}
-				tooltipText={$L('Zoom')}
-				open={this.state.isOpened}
+				className={css.zoomPopupButton}
 				direction="down"
-				popupComponent={this.renderPopup}
 				onClick={this.toggleMenu}
 				onClose={this.closeMenu}
-				type="zoomButton"
+				open={this.state.isOpened}
+				popupComponent={this.renderPopup}
+				size="small"
+				tooltipText={$L('Zoom')}
 				{...props}
 			/>
+
 		);
 	}
 }

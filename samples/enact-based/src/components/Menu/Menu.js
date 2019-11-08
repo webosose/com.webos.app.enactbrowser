@@ -11,15 +11,25 @@
  *
  */
 
+import kind from '@enact/core/kind';
 import $L from '@enact/i18n/$L';
 import ContextualPopupDecorator from '@enact/moonstone/ContextualPopupDecorator';
 import Item from '@enact/moonstone/Item';
+import IconButton from '@enact/moonstone/IconButton';
 import React, {Component} from 'react';
 
-import BrowserIconButton from '../BrowserIconButton';
-import css from './Menu.module.less';
+const MenuIconButton = kind({
+	name: 'MenuIconButton',
+	render: (props) => (
+		<IconButton
+			{...props}
+		>
+			list
+		</IconButton>
+	)
+});
 
-const MenuPopupButton = ContextualPopupDecorator(BrowserIconButton);
+const MenuPopupButton = ContextualPopupDecorator(MenuIconButton);
 
 class Menu extends Component {
 	constructor (props) {
@@ -72,15 +82,13 @@ class Menu extends Component {
 
 		return (
 			<MenuPopupButton
-				backgroundOpacity="transparent"
-				className={css.menuButton}
 				direction="down"
 				onClick={this.toggleMenu}
 				onClose={this.closeMenu}
 				open={this.state.isOpened}
 				popupComponent={this.renderPopup}
 				tooltipText={$L('Menu')}
-				type="menuButton"
+				size="small"
 				{...props}
 			/>
 		);

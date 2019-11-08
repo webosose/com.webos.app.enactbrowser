@@ -14,12 +14,12 @@
 
 import $L from '@enact/i18n/$L';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
-import React, {Component} from 'react';
+import IconButton from '@enact/moonstone/IconButton';
 import Spotlight from '@enact/spotlight';
+import React, {Component} from 'react';
 
 import {Browser} from '../../NevaLib/BrowserModel';
 
-import {BrowserIconButton as IconButton} from '../../components/BrowserIconButton';
 import ContentView from '../ContentView';
 import DialogView from '../DialogView';
 import Dialog from '../../components/Dialog';
@@ -135,12 +135,11 @@ class Main extends Component {
 						<ZoomControl browser={browser} />
 						<Menu browser={browser}/>
 						<IconButton
-							backgroundOpacity="transparent"
-							className={css.button}
 							onClick={this.onFullScreen}
 							tooltipText={$L('Full screen')}
-							type="fullscreenButton"
-						/>
+						>
+							fullscreen
+						</IconButton>
 					</div> }
 					<TabBar fullScreen={fullScreen} browser={browser} />
 				</div>

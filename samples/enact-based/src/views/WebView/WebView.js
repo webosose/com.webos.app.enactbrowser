@@ -63,15 +63,17 @@ class WebView extends Component {
 	}
 
 	render () {
-		const {id, tabs, style, browser, webView, ...rest} = this.props;
+		const {id, tabs, style, ...rest} = this.props;
+
+		delete rest.browser;
 		delete rest.webView;
 
 		let id_ = id + WebViewWrapperId;
 		return (
 			<div>
-				<ErrorPage id={id_ + "errorPage"} style={style} hidden={true}
+				<ErrorPage id={id_ + "errorPage"} style={style} hidden
 					errorMsg={tabs[id].error} />
-				<div style={style} hidden={true} id={id_} {...rest} />
+				<div style={style} hidden id={id_} {...rest} />
 			</div>
 		);
 	}

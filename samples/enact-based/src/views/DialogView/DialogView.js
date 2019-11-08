@@ -15,18 +15,8 @@ import {connect} from 'react-redux';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ri from '@enact/ui/resolution';
 
 import AuthDialog from '../../components/AuthDialog';
-
-const
-	hideStyle = {
-		display: 'none'
-	},
-	fullScreenStyle = {
-		top: '0',
-		height: '100vh'
-	}
 
 const DialogViewBase = kind({
 	name: 'DialogView',
@@ -35,7 +25,7 @@ const DialogViewBase = kind({
 		tabs: PropTypes.object,
 		selectedIndex: PropTypes.number
 	},
-	render: ({selectedIndex, ids, tabs, ...rest}) => {
+	render: ({selectedIndex, ids, tabs}) => {
 		if (ids.length === 0) {
 			return null;
 		}

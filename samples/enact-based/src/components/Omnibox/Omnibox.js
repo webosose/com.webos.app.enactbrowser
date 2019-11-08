@@ -11,16 +11,18 @@
  *
  */
 
+import classNames from 'classnames';
 import $L from '@enact/i18n/$L';
 import {connect} from 'react-redux';
 import ContextualPopupDecorator from '@enact/moonstone/ContextualPopupDecorator';
 import Input from '@enact/moonstone/Input';
+import Icon from '@enact/moonstone/Icon';
+import IconButton from '@enact/moonstone/IconButton';
 import Notification from '@enact/moonstone/Notification';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import Spotlight from '@enact/spotlight';
 
-import {BrowserIconButton as IconButton} from '../BrowserIconButton';
 import SuggestedItem from './SuggestedItem';
 import {TabTypes} from '../../NevaLib/BrowserModel';
 
@@ -233,29 +235,34 @@ class OmniboxBase extends Component {
 						popupSpotlightId="suggestedList"
 						value={value}
 					/>
-					<IconButton
+					<Icon
 						backgroundOpacity="transparent"
-						className={css.headButton}
-						type={this.getOmniboxIcon()}
-					/>
+						className={classNames(css.searchIcon)}
+						size="small"
+					>
+						search
+					</Icon>
 					{reloadDisabled ?
 						null :
 						<IconButton
 							backgroundOpacity="transparent"
-							className={css.bookmarkButton}
+							className={classNames(css.iconButton, css, css.small, css.bookmarkButton)}
 							tooltipText={isBookmarked ? $L('Delete from bookmarks') : $L('Add to bookmarks')}
 							onClick={isBookmarked ? this.onBookmarkRemove : this.onBookmarkAdd}
-							type={isBookmarked ? "removeBookmarkButton" : "addBookmarkButton"}
-						/>
+						>
+							{isBookmarked ? "hollowstar" : "star"}
+						</IconButton>
 					}
 					<IconButton
 						backgroundOpacity="transparent"
-						className={css.reloadStopButton}
-						tooltipText={$L('Refresh')}
+						className={classNames(css.iconButton, css.small, css.reloadStopButton)}
 						onClick={this.onReloadStop}
 						disabled={reloadDisabled}
-						type={isLoading ? "closeButton" : "reloadButton"}
-					/>
+						size="small"
+						tooltipText={$L('Refresh')}
+					>
+						{isLoading ? "closex" : "refresh" }
+					</IconButton>
 				</form>
 				<Notification
 					open={addBookmarkCompleted}
