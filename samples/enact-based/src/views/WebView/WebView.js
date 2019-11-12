@@ -28,7 +28,8 @@ class WebView extends Component {
 		let err = tab.error;
 		let id_ = this.props.id + WebViewWrapperId;
 		let use_chrome_err_page = this.props.browser.config.useBuiltInErrorPages;
-		let show_error = err && !use_chrome_err_page;
+		let show_error = err === 'RENDERER_CRASHED' || err === 'PAGE_UNRESPONSIVE' ||
+			(err && !use_chrome_err_page);
 		let show_webview = !show_error;
 
 		let webview_elem = document.getElementById(id_);
