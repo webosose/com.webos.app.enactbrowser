@@ -23,59 +23,109 @@ class WebView extends Component {
 		webView: PropTypes.object
 	}
 
-	showHideWebview = () => {
-		let tab = this.props.tabs[this.props.id];
-		let err = tab.error;
-		let id_ = this.props.id + WebViewWrapperId;
-		let use_chrome_err_page = this.props.browser.config.useBuiltInErrorPages;
-		let show_error = err === 'RENDERER_CRASHED' || err === 'PAGE_UNRESPONSIVE' ||
-			(err && !use_chrome_err_page);
-		let show_webview = !show_error;
+	constructor (props) {
+		super(props);
 
-		let webview_elem = document.getElementById(id_);
-		let errpage_elem = document.getElementById(id_ + "errorPage");
+		this.state = {
+			last_error: null, // error value that was before previous rendering
+			load_commit: false, // load has commited
+			show_error_page: false, // show error page (or webview) on next rendering
+			show_webview: true,
+		};
+	}
 
-		if (webview_elem !== null) {
-			if (show_webview) {
-				webview_elem.removeAttribute("hidden");
+	static getDerivedStateFromProps = (nextProps, prevState) => {
+		let
+			{browser, id, tabs} = nextProps,
+			{last_error, load_commit} = prevState,
+			error = tabs[id].error;
+
+		let isOnlyForBuiltInErrorPage = (error) => {
+			return ['PAGE_UNRESPONSIVE','RENDERER_CRASHED'].includes(error);
+		};
+
+		const
+			is_unresponsive = (error === 'PAGE_UNRESPONSIVE'),
+			need_render = (load_commit === true) ||
+				(!is_unresponsive && last_error === null) || // first time error appeared
+				(isOnlyForBuiltInErrorPage(error) || // because comes without loadcommit
+				 isOnlyForBuiltInErrorPage(last_error));
+
+		if (!need_render)
+			return null;
+
+		if (error === null) {
+			return { // show webview
+				last_error: error,
+				load_commit: false,
+				show_error_page: false,
+				show_webview: true,
+			};
+		} else if (isOnlyForBuiltInErrorPage(error)) {
+			return { // show errors from except list on built-in error page
+				last_error: error,
+				load_commit: false,
+				show_error_page: true,
+				show_webview: (is_unresponsive === true),
+			};
+		} else {
+			if (!browser.config.useBuiltInErrorPages) {
+				return { // show error on buit-in error page
+					last_error: error,
+					load_commit: false,
+					show_error_page: true,
+					show_webview: false,
+				};
 			} else {
-				webview_elem.setAttribute("hidden", "");
-			}
-		}
-
-		if (errpage_elem !== null) {
-			if (show_error) {
-				errpage_elem.removeAttribute("hidden");
-			} else {
-				errpage_elem.setAttribute("hidden", "");
+				return { // show error in webview
+					last_error: error,
+					load_commit: false,
+					show_error_page: false,
+					show_webview: true,
+				};
 			}
 		}
 	}
 
-	onLoadCommit() {
-		this.showHideWebview();
-	}
-
-	onExit() {
-		this.showHideWebview();
+	onLoadCommit = () => {
+		this.setState({load_commit: true});
 	}
 
 	componentDidMount () {
 		this.props.webView.insertIntoDom(this.props.id + WebViewWrapperId);
-		this.props.webView.addEventListener('loadcommit', this.onLoadCommit.bind(this));
-		this.props.webView.addEventListener('exit', this.onExit.bind(this));
+		this.props.webView.addEventListener('loadcommit', this.onLoadCommit);
 	}
 
 	render () {
-		const {id, tabs, style, browser, webView, ...rest} = this.props;
-		delete rest.webView;
+		const {id, tabs, style, browser, webView, ...rest} = this.props,
+			{show_error_page} = this.state,
+			{show_webview} = this.state,
+			err = tabs[id].error,
+			id_ = id + WebViewWrapperId;
 
-		let id_ = id + WebViewWrapperId;
+		delete rest.webView;
+		delete rest.browser;
+
+		const view_page =
+			<div
+				style={style}
+				id={id_}
+				hidden={!show_webview}
+				{...rest}
+			/>;
+
+		const error_page =
+			<ErrorPage
+				id={id_ + "errorPage"}
+				style={style}
+				errorMsg={err}
+				hidden={!show_error_page}
+			/>;
+
 		return (
 			<div>
-				<ErrorPage id={id_ + "errorPage"} style={style} hidden={true}
-					errorMsg={tabs[id].error} />
-				<div style={style} hidden={true} id={id_} {...rest} />
+				{view_page}
+				{error_page}
 			</div>
 		);
 	}
