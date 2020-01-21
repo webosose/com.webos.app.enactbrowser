@@ -17,6 +17,7 @@ import classNames from 'classnames';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
+import {DragDropContext, Droppable} from 'react-beautiful-dnd';
 
 import {BrowserIconButton as IconButton} from '../BrowserIconButton';
 import Tab from './Tab';
@@ -157,6 +158,20 @@ class TabBarBase extends Component {
 		this.props.browser.moveTab(fromIndex, toIndex);
 	}
 
+	onDragEnd = result => {
+		const {destination, source, draggableId} = result;
+
+		if (!destination) {
+			return;
+		}
+
+		if (destination.droppableId === source.droppableId && destination.index === source.index) {
+			return;
+		}
+
+		this.onMove(source.index, destination.index);
+	}
+
 	render = () => {
 		const
 			{className, numOfTabs, fullScreen, ...rest} = this.props,
@@ -173,10 +188,22 @@ class TabBarBase extends Component {
 
 		return (
 			!fullScreen ?
-			<ul className={classes} {...rest}>
+			<DragDropContext onDragEnd={this.onDragEnd}>
+			<Droppable droppableId='tabbar' direction='horizontal'>
+			{provided => (
+			<ul
+				className={classes}
+				{...rest}
+				ref={provided.innerRef}
+				{...provided.droppableProps}
+			>
 				{this.tabs()}
+				{provided.placeholder}
 				{numOfTabs < 7 ? <NewTabButton onNew={this.onNew} /> : null}
 			</ul>
+			)}
+			</Droppable>
+			</DragDropContext>
 			: null
 		);
 	}

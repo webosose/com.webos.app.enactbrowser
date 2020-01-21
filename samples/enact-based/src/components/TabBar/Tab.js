@@ -19,6 +19,7 @@ import React from 'react';
 import Spinner from '@enact/moonstone/Spinner';
 import Spottable from '@enact/spotlight/Spottable';
 import Spotlight from '@enact/spotlight';
+import {Draggable} from 'react-beautiful-dnd';
 
 import {BrowserIconButton as IconButton} from '../BrowserIconButton';
 import {TabTypes} from '../../NevaLib/BrowserModel';
@@ -26,7 +27,7 @@ import {TabTypes} from '../../NevaLib/BrowserModel';
 import css from './Tab.less';
 
 const
-	SpottableLi = Spottable('li'),
+	SpottableDiv = Spottable('div'),
 	TitleDiv = MarqueeDecorator('div');
 
 const Tab = kind({
@@ -83,37 +84,48 @@ const Tab = kind({
 			}
 		}
 	},
-	render: ({closable, onClose, iconUrl, isLoading, onSelect, title, iconClassName, ...rest}) => {
+	render: ({closable, onClose, iconUrl, isLoading, onSelect, title, iconClassName, index, ...rest}) => {
 		delete rest.browser;
 		delete rest.selected;
 		delete rest.index;
 		delete rest.type;
 
 		return (
-			<SpottableLi {...rest} onClick={onSelect}>
-				{
+			<Draggable draggableId={`draggable-tab-${index}`} index={index}>
+			{provided => (
+			<li
+				{...rest}
+				ref={provided.innerRef}
+				{...provided.draggableProps}
+				{...provided.dragHandleProps}
+			>
+				<SpottableDiv onClick={onSelect}>
+					{
 					isLoading ?
-						<Spinner className={css.spinner} size="small" transparent />
-						:<div
-							style={iconUrl ? {
-								backgroundImage: 'url(' + iconUrl + ')',
-								backgroundSize: 'contain'
-							} : {}}
-							className={classNames(css.tabFavicon, iconClassName)}
-						/>
-				}
-				<TitleDiv className={css.tabTitle} marqueeOn="hover">{title}</TitleDiv>
-				{
-					closable &&
-					<IconButton
-						backgroundOpacity="transparent"
-						className={css.tabCloseButton}
-						onClick={onClose}
-						type="tabCloseButton"
-						small
+					<Spinner className={css.spinner} size="small" transparent />
+					:<div
+						style={iconUrl ? {
+							backgroundImage: 'url(' + iconUrl + ')',
+							backgroundSize: 'contain'
+						} : {}}
+						className={classNames(css.tabFavicon, iconClassName)}
 					/>
-				}
-			</SpottableLi>
+					}
+					<TitleDiv className={css.tabTitle} marqueeOn="hover">{title}</TitleDiv>
+					{
+						closable &&
+						<IconButton
+							backgroundOpacity="transparent"
+							className={css.tabCloseButton}
+							onClick={onClose}
+							type="tabCloseButton"
+							small
+						/>
+					}
+				</SpottableDiv>
+			</li>
+			)}
+			</Draggable>
 		);
 	}
 });

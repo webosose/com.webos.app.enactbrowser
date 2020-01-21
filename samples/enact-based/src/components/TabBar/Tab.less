@@ -13,13 +13,18 @@
 	display: flex;
 	width: 12.5%;
 	height: 36px;
-	align-items: center;
 	margin-right: 21px;
-	padding: 6px;
 	background-image: url('../../../assets/default/tab_normal.svg');
 	.focus({
 		background-image: none;
 	});
+}
+
+.tab>div {
+	display: flex;
+	width: 100%;
+	align-items: center;
+	padding: 6px;
 }
 
 .selected {
