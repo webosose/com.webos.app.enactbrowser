@@ -15,6 +15,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import Spotlight from '@enact/spotlight';
+import {DragDropContext, Droppable} from 'react-beautiful-dnd';
 
 import Bookmark from './Bookmark';
 import Sortable from '../Sortable';
@@ -62,9 +63,20 @@ class BookmarkBarBase extends Component {
 		}
 
 		return (
-			<div className={css.bookmarks}>
-				{items}
-			</div>
+			<DragDropContext onDragEnd={this.onDragEnd}>
+			<Droppable droppableId='bookmarkbar' direction='horizontal'>
+			{provided => (
+				<div
+					className={css.bookmarks}
+					ref={provided.innerRef}
+					{...provided.droppableProps}
+				>
+					{items}
+					{provided.placeholder}
+				</div>
+			)}
+			</Droppable>
+			</DragDropContext>
 		);
 	}
 
@@ -87,6 +99,20 @@ class BookmarkBarBase extends Component {
 	onMove = (fromIndex, toIndex) => {
 		this.props.browser.bookmarks.moveBookmark(fromIndex, toIndex);
 		this.props.moveBookmarkSelected(fromIndex, toIndex);
+	}
+
+	onDragEnd = result => {
+		const {destination, source} = result;
+
+		if (!destination) {
+			return;
+		}
+
+		if (destination.droppableId === source.droppableId && destination.index === source.index) {
+			return;
+		}
+
+		this.onMove(source.index, destination.index);
 	}
 
 	render = () => {

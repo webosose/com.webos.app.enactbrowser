@@ -83,10 +83,15 @@ class BookmarksBase {
         if (typeof from === 'number' &&
             typeof to === 'number') {
             const store = this.store;
+            store.move(from, to);
             return this.storage.move(from, to).
                 then((result) => {
-                    store.move(from, to);
                     return result;
+                }).
+                catch((error) => {
+                    // In case of failure swap store items back
+                    store.move(to, from);
+                    return error;
                 });
         }
         return Promise.reject('Move positions is not number');
