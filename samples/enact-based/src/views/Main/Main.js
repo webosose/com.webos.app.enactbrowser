@@ -95,12 +95,30 @@ class Main extends Component {
 	}
 
 	onDialogClose = () => {
+		const selectedWebview = this.getSelectedWebview();
+		if (selectedWebview) {
+			selectedWebview.isAlertsAllowed = this.state.dialog.isAlertsAllowed;
+		}
 		this.setState({dialog: null});
 	}
 
 	onDialog = (ev) => {
-		ev.preventDefault();
-		this.setState({dialog: ev});
+		const
+			selectedWebview = this.getSelectedWebview(),
+			{browser} = this.state;
+
+		if (selectedWebview) {
+			if (selectedWebview.isAlertsAllowed) {
+				ev.preventDefault();
+				this.setState({dialog: {
+					...ev,
+					alertsCount: selectedWebview.alertsCount,
+					isAlertsAllowed: selectedWebview.isAlertsAllowed,
+					alertsCountBeforePreventionRequest: browser.config.alertsCountBeforePreventionRequest
+				}});
+				selectedWebview.alertsCount++;
+			}
+		}
 	}
 
 	onFullScreen = () => {

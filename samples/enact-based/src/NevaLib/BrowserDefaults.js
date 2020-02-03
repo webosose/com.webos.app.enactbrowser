@@ -35,7 +35,8 @@ function getDefaults() {
                     'maxSuspendedNormal': 3,
                     'maxSuspendedLow': 1,
                     'maxSuspendedCritical': 0
-                }
+                },
+                alertsCountBeforePreventionRequest: 3
             }
         };
     }

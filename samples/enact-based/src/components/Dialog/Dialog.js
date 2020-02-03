@@ -14,6 +14,7 @@
 import $L from '@enact/i18n/$L';
 import Button from '@enact/moonstone/Button';
 import Input from '@enact/moonstone/Input';
+import Checkbox from '@enact/moonstone/Checkbox';
 import Notification from '@enact/moonstone/Notification';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
@@ -48,11 +49,16 @@ class Dialog extends Component {
 		this.setState({value: ev.value});
 	}
 
+	onToggle = (ev) => {
+		this.props.dialog.isAlertsAllowed = !ev.selected;
+	}
+
 	render () {
 		const
 			{dialog} = this.props,
 			{value} = this.state,
-			{messageType, messageText, dialog: dialogController} = dialog;
+			{messageType, messageText, dialog: dialogController,
+				alertsCount, alertsCountBeforePreventionRequest} = dialog;
 
 		return (
 			<Notification
@@ -69,6 +75,14 @@ class Dialog extends Component {
 						onChange={this.onChange}
 						value={value}
 					/>
+					: null
+				}
+				{
+					(alertsCount >= alertsCountBeforePreventionRequest) ?
+						<div>
+							<Checkbox className={css.checkbox} css={css} onToggle={this.onToggle}/>
+							<span>{$L('Prevent dialogs from opening on this page')}</span>
+						</div>
 					: null
 				}
 				<buttons>

@@ -154,6 +154,7 @@ class Config {
         this._restorePrevSessionPolicy =
         this.simplePolicy = new SimplePolicy(this._storage);
         this.memoryManager = new MemoryManager(this._storage);
+        this._alertsCountBeforePreventionRequest = 0;
 
     }
 
@@ -166,6 +167,7 @@ class Config {
             this.memoryManager._maxSuspendedNormal = values.MM_maxSuspendedNormal;
             this.memoryManager._maxSuspendedLow = values.MM_maxSuspendedLow;
             this.memoryManager._maxSuspendedCritical = values.MM_maxSuspendedCritical;
+            this._alertsCountBeforePreventionRequest = values.alertsCountBeforePreventionRequest;
         };
 
         return this._storage.get({
@@ -175,7 +177,8 @@ class Config {
                 SP_maxSuspendedTabs: defaults.simplePolicy.maxSuspendedTabs,
                 MM_maxSuspendedNormal: defaults.memoryManager.maxSuspendedNormal,
                 MM_maxSuspendedLow: defaults.memoryManager.maxSuspendedLow,
-                MM_maxSuspendedCritical: defaults.memoryManager.maxSuspendedCritical
+                MM_maxSuspendedCritical: defaults.memoryManager.maxSuspendedCritical,
+                alertsCountBeforePreventionRequest: defaults.alertsCountBeforePreventionRequest
             })
             .then(setInMemoryValues);
     }
@@ -210,6 +213,10 @@ class Config {
 
     get versionString() {
         return chrome.runtime.getManifest().version_name;
+    }
+
+    get alertsCountBeforePreventionRequest() {
+        return this._alertsCountBeforePreventionRequest;
     }
 }
 

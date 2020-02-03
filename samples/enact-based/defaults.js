@@ -27,7 +27,8 @@ function getBrowserDefaults() {
                 'maxSuspendedNormal': 3,
                 'maxSuspendedLow': 1,
                 'maxSuspendedCritical': 0
-            }
+            },
+            alertsCountBeforePreventionRequest: 3
         },
         settings: {
             startupPage: 'newTabPage', /*OR continue OR homePage*/

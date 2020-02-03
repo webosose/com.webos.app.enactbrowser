@@ -171,6 +171,8 @@ const WebViewMixinBase = {
             this._scriptInjectionAttempted = false;
             this._scriptInjected = false;
             this.isAborted = false;
+            this.isAlertsAllowed = true;
+            this.alertsCount = 0;
         }
     },
 
@@ -244,7 +246,9 @@ function WebViewMixin(webView, {activeState, ...rest}) {
             _scriptInjectionAttempted: false,
             rootId: null,
             isAborted: false,
-            msgListenerId: null
+            msgListenerId: null,
+            isAlertsAllowed: true,
+            alertsCount: 0
         });
 
     // TODO: use local property and Singleton

@@ -1,5 +1,14 @@
 /* Dialog.less */
+@import '~@enact/moonstone/styles/skin.less';
 
 .input {
 	width: 100%;
+}
+
+.checkbox {
+	margin-right: 20px;
+	.applySkins({
+		color: @moon-button-text-color;
+		background-color: @moon-button-bg-color;
+	});
 }
