@@ -9,19 +9,10 @@
 import {TabTypes} from './TabsConsts';
 
 class RecentlyClosedSites {
-    constructor(storage, tabs, maxTabsToStore = 10) {
+    constructor(storage, tabs) {
         this.storage = storage;
         this.tabs = tabs;
-        this.maxTabsToStore = maxTabsToStore;
-        this.count = null;
         this.earliestId = null;
-        this.storage.db.didOpen.push(() =>
-            this.storage.getAll().then((result) => {
-                this.count = result.length;
-                return undefined;
-            })
-        );
-
         this.turnOn();
     }
 
@@ -31,13 +22,11 @@ class RecentlyClosedSites {
 
     remove(id) {
         this.storage.remove(id).then((result) => {
-            this.count--;
             return Promise.resolve(result);
         });
     }
 
     removeAll() {
-        this.count = 0;
         return this.storage.removeAll();
     }
 
@@ -52,14 +41,7 @@ class RecentlyClosedSites {
     }
 
     _addEntry(entry) {
-        let promise;
-        if (this.count >= this.maxTabsToStore) {
-            promise = this.storage.removeFirst();
-        }
-        else {
-            this.count++;
-            promise = Promise.resolve();
-        }
+        let promise = Promise.resolve();
         promise.then(() => {
             return this.storage.add(entry);
         });
@@ -67,10 +49,11 @@ class RecentlyClosedSites {
 
     handleTabDelete = (ev) => {
         if (ev.state.type === TabTypes.WEBVIEW) {
-            this._addEntry({
+            let p = this._addEntry({
                 url: ev.state.navState.url,
                 title: ev.state.title
             });
+            Promise.all([p]);
         }
     }
 

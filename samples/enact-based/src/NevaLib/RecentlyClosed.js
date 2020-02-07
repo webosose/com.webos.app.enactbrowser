@@ -15,7 +15,7 @@ import {setRecentlyClosed} from './Browser/actions';
 
 class RecentlyClosed extends RecentlyClosedSites {
     constructor(reduxStore, db, tabs) {
-        super(new RecentlyClosedSitesIdbStorage(db), tabs, 3);
+        super(new RecentlyClosedSitesIdbStorage(db, 3), tabs);
         this.store = reduxStore;
     }
 

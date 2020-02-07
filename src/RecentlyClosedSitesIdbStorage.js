@@ -18,9 +18,17 @@ Tab entry structure:
 }
 */
 class RecentlyClosedSitesIdbStorage {
-    constructor(db) {
+    constructor(db, max_entry_num) {
+        this.count = 0;
         this.db = db;
         this.db.addObjectStore(STORE_NAME, {keyPath: 'id', autoIncrement: true});
+        this.max_entry_num = max_entry_num;
+
+        this.db.didOpen.push( () =>
+            this.getAll().then((result) => {
+                this.count = result.length;
+                return undefined;
+            }));
     }
 
     getAll() {
@@ -29,18 +37,28 @@ class RecentlyClosedSitesIdbStorage {
     }
 
     add(entry) {
-        return this.db.transaction('readwrite', STORE_NAME, (store) =>
-            store.request('add', [entry])
-        );
+        let promise;
+        promise = this.db.transaction('readwrite', STORE_NAME, (store) =>
+            store.request('add', [entry]));
+        if (this.count >= this.max_entry_num) {
+            promise.then(() => {
+                return this.removeFirst();
+            });
+        }
+
+        this.count++;
+        return promise;
     }
 
     remove(id) {
+        this.count--;
         return this.db.transaction('readwrite', STORE_NAME, (store) =>
             store.request('delete', [id])
         );
     }
 
     removeFirst() {
+        this.count--;
         return this.db.transaction('readwrite', STORE_NAME, (store) => {
             return new Promise((resolve, reject) => {
                 const objectStore = store.store;
@@ -68,6 +86,7 @@ class RecentlyClosedSitesIdbStorage {
     }
 
     removeAll() {
+        this.count = 0;
         return this.db.transaction('readwrite', STORE_NAME, (store) =>
             store.request('clear', []));
     }
