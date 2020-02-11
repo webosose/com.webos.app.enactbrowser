@@ -46,14 +46,14 @@ class Main extends Component {
 		};
 
 		this.fullScreenContentItem = React.createRef();
-		this.showExitButton = false;
+		this.showExitButton = true;
 		if (typeof chrome === 'object' && chrome.app.launchArgs) {
 			const launchArgs = JSON.parse(chrome.app.launchArgs);
 			if (launchArgs.fullMode) {
 				this.state.fullScreen = true;
 			}
-			if (launchArgs.show_exit_button) {
-				this.showExitButton = true;
+			if (launchArgs.hide_exit_button) {
+				this.showExitButton = false;
 			}
 		}
 	}
