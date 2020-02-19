@@ -15,7 +15,10 @@ import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ErrorPage from '../ErrorPage';
 
-const WebViewWrapperId = '_webview';
+const
+	WebViewWrapperId = '_webview',
+	DialogSupressTimeout = 30000;
+
 
 class WebView extends Component {
 	static propTypes = {
@@ -31,12 +34,14 @@ class WebView extends Component {
 			load_commit: false, // load has commited
 			show_error_page: false, // show error page (or webview) on next rendering
 			show_webview: true,
+			show_error_dialog: false,
+			suppressDialog: false,
 		};
 	}
 
 	static getDerivedStateFromProps = (nextProps, prevState) => {
 		let
-			{browser, id, tabs} = nextProps,
+			{browser, id, tabs, webView} = nextProps,
 			{last_error, load_commit} = prevState,
 			error = tabs[id].error;
 
@@ -50,23 +55,34 @@ class WebView extends Component {
 				(!is_unresponsive && last_error === null) || // first time error appeared
 				(isOnlyForBuiltInErrorPage(error) || // because comes without loadcommit
 				 isOnlyForBuiltInErrorPage(last_error));
+		const {suppressDialog} = prevState;
 
 		if (!need_render)
 			return null;
 
-		if (error === null) {
+		if (webView.activeState === 'deactivated') { // webview closed
+			return {
+				show_webview: false,
+				show_error_page: true,
+				show_error_dialog: false,
+				suppressDialog: false,
+			};
+		} else if (error === null) {
 			return { // show webview
 				last_error: error,
 				load_commit: false,
 				show_error_page: false,
 				show_webview: true,
+				show_error_dialog: false,
 			};
 		} else if (isOnlyForBuiltInErrorPage(error)) {
+			const show_dialog = (is_unresponsive === true && suppressDialog === false);
 			return { // show errors from except list on built-in error page
 				last_error: error,
 				load_commit: false,
-				show_error_page: true,
 				show_webview: (is_unresponsive === true),
+				show_error_dialog: show_dialog,
+				show_error_page: !is_unresponsive,
 			};
 		} else {
 			if (!browser.config.useBuiltInErrorPages) {
@@ -75,6 +91,7 @@ class WebView extends Component {
 					load_commit: false,
 					show_error_page: true,
 					show_webview: false,
+					show_error_dialog: false,
 				};
 			} else {
 				return { // show error in webview
@@ -82,6 +99,7 @@ class WebView extends Component {
 					load_commit: false,
 					show_error_page: false,
 					show_webview: true,
+					show_error_dialog: false,
 				};
 			}
 		}
@@ -96,10 +114,23 @@ class WebView extends Component {
 		this.props.webView.addEventListener('loadcommit', this.onLoadCommit);
 	}
 
+	onWait = () => {
+		this.setState({suppressDialog: true});
+
+		const releaseDialog = () => {
+			this.setState({suppressDialog: false});
+		};
+		setTimeout(releaseDialog, DialogSupressTimeout);
+	}
+
+	onStop = () => {
+		this.props.webView.deactivate();
+		this.setState({show_error_dialog: false});
+	}
+
 	render () {
 		const {id, tabs, style, browser, webView, ...rest} = this.props,
-			{show_error_page} = this.state,
-			{show_webview} = this.state,
+			{show_error_page, show_webview, show_error_dialog, suppressDialog} = this.state,
 			err = tabs[id].error,
 			id_ = id + WebViewWrapperId;
 
@@ -119,6 +150,9 @@ class WebView extends Component {
 				id={id_ + "errorPage"}
 				style={style}
 				errorMsg={err}
+				show_error_dialog={show_error_dialog && !suppressDialog}
+				onWait={this.onWait}
+				onStop={this.onStop}
 				hidden={!show_error_page}
 			/>;
 
