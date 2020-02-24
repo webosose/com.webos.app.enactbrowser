@@ -13,6 +13,7 @@
 
 import $L from '@enact/i18n/$L';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
+import Button from '@enact/moonstone/Button';
 import ContextualPopupDecorator from '@enact/moonstone/ContextualPopupDecorator';
 import Icon from '@enact/moonstone/Icon';
 import IconButton from '@enact/moonstone/IconButton';
@@ -58,6 +59,7 @@ class OmniboxBase extends Component {
 		searchEngine: PropTypes.string,
 		selectedId: PropTypes.string,
 		selectedIndex: PropTypes.number,
+		title: PropTypes.string,
 		url: PropTypes.string,
 		urlSuggestions: PropTypes.array
 	}
@@ -66,6 +68,7 @@ class OmniboxBase extends Component {
 		super(props);
 		this.state = {
 			addBookmarkCompleted: false,
+			addBookmarkToHome: false,
 			open: false,
 			removeBookmarkCompleted: false,
 			value: props.url ? props.url : ''
@@ -74,6 +77,13 @@ class OmniboxBase extends Component {
 
 	prevOpen = false
 	isEditing = false
+	webOSBridge = null
+
+	componentDidMount () {
+		if (typeof window !== 'undefined' && window.WebOSServiceBridge) {
+			this.webOSBridge = new window.WebOSServiceBridge();
+		}
+	}
 
 	componentWillReceiveProps (nextProps) {
 		if (this.props.selectedIndex !== nextProps.selectedIndex ||
@@ -130,10 +140,24 @@ class OmniboxBase extends Component {
 
 	onBookmarkAdd = () => {
 		this.props.browser.addBookmark();
-		this.setState({addBookmarkCompleted: true});
+		this.setState({addBookmarkCompleted: true, addBookmarkToHome: false});
 		setTimeout(() => {
-			this.setState({addBookmarkCompleted: false});
+			this.setState({addBookmarkCompleted: false, addBookmarkToHome: false});
 		}, 1500);
+	}
+
+	onBookmarkAddToHome = () => {
+		this.setState({addBookmarkToHome: false});
+
+		if (this.webOSBridge) {
+			this.webOSBridge.onservicecallback = (payload) => {
+				console.log('Add bookmark to home result: ', payload);
+			}
+			this.webOSBridge.call(
+				'luna://com.webos.service.applicationmanager/addLaunchPoint',
+				`{"id": "com.webos.app.enactbrowser", "title": "${this.props.title}", "params": {"target": "${this.state.value}"}}`
+			);
+		}
 	}
 
 	onBookmarkRemove = () => {
@@ -142,6 +166,14 @@ class OmniboxBase extends Component {
 		setTimeout(() => {
 			this.setState({removeBookmarkCompleted: false});
 		}, 1500);
+	}
+
+	showAddBookmarkToHome = () => {
+		this.setState({addBookmarkToHome: true});
+	}
+
+	dismissAddBookmarkToHome = () => {
+		this.setState({addBookmarkToHome: false});
 	}
 
 	getOmniboxIcon = () => {
@@ -226,7 +258,7 @@ class OmniboxBase extends Component {
 	render () {
 		const
 			{isLoading, reloadDisabled, isBookmarked, ...rest} = this.props,
-			{addBookmarkCompleted, value, open, removeBookmarkCompleted} = this.state;
+			{addBookmarkCompleted, addBookmarkToHome, value, open, removeBookmarkCompleted} = this.state;
 
 		delete rest.bookmarksData;
 		delete rest.browser;
@@ -267,9 +299,9 @@ class OmniboxBase extends Component {
 							backgroundOpacity="transparent"
 							className={classNames(css.iconButton, css, css.small, css.bookmarkButton)}
 							tooltipText={isBookmarked ? $L('Delete from bookmarks') : $L('Add to bookmarks')}
-							onClick={isBookmarked ? this.onBookmarkRemove : this.onBookmarkAdd}
+							onClick={isBookmarked ? this.onBookmarkRemove : this.showAddBookmarkToHome}
 						>
-							{isBookmarked ? "hollowstar" : "star"}
+							{isBookmarked ? "star" : "hollowstar"}
 						</IconButton>
 					}
 					<IconButton
@@ -283,6 +315,18 @@ class OmniboxBase extends Component {
 						{isLoading ? "closex" : "refresh" }
 					</IconButton>
 				</form>
+				<Notification
+					onClose={this.dismissAddBookmarkToHome}
+					open={addBookmarkToHome}
+					showCloseButton
+					className={css.addBookmarkToHome}
+				>
+					<p>{$L('You can add your bookmark to Home screen and access your favorite website by pressing the icon. Do you want to the bookmark to Home?')}</p>
+					<buttons>
+						<Button onClick={this.onBookmarkAdd}>{$L('NO')}</Button>
+						<Button onClick={this.onBookmarkAddToHome}>{$L('YES')}</Button>
+					</buttons>
+				</Notification>
 				<Notification
 					open={addBookmarkCompleted}
 					noAutoDismiss
@@ -304,7 +348,7 @@ const mapStateToProps = ({tabsState, bookmarksState, browserState, settingsState
 	const {selectedIndex, ids, tabs} = tabsState;
 
 	if (ids.length > 0) {
-		const {navState, type} = tabs[ids[selectedIndex]];
+		const {navState, title, type} = tabs[ids[selectedIndex]];
 		if (navState) {
 			return {
 				bookmarksData: bookmarksState.data,
@@ -316,6 +360,7 @@ const mapStateToProps = ({tabsState, bookmarksState, browserState, settingsState
 				searchEngine: settingsState.searchEngine,
 				selectedId: ids[selectedIndex],
 				selectedIndex,
+				title,
 				url: navState.url,
 				urlSuggestions: browserState.urlSuggestions
 			}
