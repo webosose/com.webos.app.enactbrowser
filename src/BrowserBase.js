@@ -263,7 +263,7 @@ class BrowserBase {
 
         webview.request.onAuthRequired.addListener(
             (details, callback) => this._handleAuthRequired(state.id, callback),
-            { urls: ['://*/*'] },
+            { urls: ['*://*/'] },
             [ 'asyncBlocking' ]
         );
 
