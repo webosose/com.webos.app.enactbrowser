@@ -27,7 +27,7 @@ class HistoryItemBase extends Component {
 		id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 		onClick: PropTypes.func,
 		selected: PropTypes.bool,
-		time: PropTypes.object,
+		date: PropTypes.object,
 		title: PropTypes.string,
 		toggleHistory: PropTypes.func,
 		url: PropTypes.string
@@ -38,20 +38,27 @@ class HistoryItemBase extends Component {
 	}
 
 	render () {
-		const {index, id, selected, title, onClick, url, time, ...rest} = this.props;
+		const {index, id, selected, title, onClick, url, date, ...rest} = this.props;
 		delete rest.toggleHistory;
 
 		if (id !== 'date') {
 			return (
 				<div {...rest} className={css.historyItem}>
 					<Checkbox className={css.checkbox} onToggle={this.onToggle} selected={selected} />
-					<Item onClick={onClick} data-index={index} className={css.title}>{`${time.toLocaleTimeString('en-US')} ${title} - ${url}`}</Item>
+					<Item
+						onClick={onClick}
+						data-index={index}
+						className={css.title}>
+						{`${date.toLocaleTimeString(window.navigator ? window.navigator.language : undefined)} ${title} - ${url}`}
+					</Item>
 				</div>
 			);
 		} else {
+			const now = new Date();
 			const
-				now = new Date(),
-				content = (now.toDateString() === title) ? title + ' (Today)' : title;
+				content = date !== undefined
+					&& (now.toDateString()) === date.toDateString() ?
+					title + ' (Today)' : title;
 			return (
 				<div {...rest} className={css.historyItem}>
 					<Item data-index={index} className={css.date}>{content}</Item>

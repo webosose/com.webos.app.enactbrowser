@@ -74,7 +74,7 @@ class HistoryBase extends Component {
 				index={index}
 				onClick={this.onClick}
 				title={data[index].title}
-				time={data[index].date}
+				date={data[index].date}
 				url={data[index].url}
 			/>
 		)
@@ -83,11 +83,13 @@ class HistoryBase extends Component {
 	manipulateData = (data) => {
 		if (data.length) {
 			const manipulatedData = data.slice();
+			const options = {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'};
+			const locale = window.navigator ? window.navigator.language : undefined;
 
 			manipulatedData.unshift({
 				id: 'date',
-				title: data[0].date.toDateString(),
-				time: '',
+				title: data[0].date.toLocaleDateString(locale, options),
+				date: data[0].date,
 				url: ''
 			});
 
@@ -96,8 +98,8 @@ class HistoryBase extends Component {
 					const targetIndex = manipulatedData.indexOf(data[i + 1]);
 					manipulatedData.splice(targetIndex, 0, {
 						id: 'date',
-						title: data[i + 1].date.toDateString(),
-						time: '',
+						title: data[i + 1].date.toLocaleDateString(locale, options),
+						date: data[i + 1].date,
 						url: ''
 					});
 				}
