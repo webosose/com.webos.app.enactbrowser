@@ -18,7 +18,7 @@ import IconButton from '@enact/moonstone/IconButton';
 import Spotlight from '@enact/spotlight';
 import React, {Component} from 'react';
 
-import {Browser} from '../../NevaLib/BrowserModel';
+import {Browser, TabTypes} from '../../NevaLib/BrowserModel';
 
 import ContentView from '../ContentView';
 import DialogView from '../DialogView';
@@ -65,6 +65,8 @@ class Main extends Component {
 				browser.back();
 			}
 		});
+
+		document.addEventListener('webOSRelaunch', this.onRelaunch);
 	}
 
 	componentDidUpdate () {
@@ -76,6 +78,10 @@ class Main extends Component {
 		} else {
 			Spotlight.resume();
 		}
+	}
+
+	componentWillUnmount() {
+		document.removeEventListener('webOSRelaunch');
 	}
 
 	getSelectedWebview = () => {
@@ -116,6 +122,23 @@ class Main extends Component {
 			Spotlight.pause();
 		} else if (document.activeElement.tagName !== 'INPUT') {
 			Spotlight.resume();
+		}
+	}
+
+	onRelaunch = (ev) => {
+		if (ev.detail && typeof ev.detail.url === 'string' && ev.detail.url !== '') {
+			const
+				{browser} = this.state,
+				numOfTabs = browser.tabs.count(),
+				url = browser.searchService.possiblyUrl(ev.detail.url) ?
+					ev.detail.url :
+					browser.searchService.getSearchUrl(ev.detail.url);
+
+			if (numOfTabs < browser.tabs.maxTabs) {
+				browser.createTab(TabTypes.WEBVIEW, url);
+			} else {
+				browser.navigate(url);
+			}
 		}
 	}
 
