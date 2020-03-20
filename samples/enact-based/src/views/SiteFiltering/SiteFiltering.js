@@ -43,7 +43,7 @@ import css from './SiteFiltering.less';
 const filteringOptions = ['off', 'whitelist', 'blacklist'];
 const filteringOptionsText = [$L('Off'), $L('Approved Sites'), $L('Blocked Sites')];
 
-function isApproved(option) {
+function isItemApproved(option) {
 	return option === filteringOptions[1];
 }
 
@@ -104,7 +104,7 @@ class SiteFilteringBase extends Component {
 				{...rest}
 				index={index}
 				url={data[index]}
-				isApproved={isApproved(this.props.siteFiltering)}
+				isApproved={isItemApproved(this.props.siteFiltering)}
 			/>
 		)
 	}
@@ -120,7 +120,7 @@ class SiteFilteringBase extends Component {
 	onSelectAll = () => {
 		const
 			{data, selected, siteFiltering} = this.props,
-			isApproved = isApproved(siteFiltering);
+			isApproved = isItemApproved(siteFiltering);
 		if (data.length === selected.length) {
 			if (isApproved) {
 				this.props.deselectAllApprovedSites();
