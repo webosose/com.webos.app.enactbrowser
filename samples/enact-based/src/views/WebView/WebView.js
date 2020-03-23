@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2019 LG Electronics, Inc.
+// Copyright (c) 2018-2020 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -14,6 +14,7 @@
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ErrorPage from '../ErrorPage';
+import BlockedPageNotification from '../BlockedPageNotification';
 
 const
 	WebViewWrapperId = '_webview',
@@ -32,7 +33,8 @@ class WebView extends Component {
 		this.state = {
 			last_error: null, // error value that was before previous rendering
 			load_commit: false, // load has commited
-			show_error_page: false, // show error page (or webview) on next rendering
+			show_error_page: false, // show error page, blocked page info (or webview) on next rendering
+			show_blocked_page_notification: false,
 			show_webview: true,
 			show_error_dialog: false,
 			suppressDialog: false,
@@ -64,6 +66,7 @@ class WebView extends Component {
 			return {
 				show_webview: false,
 				show_error_page: true,
+				show_blocked_page_notification: false,
 				show_error_dialog: false,
 				suppressDialog: false,
 			};
@@ -72,6 +75,7 @@ class WebView extends Component {
 				last_error: error,
 				load_commit: false,
 				show_error_page: false,
+				show_blocked_page_notification: false,
 				show_webview: true,
 				show_error_dialog: false,
 			};
@@ -83,6 +87,17 @@ class WebView extends Component {
 				show_webview: (is_unresponsive === true),
 				show_error_dialog: show_dialog,
 				show_error_page: !is_unresponsive,
+				show_blocked_page_notification: false,
+			};
+		} else if (error === 'ERR_BLOCKED_BY_CLIENT') {
+			return { // show blocked page notification
+				last_error: error,
+				load_commit: false,
+				show_error_page: false,
+				show_blocked_page_notification: true,
+				show_webview: false,
+				show_error_dialog: false,
+				suppressDialog: false,
 			};
 		} else {
 			if (!browser.config.useBuiltInErrorPages) {
@@ -90,6 +105,7 @@ class WebView extends Component {
 					last_error: error,
 					load_commit: false,
 					show_error_page: true,
+					show_blocked_page_notification: false,
 					show_webview: false,
 					show_error_dialog: false,
 				};
@@ -98,6 +114,7 @@ class WebView extends Component {
 					last_error: error,
 					load_commit: false,
 					show_error_page: false,
+					show_blocked_page_notification: false,
 					show_webview: true,
 					show_error_dialog: false,
 				};
@@ -128,9 +145,14 @@ class WebView extends Component {
 		this.setState({show_error_dialog: false});
 	}
 
+	openSiteFiltering = () => {
+		this.props.browser.openSettings();
+	}
+
 	render () {
 		const {id, tabs, style, browser, webView, ...rest} = this.props,
 			{show_error_page, show_webview, show_error_dialog, suppressDialog} = this.state,
+			{show_blocked_page_notification} = this.state,
 			err = tabs[id].error,
 			id_ = id + WebViewWrapperId;
 
@@ -156,10 +178,19 @@ class WebView extends Component {
 				hidden={!show_error_page}
 			/>;
 
+		const blocked_page_notification =
+			<BlockedPageNotification
+				id={id_ + "blockedPage"}
+				style={style}
+				onOpenSiteFiltering={this.openSiteFiltering}
+				hidden={!show_blocked_page_notification}
+			/>;
+
 		return (
 			<div>
 				{view_page}
 				{error_page}
+				{blocked_page_notification}
 			</div>
 		);
 	}

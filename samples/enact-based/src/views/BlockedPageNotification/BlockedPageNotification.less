@@ -1,0 +1,40 @@
+/* BlockedPageNotification.less */
+@import '~@enact/moonstone/styles/mixins.less';
+@import '~@enact/moonstone/styles/skin.less';
+
+.blockedPageNotification {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background-color: black;
+	padding-top: 10%;
+	padding-left: 30%;
+}
+
+.notificationIcon {
+	background-size: cover;
+	background-repeat: no-repeat;
+	width: 100px;
+	height: 100px;
+	margin-bottom: 21px;
+	background-image: url('../../../assets/default/error_generic_big.png');
+}
+
+.notificationTitle {
+	color: white;
+	font-size: 39px;
+}
+
+button {
+	width: 320px;
+	margin: 24px 0 0 0;
+	display: inline-block;
+	.applySkins({
+		font-size: 24px;
+		font-weight: 700;
+		color: #4B4B4B;
+		.bg {
+			background-color: white;
+		}
+	});
+}
