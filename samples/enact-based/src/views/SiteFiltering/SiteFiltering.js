@@ -194,9 +194,9 @@ class SiteFilteringBase extends Component {
 					{filteringOptionsText}
 				</Group>
 				<div>
-					{$L('Approved Sites: Anyone can access the sites on this list.')}
+					{$L('Approved Sites: Anyone can access only the sites on this list.')}
 					<br />
-					{$L('Blocked Sites: Your Safety PIN is required to access these sites.')}
+					{$L('Blocked Sites: Nobody can access the sites on this list.')}
 				</div>
 				<br />
 				{(optionIndex === 1) && <BodyText>{$L('Approved Sites List')}</BodyText>}
