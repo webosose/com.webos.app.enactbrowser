@@ -1,4 +1,4 @@
-// Copyright (c) 2018 LG Electronics, Inc.
+// Copyright (c) 2018-2020 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -56,10 +56,10 @@ class PinPopup extends Component {
 		const key = ev.target.textContent;
 
 		if (key === "BACK") {
-			this.setState({pinValue: this.state.pinValue.slice(0, -1)});
+			this.setState(state => ({pinValue: state.pinValue.slice(0, -1)}));
 		} else {
 			if (this.state.pinValue.length < 4) {
-				this.setState({pinValue: this.state.pinValue + key});
+				this.setState(state => ({pinValue: state.pinValue + key}))
 			}
 		}
 	}

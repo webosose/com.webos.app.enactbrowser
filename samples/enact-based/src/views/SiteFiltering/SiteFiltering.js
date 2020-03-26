@@ -1,4 +1,4 @@
-// Copyright (c) 2018 LG Electronics, Inc.
+// Copyright (c) 2018-2020 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -16,9 +16,9 @@ import BodyText from '@enact/moonstone/BodyText';
 import Button from '@enact/moonstone/Button';
 import {connect} from 'react-redux';
 import Group from '@enact/ui/Group';
-import Icon from '@enact/moonstone/Icon';
-import Input from '@enact/moonstone/Input';
-import Notification from '@enact/moonstone/Notification';
+//import Icon from '@enact/moonstone/Icon';
+//import Input from '@enact/moonstone/Input';
+//import Notification from '@enact/moonstone/Notification';
 import PropTypes from 'prop-types';
 import RadioItem from '@enact/moonstone/RadioItem';
 import React, {Component} from 'react';
@@ -169,7 +169,7 @@ class SiteFilteringBase extends Component {
 
 	render () {
 		const
-			{data, selected, siteFiltering, ...rest} = this.props,
+			{data, /*selected,*/ siteFiltering, ...rest} = this.props,
 			optionIndex = filteringOptions.indexOf(siteFiltering);
 
 		delete rest.browser;

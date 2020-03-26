@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2019 LG Electronics, Inc.
+// Copyright (c) 2018-2020 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -155,7 +155,7 @@ class Main extends Component {
 		return (
 			<div {...props}>
 				<div onClick={this.onClick} onMouseLeave={this.onMouseLeave}>
-					{ fullScreen == false && <div className={css['flexbox-row']}>
+					{ fullScreen === false && <div className={css['flexbox-row']}>
 						<NavigationBox browser={browser} />
 						<Omnibox browser={browser} />
 						<ZoomControl browser={browser} />
@@ -196,7 +196,7 @@ class Main extends Component {
 				/>
 				: null
 			}
-				{fullScreen == false && <DialogView />}
+				{fullScreen === false && <DialogView />}
 			</div>
 		);
 	}

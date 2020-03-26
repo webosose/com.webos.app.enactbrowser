@@ -47,8 +47,8 @@ class WebView extends Component {
 			{last_error, load_commit} = prevState,
 			error = tabs[id].error;
 
-		let isOnlyForBuiltInErrorPage = (error) => {
-			return ['PAGE_UNRESPONSIVE','RENDERER_CRASHED'].includes(error);
+		let isOnlyForBuiltInErrorPage = (err) => {
+			return ['PAGE_UNRESPONSIVE','RENDERER_CRASHED'].includes(err);
 		};
 
 		const
@@ -59,8 +59,9 @@ class WebView extends Component {
 				 isOnlyForBuiltInErrorPage(last_error));
 		const {suppressDialog} = prevState;
 
-		if (!need_render)
+		if (!need_render) {
 			return null;
+		}
 
 		if (webView.activeState === 'deactivated') { // webview closed
 			return {
@@ -150,7 +151,7 @@ class WebView extends Component {
 	}
 
 	render () {
-		const {id, tabs, style, browser, webView, ...rest} = this.props,
+		const {id, tabs, style, ...rest} = this.props,
 			{show_error_page, show_webview, show_error_dialog, suppressDialog} = this.state,
 			{show_blocked_page_notification} = this.state,
 			err = tabs[id].error,

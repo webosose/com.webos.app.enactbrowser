@@ -1,4 +1,4 @@
-// Copyright (c) 2018 LG Electronics, Inc.
+// Copyright (c) 2018-2020 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -159,7 +159,7 @@ class TabBarBase extends Component {
 	}
 
 	onDragEnd = result => {
-		const {destination, source, draggableId} = result;
+		const {destination, source} = result;
 
 		if (!destination) {
 			return;

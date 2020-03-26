@@ -1,4 +1,4 @@
-// Copyright (c) 2018 LG Electronics, Inc.
+// Copyright (c) 2018-2020 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -65,10 +65,11 @@ const ErrorPage = kind({
 						<div className={css.errorCode}>{errorMsg}</div>
 					</div>
 
-		if (show_error_dialog)
+		if (show_error_dialog) {
 			return dialog;
-		else
+		} else {
 			return error_page;
+		}
 	}
 });
 
