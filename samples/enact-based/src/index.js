@@ -6,12 +6,15 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
+import ilib from 'ilib';
 import {Provider} from 'react-redux';
 import React from 'react';
 import {render} from 'react-dom';
 
 import App from './App';
 import configureStore from './store';
+
+ilib._load = undefined;
 
 const store = configureStore();
 

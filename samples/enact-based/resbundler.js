@@ -36,66 +36,16 @@ const outDir = process.argv[3] || 'localedata';
 process.chdir(process.argv[2] || '.');
 
 function getSpec(locale, bundle) {
-	const loadParams = bundle!==defaultBundle ? {root: path.relative(process.cwd(), fs.realpathSync(bundle)).replace(/\.\.(\/)?/g, "_$1").replace(/\\/g, '/')} : undefined;
-	return locale.replace(/[-/]/g, '_') + ',strings.json,' + String(hashCode(loadParams));
-}
-
-function addHash(hash, newValue) {
-	// co-prime numbers creates a nicely distributed hash
-	hash *= 65543;
-	hash += newValue;
-	hash %= 2147483647;
-	return hash;
-}
-
-function stringHash(str) {
-	let hash = 0;
-	for(let i = 0; i < str.length; i++) {
-		hash = addHash(hash, str.charCodeAt(i));
+	let pathChunk = '';
+	if (bundle !== defaultBundle) {
+		pathChunk = '_' + path.relative(process.cwd(), fs.realpathSync(bundle)).replace(/\.\.(\/)?/g, "_$1").replace(/[\\/]+/g, '_');
 	}
-	return hash;
-}
-
-function hashCode(obj) {
-	let hash = 0;
-	switch (typeof obj) {
-		case 'undefined':
-			hash = 0;
-			break;
-		case 'string':
-			hash = stringHash(obj);
-			break;
-		case 'function':
-		case 'number':
-		case 'xml':
-			hash = stringHash(String(obj));
-			break;
-		case 'boolean':
-			hash = obj ? 1 : 0;
-			break;
-		case 'object': {
-			const props = [];
-			for(const p in obj) {
-				if (obj.hasOwnProperty(p)) {
-					props.push(p);
-				}
-			}
-			// make sure the order of the properties doesn't matter
-			props.sort();
-			for (let i = 0; i < props.length; i++) {
-				hash = addHash(hash, stringHash(props[i]));
-				hash = addHash(hash, hashCode(obj[props[i]]));
-			}
-			break;
-		}
-	}
-
-	return hash;
+	return 'strings' + pathChunk + '_' + locale.replace(/[-/]/g, '_');
 }
 
 if(!fs.existsSync(outDir)) fs.mkdirSync(outDir);
 
-const prelude = 'window.resBundleData = window.resBundleData || {};\n';
+const prelude = 'window.ilibData = window.moonstoneILibCache = window.ilibData || {};\n';
 
 locales.forEach(locale => {
 	locale = locale.replace(/-/g, '/');
@@ -110,8 +60,8 @@ locales.forEach(locale => {
 			return obj;
 		}, {});
 
-		return result + 'window.resBundleData[\'' + spec + '\'] = ' + JSON.stringify(data) + ';\n';
+		return result + 'window.ilibData[\'' + spec + '\'] = ' + JSON.stringify(data) + ';\n';
 	}, '');
+
 	fs.writeFileSync(path.join(outDir, locale.replace(/\//g, '-') + '.js'), prelude + content, {encoding:'UTF8'});
 });
-
