@@ -146,9 +146,7 @@ class OmniboxBase extends Component {
 		}, 1500);
 	}
 
-	onBookmarkAddToHome = () => {
-		this.setState({addBookmarkToHome: false});
-
+	onBookmarkAndLaunchPointAdd = () => {
 		if (this.webOSBridge) {
 			this.webOSBridge.onservicecallback = (payload) => {
 				console.log('Add bookmark to home result: ', payload);
@@ -158,6 +156,8 @@ class OmniboxBase extends Component {
 				`{"id": "com.webos.app.enactbrowser", "title": "${this.props.title}", "params": {"target": "${this.state.value}"}}`
 			);
 		}
+
+		this.onBookmarkAdd();
 	}
 
 	onBookmarkRemove = () => {
@@ -324,7 +324,7 @@ class OmniboxBase extends Component {
 					<p>{$L('You can add your bookmark to Home screen and access your favorite website by pressing the icon. Do you want to the bookmark to Home?')}</p>
 					<buttons>
 						<Button onClick={this.onBookmarkAdd}>{$L('NO')}</Button>
-						<Button onClick={this.onBookmarkAddToHome}>{$L('YES')}</Button>
+						<Button onClick={this.onBookmarkAndLaunchPointAdd}>{$L('YES')}</Button>
 					</buttons>
 				</Notification>
 				<Notification
