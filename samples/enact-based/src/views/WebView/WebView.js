@@ -31,105 +31,153 @@ class WebView extends Component {
 		super(props);
 
 		this.state = {
-			last_error: null, // error value that was before previous rendering
-			load_commit: false, // load has commited
+			load_commited: false, // load has commited
 			show_error_page: false, // show error page, blocked page info (or webview) on next rendering
 			show_blocked_page_notification: false,
-			show_webview: true,
+			load_started: false,
+			load_stopped: false,
+			show_webview: false,
 			show_error_dialog: false,
 			suppressDialog: false,
+			state: "navigating",
+			post_render_task: null,
 		};
 	}
 
 	static getDerivedStateFromProps = (nextProps, prevState) => {
 		let
-			{browser, id, tabs, webView} = nextProps,
-			{last_error, load_commit} = prevState,
+			{browser, id, tabs} = nextProps,
+			{state} = prevState,
 			error = tabs[id].error;
 
-		let isOnlyForBuiltInErrorPage = (err) => {
-			return ['PAGE_UNRESPONSIVE','RENDERER_CRASHED'].includes(err);
-		};
+		let state_set = Object.assign({}, prevState);
 
-		const
-			is_unresponsive = (error === 'PAGE_UNRESPONSIVE'),
-			need_render = (load_commit === true) ||
-				(!is_unresponsive && last_error === null) || // first time error appeared
-				(isOnlyForBuiltInErrorPage(error) || // because comes without loadcommit
-				 isOnlyForBuiltInErrorPage(last_error));
-		const {suppressDialog} = prevState;
+		state_set.show_webview = false;
+		state_set.show_error_page = false;
+		state_set.show_blocked_page_notification = false;
+		state_set.show_error_dialog = false;
 
-		if (!need_render) {
-			return null;
+		if (error !== null) {
+			state = "showing_error";
 		}
 
-		if (webView.activeState === 'deactivated') { // webview closed
-			return {
-				show_webview: false,
-				show_error_page: true,
-				show_blocked_page_notification: false,
-				show_error_dialog: false,
-				suppressDialog: false,
-			};
-		} else if (error === null) {
-			return { // show webview
-				last_error: error,
-				load_commit: false,
-				show_error_page: false,
-				show_blocked_page_notification: false,
-				show_webview: true,
-				show_error_dialog: false,
-			};
-		} else if (isOnlyForBuiltInErrorPage(error)) {
-			const show_dialog = (is_unresponsive === true && suppressDialog === false);
-			return { // show errors from except list on built-in error page
-				last_error: error,
-				load_commit: false,
-				show_webview: (is_unresponsive === true),
-				show_error_dialog: show_dialog,
-				show_error_page: !is_unresponsive,
-				show_blocked_page_notification: false,
-			};
-		} else if (error === 'ERR_BLOCKED_BY_CLIENT') {
-			return { // show blocked page notification
-				last_error: error,
-				load_commit: false,
-				show_error_page: false,
-				show_blocked_page_notification: true,
-				show_webview: false,
-				show_error_dialog: false,
-				suppressDialog: false,
-			};
-		} else {
-			if (!browser.config.useBuiltInErrorPages) {
-				return { // show error on buit-in error page
-					last_error: error,
-					load_commit: false,
-					show_error_page: true,
-					show_blocked_page_notification: false,
-					show_webview: false,
-					show_error_dialog: false,
-				};
-			} else {
-				return { // show error in webview
-					last_error: error,
-					load_commit: false,
-					show_error_page: false,
-					show_blocked_page_notification: false,
-					show_webview: true,
-					show_error_dialog: false,
-				};
+		switch (state) {
+			case "navigating": {
+				break;
 			}
+
+			case "loading_site": {
+				state_set.show_webview = true;
+				break;
+			}
+
+			case "showing_error": {
+
+				switch (error) {
+					case 'PAGE_UNRESPONSIVE':
+						state_set.show_error_dialog = true;
+						state_set.show_webview = true;
+						state_set.show_error_page = true;
+						break;
+
+					case 'RENDERER_CRASHED':
+						state_set.show_error_page = true;
+						break;
+
+					case 'ERR_BLOCKED_BY_CLIENT':
+						state_set.show_blocked_page_notification = true;
+						break;
+
+					default:
+						if (!browser.config.useBuiltInErrorPages) {
+							state_set.show_error_page = true;
+						} else {
+							state_set.show_webview = true;
+						}
+						break;
+				}
+				break; // case: "showing_error"
+			}
+
+			case "deactivated":
+				state_set.show_webview = false; // when 'stop' pressed in 'unresponsive' dialog
+				state_set.show_error_page = true;
+				break;
+
+			case "showing_site": {
+				state_set.show_webview = true;
+				break;
+			}
+		} // switch
+
+		if (JSON.stringify(state_set) !== JSON.stringify(prevState)) {
+			return state_set;
+		} else {
+			return null;
+		}
+	}
+
+	isOnlyForBuiltInErrorPage = (err) => {
+		return ['PAGE_UNRESPONSIVE','RENDERER_CRASHED'].includes(err);
+	};
+
+	MaybeLoadingStarted = () => {
+		let err = this.props.tabs[this.props.id].error;
+		if (this.state.load_commited === true && this.state.load_started === true) {
+			if (err === null) {
+				this.setState({state: "loading_site"});
+			} else { // error`
+				if (this.isOnlyForBuiltInErrorPage(err)) {
+					this.setState({state: "showing_builtin_error_page"});
+				} else if (err === 'ERR_BLOCKED_BY_CLIENT') {
+					this.setState({state: "showing_blocked_notification"});
+				} else {
+					this.setState({state: "showing_error"});
+				}
+			}
+
+			this.setState({load_started: false});
+			this.setState({load_commited: false});
+			this.setState({load_stopped: false});
 		}
 	}
 
 	onLoadCommit = () => {
-		this.setState({load_commit: true});
+		this.setState({load_commited: true});
+		this.MaybeLoadingStarted();
+	}
+
+	onLoadStart = () => {
+		this.setState({load_started: true});
+		if (this.state.state === "showing_site") {
+			this.setState({state: "navigating"});
+		}
+		this.MaybeLoadingStarted();
+	}
+
+	onLoadStop = () => {
+		this.setState({load_started: false});
+		this.setState({load_commited: false});
+		this.setState({load_stopped: true});
+
+		if (this.props.tabs[this.props.id].error === null) {
+			this.setState({state: "showing_site"});
+		} else {
+			this.setState({state: "showing_error"});
+		}
+	}
+
+	onNavigate = (ev) => {
+		this.setState({state: "navigating"});
+		this.setState({post_render_task: ev.detail.call_after_render});
 	}
 
 	componentDidMount () {
 		this.props.webView.insertIntoDom(this.props.id + WebViewWrapperId);
 		this.props.webView.addEventListener('loadcommit', this.onLoadCommit);
+		this.props.webView.addEventListener('loadstart', this.onLoadStart);
+		this.props.webView.addEventListener('loadstop', this.onLoadStop);
+		this.props.webView.addEventListener('navigate', this.onNavigate);
 	}
 
 	onWait = () => {
@@ -144,10 +192,21 @@ class WebView extends Component {
 	onStop = () => {
 		this.props.webView.deactivate();
 		this.setState({show_error_dialog: false});
+		this.setState({state: "deactivated"});
 	}
 
 	openSiteFiltering = () => {
 		this.props.browser.openSettings();
+	}
+
+	componentDidUpdate() {
+		if (this.state.post_render_task !== null) {
+			this.state.post_render_task();
+			setTimeout( () => {
+				// it is to avoid warning about using setState in componentDidUpdate
+				this.setState({post_render_task: null})
+			}, 0);
+		}
 	}
 
 	render () {

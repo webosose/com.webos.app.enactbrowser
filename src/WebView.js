@@ -96,18 +96,33 @@ const WebViewMixinBase = {
     },
 
     navigate: function WebViewMixin_navigate(url) {
-        this.src = url;
+        const event = new CustomEvent('navigate', {
+            detail: {
+                call_after_render: () => this.src = url
+            }
+        });
+        this.dispatchEvent(event);
     },
 
     back: function WebViewMixin_back() {
         if (this.canGoBack()) {
-            WebView.prototype.back.call(this);
+            const event = new CustomEvent('navigate', {
+                detail: {
+                    call_after_render: () => WebView.prototype.back.call(this)
+                }
+            });
+            this.dispatchEvent(event);
         }
     },
 
     forward: function WebViewMixin_forward() {
         if (this.canGoForward()) {
-            WebView.prototype.forward.call(this);
+            const event = new CustomEvent('navigate', {
+                detail: {
+                    call_after_render: () => WebView.prototype.forward.call(this)
+                }
+            });
+            this.dispatchEvent(event);
         }
     },
 

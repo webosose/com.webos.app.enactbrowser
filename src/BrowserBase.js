@@ -120,7 +120,12 @@ class BrowserBase {
             webView.stop();
         }
         else {
-             webView.reload();
+            const event = new CustomEvent('navigate', {
+                detail: {
+                  call_after_render: () => webView.reload()
+                }
+            });
+            webView.dispatchEvent(event);
         }
     }
 
