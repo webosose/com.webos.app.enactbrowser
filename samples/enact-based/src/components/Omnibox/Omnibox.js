@@ -12,13 +12,18 @@
  */
 
 import $L from '@enact/i18n/$L';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import Button from '@enact/moonstone/Button';
 import ContextualPopupDecorator from '@enact/moonstone/ContextualPopupDecorator';
-import Input from '@enact/moonstone/Input';
 import Icon from '@enact/moonstone/Icon';
 import IconButton from '@enact/moonstone/IconButton';
+import {InputBase} from '@enact/moonstone/Input';
+import {InputSpotlightDecorator} from '@enact/moonstone/Input/InputSpotlightDecorator';
 import Notification from '@enact/moonstone/Notification';
+import Skinnable from '@enact/moonstone/Skinnable';
 import Spotlight from '@enact/spotlight';
+import Changeable from '@enact/ui/Changeable';
+import Pure from '@enact/ui/internal/Pure';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
@@ -28,6 +33,20 @@ import SuggestedItem from './SuggestedItem';
 import {TabTypes} from '../../NevaLib/BrowserModel';
 
 import css from './Omnibox.module.less';
+
+const Input = Pure(
+    I18nContextDecorator(
+        {rtlProp: 'rtl'},
+        Changeable(
+            InputSpotlightDecorator(
+                {noLockPointer: true},
+                Skinnable(
+                    InputBase
+                )
+            )
+        )
+    )
+);
 
 const ContextualPopupInput = ContextualPopupDecorator(Input);
 
