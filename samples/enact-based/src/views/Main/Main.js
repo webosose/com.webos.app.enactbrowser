@@ -67,6 +67,7 @@ class Main extends Component {
 		});
 
 		document.addEventListener('webOSRelaunch', this.onRelaunch);
+		document.addEventListener('webOSLocaleChange', this.onLocaleChange);
 	}
 
 	componentDidUpdate () {
@@ -140,6 +141,10 @@ class Main extends Component {
 				browser.navigate(url);
 			}
 		}
+	}
+
+	onLocaleChange = () => {
+		chrome.runtime.sendMessage({event: "localechange"});
 	}
 
 	render () {

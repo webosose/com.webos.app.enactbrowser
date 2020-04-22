@@ -1,4 +1,4 @@
-// Copyright (c) 2018 LG Electronics, Inc.
+// Copyright (c) 2018-2020 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -26,9 +26,10 @@ chrome.app.runtime.onRestarted.addListener(function() {
 });
 
 /**
- * Creates the window for the application.
+ * Creates the window for the application and set up event listener to handle the message
  *
  * @see http://developer.chrome.com/apps/app.window.html
+ * @see https://developer.chrome.com/extensions/messaging
  */
 function runApp() {
   chrome.app.window.create('index.html', {
@@ -36,6 +37,12 @@ function runApp() {
     innerBounds: {
       'width': 1024,
       'height': 768
+    }
+  });
+
+  chrome.runtime.onMessage.addListener(function(request) {
+    if (request.event === 'localechange') {
+      chrome.runtime.reload();
     }
   });
 }
