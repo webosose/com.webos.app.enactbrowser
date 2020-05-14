@@ -41,11 +41,11 @@
     "@enact/ui": "^3.0.0",
     "@enact/webos": "^3.0.0",
     "ilib": "^14.3.0",
-    "prop-types": "^15.6.0",
+    "prop-types": "^15.7.2",
     "react": "^16.8.0",
     "react-dom": "^16.8.0",
-    "redux": "^3.7.2",
-    "react-redux": "^5.0.7"
+    "redux": "^4.0.5",
+    "react-redux": "^7.2.0"
   },
   "devDependencies": {
     "minimist": "^1.2.0"
