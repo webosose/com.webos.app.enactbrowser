@@ -25,6 +25,12 @@ const
 	error_unresponsive = 'PAGE_UNRESPONSIVE',
 	timeoutToSuppressDialog = 30000;
 
+const LOAD_STATE = {
+	UNLOADED: 0,
+	READY:1,
+	LOADED:2
+};
+
 class WebView extends Component {
 	static propTypes = {
 		id: PropTypes.string,
@@ -38,7 +44,7 @@ class WebView extends Component {
 			hideDialog: true,
 			hideErrorPage: true,
 			hideWebview: true,
-			ready: false, // to be set to `true` after `loadcommit` event
+			load: LOAD_STATE.UNLOADED,
 			suppressDialog: false
 		};
 	}
@@ -46,10 +52,10 @@ class WebView extends Component {
 	static getDerivedStateFromProps = (nextProps, prevState) => {
 		let
 			{browser, id, tabs} = nextProps,
-			{ready} = prevState,
+			{load} = prevState,
 			error = tabs[id].error;
 
-		if (ready) {
+		if (load === LOAD_STATE.READY) {
 			if (error === null) {
 				return {
 					suppressDialog: false,
@@ -90,7 +96,15 @@ class WebView extends Component {
 	}
 
 	onLoadCommit = () => {
-		this.setState({ready: true});
+		if (this.state.load !== LOAD_STATE.READY) {
+			this.setState({load: LOAD_STATE.READY});
+		}
+	}
+
+	onLoadContent = () => {
+		if (this.state.load === LOAD_STATE.READY) {
+			this.setState({load: LOAD_STATE.LOADED});
+		}
 	}
 
 	enableDialog = () => {
@@ -108,13 +122,14 @@ class WebView extends Component {
 			hideDialog: true,
 			hideErrorPage: false,
 			hideWebview: true,
-			ready: false
+			load: LOAD_STATE.UNLOADED
 		});
 	}
 
 	componentDidMount () {
 		this.props.webView.insertIntoDom(this.props.id + WebViewWrapperId);
 		this.props.webView.addEventListener('loadcommit', this.onLoadCommit);
+		this.props.webView.addEventListener('contentload', this.onLoadContent);
 	}
 
 	render () {
