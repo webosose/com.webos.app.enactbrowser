@@ -140,6 +140,28 @@ class SiteFilteringBase extends Component {
 		}
 	}
 
+	addFilerPattern = (value) => {
+		const {
+			siteFiltering: filteringMode,
+			browser: {siteFiltering, siteFiltering: {filterStorages}}
+		} = this.props;
+
+		filterStorages[filteringMode].set(value)
+			.then(() => this.loadSiteList())
+			.then(() => siteFiltering.setMode(filteringMode));
+	}
+
+	removeFilterPattern = (value) => {
+		const {
+			siteFiltering: filteringMode,
+			browser: {siteFiltering, siteFiltering: {filterStorages}}
+		} = this.props;
+
+		filterStorages[filteringMode].remove(value)
+			.then(() => this.loadSiteList())
+			.then(() => siteFiltering.setMode(filteringMode));
+	}
+
 	onDelete = () => {
 		this.setState({deletePopupOpen: true});
 	}
