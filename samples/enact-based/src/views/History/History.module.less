@@ -26,4 +26,8 @@
 	height: ~"calc(100vh - " 200px + @moon-button-height + 36px ~")";
 	padding: 10px;
 	margin-top: 20px;
+	&.shrinkHeight {
+		// shirnk as much as bookmarkbar height (84px)
+		height: ~"calc(100vh - " 200px + @moon-button-height + 36px + 84px ~")";
+	}
 }

@@ -4,6 +4,10 @@
 
 .scroller {
 	height: ~"calc(100vh - " 236px ~")";
+	&.shrinkHeight {
+		// shirnk as much as bookmarkbar height (84px)
+		height: ~"calc(100vh - " 238px + 84px ~")";
+	}
 }
 
 .settings {

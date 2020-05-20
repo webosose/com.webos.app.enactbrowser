@@ -22,9 +22,13 @@
 	});
 }
 
-.list {
+.scroller {
 	height: ~"calc(100vh - " 200px + @moon-button-height + 36px ~")";
 	padding: 20px 10px 10px 10px;
+	&.shrinkHeight {
+		// shirnk as much as bookmarkbar height (84px)
+		height: ~"calc(100vh - " 200px + @moon-button-height + 36px + 84px ~")";
+	}
 }
 
 .noItem {

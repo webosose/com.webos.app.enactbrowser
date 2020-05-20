@@ -74,9 +74,9 @@ const ContentItem = kind({
             case TabTypes.SITE_FILTERING:
                 return <SiteFiltering style={style} browser={browser} />;
             case TabTypes.BOOKMARKS:
-                return <BookmarkManager style={style} browser={browser} />;
+                return <BookmarkManager style={style} alwaysShowBookmarks={alwaysShowBookmarks} browser={browser} />;
             case TabTypes.HISTORY:
-                return <History style={style} browser={browser} isSelectedTab={isSelectedTab} />;
+                return <History style={style} alwaysShowBookmarks={alwaysShowBookmarks} browser={browser} isSelectedTab={isSelectedTab} />;
         }
     }
 });
