@@ -15,6 +15,7 @@ import $L from '@enact/i18n/$L';
 import Button from '@enact/moonstone/Button';
 import {connect} from 'react-redux';
 import Notification from '@enact/moonstone/Notification';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import Scroller from '@enact/moonstone/Scroller';
@@ -27,6 +28,7 @@ import css from './BookmarkManager.module.less';
 class BookmarkManagerBase extends Component {
 
 	static propTypes = {
+		alwaysShowBookmarks: PropTypes.bool,
 		browser: PropTypes.object,
 		data: PropTypes.array,
 		selectedIndices: PropTypes.array,
@@ -85,7 +87,10 @@ class BookmarkManagerBase extends Component {
 	}
 
 	render () {
-		const {browser, data, hasSelection, ...rest} = this.props;
+		const
+			{alwaysShowBookmarks, browser, data, hasSelection, ...rest} = this.props,
+			scrollerClass = classNames(css.scroller, {[css.shrinkHeight]: alwaysShowBookmarks});
+
 		delete rest.selectedIndices;
 		delete rest.selectAllBookmarks;
 		delete rest.deselectAllBookmarks;
@@ -114,7 +119,7 @@ class BookmarkManagerBase extends Component {
 				</Notification>
 				{
 					(data.length > 0) ?
-					<Scroller horizontalScrollbar="hidden" className={css.list}>
+					<Scroller horizontalScrollbar="hidden" className={scrollerClass}>
 						<BookmarkList browser={browser}/>
 					</Scroller>
 					:

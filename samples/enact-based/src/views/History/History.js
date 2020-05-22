@@ -15,6 +15,7 @@ import $L from '@enact/i18n/$L';
 import Button from '@enact/moonstone/Button';
 import {connect} from 'react-redux';
 import Notification from '@enact/moonstone/Notification';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ri from '@enact/ui/resolution';
@@ -29,6 +30,7 @@ import css from './History.module.less';
 class HistoryBase extends Component {
 
 	static propTypes = {
+		alwaysShowBookmarks: PropTypes.bool,
 		browser: PropTypes.object,
 		data: PropTypes.array,
 		deselectAllHistory: PropTypes.func,
@@ -159,7 +161,10 @@ class HistoryBase extends Component {
 	}
 
 	render () {
-		const {data, hasSelection, ...rest} = this.props;
+		const
+			{alwaysShowBookmarks, data, hasSelection, ...rest} = this.props,
+			listClass = classNames(css.list, {[css.shrinkHeight]:alwaysShowBookmarks});
+
 
 		delete rest.browser;
 		delete rest.deselectAllHistory;
@@ -195,7 +200,7 @@ class HistoryBase extends Component {
 							dataSize={this.viewData.length}
 							focusableScrollbar
 							itemRenderer={this.renderItem}
-							className={css.list}
+							className={listClass}
 							itemSize={ri.scale(70)}
 						/>
 					: <div>{$L('There is no history.')}</div>
