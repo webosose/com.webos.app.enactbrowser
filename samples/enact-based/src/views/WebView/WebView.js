@@ -168,8 +168,7 @@ class WebView extends Component {
 	}
 
 	onNavigate = (ev) => {
-		this.setState({state: "navigating"});
-		this.setState({post_render_task: ev.detail.call_after_render});
+		this.setState({state: "navigating"}, ev.detail.call_after_render);
 	}
 
 	componentDidMount () {
@@ -197,16 +196,6 @@ class WebView extends Component {
 
 	openSiteFiltering = () => {
 		this.props.browser.openSettings();
-	}
-
-	componentDidUpdate() {
-		if (this.state.post_render_task !== null) {
-			this.state.post_render_task();
-			setTimeout( () => {
-				// it is to avoid warning about using setState in componentDidUpdate
-				this.setState({post_render_task: null})
-			}, 0);
-		}
 	}
 
 	render () {
