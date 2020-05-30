@@ -15,7 +15,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import Spotlight from '@enact/spotlight';
-import {DragDropContext, Droppable} from 'react-beautiful-dnd';
+import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 
 import Bookmark from './Bookmark';
 import Sortable from '../Sortable';
@@ -50,15 +50,24 @@ class BookmarkBarBase extends Component {
 
 		for (let i = 0; i < leng; i++) {
 			items.push(
-				<Item
-					data-id={i}
-					data-index={i}
-					index={i}
-					key={i}
-					title={data[i].title}
-					url={data[i].url}
-					onClick={this.onClick}
-				/>
+				<Draggable draggableId={`draggable-bookmark-on-bar-${i}`} index={i} key={i}>
+				{provided => (
+					<div
+						ref={provided.innerRef}
+						{...provided.draggableProps}
+						{...provided.dragHandleProps}
+						className={css.bookmarkContainer}
+					>
+						<Item
+							data-id={i}
+							data-index={i}
+							title={data[i].title}
+							url={data[i].url}
+							onClick={this.onClick}
+						/>
+					</div>
+				)}
+				</Draggable>
 			);
 		}
 

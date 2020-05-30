@@ -16,7 +16,6 @@ import {MarqueeDecorator} from '@enact/moonstone/Marquee';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Spottable from '@enact/spotlight/Spottable';
-import {Draggable} from 'react-beautiful-dnd';
 
 import css from './Bookmark.less';
 
@@ -38,26 +37,14 @@ const Bookmark = kind({
 		className: 'bookmark'
 	},
 
-	render: ({title, index, ...rest}) => {
-		delete rest.index;
+	render: ({title, ...rest}) => {
 		delete rest.url;
 
 		return (
-			<Draggable draggableId={`draggable-bookmark-on-bar-${index}`} index={index}>
-			{provided => (
-				<div
-					{...rest}
-					ref={provided.innerRef}
-					{...provided.draggableProps}
-					{...provided.dragHandleProps}
-				>
-					<SpottableDiv>
-						<div className={css.favicon} />
-						<TitleDiv className={css.title} marqueeOn="hover">{title}</TitleDiv>
-					</SpottableDiv>
-				</div>
-			)}
-			</Draggable>
+			<SpottableDiv {...rest}>
+				<div className={css.favicon} />
+				<TitleDiv className={css.title} marqueeOn="hover">{title}</TitleDiv>
+			</SpottableDiv>
 		);
 	}
 });

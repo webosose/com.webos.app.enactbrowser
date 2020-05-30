@@ -117,6 +117,7 @@ class NewTabPageBase extends Component {
 		for (let i = 0; i < recentlyClosed.length; i++) {
 			sites.push(
 				<Bookmark
+					className={css.bookmarkContainer}
 					data-index={i}
 					key={i}
 					onClick={this.onClickRecentlyClosed}
