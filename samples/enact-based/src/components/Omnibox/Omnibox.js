@@ -35,20 +35,20 @@ import {TabTypes} from '../../NevaLib/BrowserModel';
 import css from './Omnibox.module.less';
 
 const Input = Pure(
-    I18nContextDecorator(
-        {rtlProp: 'rtl'},
-        Changeable(
-            InputSpotlightDecorator(
-                {noLockPointer: true},
-                Skinnable(
-                    InputBase
-                )
-            )
-        )
-    )
+	I18nContextDecorator(
+		{rtlProp: 'rtl'},
+		Changeable(
+			InputSpotlightDecorator(
+				{noLockPointer: true},
+				Skinnable(
+					InputBase
+				)
+			)
+		)
+	)
 );
 
-const ContextualPopupInput = ContextualPopupDecorator(Input);
+const ContextualPopupInput = ContextualPopupDecorator({noArrow:true}, Input);
 
 class OmniboxBase extends Component {
 
@@ -122,7 +122,12 @@ class OmniboxBase extends Component {
 		if (!this.prevOpen) {
 			Spotlight.setPointerMode(true);
 		}
-		this.setState({value: ev.value, open: ev.value.length > 0});
+
+		this.setState({
+			value: ev.value,
+			open: true
+		});
+
 		this.props.browser.mostVisited.getSuggestions(ev.value, 5);
 	}
 
@@ -258,7 +263,8 @@ class OmniboxBase extends Component {
 	render () {
 		const
 			{isLoading, reloadDisabled, isBookmarked, ...rest} = this.props,
-			{addBookmarkCompleted, addBookmarkToHome, value, open, removeBookmarkCompleted} = this.state;
+			{addBookmarkCompleted, addBookmarkToHome, value, open, removeBookmarkCompleted} = this.state,
+			popupClassName = classNames(css.popup, {[css.invisible]:(open && !value.length)});
 
 		delete rest.bookmarksData;
 		delete rest.browser;
@@ -281,7 +287,7 @@ class OmniboxBase extends Component {
 						onClose={this.onClose}
 						onSpotlightDown={this.spotSuggested}
 						open={open}
-						popupClassName={css.popup}
+						popupClassName={popupClassName}
 						popupComponent={this.renderPopup}
 						popupSpotlightId="suggestedList"
 						value={value}
