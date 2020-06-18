@@ -68,7 +68,7 @@ const ContentItem = kind({
                     tabPolicy={browser.tabPolicy.constructor.name}
                 />;
             case TabTypes.NEW_TAB_PAGE:
-                return <NewTabPage style={style} browser={browser} isSelectedTab={isSelectedTab} />;
+                return <NewTabPage style={style} browser={browser} isSelectedTab={isSelectedTab} fullScreen={fullScreen}/>;
             case TabTypes.SETTINGS:
                 return <Settings style={style} browser={browser} />;
             case TabTypes.SITE_FILTERING:

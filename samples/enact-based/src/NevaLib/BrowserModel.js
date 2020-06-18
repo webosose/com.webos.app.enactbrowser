@@ -243,6 +243,10 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
         }
     }
 
+    getPrivateBrowsing() {
+        return this.settings.getPrivateBrowsing();
+    }
+
     setPrivateBrowsing(usePrivateBrowsing) {
         const {tabs, settings} = this;
         if (usePrivateBrowsing === settings.getPrivateBrowsing()) {

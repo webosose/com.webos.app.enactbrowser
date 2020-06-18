@@ -51,7 +51,7 @@ class NewTabPageBase extends Component {
 			this.retrieveMostVisited();
 		}
 		else if (this.props.isSelectedTab &&
-		         this.props.mostVisited.length !== nextProps.mostVisited.length) {
+			this.props.mostVisited.length !== nextProps.mostVisited.length) {
 			// user has deleted most visited site
 			this.retrieveMostVisited();
 		}
@@ -142,16 +142,22 @@ class NewTabPageBase extends Component {
 	}
 
 	render () {
-		const {style, ...rest} = this.props;
+		const {style, browser, fullScreen, ...rest} = this.props;
 
-		delete rest.browser;
 		delete rest.dispatch;
 		delete rest.isSelectedTab;
 		delete rest.mostVisited;
 		delete rest.recentlyClosed;
 
+		let private_mode = false;
+		if (browser.getPrivateBrowsing !== undefined) {
+			private_mode = browser.getPrivateBrowsing();
+		}
+
 		return (
-			<div className={css.newTabPage} style={style}>
+			<div className={(private_mode && fullScreen) ? css.privateNewTabPage : null} style={style}>
+				{private_mode && fullScreen && <p className={css.privateTextNewTab}>
+					P R I V A T E &nbsp;&nbsp; B R O W S I N G</p>}
 				<div {...rest}>
 					<div className={css.title}>{$L('Most Visited Sites')}</div>
 					<div className={css.sites}>

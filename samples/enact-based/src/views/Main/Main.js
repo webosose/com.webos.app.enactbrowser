@@ -20,12 +20,14 @@ import Spotlight from '@enact/spotlight';
 import {Browser} from '../../NevaLib/BrowserModel';
 
 import {BrowserIconButton as IconButton} from '../../components/BrowserIconButton';
+import {connect} from 'react-redux';
 import ContentView from '../ContentView';
 import DialogView from '../DialogView';
 import Dialog from '../../components/Dialog';
 import Menu from '../../components/Menu';
 import NavigationBox from '../../components/NavigationBox';
 import Omnibox from '../../components/Omnibox';
+import PropTypes from 'prop-types';
 import {TabBar} from '../../components/TabBar';
 import ZoomControl from '../../components/ZoomControl';
 
@@ -33,8 +35,11 @@ import css from './Main.less';
 
 const maxTab = 7;
 
-class Main extends Component {
+class MainBase extends Component {
 	static contextTypes = contextTypes;
+	static propTypes = {
+		privateBrowsing: PropTypes.bool,
+	}
 
 	constructor (props) {
 		super(props);
@@ -152,9 +157,15 @@ class Main extends Component {
 
 		delete props.store;
 
+		let private_mode = false;
+		if (browser.getPrivateBrowsing !== undefined) {
+			private_mode = browser.getPrivateBrowsing();
+		}
+
 		return (
 			<div {...props}>
-				<div onClick={this.onClick} onMouseLeave={this.onMouseLeave}>
+				<div onClick={this.onClick} onMouseLeave={this.onMouseLeave}
+					className={private_mode ? css['main-bar'] : null}>
 					{ fullScreen === false && <div className={css['flexbox-row']}>
 						<NavigationBox browser={browser} />
 						<Omnibox browser={browser} />
@@ -179,6 +190,10 @@ class Main extends Component {
 							null
 						}
 					</div> }
+				{fullScreen === false && private_mode &&
+					<div className={css['private-text']}>
+					P R I V A T E &nbsp;&nbsp; B R O W S I N G</div>
+				}
 					<TabBar fullScreen={fullScreen} browser={browser} />
 				</div>
 				<ContentView
@@ -201,5 +216,11 @@ class Main extends Component {
 		);
 	}
 }
+
+const mapStateToProps = ({settingsState}) => ({
+	privateBrowsing: settingsState.privateBrowsing,
+});
+
+const Main = connect(mapStateToProps, null)(MainBase);
 
 export default Main;
