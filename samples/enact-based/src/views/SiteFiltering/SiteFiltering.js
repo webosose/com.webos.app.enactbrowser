@@ -34,7 +34,9 @@ import {
 } from '../../actions';
 import {
 	setApprovedSites,
-	setBlockedSites
+	removeApprovedSites,
+	setBlockedSites,
+	removeBlockedSites
 } from '../../NevaLib/Settings/actions';
 import PinPopup from '../../components/PinPopup';
 import SiteFilteringItem from './SiteFilteringItem';
@@ -169,6 +171,14 @@ class SiteFilteringBase extends Component {
 
 	onDeleteYes = () => {
 		this.setState({deletePopupOpen: false});
+
+		const {data, selected, siteFiltering} = this.props;
+		selected.forEach(i => this.removeFilterPattern(data[i]));
+		if (isItemApproved(siteFiltering)) {
+			this.props.deselectAllApprovedSites();
+		} else {
+			this.props.deselectAllBlockedSites();
+		}
 	}
 
 	onDeleteNo = () => {
@@ -325,7 +335,9 @@ const mapDispatchToProps = (dispatch) => ({
 	deselectAllApprovedSites: () => dispatch(deselectAllApprovedSites()),
 	setBlockedSites: (urls) => dispatch(setBlockedSites(urls)),
 	selectAllBlockedSites: (ids) => dispatch(selectAllBlockedSites(ids)),
-	deselectAllBlockedSites: () => dispatch(deselectAllBlockedSites())
+	deselectAllBlockedSites: () => dispatch(deselectAllBlockedSites()),
+	removeApprovedSites: (urls) => dispatch(removeApprovedSites(urls)),
+	removeBlockedSites: (urls) => dispatch(removeBlockedSites(urls))
 });
 
 const SiteFiltering = connect(mapStateToProps, mapDispatchToProps)(SiteFilteringBase);

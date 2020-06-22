@@ -81,7 +81,9 @@ function settingsState (state = initialSettingsState, action) {
 				!action.urls.includes(elem)
 			));
 
-			return [...newData];
+			return Object.assign({}, state, {
+				approvedSites: [...newData]
+			});
 		}
 
 		/*
@@ -100,7 +102,9 @@ function settingsState (state = initialSettingsState, action) {
 				!action.urls.includes(elem)
 			));
 
-			return [...newData];
+			return Object.assign({}, state, {
+				blockedSites: [...newData]
+			});
 		}
 		default:
 			return state;
