@@ -16,12 +16,13 @@ import BodyText from '@enact/moonstone/BodyText';
 import Button from '@enact/moonstone/Button';
 import {connect} from 'react-redux';
 import Group from '@enact/ui/Group';
-//import Icon from '@enact/moonstone/Icon';
-//import Input from '@enact/moonstone/Input';
-//import Notification from '@enact/moonstone/Notification';
+import Icon from '@enact/moonstone/Icon';
+import Input from '@enact/moonstone/Input';
+import Notification from '@enact/moonstone/Notification';
 import PropTypes from 'prop-types';
 import RadioItem from '@enact/moonstone/RadioItem';
 import React, {Component} from 'react';
+import Scroller from '@enact/moonstone/Scroller';
 import ri from '@enact/ui/resolution';
 import VirtualList from '@enact/moonstone/VirtualList';
 
@@ -140,7 +141,7 @@ class SiteFilteringBase extends Component {
 		}
 	}
 
-	addFilerPattern = (value) => {
+	addFilterPattern = (value) => {
 		const {
 			siteFiltering: filteringMode,
 			browser: {siteFiltering, siteFiltering: {filterStorages}}
@@ -191,7 +192,7 @@ class SiteFilteringBase extends Component {
 
 	render () {
 		const
-			{data, /*selected,*/ siteFiltering, ...rest} = this.props,
+			{data, selected, siteFiltering, ...rest} = this.props,
 			optionIndex = filteringOptions.indexOf(siteFiltering);
 
 		delete rest.browser;
@@ -203,7 +204,7 @@ class SiteFilteringBase extends Component {
 		delete rest.setBlockedSites;
 
 		return (
-			<div {...rest} className={css.siteFiltering}>
+			<Scroller {...rest} className={css.scroller}>
 				<BodyText>Site Filtering</BodyText>
 				<Group
 					childComponent={RadioItem}
@@ -225,12 +226,11 @@ class SiteFilteringBase extends Component {
 				{(optionIndex === 2) && <BodyText>{$L('Blocked Sites List')}</BodyText>}
 				{(optionIndex === 1 || optionIndex === 2) &&
 					<div>
-						{/*
 						<Notification
 							open={this.state.deletePopupOpen}
 							noAutoDismiss
 						>
-							<span>{(data.length === selected.length) ?
+							<span>{(data && selected && data.length === selected.length) ?
 								'Do you want to delete all websites?'
 								: 'Do you want to delete the selected website(s)?'}</span>
 							<buttons>
@@ -247,26 +247,26 @@ class SiteFilteringBase extends Component {
 								/>
 								<Icon className={css.add} onClick={this.onAdd}>plus</Icon>
 							</div>
+							<br/>
 							<Button
 								css={css}
 								onClick={this.onSelectAll}
-								disabled={!data.length}
+								disabled={!data || !data.length}
 								small
 							>
-								{(data.length && data.length === selected.length) ? 'Deselect All' : 'Select All'}
+								{(data && selected && data.length && data.length === selected.length) ? 'Deselect All' : 'Select All'}
 							</Button>
 							<Button
 								css={css}
 								onClick={this.onDelete}
 								small
-								disabled={!data.length || !selected.length}
+								disabled={!data || !data.length || !selected.length}
 							>
 								Delete
 							</Button>
 						</form>
-						*/}
 						{
-							(data.length > 0) ?
+							(data && data.length > 0) ?
 								<VirtualList
 									data={data}
 									dataSize={data.length}
@@ -291,7 +291,7 @@ class SiteFilteringBase extends Component {
 					onSubmit={this.onSubmitPinCode}
 					matched
 				/>
-			</div>
+			</Scroller>
 		);
 	}
 }
