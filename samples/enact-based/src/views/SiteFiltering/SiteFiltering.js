@@ -112,30 +112,39 @@ class SiteFilteringBase extends Component {
 		)
 	}
 
+	deselectAll = () => {
+		if (isItemApproved(this.props.siteFiltering)) {
+			this.props.deselectAllApprovedSites();
+		} else {
+			this.props.deselectAllBlockedSites();
+		}
+	}
+
 	onChange = (ev) => {
 		this.setState({urlToAdd: ev.value});
 	}
 
 	onAdd = (ev) => {
+		const {urlToAdd} = this.state;
+		if (urlToAdd !== '') {
+			this.addFilterPattern(urlToAdd);
+			this.setState({urlToAdd: ev.value});
+		}
 		ev.preventDefault();
+		ev.stopPropagation();
 	}
 
 	onSelectAll = () => {
 		const
-			{data, selected, siteFiltering} = this.props,
-			isApproved = isItemApproved(siteFiltering);
+			{data, selected, siteFiltering} = this.props;
 		if (data.length === selected.length) {
-			if (isApproved) {
-				this.props.deselectAllApprovedSites();
-			} else {
-				this.props.deselectAllBlockedSites();
-			}
+			this.deselectAll();
 		} else {
 			const ids = [];
 			for (let i = 0; i < data.length; i++) {
 				ids.push(i);
 			}
-			if (isApproved) {
+			if (isItemApproved(siteFiltering)) {
 				this.props.selectAllApprovedSites(ids);
 			} else {
 				this.props.selectAllBlockedSites(ids);
@@ -172,13 +181,9 @@ class SiteFilteringBase extends Component {
 	onDeleteYes = () => {
 		this.setState({deletePopupOpen: false});
 
-		const {data, selected, siteFiltering} = this.props;
+		const {data, selected} = this.props;
 		selected.forEach(i => this.removeFilterPattern(data[i]));
-		if (isItemApproved(siteFiltering)) {
-			this.props.deselectAllApprovedSites();
-		} else {
-			this.props.deselectAllBlockedSites();
-		}
+		this.deselectAll();
 	}
 
 	onDeleteNo = () => {
