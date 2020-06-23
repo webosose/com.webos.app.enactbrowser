@@ -1,0 +1,20 @@
+Open Source Software Package:
+- name: webOSOSE-com.webos.app.enactbrowser
+  version: 1.0.0
+  source: https://github.com/webosose/com.webos.app.enactbrowser
+  license: LicenseRef-EnactBrowser-Evaluation
+- name: Enact
+  source: https://github.com/enactjs/enact
+  license: Apache-2.0
+- name: Enact-cli
+  source: https://github.com/enactjs/cli
+  license: Apache-2.0
+- name: React
+  source: https://github.com/facebook/react
+  license: MIT
+- name: Redux
+  source: https://github.com/reduxjs/redux
+  license: MIT
+- name: React Redux
+  source: https://github.com/reduxjs/react-redux
+  license: MIT
