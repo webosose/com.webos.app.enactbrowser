@@ -155,7 +155,8 @@ class NewTabPageBase extends Component {
 		}
 
 		return (
-			<div className={(private_mode && fullScreen) ? css.privateNewTabPage : null} style={style}>
+			<div className={(private_mode && fullScreen) ?
+				css.privateNewTabPage : css.newTabPage} style={style}>
 				{private_mode && fullScreen && <p className={css.privateTextNewTab}>
 					P R I V A T E &nbsp;&nbsp; B R O W S I N G</p>}
 				<div {...rest}>
