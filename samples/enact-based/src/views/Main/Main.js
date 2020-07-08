@@ -157,13 +157,22 @@ class MainBase extends Component {
 
 		delete props.store;
 
+		let privateBrowsingCueBgColor = undefined;
+		let privateBrowsingCueTextColor = undefined;
+		if (browser.config !== undefined) {
+			privateBrowsingCueBgColor = browser.config.privateBrowsingCueBgColor;
+			privateBrowsingCueTextColor = browser.config.privateBrowsingCueTextColor;
+		}
+
 		let private_mode = false;
 		if (browser.getPrivateBrowsing !== undefined) {
 			private_mode = browser.getPrivateBrowsing();
 		}
 
 		return (
-			<div {...props}>
+			<div {...props}
+				style={{ '--cue-bg-color': privateBrowsingCueBgColor, '--cue-text-color': privateBrowsingCueTextColor }}
+			>
 				<div onClick={this.onClick} onMouseLeave={this.onMouseLeave}
 					className={private_mode ? css['main-bar'] : null}>
 					{ fullScreen === false && <div className={css['flexbox-row']}>

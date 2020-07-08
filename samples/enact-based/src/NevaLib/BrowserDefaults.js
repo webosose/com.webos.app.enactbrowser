@@ -36,7 +36,9 @@ function getDefaults() {
                     'maxSuspendedLow': 1,
                     'maxSuspendedCritical': 0
                 },
-                alertsCountBeforePreventionRequest: 3
+                alertsCountBeforePreventionRequest: 3,
+                privateBrowsingCueBgColor: '#910137',
+                privateBrowsingCueTextColor: '#ce2e6b'
             }
         };
     }

@@ -155,7 +155,8 @@ class Config {
         this.simplePolicy = new SimplePolicy(this._storage);
         this.memoryManager = new MemoryManager(this._storage);
         this._alertsCountBeforePreventionRequest = 0;
-
+        this._privateBrowsingCueBgColor = '';
+        this._privateBrowsingCueTextColor = '';
     }
 
     initialize(defaults) {
@@ -168,6 +169,8 @@ class Config {
             this.memoryManager._maxSuspendedLow = values.MM_maxSuspendedLow;
             this.memoryManager._maxSuspendedCritical = values.MM_maxSuspendedCritical;
             this._alertsCountBeforePreventionRequest = values.alertsCountBeforePreventionRequest;
+            this._privateBrowsingCueBgColor = values.privateBrowsingCueBgColor;
+            this._privateBrowsingCueTextColor = values.privateBrowsingCueTextColor;
         };
 
         return this._storage.get({
@@ -178,7 +181,9 @@ class Config {
                 MM_maxSuspendedNormal: defaults.memoryManager.maxSuspendedNormal,
                 MM_maxSuspendedLow: defaults.memoryManager.maxSuspendedLow,
                 MM_maxSuspendedCritical: defaults.memoryManager.maxSuspendedCritical,
-                alertsCountBeforePreventionRequest: defaults.alertsCountBeforePreventionRequest
+                alertsCountBeforePreventionRequest: defaults.alertsCountBeforePreventionRequest,
+                privateBrowsingCueBgColor: defaults.privateBrowsingCueBgColor,
+                privateBrowsingCueTextColor: defaults.privateBrowsingCueTextColor
             })
             .then(setInMemoryValues);
     }
@@ -217,6 +222,14 @@ class Config {
 
     get alertsCountBeforePreventionRequest() {
         return this._alertsCountBeforePreventionRequest;
+    }
+
+    get privateBrowsingCueBgColor() {
+        return this._privateBrowsingCueBgColor;
+    }
+
+    get privateBrowsingCueTextColor() {
+        return this._privateBrowsingCueTextColor;
     }
 }
 
