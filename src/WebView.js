@@ -264,7 +264,8 @@ function WebViewMixin(webView, {activeState, ...rest}) {
             isAborted: false,
             msgListenerId: null,
             isAlertsAllowed: true,
-            alertsCount: 0
+            alertsCount: 0,
+            tabFamilyId: null
         });
 
     // TODO: use local property and Singleton

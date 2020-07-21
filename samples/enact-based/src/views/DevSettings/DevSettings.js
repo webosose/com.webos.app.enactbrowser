@@ -49,26 +49,26 @@ class SimplePolicySettings extends Component {
 	constructor (props) {
 		super(props);
 		this.state = {
-			maxActive: props.simplePolicy.maxActiveTabs,
-			maxSuspended: props.simplePolicy.maxSuspendedTabs
+			maxActive: props.simplePolicy.maxActiveTabFamilies,
+			maxSuspended: props.simplePolicy.maxSuspendedTabFamilies
 		}
 	}
 
-	onChangeMaxActiveTabs = (ev) => {
+	onChangeMaxActiveTabFamilies = (ev) => {
 		const {simplePolicy} = this.props;
-		simplePolicy.setMaxActiveTabs(ev.value)
-		.catch((err) => console.error(`SimplePolicySettings::setMaxActiveTabs error: ${err}`))
+		simplePolicy.setMaxActiveTabFamilies(ev.value)
+		.catch((err) => console.error(`SimplePolicySettings::setMaxActiveTabFamilies error: ${err}`))
 		.finally(() => this.setState({
-				maxActive: simplePolicy.maxActiveTabs
+				maxActive: simplePolicy.maxActiveTabFamilies
 			}));
 	}
 
-	onChangeMaxSuspendedTabs = (ev) => {
+	onChangeMaxSuspendedTabFamilies = (ev) => {
 		const {simplePolicy} = this.props;
-		simplePolicy.setMaxSuspendedTabs(ev.value)
-		.catch((err) => console.error(`SimplePolicySettings::setMaxSuspendedTabs error: ${err}`))
+		simplePolicy.setMaxSuspendedTabFamilies(ev.value)
+		.catch((err) => console.error(`SimplePolicySettings::setMaxSuspendedTabFamilies error: ${err}`))
 		.finally(() => this.setState({
-				maxSuspended: simplePolicy.maxSuspendedTabs
+				maxSuspended: simplePolicy.maxSuspendedTabFamilies
 			}));
 	}
 
@@ -79,15 +79,15 @@ class SimplePolicySettings extends Component {
 				<div className={css.indent}>
 					<RangePicker min={1} max={100}
 						value={this.state.maxActive}
-						onChange={this.onChangeMaxActiveTabs}
+						onChange={this.onChangeMaxActiveTabFamilies}
 					/>
-					<BodyText className={css.menu}>Number of active tabs</BodyText>
+					<BodyText className={css.menu}>Number of active tab families</BodyText>
 					<br />
 					<RangePicker min={0} max={100}
 						value={this.state.maxSuspended}
-						onChange={this.onChangeMaxSuspendedTabs}
+						onChange={this.onChangeMaxSuspendedTabFamilies}
 					/>
-					<BodyText className={css.menu}>Number of suspended tabs</BodyText>
+					<BodyText className={css.menu}>Number of suspended tab families</BodyText>
 				</div>
 			</React.Fragment>
 		);

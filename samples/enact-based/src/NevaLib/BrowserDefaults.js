@@ -28,8 +28,8 @@ function getDefaults() {
                 useBuiltInErrorPages: true,
                 restorePrevSessionPolicy: 'onlyLastTab',
                 simplePolicy: {
-                    'maxActiveTabs': 1,
-                    'maxSuspendedTabs': 2
+                    'maxActiveTabFamilies': 1,
+                    'maxSuspendedTabFamilies': 2
                 },
                 memoryManager: {
                     'maxSuspendedNormal': 3,
