@@ -18,15 +18,30 @@ import React, {Component} from 'react';
 
 import css from './SiteItem.less';
 
-const CloseButton = (props) => (
-	<IconButton {...props} className={css.xbutton} small>closex</IconButton>
-);
+const
+	CloseButton = (props) => (
+		<IconButton {...props} className={css.xbutton} small>closex</IconButton>
+	),
+	EmptyItem = (props) => (
+		<div className={css.emptyContainer} {...props} />
+	),
+	placeholder =
+	'data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC' +
+	'9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHN0cm9rZT0iIzU1NSIgZmlsbD0iI2FhYSIg' +
+	'ZmlsbC1vcGFjaXR5PSIwLjIiIHN0cm9rZS1vcGFjaXR5PSIwLjgiIHN0cm9rZS13aWR0aD0iNiIgLz48L3N2Zz' +
+	'4NCg==';
+
 
 class SiteItem extends Component {
 	static propTypes = {
 		browser: PropTypes.object,
+		source: PropTypes.string,
 		title: PropTypes.string,
 		url: PropTypes.string
+	}
+
+	static defaultProps = {
+		source: placeholder
 	}
 
 	constructor (props) {
@@ -64,6 +79,7 @@ class SiteItem extends Component {
 					disabled={!title}
 					onMouseEnter={this.onMouseEnter}
 					onMouseLeave={this.onMouseLeave}
+					placeholder={placeholder}
 				/>
 				{
 					this.state.showingCloseButton && title ?
@@ -79,4 +95,4 @@ class SiteItem extends Component {
 }
 
 export default SiteItem;
-export {SiteItem};
+export {SiteItem, EmptyItem};

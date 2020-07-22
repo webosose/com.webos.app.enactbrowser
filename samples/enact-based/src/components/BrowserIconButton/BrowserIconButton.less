@@ -11,11 +11,20 @@
 	margin: 0;
 }
 
-.icon-newtab {
-	width: 60px;
-	min-width: 60px;
-	height: 45px;
-	margin: 0;
+.icon-svg-common {
+	.icon {
+		background-size: contain;
+		border: solid transparent 6px;
+		box-sizing: border-box;
+	}
+}
+
+.icon-svg-omnibox {
+	.icon {
+		background-size: contain;
+		border: solid transparent 15px;
+		box-sizing: border-box;
+	}
 }
 
 .iconButton {
@@ -57,6 +66,7 @@
 	}
 
 	&.menuButton {
+		.icon-svg-common;
 		.applySkins({
 			&:not([disabled]) {
 				.focus({
@@ -73,6 +83,7 @@
 	}
 
 	&.fullscreenButton {
+		.icon-svg-common;
 		.applySkins({
 			&:not([disabled]) {
 				.focus({
@@ -89,6 +100,7 @@
 	}
 
 	&.xButton {
+		.icon-svg-common;
 		.applySkins({
 			&:not([disabled]) {
 				.focus({
@@ -105,6 +117,7 @@
 	}
 
 	&.zoomButton {
+		.icon-svg-common;
 		.applySkins({
 			&:not([disabled]) {
 				.focus({
@@ -126,6 +139,9 @@
 	}
 
 	&.tabCloseButton {
+		.icon {
+			background-size: contain;
+		}
 		.applySkins({
 			&:not([disabled]) {
 				.focus({
@@ -142,6 +158,10 @@
 	}
 
 	&.reloadButton {
+		.icon-svg-omnibox;
+		.icon {
+			border-top-width: 0;
+		}
 		.applySkins({
 			&:not([disabled]) {
 				.focus({
@@ -160,6 +180,10 @@
 	}
 
 	&.closeButton {
+		.icon-svg-omnibox;
+		.icon {
+			border-top-width: 0;
+		}
 		.applySkins({
 			&:not([disabled]) {
 				.focus({
@@ -178,6 +202,10 @@
 	}
 
 	&.addBookmarkButton {
+		.icon-svg-omnibox;
+		.icon {
+			border-top-width: 0;
+		}
 		.applySkins({
 			&:not([disabled]) {
 				.focus({
@@ -202,6 +230,10 @@
 	}
 
 	&.removeBookmarkButton {
+		.icon-svg-omnibox;
+		.icon {
+			border-top-width: 0;
+		}
 		.applySkins({
 			&:not([disabled]) {
 				.focus({
@@ -220,6 +252,7 @@
 	}
 
 	&.bookmarksButton {
+		.icon-svg-omnibox;
 		.icon {
 			margin-top: -12px;
 			background-image: url('../../../assets/default/omnibox_star.svg');
@@ -227,6 +260,7 @@
 	}
 
 	&.historyButton {
+		.icon-svg-omnibox;
 		.icon {
 			margin-top: -12px;
 			background-image: url('../../../assets/default/omnibox_history_selected.svg');
@@ -234,6 +268,7 @@
 	}
 
 	&.secureButton {
+		.icon-svg-omnibox;
 		.icon {
 			margin-top: -12px;
 			background-image: url('../../../assets/default/omnibox_https_valid_selected.svg');
@@ -241,6 +276,7 @@
 	}
 
 	&.searchButton {
+		.icon-svg-omnibox;
 		.icon {
 			margin-top: -12px;
 			background-image: url('../../../assets/default/omnibox_search_selected.svg');
@@ -248,6 +284,7 @@
 	}
 
 	&.wwwButton {
+		.icon-svg-omnibox;
 		.icon {
 			margin-top: -12px;
 			background-image: url('../../../assets/default/omnibox_http_selected.svg');
@@ -255,6 +292,7 @@
 	}
 
 	&.backButton {
+		.icon-svg-common;
 		.applySkins({
 			&:not([disabled]) {
 				.focus({
@@ -277,6 +315,7 @@
 	}
 
 	&.forwardButton {
+		.icon-svg-common;
 		.applySkins({
 			&:not([disabled]) {
 				.focus({
@@ -298,20 +337,23 @@
 	}
 
 	&.newTabButton {
-		.icon-newtab;
+		.icon {
+			width: 60px;
+			min-width: 60px;
+			height: 45px;
+			margin: 0;
+			background: 0 0 / cover;
+		}
 		.applySkins({
 			&:not([disabled]) {
 				.focus({
 					.icon {
-						background-position: 0 0;
 						background-image: url('../../../assets/default/newtab_hover.svg');
 					}
 				});
 			}
 
 			.icon {
-				.icon-newtab;
-				background-position: 0 0;
 				background-image: url('../../../assets/default/newtab_normal.svg');
 			}
 		});

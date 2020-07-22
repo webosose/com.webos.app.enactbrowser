@@ -1,5 +1,6 @@
 /* History.less */
 @import '~@enact/moonstone/styles/skin.less';
+@import '~@enact/moonstone/styles/variables.less';
 
 .history {
 	height: 75vh;
@@ -22,7 +23,7 @@
 }
 
 .list {
-	height: 70%;
+	height: ~"calc(100vh - " 200px + @moon-button-height + 36px ~")";
 	padding: 10px;
 	margin-top: 20px;
 }
