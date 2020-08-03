@@ -74,6 +74,7 @@ const WebViewMixinBase = {
     suspend: function WebViewMixin_suspend() {
         console.log('SUSPEND ' + this.rootId);
         if (this.activeState === 'activated') {
+            this.executeScript({ code: 'document.activeElement.blur();'});
             if (WebView.prototype.suspend) {
                 WebView.prototype.suspend.call(this);
             }

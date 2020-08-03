@@ -74,6 +74,7 @@ class TabBarBase extends Component {
 				webViewToBlur = browser.webViews[prevSelectedId];
 
 				if (webViewToBlur) {
+					webViewToBlur.executeScript({ code: 'document.activeElement.blur();'});
 					webViewToBlur.blur();
 				}
 		}
