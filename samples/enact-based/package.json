@@ -34,20 +34,20 @@
   },
   "dependencies": {
     "js-browser-lib": "file:../../lib",
-    "@enact/core": "3.2.6",
-    "@enact/i18n": "3.2.6",
-    "@enact/moonstone": "3.2.6",
-    "@enact/spotlight": "3.2.6",
-    "@enact/ui": "3.2.6",
-    "@enact/webos": "3.2.6",
-    "ilib": "14.5.0",
-    "prop-types": "15.7.2",
-    "react": "16.13.1",
-    "react-dom": "16.13.1",
-    "redux": "4.0.5",
-    "react-redux": "7.2.0"
+    "@enact/core": "^3.0.0",
+    "@enact/i18n": "^3.0.0",
+    "@enact/moonstone": "^3.0.0",
+    "@enact/spotlight": "^3.0.0",
+    "@enact/ui": "^3.0.0",
+    "@enact/webos": "^3.0.0",
+    "ilib": "^14.3.0",
+    "prop-types": "^15.7.2",
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0",
+    "redux": "^4.0.5",
+    "react-redux": "^7.2.0"
   },
   "devDependencies": {
-    "minimist": "1.2.5"
+    "minimist": "^1.2.0"
   }
 }
