@@ -6,8 +6,6 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
-/*global window*/
-
 // if defaults.js file is missing then browser will work anyway
 function getDefaults() {
     if (typeof window.getBrowserDefaults === 'function') {

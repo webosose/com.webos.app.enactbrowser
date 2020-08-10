@@ -6,7 +6,6 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
-/*global window*/
 import {RendererPerTabPolicy as SimplePolicy} from './RendererPerTabPolicy.js';
 
 const maxActive = 1;
