@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2019 LG Electronics, Inc.
+// Copyright (c) 2018-2020 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -92,6 +92,19 @@ const WebViewMixinBase = {
         if (this.activeState !== 'deactivated') {
             document.getElementById(this.rootId).removeChild(this); // TODO: change to terminate
             this.activeState = 'deactivated';
+        }
+    },
+
+    // Clears focus for inputting text in web contents of webview
+    clearTextInputFocus: function WebViewMixin_clearTextInputFocus() {
+        if (this.activeState === 'activated') {
+            this.executeScript({code: " \
+                if (document.activeElement && ( \
+                    document.activeElement.tagName.toLowerCase() === 'input' || \
+                    document.activeElement.tagName.toLowerCase() === 'textarea')) { \
+                    document.activeElement.blur(); \
+                } \
+            "});
         }
     },
 
