@@ -1,4 +1,4 @@
-// Copyright (c) 2018 LG Electronics, Inc.
+// Copyright (c) 2018-2020 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -20,6 +20,12 @@ class RendererPerTabPolicy {
 
     _handleTabSelect = (ev) => {
         const tab = ev.state;
+
+        // VKB for current tab should be hidden when the other tab is selected
+        if (this.queue.length > 0) {
+            this.webViews[this.queue[0]].clearTextInputFocus();
+        }
+
         if (tab.type !== TabTypes.WEBVIEW) {
             return;
         }
