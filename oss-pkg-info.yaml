@@ -1,6 +1,5 @@
 Open Source Software Package:
 - name: webOSOSE-com.webos.app.enactbrowser
-  version: 1.0.0
   source: https://github.com/webosose/com.webos.app.enactbrowser
   license: LicenseRef-EnactBrowser-Evaluation
 - name: Enact
