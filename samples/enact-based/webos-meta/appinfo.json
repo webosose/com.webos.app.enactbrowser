@@ -32,5 +32,11 @@
 	],
 	"accessibility": {
 		"supportsAudioGuidance": true
-	}
+	},
+    "intentFilters": [
+        {
+            "actions": ["action_url", "action_uri"],
+            "uris": ["http://", "https://"]
+        }
+    ]
 }

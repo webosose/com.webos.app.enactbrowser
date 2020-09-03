@@ -2,6 +2,7 @@
     "com.webos.app.enactbrowser-*": [
         "applications",
         "applications.internal",
+        "intent.operation",
         "media",
         "settings.read",
         "signals.all"
