@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2019 LG Electronics, Inc.
+// Copyright (c) 2018-2020 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -133,6 +133,10 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
                 hasTargetInLaunchParams = true;
                 this.tabs.addTab(this._createWebViewPage(launchArgs.target));
             }
+			if (launchArgs.uri) {
+				hasTargetInLaunchParams = true;
+				this.tabs.addTab(this._createWebViewPage(launchArgs.uri));
+			}
             if (launchArgs.newtab) {
                 hasTargetInLaunchParams = true;
                 this.createTab(TabTypes.NEW_TAB_PAGE);

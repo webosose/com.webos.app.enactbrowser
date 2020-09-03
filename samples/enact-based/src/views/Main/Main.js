@@ -127,18 +127,21 @@ class Main extends Component {
 	}
 
 	onRelaunch = (ev) => {
-		if (ev.detail && typeof ev.detail.url === 'string' && ev.detail.url !== '') {
-			const
-				{browser} = this.state,
-				numOfTabs = browser.tabs.count(),
-				url = browser.searchService.possiblyUrl(ev.detail.url) ?
-					ev.detail.url :
-					browser.searchService.getSearchUrl(ev.detail.url);
+		if (ev.detail) {
+			if ((typeof ev.detail.url === 'string' && ev.detail.url !== '') ||
+				(typeof ev.detail.uri === 'string' && ev.detail.uri !== '')) {
+				let url = ev.detail.url ? ev.detail.url : ev.detail.uri;
+				const
+					{browser} = this.state,
+					numOfTabs = browser.tabs.count();
 
-			if (numOfTabs < browser.tabs.maxTabs) {
-				browser.createTab(TabTypes.WEBVIEW, url);
-			} else {
-				browser.navigate(url);
+				url = browser.searchService.possiblyUrl(url) ? url : browser.searchService.getSearchUrl(url);
+
+				if (numOfTabs < browser.tabs.maxTabs) {
+					browser.createTab(TabTypes.WEBVIEW, url);
+				} else {
+					browser.navigate(url);
+				}
 			}
 		}
 	}
