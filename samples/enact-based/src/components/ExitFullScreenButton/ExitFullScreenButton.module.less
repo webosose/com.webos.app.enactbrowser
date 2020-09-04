@@ -1,40 +1,23 @@
 /* ExitFullScreenButton.module.less */
 
-.topArea {
-	top: 0;
+@import "~@enact/moonstone/styles/variables.less";
+
+@top: 101px;
+
+.item {
+	top: @top;
+	left: @moon-button-height / 2 * -0.75;
+	width: @moon-button-height;
+	height: @moon-button-height;
 	position: absolute;
-	display: flex;
-	justify-content: center;
-	width: 100%;
-	height: 1px;
+	background-color: #4c5360;
+	border-radius: 50%;
 }
 
-.hide {
-	-webkit-animation: hideAnimation 0.2s linear forwards;
-}
-
-.show {
-	-webkit-animation: showAnimation 0.2s linear forwards;
-}
-
-@-webkit-keyframes hideAnimation {
-	0% {
-		-webkit-transform: translate3d(0, 50%, 0);
-		transform: translate3d(0, 50%, 0);
-	}
-	100% {
-		-webkit-transform: translate3d(0, -100%, 0);
-		transform: translate3d(0, -100%, 0);
-	}
-}
-
-@-webkit-keyframes showAnimation {
-	0% {
-		-webkit-transform: translate3d(0, -100%, 0);
-		transform: translate3d(0, -100%, 0);
-	}
-	100% {
-		-webkit-transform: translate3d(0, 50%, 0);
-		transform: translate3d(0, 50%, 0);
-	}
+.image {
+	top: @moon-icon-small-size / 2;
+	left: @moon-icon-small-size * 0.8;
+	width: @moon-icon-small-size;
+	height: @moon-icon-small-size;
+	position: relative;
 }
