@@ -61,28 +61,28 @@ const isZero = (value) => (value === 0);
 class SimplePolicy {
     constructor(storage) {
         this._storage = storage;
-        this._maxActiveTabs = 1;
-        this._maxSuspendedTabs = 2;
+        this._maxActiveTabFamilies = 1;
+        this._maxSuspendedTabFamilies = 2;
     }
 
-    get maxActiveTabs() {
-        return this._maxActiveTabs;
+    get maxActiveTabFamilies() {
+        return this._maxActiveTabFamilies;
     }
 
-    setMaxActiveTabs(newValue) {
+    setMaxActiveTabFamilies(newValue) {
         if (!isPositiveNumber(newValue)) {
             return Promise.reject('Should be a positive number');
         }
         if (isZero(newValue)) {
             return Promise.reject('Can\'t be a zero');
         }
-        return this._storage.set({SP_maxActiveTabs: newValue})
+        return this._storage.set({SP_maxActiveTabFamilies: newValue})
             .then(() => {
-                    this._maxActiveTabs = newValue;
+                    this._maxActiveTabFamilies = newValue;
             });
     }
 
-    get maxSuspendedTabs() {
+    get maxSuspendedTabFamilies() {
         return this._maxSuspendedTabs;
     }
 
@@ -90,9 +90,9 @@ class SimplePolicy {
         if (!isPositiveNumber(newValue)) {
             return Promise.reject('Should be a positive number');
         }
-        return this._storage.set({SP_maxSuspendedTabs: newValue})
+        return this._storage.set({SP_maxSuspendedTabFamilies: newValue})
             .then(() => {
-                this._maxSuspendedTabs = newValue;
+                this._maxSuspendedTabFamilies = newValue;
             });
     }
 }
@@ -161,8 +161,8 @@ class Config {
         const setInMemoryValues = (values) => {
             this._useBuiltInErrorPages = values.useBuiltInErrorPages;
             this._restorePrevSessionPolicy = values.restorePrevSessionPolicy;
-            this.simplePolicy._maxActiveTabs = values.SP_maxActiveTabs;
-            this.simplePolicy._maxSuspendedTabs = values.SP_maxSuspendedTabs;
+            this.simplePolicy._maxActiveTabs = values.SP_maxActiveTabFamilies;
+            this.simplePolicy._maxSuspendedTabs = values.SP_maxSuspendedTabFamilies;
             this.memoryManager._maxSuspendedNormal = values.MM_maxSuspendedNormal;
             this.memoryManager._maxSuspendedLow = values.MM_maxSuspendedLow;
             this.memoryManager._maxSuspendedCritical = values.MM_maxSuspendedCritical;
@@ -171,8 +171,8 @@ class Config {
         return this._storage.get({
                 useBuiltInErrorPages: defaults.useBuiltInErrorPages,
                 restorePrevSessionPolicy: defaults.restorePrevSessionPolicy,
-                SP_maxActiveTabs: defaults.simplePolicy.maxActiveTabs,
-                SP_maxSuspendedTabs: defaults.simplePolicy.maxSuspendedTabs,
+                SP_maxActiveTabs: defaults.simplePolicy.maxActiveTabFamilies,
+                SP_maxSuspendedTabs: defaults.simplePolicy.maxSuspendedTabFamilies,
                 MM_maxSuspendedNormal: defaults.memoryManager.maxSuspendedNormal,
                 MM_maxSuspendedLow: defaults.memoryManager.maxSuspendedLow,
                 MM_maxSuspendedCritical: defaults.memoryManager.maxSuspendedCritical

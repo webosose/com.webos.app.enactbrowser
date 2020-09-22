@@ -9,11 +9,11 @@
 import {TabTypes} from 'js-browser-lib/TabsConsts';
 
 class RendererPerTabPolicy {
-    constructor(tabs, webViews, maxActive, maxSuspended) {
+    constructor (tabs, webViews, maxActiveTabFamilies, maxSuspendedTabFamilies) {
         this.webViews = webViews;
         this.queue = [];
-        this.maxActive = maxActive;
-        this.maxSuspended = maxSuspended;
+        this.maxActiveTabFamilies = maxActiveTabFamilies;
+        this.maxSuspendedTabFamilies = maxSuspendedTabFamilies;
         tabs.addEventListener('select', this._handleTabSelect);
         tabs.addEventListener('delete', this._handleTabDelete);
     }
@@ -30,23 +30,41 @@ class RendererPerTabPolicy {
             return;
         }
 
-        const id = tab.id;
-        const oldIndex = this.queue.findIndex((element) => (id === element));
-
-        this.webViews[id].activate();
-        if (oldIndex === -1) { // deactivated tab
-            this.queue.unshift(id);
+        let tab_family_id = this.webViews[tab.id].tabFamilyId;
+        this.queue.unshift(tab_family_id);
+        this.queue = [...new Set(this.queue)]; // remove duplicates
+        
+        // do <action> with all members of tab family with <family_id>.
+        let manage_tab_family = (action) => (family_id) => {
+            this.webViews.forEach((webView, index) => {
+                if (this.webViews[index].tabFamilyId === family_id) {
+                    action(index);
+                }
+            });
+        };
+        
+        let activate_tab_family = manage_tab_family(
+            id => this.webViews[id].activate()
+        );
+        let suspend_tab_family = manage_tab_family(
+            id => this.webViews[id].suspend()
+        );
+        let deactivate_tab_family = manage_tab_family(
+            id => this.webViews[id].deactivate()
+        );
+        
+        console.log(`tab family id: ${tab_family_id}. this.queue: ${this.queue.toString()}`);
+        
+        activate_tab_family(tab_family_id);
+        
+        if (this.queue.length > this.maxActiveTabFamilies) {
+            suspend_tab_family(this.queue[this.maxActiveTabFamilies]);
         }
-        else { // in queue, then bring to top
-            this.queue.splice(0, 0, this.queue.splice(oldIndex, 1)[0]);
-        }
-        if (this.queue.length > this.maxActive) {
-            this.webViews[this.queue[this.maxActive]].suspend();
-        }
-        const maxNotDeactivated = this.maxActive + this.maxSuspended;
+        
+        const maxNotDeactivated = this.maxActiveTabFamilies + this.maxSuspendedTabFamilies;
+        
         if (this.queue.length > maxNotDeactivated) {
-            const lastId = this.queue.pop();
-            this.webViews[lastId].deactivate();
+            deactivate_tab_family(this.queue.pop());
         }
     }
 
@@ -56,11 +74,16 @@ class RendererPerTabPolicy {
             return;
         }
 
-        const id = tab.id;
-        const oldIndex = this.queue.findIndex((element) => (id === element));
-        if (oldIndex !== -1) {
-            this.queue.splice(oldIndex, 1);
-        }
+        this.queue = this.queue.filter((tab_family_id) => {
+            // if there are at least one tab family member
+            let result = this.webViews.find((webView, index, views) => {
+                if (views[index] === undefined) {
+                    return false;
+                }
+                return views[index].tabFamilyId === tab_family_id;
+            });
+            return result !== undefined;
+        });
     }
 }
 

@@ -19,8 +19,8 @@ function getBrowserDefaults() {
             restorePrevSessionPolicy: 'onlyLastTab', /*OR allTabs*/
             // Limitations for Simple Tab management policy
             simplePolicy: {
-                'maxActiveTabs': 1,
-                'maxSuspendedTabs': 2
+                'maxActiveTabFamilies': 1,
+                'maxSuspendedTabFamilies': 2
             },
             // Limitations for MemoryManager aware tab policy
             memoryManager: {

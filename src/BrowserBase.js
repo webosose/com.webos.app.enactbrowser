@@ -63,7 +63,7 @@ class BrowserBase {
     constructor ({tabsModel, defaultWebviewState = 'activated', webViewFactory}) {
         this.defaultWebviewState = defaultWebviewState;
         this.webViewFactory = webViewFactory || new WebViewFactoryBase(this);
-        this.webViews = {};
+        this.webViews = [];
         this.zoomFactor = 1;
         this.useragentOverride = null;
         this.tabs = tabsModel;
@@ -109,6 +109,7 @@ class BrowserBase {
         }
         else {
             this.webViews[id].navigate(url);
+            this.webViews[id].tabFamilyId = newState;
         }
     }
 
@@ -193,7 +194,7 @@ class BrowserBase {
         });
     }
 
-    _createWebViewPage(url, newWindow = null) {
+    _createWebViewPage(url, newWindow = null, tab_family_id = null) {
         let state = TabsModel.createTabState(
             IdGenerator.getNextId(),
             TabTypes.WEBVIEW
@@ -205,6 +206,9 @@ class BrowserBase {
         const webview = this.webViews[state.id] = this.webViewFactory.create({
             url, newWindow
         });
+
+        webview.tabFamilyId = tab_family_id !== null ? tab_family_id : state.id;
+        console.log(`created webview.tabFamilyId = ${webview.tabFamilyId}`);
 
         webview.addEventListener('loadstart', (ev) => this._handleLoadStart(state.id, ev));
         webview.addEventListener('loadcommit', (ev) => this._handleLoadCommit(state.id, ev));
@@ -301,14 +305,29 @@ class BrowserBase {
             return;
         }
 
+        let tab_id = this.tabs.getSelectedId();
+        let tab_family_id = null;
+        
+        if (this.webViews[tab_id].tabFamilyId === null) {
+            this.webViews[tab_id].tabFamilyId = tab_id;
+            tab_family_id = tab_id;
+        } else {
+            tab_family_id = this.webViews[tab_id].tabFamilyId;
+        }
+
         let selectNewTab = false;
         switch (ev.windowOpenDisposition) {
             case 'new_foreground_tab':
                 selectNewTab = true;
             case 'new_background_tab':
-                const state = this._createWebViewPage(ev.targetUrl, ev.window);
+                const state = this._createWebViewPage(ev.targetUrl, ev.window, tab_family_id);
                 this.tabs.addTab(state, selectNewTab);
                 break;
+            case 'new_popup': {
+                const state = this._createWebViewPage(ev.targetUrl, ev.window, tab_family_id);
+                this.tabs.addTab(state, true);
+                break;
+            }
             default:
                 console.warn('New window request ' + ev.windowOpenDisposition + ' is discarded');
                 ev.window.discard();

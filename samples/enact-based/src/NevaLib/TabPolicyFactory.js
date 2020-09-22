@@ -25,8 +25,8 @@ function createTabPolicy(tabs, webViews, config) {
         return new SimplePolicy(
             tabs,
             webViews,
-            config.simplePolicy.maxActiveTabs,
-            config.simplePolicy.maxSuspendedTabs
+            config.simplePolicy.maxActiveTabFamilies,
+            config.simplePolicy.maxSuspendedTabFamilies
         );
     }
 }

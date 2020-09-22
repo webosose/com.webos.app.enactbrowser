@@ -257,7 +257,8 @@ function WebViewMixin(webView, {activeState, ...rest}) {
             _scriptInjectionAttempted: false,
             rootId: null,
             isAborted: false,
-            msgListenerId: null
+            msgListenerId: null,
+            tabFamilyId: null
         });
 
     // TODO: use local property and Singleton
