@@ -43,7 +43,7 @@ class MemoryManagerTabPolicy {
                 })
             ]).then((memoryStatus) => {
                 console.log('Initializing memory status: ' + memoryStatus);
-                policy.simplePolicy.maxSuspended =
+                policy.simplePolicy.maxSuspendedTabFamilies =
                     policy.statusToMaxSuspended(memoryStatus);
                 window.navigator.memorymanager.onlevelchanged =
                     policy._handleLevelChanged;
