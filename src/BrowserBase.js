@@ -350,6 +350,9 @@ class BrowserBase {
             case 'fullscreen':
                 ev.request.allow();
                 break;
+            case 'media':
+                ev.request.allow();
+                break;
             default:
                 console.warn("Permission request recieved: " + ev.permission);
                 ev.request.deny();

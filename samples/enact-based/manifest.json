@@ -13,6 +13,8 @@
     "storage",
     "https://*/*",
     "http://*/*",
-    "fullscreen"
+    "fullscreen",
+    "audioCapture",
+    "videoCapture"
   ]
 }
