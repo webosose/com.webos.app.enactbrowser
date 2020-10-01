@@ -52,7 +52,7 @@ class WebViewFactory extends WebViewFactoryBase {
 
     getPartition() {
         if (this.browser.settings.getPrivateBrowsing()) {
-            return 'inmemory-partition'; // should be any name without 'persist:' prefix
+            return this.browser.private_browsing_partition_id;
         } else {
             return super.getPartition();
         }
@@ -108,6 +108,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
             browser.siteFiltering.setMode(browser.settings.getSiteFiltering());
             browser.searchService.engine = browser.settings.getSearchEngine();
             browser.setStatisticsGathering(browser.settings.getPrivateBrowsing());
+            browser.private_browsing_partition_id = (new Date()).toString();
             browser.initializeTabs();
         });
 
@@ -251,6 +252,9 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
         const {tabs, settings} = this;
         if (usePrivateBrowsing === settings.getPrivateBrowsing()) {
             return;
+        }
+        if (usePrivateBrowsing === true) { // start new clean session
+            this.private_browsing_partition_id = (new Date()).toString();
         }
         // First, we should close all tabs with <webview>
         for (let i = tabs.count() - 1; i >= 0; i--) {
