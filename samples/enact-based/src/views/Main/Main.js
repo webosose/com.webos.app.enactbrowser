@@ -74,6 +74,7 @@ class MainBase extends Component {
 				browser.back();
 			}
 		});
+		document.addEventListener('setInsetY', this.onSetInsetY);
 	}
 
 	componentDidUpdate () {
@@ -148,6 +149,34 @@ class MainBase extends Component {
 		} else if (document.activeElement.tagName !== 'INPUT') {
 			Spotlight.resume();
 		}
+	}
+
+	onSetInsetY = (ev) => {
+		const selectedWebview = this.getSelectedWebview();
+		if (!selectedWebview) {
+			return;
+		}
+		const height = ev.detail;
+		let script = `
+			var elements = document.body.getElementsByClassName('vkbInset');
+			if (elements.length !== 0) {
+				window.scrollTo(0, window.pageYOffset - parseInt(elements[0].style.height));
+				for (let i = elements.length - 1; i >= 0; --i) {
+					elements[i].remove();
+				}
+			}
+		`;
+		if (height > 0) {
+			script += `
+				var node = document.createElement('div');
+				node.setAttribute('class','vkbInset');
+				node.style.width = '100%';
+				node.style.height = ${height} + 'px';
+				document.body.appendChild(node);
+				window.scrollBy(0, ${height});
+			`;
+		}
+		selectedWebview.executeScript({ code: script});
 	}
 
 	render () {
