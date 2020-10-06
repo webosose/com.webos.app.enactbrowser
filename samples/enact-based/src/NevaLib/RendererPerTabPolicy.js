@@ -22,7 +22,7 @@ class RendererPerTabPolicy {
         const tab = ev.state;
 
         // VKB for current tab should be hidden when the other tab is selected
-        if (this.queue.length > 0) {
+        if (this.queue.length > 0 && this.webViews[this.queue[0]]) {
             this.webViews[this.queue[0]].clearTextInputFocus();
         }
 

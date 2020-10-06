@@ -69,7 +69,7 @@ class SimplePolicy {
         return this._maxActiveTabFamilies;
     }
 
-    setMaxActiveTabFamilies(newValue) {
+    setMaxActiveFamilies(newValue) {
         if (!isPositiveNumber(newValue)) {
             return Promise.reject('Should be a positive number');
         }
@@ -83,10 +83,10 @@ class SimplePolicy {
     }
 
     get maxSuspendedTabFamilies() {
-        return this._maxSuspendedTabs;
+        return this._maxSuspendedTabFamilies;
     }
 
-    setMaxSuspendedTabs(newValue) {
+    setMaxSuspendedFamilies(newValue) {
         if (!isPositiveNumber(newValue)) {
             return Promise.reject('Should be a positive number');
         }
@@ -161,8 +161,8 @@ class Config {
         const setInMemoryValues = (values) => {
             this._useBuiltInErrorPages = values.useBuiltInErrorPages;
             this._restorePrevSessionPolicy = values.restorePrevSessionPolicy;
-            this.simplePolicy._maxActiveTabs = values.SP_maxActiveTabFamilies;
-            this.simplePolicy._maxSuspendedTabs = values.SP_maxSuspendedTabFamilies;
+            this.simplePolicy._maxActiveTabFamilies = values.SP_maxActiveTabFamilies;
+            this.simplePolicy._maxSuspendedTabFamilies = values.SP_maxSuspendedTabFamilies;
             this.memoryManager._maxSuspendedNormal = values.MM_maxSuspendedNormal;
             this.memoryManager._maxSuspendedLow = values.MM_maxSuspendedLow;
             this.memoryManager._maxSuspendedCritical = values.MM_maxSuspendedCritical;
@@ -171,8 +171,8 @@ class Config {
         return this._storage.get({
                 useBuiltInErrorPages: defaults.useBuiltInErrorPages,
                 restorePrevSessionPolicy: defaults.restorePrevSessionPolicy,
-                SP_maxActiveTabs: defaults.simplePolicy.maxActiveTabFamilies,
-                SP_maxSuspendedTabs: defaults.simplePolicy.maxSuspendedTabFamilies,
+                SP_maxActiveTabFamilies: defaults.simplePolicy.maxActiveTabFamilies,
+                SP_maxSuspendedTabFamilies: defaults.simplePolicy.maxSuspendedTabFamilies,
                 MM_maxSuspendedNormal: defaults.memoryManager.maxSuspendedNormal,
                 MM_maxSuspendedLow: defaults.memoryManager.maxSuspendedLow,
                 MM_maxSuspendedCritical: defaults.memoryManager.maxSuspendedCritical
