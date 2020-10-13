@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>HTML5 input types test page</title>
+    <style>
+        html,
+        body {
+            margin:0;
+            padding:10px;
+            font-family:Helvetica,sans-serif;
+        }
+        div {margin:1em 0;}
+        label {
+            display:block;
+            margin:0 0 3px;
+        }
+        input {
+            font-size:1em;
+            outline: none;
+        }
+        input[type=text],
+        input[type=search],
+        input[type=tel],
+        input[type=url],
+        input[type=email],{
+            width:296px;
+            padding:2px;
+        }
+        input[type=password]
+        input[type=number] {
+            padding:2px;
+        }
+        .content {
+            width:600px;
+            margin:0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <h1>HTML5 input types test page</h1>
+        <p>This page contains examples of the form controls that can be created with the new values for the `input` element’s `type` attribute in HTML5.</p>
+        <form action=".">
+            <div>
+                <label for="type-text">Text (text)</label>
+                <input type="text" name="type-text" id="type-text">
+            </div>
+            <div>
+                <label for="type-text">TextArea</label>
+                <textarea rows="5"></textarea>
+            </div>
+            <div>
+                <label for="type-search">Search (search)</label>
+                <input type="search" name="type-search" id="type-search">
+            </div>
+            <div>
+                <label for="type-tel">Telephone (tel)</label>
+                <input type="tel" name="type-tel" id="type-tel">
+            </div>
+            <div>
+                <label for="type-url">URL (url)</label>
+                <input type="url" name="type-url" id="type-url">
+            </div>
+            <div>
+                <label for="type-email">E-mail (email)</label>
+                <input type="email" name="type-email" id="type-email">
+            </div>
+            <div>
+                <label for="type-password">Password:</label>
+                <input type="password" name="password" id="type-password">
+            </div>
+            <div>
+                <label for="type-datetime">Date and Time (datetime)</label>
+                <input type="datetime" name="type-datetime" id="type-datetime">
+            </div>
+            <div>
+                <label for="type-date">Date (date)</label>
+                <input type="date" name="type-date" id="type-date">
+            </div>
+            <div>
+                <label for="type-month">Month (month)</label>
+                <input type="month" name="type-month" id="type-month">
+            </div>
+            <div>
+                <label for="type-week">Week (week)</label>
+                <input type="week" name="type-week" id="type-week">
+            </div>
+            <div>
+                <label for="type-time">Time (time)</label>
+                <input type="time" name="type-time" id="type-time">
+            </div>
+            <div>
+                <label for="type-datetime-local">Local Date and Time (datetime-local)</label>
+                <input type="datetime-local" name="type-datetime-local" id="type-datetime-local">
+            </div>
+            <div>
+                <label for="type-number">Number (number)</label>
+                <input type="number" name="type-number" id="type-number" min="0" max="20">
+            </div>
+            <div>
+                <label for="type-range">Range (range)</label>
+                <input type="range" name="type-range" id="type-range" min="0" max="100">
+            </div>
+            <div>
+                <label for="type-color">Colour (color)</label>
+                <input type="color" name="type-color" id="type-color">
+            </div>
+            <div>
+                <input type="submit" value="Submit" name="submit-1">
+            </div>
+        </form>
+    </div>
+</body>
+</html>
