@@ -9,7 +9,7 @@
 /*global window*/
 import {RendererPerTabPolicy as SimplePolicy} from './RendererPerTabPolicy.js';
 
-const maxActive = 1;
+const maxActiveTabFamilies = 1;
 
 class MemoryManagerTabPolicy {
     constructor(
@@ -22,7 +22,7 @@ class MemoryManagerTabPolicy {
         this.simplePolicy = new SimplePolicy(
             tabs,
             webViews,
-            maxActive,
+            maxActiveTabFamilies,
             maxSuspendedCritical
         );
         this.maxSuspendedNormal = maxSuspendedNormal;
@@ -79,8 +79,8 @@ class MemoryManagerTabPolicy {
     _handleLevelChanged = (ev) => {
         console.log('Handle memory level change ' + ev.current);
         const policy = this.simplePolicy;
-        policy.maxSuspended = this.statusToMaxSuspended(ev.current);
-        while (policy.queue.length > policy.maxSuspended + policy.maxActive) {
+        policy.maxSuspendedTabFamilies = this.statusToMaxSuspended(ev.current);
+        while (policy.queue.length > policy.maxSuspendedTabFamilies + policy.maxActiveTabFamilies) {
             const id = policy.queue.pop();
             policy.webViews[id].deactivate();
         }
