@@ -22,7 +22,9 @@ import React, {Component} from 'react';
 import Scroller from '@enact/moonstone/Scroller';
 import ToggleButton from '@enact/moonstone/ToggleButton';
 import RangePicker from '@enact/moonstone/RangePicker';
-
+import Input from '@enact/moonstone/Input';
+import ExpandableList from '@enact/moonstone/ExpandableList';
+import {Panel} from '@enact/moonstone/Panels';
 import css from './DevSettings.less';
 
 const OnOffButton = kind({
@@ -38,6 +40,78 @@ const OnOffButton = kind({
 		);
 	}
 });
+
+class UAInput extends Component {
+	static propTypes = {
+		browser: PropTypes.object
+	}
+
+	constructor (props) {
+		super(props);
+
+		if (!window.originalUAString) {
+			window.originalUAString = this.props.browser.useragentOverride || window.navigator.userAgent;
+		}
+
+		window.dev_settings_ua_selected = window.dev_settings_ua_selected || 0;
+
+		this.state = {
+			inputValue: this.props.browser.useragentOverride || window.originalUAString,
+		}
+
+		let chrome_version_re = /(Chrome\/\d+\.\d+\.\d+\.\d+)/;
+		let chrome_version = chrome_version_re.exec(window.navigator.userAgent)[1];
+
+		this.ua_list =
+		[
+			"Default UA",
+			"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.0 Safari/537.36",
+			"Mozilla/5.0 (Linux; Android 10; Pixel 5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.0 Mobile Safari/537.36"
+		].map(e => {
+			return e.replace(chrome_version_re, chrome_version);
+		});
+	}
+
+	on_select = ({selected, data}) => {
+		let newUAString = window.originalUAString;
+
+		if (selected > 0) {
+			newUAString = data;
+		}
+
+		window.dev_settings_ua_selected = selected;
+		this.setState({inputValue: newUAString});
+		this.props.browser.useragentOverride = newUAString;
+	}
+
+	on_change = (ev) => {
+		this.setState({inputValue: ev.value});
+		this.props.browser.useragentOverride = ev.value;
+	}
+
+	render () {
+		return (
+			<div>
+				<BodyText className={css.menu}>UA string override</BodyText>
+				<Input className={css.input}
+					dismissOnEnter
+					value={this.state.inputValue}
+					onChange={this.on_change}
+					type="text"
+				/>
+				<ExpandableList className={css.ua_list}
+					title={"Predefined UA strings"}
+					noneText={"nothing selected"}
+					select={"radio"}
+					closeOnSelect
+					selected={window.dev_settings_ua_selected}
+					onSelect={this.on_select}>
+					{this.ua_list}
+				</ExpandableList>
+			</div>
+		);
+	}
+};
 
 const restoreSessionOptions = ['onlyLastTab', 'allTabs'];
 
@@ -183,7 +257,8 @@ class MemoryManagerSettings extends Component {
 class DevSettingsBase extends Component {
 	static propTypes = {
 		config: PropTypes.object,
-		tabPolicy: PropTypes.string
+		tabPolicy: PropTypes.string,
+		browser: PropTypes.object
 	}
 
 	constructor (props) {
@@ -214,51 +289,56 @@ class DevSettingsBase extends Component {
 				className,
 				config,
 				tabPolicy,
+				browser,
 				...rest
 			} = this.props,
 			version = config.versionString,
 			classes = classNames(className, css.settings);
 
 		return (
-			<Scroller {...rest} className={css.scroller}>
-				<div className={classes}>
+			<Panel className={css.panel}>
+				<Scroller {...rest} className={css.scroller}>
+					<div className={classes}>
 
-					<BodyText className={css.menu}>Version string: {version}</BodyText>
-					<br />
+						<BodyText className={css.menu}>Version string: {version}</BodyText>
+						<br />
 
-					<BodyText className={css.menu}>Use built in error pages</BodyText>
-					<OnOffButton
-						onClick={this.onToggleUseBuiltInErrorPages}
-						selected={this.state.useBuiltInErrorPages}
-					/>
-					<br />
+						<BodyText className={css.menu}>Use built in error pages</BodyText>
+						<OnOffButton
+							onClick={this.onToggleUseBuiltInErrorPages}
+							selected={this.state.useBuiltInErrorPages}
+						/>
+						<br />
 
-					<BodyText>Restore previous session policy</BodyText>
-					<div className={css.indent}>
-						<Group
-							childComponent={RadioItem}
-							itemProps={{inline: true}}
-							select="radio"
-							selectedProp="selected"
-							defaultSelected={restoreSessionOptions.indexOf(this.state.restorePrevSessionPolicy)}
-							onSelect={this.onSelectRestoreSessionPolicy}
-						>
-							{[
-								'Last tab',
-								'All tabs'
-							]}
-						</Group>
+						<UAInput className={css.menu} browser={browser}/>
+
+						<BodyText>Restore previous session policy</BodyText>
+						<div className={css.indent}>
+							<Group
+								childComponent={RadioItem}
+								itemProps={{inline: true}}
+								select="radio"
+								selectedProp="selected"
+								defaultSelected={restoreSessionOptions.indexOf(this.state.restorePrevSessionPolicy)}
+								onSelect={this.onSelectRestoreSessionPolicy}
+							>
+								{[
+									'Last tab',
+									'All tabs'
+								]}
+							</Group>
+						</div>
+
+						{tabPolicy === 'RendererPerTabPolicy' &&
+							<SimplePolicySettings simplePolicy={config.simplePolicy} />
+						}
+
+						{tabPolicy === 'MemoryManagerTabPolicy' &&
+							<MemoryManagerSettings memoryManager={config.memoryManager} />
+						}
 					</div>
-
-					{tabPolicy === 'RendererPerTabPolicy' &&
-						<SimplePolicySettings simplePolicy={config.simplePolicy} />
-					}
-
-					{tabPolicy === 'MemoryManagerTabPolicy' &&
-						<MemoryManagerSettings memoryManager={config.memoryManager} />
-					}
-				</div>
-			</Scroller>
+				</Scroller>
+			</Panel>
 		);
 	}
 }

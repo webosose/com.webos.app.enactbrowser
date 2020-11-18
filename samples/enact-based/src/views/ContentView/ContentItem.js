@@ -66,6 +66,7 @@ const ContentItem = kind({
                     style={style}
                     config={browser.config}
                     tabPolicy={browser.tabPolicy.constructor.name}
+                    browser={browser}
                 />;
             case TabTypes.NEW_TAB_PAGE:
                 return <NewTabPage style={style} browser={browser} isSelectedTab={isSelectedTab} fullScreen={fullScreen}/>;
