@@ -1,6 +1,7 @@
 /* Omnibox.module.less */
-@import '~@enact/moonstone/styles/mixins.less';
-@import '~@enact/moonstone/styles/skin.less';
+@import '~@enact/agate/styles/mixins.less';
+@import '~@enact/agate/styles/skin.less';
+@import '~@enact/agate/styles/colors-base.less';
 
 .div {
 	display: flex;
@@ -11,6 +12,11 @@
 	display: flex;
 	flex-grow: 1;
 	position: relative;
+	align-items: center;
+}
+
+.invisible {
+	visibility: hidden;
 }
 
 .invisible {
@@ -19,7 +25,8 @@
 
 @media only screen and (min-width: 1280px) {
 	.form {
-		margin-right: 42px;
+		margin-left: 21px;
+		margin-right: 21px;
 	}
 }
 
@@ -47,75 +54,124 @@
 	}
 
 	.popup {
-		width: 620px;
+		width: 621px;
 	}
 }
 
-.form div:first-child {
+.form > div:first-child {
+	align-items: center;
 	display: flex;
-	flex-grow: 1;
+	flex-grow: inherit;
 }
 
 .inputBox {
-	height: 80px;
-	padding: 12px 80px;
-	input {
-		flex-grow: 1;
-		padding-right: 80px;
-		font-weight: 700;
-		margin-top: -11px;
-	}
+	height: 60px;
+	padding: 3px 12px 3px 72px;
 
 	@media only screen and (min-width: 1280px) {
 		input {
-			font-size: 44px;
+			font-size: 45px;
 		}
 	}
 
 	@media only screen and (max-width: 1280px) {
 		input {
-			font-size: 28px;
+			font-size: 27px;
 		}
 	}
 
 	@media only screen and (min-width: 720px) and (max-width: 1024px) {
 		input {
-			font-size: 28px;
+			font-size: 27px;
 			width: 51px;
 		}
 	}
 
 	.applySkins({
-		//background-color: #4E4E4E;
-		.focus({
-		//	background-color: #4E4E4E;
-		//	border-color: transparent;
-		});
+		align-items: center;
+		background-color: #D3D3D3;
+		display: flex;
+		flex-grow: inherit;
+
+		.input {
+			border-bottom: 0;
+			padding: 0 120px 0 0;
+			padding-left: 0;
+			font-weight: 700;
+			color: black;
+			opacity: 1;
+		}
+
+		&.focused,
+		&:focus-within {
+			background-color: @agate-white;
+
+			.input {
+				color: @agate-black;
+				opacity: 1;
+			}
+
+			&.searchIcon {
+				color: @agate-black;
+			}
+		};
 	});
 
 }
 
 .iconButton {
+	.applySkins({
+		.bg{
+			border-color: transparent;
+		}
+	});
+
 	&.small {
 		&.reloadStopButton {
 			padding: 0 24px;
 			position: absolute;
 			right: 24px;
+
+			.icon {
+				color: @agate-black;
+			}
+
+			.focus({
+				.icon {
+					color: @agate-white;
+				}
+			})
 		}
 
 
 		&.bookmarkButton {
 			padding: 0 24px;
 			position: absolute;
-			right: 80px;
+			right: 81px;
+
+			.icon {
+				color: @agate-black;
+			}
+
+			.focus({
+				.icon {
+					color: @agate-white;
+				}
+			})
 		}
 	}
 }
 
 .searchIcon {
 	padding: 0 24px;
-	position: absolute;
 	pointer-events: none;
+	opacity: 0.6;
+
+	.applySkins({
+		margin: 0 12px;
+		position: absolute;
+		color: @agate-black;
+	})
 }
 
 .addBookmarkToHome {

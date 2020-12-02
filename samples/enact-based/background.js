@@ -12,8 +12,8 @@
  * @see http://developer.chrome.com/apps/app.runtime.html
  * @see http://developer.chrome.com/apps/app.window.html
  */
-chrome.app.runtime.onLaunched.addListener(function() {
-  runApp();
+chrome.app.runtime.onLaunched.addListener(function () {
+	runApp();
 });
 
 /**
@@ -21,8 +21,8 @@ chrome.app.runtime.onLaunched.addListener(function() {
  *
  * @see http://developer.chrome.com/apps/app.runtime.html
  */
-chrome.app.runtime.onRestarted.addListener(function() {
-  runApp();
+chrome.app.runtime.onRestarted.addListener(function () {
+	runApp();
 });
 
 /**
@@ -31,18 +31,18 @@ chrome.app.runtime.onRestarted.addListener(function() {
  * @see http://developer.chrome.com/apps/app.window.html
  * @see https://developer.chrome.com/extensions/messaging
  */
-function runApp() {
-  chrome.app.window.create('index.html', {
-    id: "browserWinID",
-    innerBounds: {
-      'width': 1024,
-      'height': 768
-    }
-  });
+function runApp () {
+	chrome.app.window.create('index.html', {
+		id: 'browserWinID',
+		innerBounds: {
+			'width': 1024,
+			'height': 768
+		}
+	});
 
-  chrome.runtime.onMessage.addListener(function(request) {
-    if (request.event === 'localechange') {
-      chrome.runtime.reload();
-    }
-  });
+	chrome.runtime.onMessage.addListener(function (request) {
+		if (request.event === 'localechange') {
+			chrome.runtime.reload();
+		}
+	});
 }

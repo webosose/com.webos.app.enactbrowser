@@ -12,13 +12,13 @@
  */
 
 import $L from '@enact/i18n/$L';
-import Button from '@enact/moonstone/Button';
+import Button from '@enact/agate/Button';
 import {connect} from 'react-redux';
-import Notification from '@enact/moonstone/Notification';
+import Popup from '@enact/agate/Popup';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
-import Scroller from '@enact/moonstone/Scroller';
+import Scroller from '@enact/agate/Scroller';
 
 import BookmarkList from './BookmarkList';
 import {selectAllBookmarks, deselectAllBookmarks} from '../../actions';
@@ -31,10 +31,12 @@ class BookmarkManagerBase extends Component {
 		alwaysShowBookmarks: PropTypes.bool,
 		browser: PropTypes.object,
 		data: PropTypes.array,
-		selectedIndices: PropTypes.array,
 		deselectAllBookmark: PropTypes.func,
-		selectAllBookmark: PropTypes.func,
-	}
+		deselectAllBookmarks: PropTypes.func,
+		hasSelection:PropTypes.any,
+		selectAllBookmarks: PropTypes.func,
+		selectedIndices: PropTypes.array
+	};
 
 	constructor (props) {
 		super(props);
@@ -55,11 +57,11 @@ class BookmarkManagerBase extends Component {
 			}
 			this.props.selectAllBookmarks(ids);
 		}
-	}
+	};
 
 	onDelete = () => {
 		this.setState({deletePopupOpen: true});
-	}
+	};
 
 	onDeleteYes = () => {
 		const {data, selectedIndices} = this.props;
@@ -67,7 +69,7 @@ class BookmarkManagerBase extends Component {
 			this.props.browser.bookmarks.removeAllBookmarks();
 		} else {
 			const urls = [];
-			for (let i = 0 ; i < data.length; i++) {
+			for (let i = 0; i < data.length; i++) {
 				if (selectedIndices.includes(i)) {
 					urls.push(data[i].url);
 				}
@@ -78,13 +80,13 @@ class BookmarkManagerBase extends Component {
 		this.props.deselectAllBookmarks();
 		this.setState({completePopupOpen: true, deletePopupOpen: false});
 		setTimeout(() => {
-			this.setState({completePopupOpen: false})
+			this.setState({completePopupOpen: false});
 		}, 1500);
-	}
+	};
 
 	onDeleteNo = () => {
 		this.setState({deletePopupOpen: false});
-	}
+	};
 
 	render () {
 		const
@@ -99,33 +101,34 @@ class BookmarkManagerBase extends Component {
 			<div className={css.bookmarkManager} {...rest}>
 				<Button css={css} onClick={this.onSelectAll} disabled={!data.length} size="small">{(data.length && data.length === hasSelection) ? $L('DESELECT ALL') : $L('SELECT ALL')}</Button>
 				<Button css={css} onClick={this.onDelete} disabled={!data.length || !hasSelection} size="small">{$L('Delete')}</Button>
-				<Notification
-					open={this.state.deletePopupOpen}
+				<Popup
+					centered
 					noAutoDismiss
+					open={this.state.deletePopupOpen}
 				>
 					<span>{(data.length === hasSelection) ?
-						$L('Do you want to delete all bookmarks?')
-						: $L('Do you want to delete the selected bookmark(s)?')}</span>
+						$L('Do you want to delete all bookmarks?') :
+						$L('Do you want to delete the selected bookmark(s)?')}</span>
 					<buttons>
-						<Button onClick={this.onDeleteNo}>{$L('NO')}</Button>
-						<Button onClick={this.onDeleteYes}>{$L('YES')}</Button>
+						<Button css={css} size="small" onClick={this.onDeleteNo}>{$L('NO')}</Button>
+						<Button css={css} size="small" onClick={this.onDeleteYes}>{$L('YES')}</Button>
 					</buttons>
-				</Notification>
-				<Notification
-					open={this.state.completePopupOpen}
+				</Popup>
+				<Popup
+					centered
 					noAutoDismiss
+					open={this.state.completePopupOpen}
 				>
 					<span>{$L('Selected bookmark(s) have been deleted.')}</span>
-				</Notification>
+				</Popup>
 				{
 					(data.length > 0) ?
-					<Scroller horizontalScrollbar="hidden" className={scrollerClass}>
-						<BookmarkList browser={browser}/>
-					</Scroller>
-					:
-					<div className={css.noItem}>
-						{$L('There is no bookmark.')}
-					</div>
+						<Scroller horizontalScrollbar="hidden" className={scrollerClass}>
+							<BookmarkList browser={browser} />
+						</Scroller> :
+						<div className={css.noItem}>
+							{$L('There is no bookmark.')}
+						</div>
 				}
 			</div>
 		);

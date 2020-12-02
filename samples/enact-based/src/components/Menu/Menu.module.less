@@ -1,0 +1,21 @@
+/* Menu.module.less */
+
+@import '~@enact/agate/styles/skin.less';
+@import '~@enact/agate/styles/variables.less';
+@import '~@enact/agate/styles/mixins.less';
+
+.menuContainer {
+	min-width: 222px;
+}
+
+.applySkins({
+	.item {
+		padding: 0;
+		border-bottom-color: transparent;
+		line-height: 48px;
+
+		.focus({
+			border-bottom-color: transparent;
+		});
+	}
+});

@@ -1,4 +1,4 @@
-// Copyright (c) 2018 LG Electronics, Inc.
+// Copyright (c) 2018-2020 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -58,7 +58,7 @@ const addApprovedSite = (url) => ({
 const removeApprovedSites = (urls) => ({
 	type: types.REMOVE_APPROVED_SITES,
 	urls
-})
+});
 
 const setBlockedSites = (urls) => ({
 	type: types.SET_BLOCKED_SITES,
@@ -73,7 +73,7 @@ const addBlockedSite = (url) => ({
 const removeBlockedSites = (urls) => ({
 	type: types.REMOVE_BLOCKED_SITES,
 	urls
-})
+});
 
 export {
 	setStartupPage,
@@ -89,4 +89,4 @@ export {
 	setBlockedSites,
 	addBlockedSite,
 	removeBlockedSites
-}
+};

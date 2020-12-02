@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2019 LG Electronics, Inc.
+// Copyright (c) 2018-2020 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -30,10 +30,10 @@ const ContentViewBase = kind({
 		browser: PropTypes.object,
 		fullScreen: PropTypes.bool,
 		ids: PropTypes.array,
-		tabs: PropTypes.object,
-		selectedIndex: PropTypes.number,
 		innerRef: PropTypes.object,
-		onExitFullScreen: PropTypes.any
+		onExitFullScreen: PropTypes.any,
+		selectedIndex: PropTypes.number,
+		tabs: PropTypes.object
 	},
 	styles: {
 		css,
@@ -59,15 +59,15 @@ const ContentViewBase = kind({
 					return (
 						<div {...wrapperAttrs}>
 							<ContentItem {...itemAttrs} />
-							{ fullScreen &&
-								<ExitFullScreenButton
-									fullScreen={fullScreen}
-									onExitFullScreen={onExitFullScreen}
-								/>
-							}
 						</div>
 					);
 				})}
+				{fullScreen &&
+					<ExitFullScreenButton
+						fullScreen={fullScreen}
+						onExitFullScreen={onExitFullScreen}
+					/>
+				}
 			</div>
 		);
 	}
@@ -91,7 +91,7 @@ const ContentView = connect(mapStateToProps, mapDispatchToProps)(ContentViewBase
 
 // We export innerRef to call webkitRequestFullscreen() on current tab element
 const ContentViewWithRef = React.forwardRef((props, ref) =>
-		<ContentView innerRef={ref} {...props} />
-	);
+	<ContentView innerRef={ref} {...props} />
+);
 
 export default ContentViewWithRef;

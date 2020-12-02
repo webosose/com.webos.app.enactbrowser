@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2019 LG Electronics, Inc.
+// Copyright (c) 2018-2020 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -11,21 +11,20 @@
  *
  */
 
-import Item from '@enact/moonstone/Item';
+import Button from '@enact/agate/Button';
+import Item from '@enact/agate/Item';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
-
-import {BrowserIconButton as IconButton} from '../BrowserIconButton';
 
 import css from './SuggestedItem.module.less';
 
 const SuggestedItem = kind({
 	name: 'SuggestedItem',
 	propTypes: {
+		icon: PropTypes.string,
 		title: PropTypes.string,
-		url: PropTypes.string,
-		icon: PropTypes.string
+		url: PropTypes.string
 	},
 	style: {
 		css,
@@ -34,13 +33,21 @@ const SuggestedItem = kind({
 	render: ({url, title, icon, ...rest}) => {
 		return (
 			<div>
-				<IconButton
+				<Button
 					backgroundOpacity="transparent"
 					className={css.icon}
+					css={css}
+					icon={icon}
+					skinVariants={{'night': false}}
 					spotlightDisabled
-					type={icon}
 				/>
-				<Item className={css.item} {...rest}>{`${url} - ${title}`}</Item>
+				<Item
+					className={css.item}
+					skinVariants={{'night': false}}
+					{...rest}
+				>
+					{`${url} - ${title}`}
+				</Item>
 			</div>
 		);
 	}

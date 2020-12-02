@@ -1,6 +1,7 @@
 /* Tab.module.less */
-@import '~@enact/moonstone/styles/mixins.less';
-@import '~@enact/moonstone/styles/skin.less';
+@import '~@enact/agate/styles/mixins.less';
+@import '~@enact/agate/styles/colors-base.less';
+@import '~@enact/agate/styles/skin.less';
 
 .icon-common {
 	width: 25px;
@@ -24,7 +25,7 @@
 }
 
 .selected {
-	border-top: solid #cf0652 4px;
+	border-top: solid @agate-accent 4px;
 	background-image: none;
 }
 
@@ -38,7 +39,7 @@
 
 .tabTitle {
 	flex-grow: 2;
-	width: 70%;
+	width: 60%;
 }
 
 @media only screen and (min-width: 1280px) and (max-width: 1580px) {

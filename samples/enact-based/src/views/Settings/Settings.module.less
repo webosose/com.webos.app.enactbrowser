@@ -1,6 +1,6 @@
 /* Settings.module.less */
-@import '~@enact/moonstone/styles/mixins.less';
-@import '~@enact/moonstone/styles/skin.less';
+@import '~@enact/agate/styles/mixins.less';
+@import '~@enact/agate/styles/skin.less';
 
 .scroller {
 	height: ~"calc(100vh - " 236px ~")";
@@ -18,12 +18,22 @@
 }
 
 .indent {
-	padding-left: 32px;
+	padding-left: 33px;
+}
+
+.homePageInput {
+	padding-left: 36px;
+}
+
+.inlineGroupItem {
+	.applySkins({
+		border-bottom-color: transparent;
+	})
 }
 
 p {
-	-webkit-margin-after: 16px;
-	-webkit-margin-before: 16px;
+	-webkit-margin-after: 15px;
+	-webkit-margin-before: 15px;
 }
 
 .menu {
@@ -32,15 +42,7 @@ p {
 }
 
 .button {
-	width: 320px;
-	margin: 24px 0 0 0;
-	display: inline-block;
 	.applySkins({
-		font-size: 24px;
 		font-weight: 700;
-		color: #4B4B4B;
-		.bg {
-			background-color: white;
-		}
 	});
 }

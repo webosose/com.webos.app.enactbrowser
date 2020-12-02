@@ -14,7 +14,7 @@ import {render} from 'react-dom';
 import App from './App';
 import configureStore from './store';
 
-ilib._load = undefined;
+ilib._load = undefined; // eslint-disable-line no-undefined
 
 const store = configureStore();
 

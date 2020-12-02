@@ -1,4 +1,4 @@
-// Copyright (c) 2018 LG Electronics, Inc.
+// Copyright (c) 2018-2020 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -27,7 +27,7 @@ const DraggableHoC = hoc(defaultConfig, (config, Wrapped) => {
 	const {onDragStart, onDragEnter, onDragEnd} = config;
 
 	return class Draggable extends Component {
-		static displayName = 'Draggable'
+		static displayName = 'Draggable';
 
 		render () {
 			return (
@@ -40,7 +40,7 @@ const DraggableHoC = hoc(defaultConfig, (config, Wrapped) => {
 				/>
 			);
 		}
-	}
+	};
 });
 
 const insertAfter = (newElem, reference) => {
@@ -51,25 +51,25 @@ const insertAfter = (newElem, reference) => {
 	} else {
 		return parent.appendChild(newElem);
 	}
-}
+};
 
 const SortableHoC = hoc((config, Wrapped) => {
 	const {component, placeholder} = config;
 
 	return class Sortable extends Component {
-		static displayName = 'Sortable'
+		static displayName = 'Sortable';
 
 		static propTypes = {
-			onMove: PropTypes.func,
-			dropPlaceholder: PropTypes.any
-		}
+			dropPlaceholder: PropTypes.any,
+			onMove: PropTypes.func
+		};
 
 		onDragStart = (e) => {
 			this.dragged = e.currentTarget;
 			e.dataTransfer.effectAllowed = 'move';
 
 			e.dataTransfer.setData('text/html', e.currentTarget);
-		}
+		};
 
 		onDragEnd = () => {
 			if (this.dragged && this.over) {
@@ -80,8 +80,7 @@ const SortableHoC = hoc((config, Wrapped) => {
 				// Adjust final toIndex based on fromIndex
 				if (fromIndex < toIndex && this.over.previousSibling === placeholder) {
 					toIndex--;
-				}
-				else if (fromIndex > toIndex && this.over.nextSibling === placeholder) {
+				} else if (fromIndex > toIndex && this.over.nextSibling === placeholder) {
 					toIndex++;
 				}
 
@@ -93,11 +92,11 @@ const SortableHoC = hoc((config, Wrapped) => {
 					this.childRef.onMove(fromIndex, toIndex);
 				}
 			}
-		}
+		};
 
 		onDragOver = (e) => {
 			e.preventDefault();
-		}
+		};
 
 		onDragEnter = (e) => {
 			const parent = e.currentTarget.parentNode;
@@ -109,11 +108,11 @@ const SortableHoC = hoc((config, Wrapped) => {
 			} else {
 				insertAfter(placeholder, this.over);
 			}
-		}
+		};
 
 		initRef = (ref) => {
 			this.childRef = ref;
-		}
+		};
 
 		render () {
 			const props = Object.assign({}, this.props);
@@ -133,7 +132,7 @@ const SortableHoC = hoc((config, Wrapped) => {
 			);
 		}
 
-	}
+	};
 });
 
 export default SortableHoC;

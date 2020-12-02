@@ -1,4 +1,4 @@
-// Copyright (c) 2019 LG Electronics, Inc.
+// Copyright (c) 2019-2020 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -15,14 +15,14 @@ import {
 
 // asterisk is removed from list of characters to escape
 // TODO: optimize for one regexp
-const regExpForEscaping = /[-\/\\^$+?.()|[\]{}]/g;
+const regExpForEscaping = /[-/\\^$+?.()|[\]{}]/g;
 const regExpForReplacingAsterisks = /[*]/g;
 /**
 	Converts string with asterisk wildcards to RegExp object
 	Example:
 		'*lenta.ru*' => /^.*lenta\.ru.*$/
 */
-function asteriskStringToRegExp(str) {
+function asteriskStringToRegExp (str) {
 	str = str.replace(regExpForEscaping, '\\$&');
 	str = str.replace(regExpForReplacingAsterisks, '.*');
 	return new RegExp('^' + str + '$');
@@ -38,7 +38,7 @@ const
 const FILTER_CTORS = {
 	[WHITE_LIST_MODE] : WhiteList,
 	[BLACK_LIST_MODE] : BlackList
-}
+};
 
 /**
 	Draft version of SiteFiltering implementation for testing purposes
@@ -50,7 +50,7 @@ class SiteFiltering {
 		OFF: OFF
 	};
 
-	constructor(webviews, tabs, db) {
+	constructor (webviews, tabs, db) {
 		this.controller = new SiteFilteringBase(webviews, tabs);
 		this.filterStorages = {
 			[WHITE_LIST_MODE] : new IdbSetStorage(WHITE_LIST_IDB_NAME, db),
@@ -58,7 +58,7 @@ class SiteFiltering {
 		};
 	}
 
-	initialize(defaults = null) {
+	initialize (defaults = null) {
 		const transactionPromises = [];
 		if (defaults) {
 			for (let [mode, values] of Object.entries(defaults)) {
@@ -73,7 +73,7 @@ class SiteFiltering {
 		return Promise.all(transactionPromises);
 	}
 
-	setMode(mode) {
+	setMode (mode) {
 		if (mode in this.filterStorages) {
 			return this.filterStorages[mode].getAll()
 				.then((values) => {
@@ -84,7 +84,7 @@ class SiteFiltering {
 		}
 
 		if (mode !== OFF) {
-			console.warn('SiteFiltering - unknown mode / filter name');
+			console.warn('SiteFiltering - unknown mode / filter name'); // eslint-disable-line no-console
 		}
 		this.controller.setFilter(null);
 		return Promise.resolve();

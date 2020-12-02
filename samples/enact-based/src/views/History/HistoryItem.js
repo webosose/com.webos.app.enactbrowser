@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2019 LG Electronics, Inc.
+// Copyright (c) 2018-2020 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -12,8 +12,8 @@
  */
 
 import {connect} from 'react-redux';
-import Checkbox from '@enact/moonstone/Checkbox';
-import Item from '@enact/moonstone/Item';
+import Checkbox from '@enact/agate/Checkbox';
+import Item from '@enact/agate/Item';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
@@ -23,19 +23,19 @@ import css from './HistoryItem.module.less';
 
 class HistoryItemBase extends Component {
 	static propTypes = {
-		index: PropTypes.number,
 		id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+		index: PropTypes.number,
 		onClick: PropTypes.func,
 		selected: PropTypes.bool,
 		time: PropTypes.object,
 		title: PropTypes.string,
 		toggleHistory: PropTypes.func,
 		url: PropTypes.string
-	}
+	};
 
 	onToggle = (ev) => {
 		this.props.toggleHistory(this.props.id, ev.selected);
-	}
+	};
 
 	render () {
 		const {index, id, selected, title, onClick, url, time, ...rest} = this.props;
@@ -45,7 +45,7 @@ class HistoryItemBase extends Component {
 			return (
 				<div {...rest} className={css.historyItem}>
 					<Checkbox className={css.checkbox} onToggle={this.onToggle} selected={selected} />
-					<Item onClick={onClick} data-index={index} className={css.title}>{`${time.toLocaleTimeString(window.navigator ? window.navigator.language : undefined)} ${title} - ${url}`}</Item>
+					<Item onClick={onClick} data-index={index} className={css.title}>{`${time.toLocaleTimeString(window.navigator ? window.navigator.language : null)} ${title} - ${url}`}</Item>
 				</div>
 			);
 		} else {

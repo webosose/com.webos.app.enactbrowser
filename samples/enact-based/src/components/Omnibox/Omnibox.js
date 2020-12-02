@@ -11,23 +11,23 @@
  *
  */
 
+import classNames from 'classnames';
+import Button from '@enact/agate/Button';
+import ContextualPopupDecorator from '@enact/agate/ContextualPopupDecorator';
+import Icon from '@enact/agate/Icon';
+import {InputBase} from '@enact/agate/Input';
+import {InputSpotlightDecorator} from '@enact/agate/Input/InputSpotlightDecorator';
+import Popup from '@enact/agate/Popup';
+import Skinnable from '@enact/agate/Skinnable';
 import $L from '@enact/i18n/$L';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
-import Button from '@enact/moonstone/Button';
-import ContextualPopupDecorator from '@enact/moonstone/ContextualPopupDecorator';
-import Icon from '@enact/moonstone/Icon';
-import IconButton from '@enact/moonstone/IconButton';
-import {InputBase} from '@enact/moonstone/Input';
-import {InputSpotlightDecorator} from '@enact/moonstone/Input/InputSpotlightDecorator';
-import Notification from '@enact/moonstone/Notification';
-import Skinnable from '@enact/moonstone/Skinnable';
 import Spotlight from '@enact/spotlight';
 import Changeable from '@enact/ui/Changeable';
 import Pure from '@enact/ui/internal/Pure';
-import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import TooltipDecorator from '@enact/agate/TooltipDecorator';
 
 import SuggestedItem from './SuggestedItem';
 import {TabTypes} from '../../NevaLib/BrowserModel';
@@ -48,12 +48,15 @@ const Input = Pure(
 	)
 );
 
-const ContextualPopupInput = ContextualPopupDecorator({noArrow:true}, Input);
+const ContextualPopupInput = ContextualPopupDecorator({noArrow: true}, Input);
+const TooltipButton = TooltipDecorator({tooltipDestinationProp: 'decoration'}, Button);
 
 class OmniboxBase extends Component {
 
 	static propTypes = {
 		bookmarksData: PropTypes.array,
+		browser: PropTypes.object,
+		isBookmarked: PropTypes.bool,
 		isLoading: PropTypes.bool,
 		reloadDisabled: PropTypes.bool,
 		searchEngine: PropTypes.string,
@@ -62,7 +65,7 @@ class OmniboxBase extends Component {
 		title: PropTypes.string,
 		url: PropTypes.string,
 		urlSuggestions: PropTypes.array
-	}
+	};
 
 	constructor (props) {
 		super(props);
@@ -72,12 +75,8 @@ class OmniboxBase extends Component {
 			open: false,
 			removeBookmarkCompleted: false,
 			value: props.url ? props.url : ''
-		}
+		};
 	}
-
-	prevOpen = false
-	isEditing = false
-	webOSBridge = null
 
 	componentDidMount () {
 		if (typeof window !== 'undefined' && window.WebOSServiceBridge) {
@@ -94,6 +93,10 @@ class OmniboxBase extends Component {
 		}
 	}
 
+	prevOpen = false;
+	isEditing = false;
+	webOSBridge = null;
+
 	onNavigate = (ev) => {
 		ev.preventDefault();
 		this.isEditing = false;
@@ -108,12 +111,12 @@ class OmniboxBase extends Component {
 		}
 		this.pauseAndNavigate(url);
 
-	}
+	};
 
 	pauseAndNavigate = (url) => {
 		this.props.browser.navigate(url);
 		Spotlight.pause();
-	}
+	};
 
 	onChange = (ev) => {
 		this.prevOpen = this.state.open;
@@ -129,19 +132,19 @@ class OmniboxBase extends Component {
 		});
 
 		this.props.browser.mostVisited.getSuggestions(ev.value, 5);
-	}
+	};
 
 	onClose = () => {
-		if(Spotlight.getPointerMode()) {
+		if (Spotlight.getPointerMode()) {
 			this.setState({open: false});
 		}
-	}
+	};
 
 	onReloadStop = (ev) => {
 		this.props.browser.reloadStop();
 		Spotlight.pause();
 		ev.stopPropagation();
-	}
+	};
 
 	onBookmarkAdd = () => {
 		this.props.browser.addBookmark();
@@ -149,13 +152,13 @@ class OmniboxBase extends Component {
 		setTimeout(() => {
 			this.setState({addBookmarkCompleted: false});
 		}, 1500);
-	}
+	};
 
 	onBookmarkAndLaunchPointAdd = () => {
 		if (this.webOSBridge) {
 			this.webOSBridge.onservicecallback = (payload) => {
-				console.log('Add bookmark to home result: ', payload);
-			}
+				console.log('Add bookmark to home result: ', payload); // eslint-disable-line no-console
+			};
 			this.webOSBridge.call(
 				'luna://com.webos.service.applicationmanager/addLaunchPoint',
 				`{"id": "com.webos.app.enactbrowser", "title": "${this.props.title}", "params": {"target": "${this.state.value}"}}`
@@ -163,7 +166,7 @@ class OmniboxBase extends Component {
 		}
 
 		this.onBookmarkAdd();
-	}
+	};
 
 	onBookmarkRemove = () => {
 		this.props.browser.removeBookmark();
@@ -171,37 +174,37 @@ class OmniboxBase extends Component {
 		setTimeout(() => {
 			this.setState({removeBookmarkCompleted: false});
 		}, 1500);
-	}
+	};
 
 	showAddBookmarkToHome = () => {
 		this.setState({addBookmarkToHome: true});
-	}
+	};
 
 	dismissAddBookmarkToHome = () => {
 		this.setState({addBookmarkToHome: false});
-	}
+	};
 
 	getOmniboxIcon = () => {
 		const {url} = this.props;
 
 		if (this.isEditing) {
-			return "searchButton";
+			return 'search2';
 		} else if (url === 'chrome://bookmarks') {
-			return "bookmarksButton";
+			return 'bookmark';
 		} else if (url === 'chrome://history') {
-			return "historyButton";
+			return 'history';
 		} else if (url.startsWith('https')) {
-			return "secureButton";
+			return 'lock';
 		} else if (url === '') {
-			return "searchButton";
+			return 'search2';
 		} else {
-			return "wwwButton";
+			return 'browser';
 		}
-	}
+	};
 
 	spotSuggested = () => {
 		Spotlight.focus('suggestedList');
-	}
+	};
 
 	onClickSuggestedItems = (ev) => {
 		this.setState({open: false});
@@ -217,7 +220,7 @@ class OmniboxBase extends Component {
 				this.pauseAndNavigate(urlSuggestions[i - 1].url);
 			}
 		}
-	}
+	};
 
 	getSuggestedItems = () => {
 		const
@@ -225,13 +228,13 @@ class OmniboxBase extends Component {
 			items = [];
 
 		if (urlSuggestions) {
-			for (let i = 0; i < urlSuggestions.length; i ++) {
+			for (let i = 0; i < urlSuggestions.length; i++) {
 				items.push(
 					<SuggestedItem
 						data-index={i + 1}
 						icon={bookmarksData.some(
 							(bookmark) => bookmark.url === urlSuggestions[i].url
-						) ? "bookmarksButton" : "historyButton"}
+						) ? 'bookmark' : 'history'}
 						key={i + 1}
 						onClick={this.onClickSuggestedItems}
 						title={urlSuggestions[i].title}
@@ -241,24 +244,24 @@ class OmniboxBase extends Component {
 			}
 		}
 		return items;
-	}
+	};
 
 	renderPopup = () => (
 		<div>
 			<SuggestedItem
 				data-index={0}
-				icon="searchButton"
+				icon="search2"
 				onClick={this.onClickSuggestedItems}
 				title={`${this.props.searchEngine} ${$L('Search')}`}
 				url={this.state.value}
 			/>
 			{this.getSuggestedItems()}
 		</div>
-	)
+	);
 
 	onClick = (ev) => {
 		ev.stopPropagation();
-	}
+	};
 
 	render () {
 		const
@@ -281,6 +284,7 @@ class OmniboxBase extends Component {
 					<ContextualPopupInput
 						autoFocus={open}
 						className={css.inputBox}
+						css={css}
 						dismissOnEnter
 						onClick={this.onClick}
 						onChange={this.onChange}
@@ -290,61 +294,65 @@ class OmniboxBase extends Component {
 						popupClassName={popupClassName}
 						popupComponent={this.renderPopup}
 						popupSpotlightId="suggestedList"
+						showCloseButton
 						value={value}
 					/>
 					<Icon
-						backgroundOpacity="transparent"
 						className={classNames(css.searchIcon)}
 						size="small"
 					>
-						search
+						search2
 					</Icon>
 					{reloadDisabled ?
 						null :
-						<IconButton
+						<TooltipButton
 							backgroundOpacity="transparent"
 							className={classNames(css.iconButton, css, css.small, css.bookmarkButton)}
+							css={css}
+							icon={isBookmarked ? 'star' : 'starhollow'}
+							size="small"
 							tooltipText={isBookmarked ? $L('Delete from bookmarks') : $L('Add to bookmarks')}
 							onClick={isBookmarked ? this.onBookmarkRemove : this.showAddBookmarkToHome}
-						>
-							{isBookmarked ? "star" : "hollowstar"}
-						</IconButton>
+						/>
 					}
-					<IconButton
+					<TooltipButton
 						backgroundOpacity="transparent"
 						className={classNames(css.iconButton, css.small, css.reloadStopButton)}
+						css={css}
 						onClick={this.onReloadStop}
 						disabled={reloadDisabled}
+						icon={isLoading ? 'closex' : 'refresh'}
 						size="small"
 						tooltipText={$L('Refresh')}
-					>
-						{isLoading ? "closex" : "refresh" }
-					</IconButton>
+					/>
 				</form>
-				<Notification
+				<Popup
+					centered
 					onClose={this.dismissAddBookmarkToHome}
 					open={addBookmarkToHome}
 					showCloseButton
 					className={css.addBookmarkToHome}
 				>
-					<p>{$L('You can add your bookmark to Home screen and access your favorite website by pressing the icon. Do you want to the bookmark to Home?')}</p>
+					<p>{$L('You can add your bookmark to Home screen and access your favorite website by pressing the icon. Do you want to add the bookmark to Home?')}</p>
 					<buttons>
-						<Button onClick={this.onBookmarkAdd}>{$L('NO')}</Button>
-						<Button onClick={this.onBookmarkAndLaunchPointAdd}>{$L('YES')}</Button>
+						<Button onClick={this.onBookmarkAdd} size="small">{$L('NO')}</Button>
+						<Button onClick={this.onBookmarkAndLaunchPointAdd} size="small">{$L('YES')}</Button>
 					</buttons>
-				</Notification>
-				<Notification
+				</Popup>
+				<Popup
+					centered
 					open={addBookmarkCompleted}
 					noAutoDismiss
 				>
 					<span>{$L('Bookmark has been added.')}</span>
-				</Notification>
-				<Notification
+				</Popup>
+				<Popup
+					centered
 					open={removeBookmarkCompleted}
 					noAutoDismiss
 				>
 					<span>{$L('Bookmark has been deleted.')}</span>
-				</Notification>
+				</Popup>
 			</div>
 		);
 	}
@@ -369,7 +377,7 @@ const mapStateToProps = ({tabsState, bookmarksState, browserState, settingsState
 				title,
 				url: navState.url,
 				urlSuggestions: browserState.urlSuggestions
-			}
+			};
 		}
 	} else {
 		return {

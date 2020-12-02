@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2019 LG Electronics, Inc.
+// Copyright (c) 2018-2020 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -11,8 +11,8 @@
  *
  */
 
-import GridListImageItem from '@enact/moonstone/GridListImageItem';
-import IconButton from '@enact/moonstone/IconButton';
+import ImageItem from '@enact/agate/ImageItem';
+import Button from '@enact/agate/Button';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
@@ -20,7 +20,12 @@ import css from './SiteItem.module.less';
 
 const
 	CloseButton = (props) => (
-		<IconButton {...props} className={css.xbutton} size="small">closex</IconButton>
+		<Button
+			{...props}
+			className={css.xbutton}
+			size="small"
+			icon="closex"
+		/>
 	),
 	EmptyItem = (props) => (
 		<div className={css.emptyContainer} {...props} />
@@ -38,11 +43,11 @@ class SiteItem extends Component {
 		source: PropTypes.string,
 		title: PropTypes.string,
 		url: PropTypes.string
-	}
+	};
 
 	static defaultProps = {
 		source: placeholder
-	}
+	};
 
 	constructor (props) {
 		super(props);
@@ -54,40 +59,42 @@ class SiteItem extends Component {
 
 	onMouseEnter = () => {
 		this.setState({showingCloseButton: true});
-	}
+	};
 
 	onMouseLeave = () => {
 		this.setState({showingCloseButton: false});
-	}
+	};
 
 	onClick = () => {
 		this.props.browser.mostVisited.remove(this.props.url);
-	}
+	};
 
 	render () {
-		const {title, ...rest} = this.props;
+		const {title, source, ...rest} = this.props;
+		const children = title;
 
 		delete rest.browser;
 		delete rest.url;
 
 		return (
 			<div className={css.container}>
-				<GridListImageItem
+				<ImageItem
 					{...rest}
 					className={css.siteItem}
-					caption={title}
-					disabled={!title}
 					onMouseEnter={this.onMouseEnter}
 					onMouseLeave={this.onMouseLeave}
 					placeholder={placeholder}
-				/>
+					src={source}
+				>
+					{children}
+				</ImageItem>
 				{
 					this.state.showingCloseButton && title ?
-					<CloseButton
-						onClick={this.onClick}
-						onMouseEnter={this.onMouseEnter}
-						onMouseLeave={this.onMouseLeave}
-					/> : null
+						<CloseButton
+							onClick={this.onClick}
+							onMouseEnter={this.onMouseEnter}
+							onMouseLeave={this.onMouseLeave}
+						/> : null
 				}
 			</div>
 		);

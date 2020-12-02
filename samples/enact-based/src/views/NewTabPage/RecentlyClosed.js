@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2019 LG Electronics, Inc.
+// Copyright (c) 2018-2020 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -12,17 +12,22 @@
  */
 
 import $L from '@enact/i18n/$L';
-import Button from '@enact/moonstone/Button';
+import Button from '@enact/agate/Button';
+import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
 import css from './RecentlyClosed.module.less';
 
 class RecentlyClosed extends Component {
+	static propTypes = {
+		onClick: PropTypes.func
+	};
+
 	constructor (props) {
 		super(props);
 		this.state = {
 			showing: false
-		}
+		};
 	}
 
 	onClick = () => {
@@ -32,7 +37,7 @@ class RecentlyClosed extends Component {
 		this.setState((prevState) => ({
 			showing: !prevState.showing
 		}));
-	}
+	};
 
 	render () {
 		return (

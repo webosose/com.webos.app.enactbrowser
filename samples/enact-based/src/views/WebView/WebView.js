@@ -11,18 +11,18 @@
  *
  */
 
+import Button from '@enact/agate/Button';
+import Popup from '@enact/agate/Popup';
+import $L from '@enact/i18n/$L';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
-import ErrorPage from '../ErrorPage';
 
-import $L from '@enact/i18n/$L';
-import Button from '@enact/moonstone/Button';
-import Notification from '@enact/moonstone/Notification';
+import ErrorPage from '../ErrorPage';
 
 const
 	WebViewWrapperId = '_webview',
-	error_renderer_crashed = 'RENDERER_CRASHED',
-	error_unresponsive = 'PAGE_UNRESPONSIVE',
+	errorRendererCrashed = 'RENDERER_CRASHED',
+	errorUnresponsive = 'PAGE_UNRESPONSIVE',
 	timeoutToSuppressDialog = 30000;
 
 const LOAD_STATE = {
@@ -34,8 +34,9 @@ const LOAD_STATE = {
 class WebView extends Component {
 	static propTypes = {
 		id: PropTypes.string,
+		tabs: PropTypes.any,
 		webView: PropTypes.object
-	}
+	};
 
 	constructor (props) {
 		super(props);
@@ -63,7 +64,7 @@ class WebView extends Component {
 					hideErrorPage: true,
 					hideWebview: false
 				};
-			} else if (error === error_unresponsive) {
+			} else if (error === errorUnresponsive) {
 				if (prevState.suppressDialog) {
 					return {
 						hideDialog: true,
@@ -77,7 +78,7 @@ class WebView extends Component {
 						hideWebview: false
 					};
 				}
-			} else if (error === error_renderer_crashed || browser.config.useBuiltInErrorPages) {
+			} else if (error === errorRendererCrashed || browser.config.useBuiltInErrorPages) {
 				return {
 					hideDialog: true,
 					hideErrorPage: true,
@@ -93,28 +94,34 @@ class WebView extends Component {
 		}
 
 		return null;
+	};
+
+	componentDidMount () {
+		this.props.webView.insertIntoDom(this.props.id + WebViewWrapperId);
+		this.props.webView.addEventListener('loadcommit', this.onLoadCommit);
+		this.props.webView.addEventListener('contentload', this.onLoadContent);
 	}
 
 	onLoadCommit = () => {
 		if (this.state.load !== LOAD_STATE.READY) {
 			this.setState({load: LOAD_STATE.READY});
 		}
-	}
+	};
 
 	onLoadContent = () => {
 		if (this.state.load === LOAD_STATE.READY) {
 			this.setState({load: LOAD_STATE.LOADED});
 		}
-	}
+	};
 
 	enableDialog = () => {
 		this.setState({suppressDialog: false});
-	}
+	};
 
 	onWait = () => {
 		setTimeout(this.enableDialog, timeoutToSuppressDialog);
 		this.setState({suppressDialog: true});
-	}
+	};
 
 	onStop = () => {
 		this.props.webView.deactivate();
@@ -124,13 +131,7 @@ class WebView extends Component {
 			hideWebview: true,
 			load: LOAD_STATE.UNLOADED
 		});
-	}
-
-	componentDidMount () {
-		this.props.webView.insertIntoDom(this.props.id + WebViewWrapperId);
-		this.props.webView.addEventListener('loadcommit', this.onLoadCommit);
-		this.props.webView.addEventListener('contentload', this.onLoadContent);
-	}
+	};
 
 	render () {
 		const
@@ -153,16 +154,17 @@ class WebView extends Component {
 					errorMsg={tabs[id].error}
 					hidden={hideErrorPage}
 				/>
-				<Notification
+				<Popup
+					centered
 					noAutoDismiss
 					open={!hideDialog}
 				>
 					<p>{$L('The current page has become unresponsive. You can wait for it to become responsive.')}</p>
 					<buttons>
-						<Button onClick={this.onWait}>{$L('Wait')}</Button>
-						<Button onClick={this.onStop}>{$L('Stop')}</Button>
+						<Button size="small" onClick={this.onWait}>{$L('Wait')}</Button>
+						<Button size="small" onClick={this.onStop}>{$L('Stop')}</Button>
 					</buttons>
-				</Notification>
+				</Popup>
 			</div>
 		);
 	}

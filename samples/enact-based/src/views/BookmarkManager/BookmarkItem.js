@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2019 LG Electronics, Inc.
+// Copyright (c) 2018-2020 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -12,8 +12,8 @@
  */
 
 import {connect} from 'react-redux';
-import Checkbox from '@enact/moonstone/Checkbox';
-import Item from '@enact/moonstone/Item';
+import Checkbox from '@enact/agate/Checkbox';
+import Item from '@enact/agate/Item';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
@@ -29,11 +29,11 @@ class BookmarkItemBase extends Component {
 		title: PropTypes.string,
 		toggleBookmark: PropTypes.func,
 		url: PropTypes.string
-	}
+	};
 
 	onToggle = (ev) => {
 		this.props.toggleBookmark(this.props.index, ev.selected);
-	}
+	};
 
 	render () {
 		const {index, selected, title, onClick, url, ...rest} = this.props;

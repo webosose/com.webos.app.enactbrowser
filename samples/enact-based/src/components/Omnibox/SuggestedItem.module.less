@@ -1,11 +1,34 @@
 /* SuggestedItem.module.less */
+@import '~@enact/agate/styles/mixins.less';
+@import '~@enact/agate/styles/skin.less';
+@import '~@enact/agate/styles/variables.less';
+
+.button {
+	.applySkins({
+		.bg {
+			border-color: transparent;
+		}
+	});
+}
 
 .icon {
 	pointer-events: none;
+
+	.bg {
+		border-color: transparent;
+	}
 }
 
 .item {
-	display: inline-block;
-	width: 85%;
-	vertical-align: top;
+	display: inline-flex;
+	width: 80%;
+	vertical-align: middle;
+
+	.applySkins({
+		border-bottom-color: transparent;
+
+		.focus({
+			border-bottom-color: transparent;
+		});
+	});
 }

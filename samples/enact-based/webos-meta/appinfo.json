@@ -1,6 +1,6 @@
 {
 	"id": "com.webos.app.enactbrowser",
-	"version": "1.0.0",
+	"version": "2.0.0",
 	"vendor": "LG Electronics, Inc.",
 	"type": "native_appshell",
 	"title": "Web Browser",
@@ -33,10 +33,10 @@
 	"accessibility": {
 		"supportsAudioGuidance": true
 	},
-    "intentFilters": [
-        {
-            "actions": ["action_url", "action_uri"],
-            "uris": ["http://", "https://"]
-        }
-    ]
+	"intentFilters": [
+		{
+			"actions": ["view"],
+			"uris": ["http://", "https://"]
+		}
+	]
 }

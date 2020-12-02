@@ -1,4 +1,4 @@
-// Copyright (c) 2018 LG Electronics, Inc.
+// Copyright (c) 2018-2020 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -14,7 +14,7 @@ const actionTypes = {
 	CLOSE_TAB: 'CLOSE_TAB',
 	MOVE_TAB: 'MOVE_TAB',
 	SELECT_TAB: 'SELECT_TAB',
-    UPDATE_TAB_STATE: 'UPDATE_TAB_STATE'
+	UPDATE_TAB_STATE: 'UPDATE_TAB_STATE'
 };
 
 export {

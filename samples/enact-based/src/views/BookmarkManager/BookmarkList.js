@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2019 LG Electronics, Inc.
+// Copyright (c) 2018-2020 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -34,8 +34,9 @@ class BookmarkListBase extends Component {
 		browser: PropTypes.any,
 		component: PropTypes.any,
 		data: PropTypes.array,
+		deselectAllBookmarks: PropTypes.func,
 		moveBookmarkSelected: PropTypes.func
-	}
+	};
 
 	onClick = (ev) => {
 		const
@@ -48,12 +49,12 @@ class BookmarkListBase extends Component {
 			Spotlight.pause();
 			this.props.deselectAllBookmarks();
 		}
-	}
+	};
 
 	onMove = (fromIndex, toIndex) => {
 		this.props.browser.bookmarks.moveBookmark(fromIndex, toIndex);
 		this.props.moveBookmarkSelected(fromIndex, toIndex);
-	}
+	};
 
 	bookmarks = () => {
 		const
@@ -74,7 +75,7 @@ class BookmarkListBase extends Component {
 		}
 
 		return items;
-	}
+	};
 
 	render () {
 		const props = Object.assign({}, this.props);

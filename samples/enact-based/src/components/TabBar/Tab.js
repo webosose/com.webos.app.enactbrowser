@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2019 LG Electronics, Inc.
+// Copyright (c) 2018-2020 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -12,15 +12,16 @@
  */
 
 import classNames from 'classnames';
+import Button from '@enact/agate/Button';
+import Spinner from '@enact/agate/Spinner';
 import kind from '@enact/core/kind';
-import {MarqueeDecorator} from '@enact/moonstone/Marquee';
-import PropTypes from 'prop-types';
-import React from 'react';
-import Spinner from '@enact/moonstone/Spinner';
+import {MarqueeDecorator} from '@enact/ui/Marquee';
 import Spottable from '@enact/spotlight/Spottable';
 import Spotlight from '@enact/spotlight';
+import PropTypes from 'prop-types';
+import React from 'react';
+import Skinnable from '@enact/agate/Skinnable';
 
-import {BrowserIconButton as IconButton} from '../BrowserIconButton';
 import {TabTypes} from '../../NevaLib/BrowserModel';
 
 import css from './Tab.module.less';
@@ -29,7 +30,7 @@ const
 	SpottableLi = Spottable('li'),
 	TitleDiv = MarqueeDecorator('div');
 
-const Tab = kind({
+const TabBase = kind({
 	name: 'Tab',
 	propTypes: {
 		browser: PropTypes.object,
@@ -39,6 +40,7 @@ const Tab = kind({
 		index: PropTypes.number,
 		isLoading: PropTypes.bool,
 		selected: PropTypes.bool,
+		skinVariants: PropTypes.object,
 		title: PropTypes.string || PropTypes.number,
 		type: PropTypes.string // or icon
 	},
@@ -83,7 +85,7 @@ const Tab = kind({
 			}
 		}
 	},
-	render: ({closable, onClose, iconUrl, isLoading, onSelect, title, iconClassName, ...rest}) => {
+	render: ({closable, onClose, iconUrl, isLoading, onSelect, title, iconClassName, skinVariants, ...rest}) => {
 		delete rest.browser;
 		delete rest.selected;
 		delete rest.index;
@@ -93,30 +95,30 @@ const Tab = kind({
 			<SpottableLi {...rest} onClick={onSelect}>
 				{
 					isLoading ?
-					<Spinner className={css.spinner} size="small" transparent />
-					:
-					<div
-						style={iconUrl ? {
-							backgroundImage: 'url(' + iconUrl + ')',
-							backgroundSize: 'contain'
-						} : {}}
-						className={classNames(css.tabFavicon, iconClassName)}
-					/>
+						<Spinner color={skinVariants.night ? 'light' : 'dark'} size="small" /> :
+						<div
+							style={iconUrl ? {
+								backgroundImage: 'url(' + iconUrl + ')',
+								backgroundSize: 'contain'
+							} : {}}
+							className={classNames(css.tabFavicon, iconClassName)}
+						/>
 				}
 				<TitleDiv className={css.tabTitle} marqueeOn="hover">{title}</TitleDiv>
 				{
 					closable &&
-					<IconButton
+					<Button
 						backgroundOpacity="transparent"
-						className={css.tabCloseButton}
 						onClick={onClose}
-						type="tabCloseButton"
-						size="small"
+						icon="closex"
+						size="smallest"
 					/>
 				}
 			</SpottableLi>
 		);
 	}
 });
+
+const Tab = Skinnable({variantsProp: 'skinVariants'}, TabBase);
 
 export default Tab;

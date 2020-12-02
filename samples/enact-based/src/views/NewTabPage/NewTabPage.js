@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2019 LG Electronics, Inc.
+// Copyright (c) 2018-2020 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -31,7 +31,7 @@ class NewTabPageBase extends Component {
 		isSelectedTab: PropTypes.bool,
 		mostVisited: PropTypes.array,
 		recentlyClosed: PropTypes.array
-	}
+	};
 
 	constructor (props) {
 		super(props);
@@ -43,9 +43,7 @@ class NewTabPageBase extends Component {
 		if (!this.props.isSelectedTab && nextProps.isSelectedTab) {
 			this.retrieveRecentlyClosed();
 			this.retrieveMostVisited();
-		}
-		else if (this.props.isSelectedTab &&
-		         this.props.mostVisited.length !== nextProps.mostVisited.length) {
+		} else if (this.props.isSelectedTab && this.props.mostVisited.length !== nextProps.mostVisited.length) {
 			// user has deleted most visited site
 			this.retrieveMostVisited();
 		}
@@ -53,7 +51,7 @@ class NewTabPageBase extends Component {
 
 	retrieveMostVisited = () => {
 		this.props.browser.mostVisited.retrieveWithThumbnails(numOfMostVisited);
-	}
+	};
 
 	mostVisitedSites = () => {
 		const
@@ -88,7 +86,7 @@ class NewTabPageBase extends Component {
 		}
 
 		return sites;
-	}
+	};
 
 	onClickMostVisited = (ev) => {
 		const
@@ -99,16 +97,16 @@ class NewTabPageBase extends Component {
 			const url = mostVisited[i].url;
 			this.pauseAndNavigate(url);
 		}
-	}
+	};
 
 	pauseAndNavigate = (url) => {
 		this.props.browser.navigate(url);
 		Spotlight.pause();
-	}
+	};
 
 	retrieveRecentlyClosed = () => {
 		this.props.browser.recentlyClosed.retrieveAll();
-	}
+	};
 
 	recentlyClosedSites = () => {
 		const
@@ -128,7 +126,7 @@ class NewTabPageBase extends Component {
 		}
 
 		return sites;
-	}
+	};
 
 	onClickRecentlyClosed = (ev) => {
 		const
@@ -139,7 +137,7 @@ class NewTabPageBase extends Component {
 			const url = recentlyClosed[i].url;
 			this.pauseAndNavigate(url);
 		}
-	}
+	};
 
 	render () {
 		const {style, ...rest} = this.props;

@@ -12,8 +12,8 @@
  */
 
 import $L from '@enact/i18n/$L';
-import Item from '@enact/moonstone/Item';
-import TooltipDecorator from '@enact/moonstone/TooltipDecorator';
+import {Button} from '@enact/agate/Button';
+import TooltipDecorator from '@enact/agate/TooltipDecorator';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
@@ -21,7 +21,7 @@ import css from './ExitFullScreenButton.module.less';
 
 import icon from '../../../assets/default/exit_fullscreen.svg';
 
-const TooltipItem = TooltipDecorator(Item);
+const TooltipButton = TooltipDecorator({tooltipDestinationProp: 'decoration'}, Button);
 
 class ExitFullScreenButton extends Component {
 	static propTypes = {
@@ -34,22 +34,18 @@ class ExitFullScreenButton extends Component {
 	}
 
 	render () {
-		const {fullScreen, onExitFullScreen} = this.props;
+		const
+			{fullScreen} = this.props;
 
 		return (
 			fullScreen ?
-				<TooltipItem
-					className={css.item}
-					onClick={onExitFullScreen}
-					tooltipPosition={'right middle'}
+				<TooltipButton
+					className={css.exitButton}
+					css={css}
+					icon={icon}
+					onClick={this.props.onExitFullScreen}
 					tooltipText={$L('Exit Full Screen')}
-				>
-					<img
-						alt={$L('Exit Full Screen')}
-						className={css.image}
-						src={icon}
-					/>
-				</TooltipItem> :
+				/> :
 				null
 		);
 	}

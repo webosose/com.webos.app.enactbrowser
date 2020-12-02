@@ -12,15 +12,15 @@
  */
 
 import $L from '@enact/i18n/$L';
-import Button from '@enact/moonstone/Button';
+import Button from '@enact/agate/Button';
 import {connect} from 'react-redux';
-import Notification from '@enact/moonstone/Notification';
+import Popup from '@enact/agate/Popup';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ri from '@enact/ui/resolution';
 import Spotlight from '@enact/spotlight';
-import VirtualList from '@enact/moonstone/VirtualList';
+import VirtualList from '@enact/agate/VirtualList';
 
 import HistoryItem from './HistoryItem';
 import {selectAllHistory, deselectAllHistory} from '../../actions';
@@ -34,10 +34,11 @@ class HistoryBase extends Component {
 		browser: PropTypes.object,
 		data: PropTypes.array,
 		deselectAllHistory: PropTypes.func,
+		hasSelection: PropTypes.any,
 		isSelectedTab: PropTypes.bool,
 		selectAllHistory: PropTypes.func,
 		selected: PropTypes.array
-	}
+	};
 
 	constructor (props) {
 		super(props);
@@ -64,7 +65,7 @@ class HistoryBase extends Component {
 		let now = new Date(Date.now());
 		let monthAgo = new Date(now.getTime() - 2628000000);
 		this.props.browser.history.retrieveByDate(monthAgo, now);
-	}
+	};
 
 	renderItem = ({index, ...rest}) => {
 		const {viewData: data} = this;
@@ -79,8 +80,8 @@ class HistoryBase extends Component {
 				time={data[index].date}
 				url={data[index].url}
 			/>
-		)
-	}
+		);
+	};
 
 	manipulateData = (data) => {
 		if (data.length) {
@@ -108,7 +109,7 @@ class HistoryBase extends Component {
 		}
 
 		return [];
-	}
+	};
 
 	onClick = (ev) => {
 		const
@@ -120,7 +121,7 @@ class HistoryBase extends Component {
 			browser.navigate(url);
 			Spotlight.pause();
 		}
-	}
+	};
 
 	onSelectAll = () => {
 		const {data} = this.props;
@@ -133,11 +134,11 @@ class HistoryBase extends Component {
 			}
 			this.props.selectAllHistory(ids);
 		}
-	}
+	};
 
 	onDelete = () => {
 		this.setState({deletePopupOpen: true});
-	}
+	};
 
 	onDeleteYes = () => {
 		const obj = this;
@@ -147,18 +148,18 @@ class HistoryBase extends Component {
 				obj.retrieveHistory();
 				obj.setState({completePopupOpen: true});
 				setTimeout(() => {
-					obj.setState({completePopupOpen: false})
+					obj.setState({completePopupOpen: false});
 				}, 1500);
 			}
 		);
-		//this.props.browser.history.clearAll();
+		// this.props.browser.history.clearAll();
 		this.props.deselectAllHistory();
 		this.setState({deletePopupOpen: false});
-	}
+	};
 
 	onDeleteNo = () => {
 		this.setState({deletePopupOpen: false});
-	}
+	};
 
 	render () {
 		const
@@ -176,24 +177,26 @@ class HistoryBase extends Component {
 			<div className={css.history} {...rest}>
 				<Button css={css} onClick={this.onSelectAll} disabled={!data.length} size="small">{(data.length && data.length === hasSelection) ? $L('DESELECT ALL') : $L('SELECT ALL')}</Button>
 				<Button css={css} onClick={this.onDelete} disabled={!data.length || !hasSelection} size="small">{$L('Delete')}</Button>
-				<Notification
+				<Popup
+					centered
 					open={this.state.deletePopupOpen}
 					noAutoDismiss
 				>
 					<span>{(data.length === hasSelection) ?
-						$L('Do you want to delete all history?')
-						: $L('Do you want to delete the selected history?')}</span>
+						$L('Do you want to delete all history?') :
+						$L('Do you want to delete the selected history?')}</span>
 					<buttons>
-						<Button onClick={this.onDeleteNo}>{$L('NO')}</Button>
-						<Button onClick={this.onDeleteYes}>{$L('YES')}</Button>
+						<Button onClick={this.onDeleteNo} size="small">{$L('NO')}</Button>
+						<Button onClick={this.onDeleteYes} size="small">{$L('YES')}</Button>
 					</buttons>
-				</Notification>
-				<Notification
+				</Popup>
+				<Popup
+					centered
 					open={this.state.completePopupOpen}
 					noAutoDismiss
 				>
 					<span>{$L('Selected history has been deleted.')}</span>
-				</Notification>
+				</Popup>
 				{
 					(this.viewData && this.viewData.length > 0) ?
 						<VirtualList
@@ -202,8 +205,8 @@ class HistoryBase extends Component {
 							itemRenderer={this.renderItem}
 							className={listClass}
 							itemSize={ri.scale(70)}
-						/>
-					: <div>{$L('There is no history.')}</div>
+						/> :
+						<div>{$L('There is no history.')}</div>
 				}
 			</div>
 		);
@@ -218,7 +221,7 @@ const mapStateToProps = ({historyState, historyUIState}) => ({
 
 const mapDispatchToProps = (dispatch) => ({
 	selectAllHistory: (ids) => dispatch(selectAllHistory(ids)),
-	deselectAllHistory: () => dispatch(deselectAllHistory()),
+	deselectAllHistory: () => dispatch(deselectAllHistory())
 });
 
 const History = connect(mapStateToProps, mapDispatchToProps)(HistoryBase);

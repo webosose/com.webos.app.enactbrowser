@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-// Copyright (c) 2018 LG Electronics, Inc.
+// Copyright (c) 2018-2020 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -28,14 +28,14 @@ fs.readdirSync(dir).forEach(f => {
 		let first = true;
 		let html = fs.readFileSync(file, {encoding: 'UTF8'});
 		match[1] = match[1] || 'update';
-		html = html.replace(/(<script[^>]*>)([\s\S]*?)(<\/script>)/g, function(m, openTag, innerScript, closeTag) {
+		html = html.replace(/(<script[^>]*>)([\s\S]*?)(<\/script>)/g, function (m, openTag, innerScript, closeTag) {
 			if (innerScript.trim().length > 0) {
 				let out = path.join(startup, match[1] + '.js');
 				if (first) {
 					out = startupJS;
 					first = false;
 				}
-				if(!fs.existsSync(out)) fs.writeFileSync(out, innerScript, {encoding: 'UTF8'});
+				if (!fs.existsSync(out)) fs.writeFileSync(out, innerScript, {encoding: 'UTF8'});
 				openTag = openTag.replace(/\s*>$/, '') + ' src="' + path.relative(dir, out).replace(/[\\/]+/g, '/') + '">';
 				return openTag + closeTag;
 			} else {

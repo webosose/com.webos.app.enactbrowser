@@ -1,6 +1,5 @@
 /* BookmarkManager.module.less */
-@import '~@enact/moonstone/styles/skin.less';
-@import '~@enact/moonstone/styles/variables.less';
+@import '~@enact/agate/styles/variables-base.less';
 
 .bookmarkManager {
 	height: 75vh;
@@ -10,27 +9,18 @@
 }
 
 .button {
-	width: 160px;
-	display: inline-block;
-	.applySkins({
-		font-size: 24px;
-		font-weight: 700;
-		color: #4B4B4B;
-		.bg {
-			background-color: white;
-		}
-	});
+	width: 231px;
 }
 
 .scroller {
-	height: ~"calc(100vh - " 200px + @moon-button-height + 36px ~")";
-	padding: 20px 10px 10px 10px;
+	height: ~"calc(100vh - " 200px + @agate-button-small-height + 36px ~")";
+	padding: 21px 9px 9px 9px;
 	&.shrinkHeight {
-		// shirnk as much as bookmarkbar height (84px)
-		height: ~"calc(100vh - " 200px + @moon-button-height + 36px + 84px ~")";
+		// shrink as much as bookmarkbar height (84px)
+		height: ~"calc(100vh - " 200px + @agate-button-small-height + 36px + 84px ~")";
 	}
 }
 
 .noItem {
-	margin: 20px;
+	margin: 21px;
 }

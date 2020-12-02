@@ -1,4 +1,4 @@
-// Copyright (c) 2019 LG Electronics, Inc.
+// Copyright (c) 2019-2020 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -22,8 +22,8 @@ const DialogViewBase = kind({
 	name: 'DialogView',
 	propTypes: {
 		ids: PropTypes.array,
-		tabs: PropTypes.object,
-		selectedIndex: PropTypes.number
+		selectedIndex: PropTypes.number,
+		tabs: PropTypes.object
 	},
 	render: ({selectedIndex, ids, tabs}) => {
 		if (ids.length === 0) {

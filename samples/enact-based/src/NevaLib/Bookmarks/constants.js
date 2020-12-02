@@ -1,4 +1,4 @@
-// Copyright (c) 2018 LG Electronics, Inc.
+// Copyright (c) 2018-2020 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -13,7 +13,7 @@ const actionTypes = {
 	ADD_BOOKMARK: 'ADD_BOOKMARK',
 	REMOVE_ALL_BOOKMARKS: 'REMOVE_ALL_BOOKMARKS',
 	REMOVE_BOOKMARKS: 'REMOVE_BOOKMARKS',
-    REMOVE_BOOKMARKS_BY_URL: 'REMOVE_BOOKMARKS_BY_URL',
+	REMOVE_BOOKMARKS_BY_URL: 'REMOVE_BOOKMARKS_BY_URL',
 	MOVE_BOOKMARK: 'MOVE_BOOKMARK'
 };
 

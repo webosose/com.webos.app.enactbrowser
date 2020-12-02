@@ -1,6 +1,7 @@
 /* History.module.less */
-@import '~@enact/moonstone/styles/skin.less';
-@import '~@enact/moonstone/styles/variables.less';
+@import '~@enact/agate/styles/skin.less';
+@import '~@enact/agate/styles/variables.less';
+@import "~@enact/agate/styles/variables-base.less";
 
 .history {
 	height: 75vh;
@@ -10,24 +11,16 @@
 }
 
 .button {
-	width: 160px;
+	width: 210px;
 	display: inline-block;
-	.applySkins({
-		font-size: 24px;
-		font-weight: 700;
-		color: #4B4B4B;
-		.bg {
-			background-color: white;
-		}
-	});
 }
 
 .list {
-	height: ~"calc(100vh - " 200px + @moon-button-height + 36px ~")";
+	height: ~"calc(100vh - " 200px + @agate-button-height + 36px ~")";
 	padding: 10px;
 	margin-top: 20px;
 	&.shrinkHeight {
-		// shirnk as much as bookmarkbar height (84px)
-		height: ~"calc(100vh - " 200px + @moon-button-height + 36px + 84px ~")";
+		// shrink as much as bookmarkbar height (84px)
+		height: ~"calc(100vh - " 200px + @agate-button-height + 36px + 84px ~")";
 	}
 }

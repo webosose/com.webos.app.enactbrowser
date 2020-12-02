@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2019 LG Electronics, Inc.
+// Copyright (c) 2018-2020 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -12,7 +12,7 @@
  */
 
 import {connect} from 'react-redux';
-import CheckboxItem from '@enact/moonstone/CheckboxItem';
+import CheckboxItem from '@enact/agate/CheckboxItem';
 
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
@@ -23,16 +23,16 @@ import css from './SiteFilteringItem.module.less';
 
 class SiteFilteringItemBase extends Component {
 	static propTypes = {
-		isApproved: PropTypes.bool,
 		index: PropTypes.number,
+		isApproved: PropTypes.bool,
 		onToggle: PropTypes.func,
 		selected: PropTypes.bool,
 		url: PropTypes.string
-	}
+	};
 
 	onToggle = (ev) => {
 		this.props.onToggle(this.props.index, ev.selected);
-	}
+	};
 
 	render () {
 		const {selected, url, ...rest} = this.props;
@@ -54,7 +54,7 @@ class SiteFilteringItemBase extends Component {
 
 const mapStateToProps = ({approvedSitesUIState, blockedSitesUIState}, {isApproved, index}) => ({
 	selected: isApproved ? approvedSitesUIState.selected.includes(index) :
-							blockedSitesUIState.selected.includes(index)
+		blockedSitesUIState.selected.includes(index)
 });
 
 const mapDispatchToProps = (dispatch, {isApproved}) => ({

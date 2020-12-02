@@ -28,33 +28,33 @@ const locales = [
 ];
 const bundles = [
 	'resources',
-	'node_modules/@enact/moonstone/resources'
+	'node_modules/@enact/agate/resources'
 ];
 const defaultBundle = 'resources';
 const outDir = process.argv[3] || 'localedata';
 
 process.chdir(process.argv[2] || '.');
 
-function getSpec(locale, bundle) {
+function getSpec (locale, bundle) {
 	let pathChunk = '';
 	if (bundle !== defaultBundle) {
-		pathChunk = '_' + path.relative(process.cwd(), fs.realpathSync(bundle)).replace(/\.\.(\/)?/g, "_$1").replace(/[\\/]+/g, '_');
+		pathChunk = '_' + path.relative(process.cwd(), fs.realpathSync(bundle)).replace(/\.\.(\/)?/g, '_$1').replace(/[\\/]+/g, '_');
 	}
 	return 'strings' + pathChunk + '_' + locale.replace(/[-/]/g, '_');
 }
 
-if(!fs.existsSync(outDir)) fs.mkdirSync(outDir);
+if (!fs.existsSync(outDir)) fs.mkdirSync(outDir);
 
-const prelude = 'window.ilibData = window.moonstoneILibCache = window.ilibData || {};\n';
+const prelude = 'window.ilibData = window.agateILibCache = window.ilibData || {};\n';
 
 locales.forEach(locale => {
 	locale = locale.replace(/-/g, '/');
 	const content = bundles.reduce((result, bundle) => {
 		const spec = getSpec(locale, bundle);
-		const files = ['strings.json'].concat(locale.split(/[-/]/).map((v, i, a) => a.slice(0, i+1).join('/') + '/strings.json'));
+		const files = ['strings.json'].concat(locale.split(/[-/]/).map((v, i, a) => a.slice(0, i + 1).join('/') + '/strings.json'));
 		const data = files.reduce((obj, file) => {
 			const f = path.join(bundle, file);
-			if(fs.existsSync(f)) {
+			if (fs.existsSync(f)) {
 				obj = Object.assign(obj, JSON.parse(fs.readFileSync(f, {encoding:'UTF8'})));
 			}
 			return obj;

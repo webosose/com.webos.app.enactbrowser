@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2019 LG Electronics, Inc.
+// Copyright (c) 2018-2020 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -31,15 +31,16 @@ if (placeholder) {
 
 class BookmarkBarBase extends Component {
 	static propTypes = {
-		data: PropTypes.array,
 		browser: PropTypes.object,
 		component: PropTypes.any,
+		data: PropTypes.array,
+		moveBookmarkSelected: PropTypes.func,
 		showingBookmark: PropTypes.bool
-	}
+	};
 
 	static defaultProps = {
 		showingBookmark: true
-	}
+	};
 
 	bookmarks = () => {
 		const
@@ -66,7 +67,7 @@ class BookmarkBarBase extends Component {
 				{items}
 			</div>
 		);
-	}
+	};
 
 	onClick = (ev) => {
 		const
@@ -78,16 +79,16 @@ class BookmarkBarBase extends Component {
 			browser.navigate(url);
 			Spotlight.pause();
 		}
-	}
+	};
 
 	onClickIcon = () => {
 		this.props.browser.openBookmarks();
-	}
+	};
 
 	onMove = (fromIndex, toIndex) => {
 		this.props.browser.bookmarks.moveBookmark(fromIndex, toIndex);
 		this.props.moveBookmarkSelected(fromIndex, toIndex);
-	}
+	};
 
 	render = () => {
 		const {showingBookmark, ...rest} = this.props;
@@ -103,7 +104,7 @@ class BookmarkBarBase extends Component {
 				</div>
 			) : null
 		);
-	}
+	};
 }
 
 const SortableBookmarkBar = Sortable({component: Bookmark, placeholder}, BookmarkBarBase);

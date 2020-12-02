@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2019 LG Electronics, Inc.
+// Copyright (c) 2018-2020 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -11,13 +11,15 @@
  *
  */
 
+import Button from '@enact/agate/Button';
+import ContextualPopupDecorator from '@enact/agate/ContextualPopupDecorator';
+import Picker from '@enact/agate/Picker';
 import kind from '@enact/core/kind';
 import $L from '@enact/i18n/$L';
-import {connect} from 'react-redux';
-import ContextualPopupDecorator from '@enact/moonstone/ContextualPopupDecorator';
-import Picker from '@enact/moonstone/Picker'
-import IconButton from '@enact/moonstone/IconButton'
+import PropTypes from 'prop-types';
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import TooltipDecorator from '@enact/agate/TooltipDecorator';
 
 import {TabTypes} from '../../NevaLib/BrowserModel';
 
@@ -26,17 +28,17 @@ import css from './ZoomControl.module.less';
 const ZoomIconButton = kind({
 	name: 'ZoomIconButton',
 	render: (props) => (
-		<IconButton
+		<TooltipButton
+			{...props}
+			icon="plus"
 			tooltipText={$L('Zoom')}
 			size="small"
-			{...props}
-		>
-			plus
-		</IconButton>
+		/>
 	)
 });
 
 const ZoomPopupButton = ContextualPopupDecorator(ZoomIconButton);
+const TooltipButton = TooltipDecorator({tooltipDestinationProp: 'decoration'}, Button);
 
 const
 	zoomLabels = [
@@ -59,42 +61,47 @@ const
 	];
 
 class ZoomControlBase extends Component {
+	static propTypes = {
+		browser: PropTypes.any
+	};
+
 	constructor (props) {
 		super(props);
 		this.state = {
 			isOpened: false,
-			zoom: zoomFactors.indexOf(props.browser.zoomFactor? props.browser.zoomFactor : 1)
-		}
+			zoom: zoomFactors.indexOf(props.browser.zoomFactor ? props.browser.zoomFactor : 1)
+		};
 	}
 
 	renderPopup = () => (
 		<div>
 			<Picker
-				incrementIcon="plus"
-				decrementIcon="minus"
+				css={css}
 				orientation="vertical"
-				width={6}
 				onChange={this.onChange}
+				skinVariants={{'night': false}}
 				value={this.state.zoom}
 			>
 				{zoomLabels}
 			</Picker>
 		</div>
-	)
+	);
 
 	onChange = (ev) => {
 		this.props.browser.setZoom(zoomFactors[ev.value]);
 		this.setState({zoom: ev.value});
-	}
+	};
 
 	toggleMenu = () => {
 		const isOpened = !this.state.isOpened;
-		setTimeout(()=> {this.setState({isOpened});}, 100);
-	}
+		setTimeout(() => {
+			this.setState({isOpened});
+		}, 100);
+	};
 
 	closeMenu = () => {
 		this.setState({isOpened: false});
-	}
+	};
 
 	render () {
 		const props = Object.assign({}, this.props);
@@ -104,12 +111,10 @@ class ZoomControlBase extends Component {
 		return (
 			<ZoomPopupButton
 				className={css.zoomPopupButton}
-				direction="down"
 				onClick={this.toggleMenu}
 				onClose={this.closeMenu}
 				open={this.state.isOpened}
 				popupComponent={this.renderPopup}
-				size="small"
 				tooltipText={$L('Zoom')}
 				{...props}
 			/>
@@ -124,13 +129,13 @@ const mapStateToProps = ({tabsState}) => {
 	if (ids.length > 0) {
 		return {
 			disabled: (tabs[ids[selectedIndex]].type !== TabTypes.WEBVIEW)
-		}
+		};
 	} else {
 		return {
 			disabled: true
 		};
 	}
-}
+};
 
 const ZoomControl = connect(mapStateToProps, null)(ZoomControlBase);
 

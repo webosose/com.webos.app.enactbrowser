@@ -1,4 +1,4 @@
-// Copyright (c) 2018 LG Electronics, Inc.
+// Copyright (c) 2018-2020 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -10,23 +10,23 @@ import {HistoryBase} from 'js-browser-lib/HistoryBase';
 import {HistoryIdbStorage} from 'js-browser-lib/HistoryIdbStorage';
 
 import {
-    setRetrievedHistoryData,
+	setRetrievedHistoryData
 } from './actions';
 
 class HistoryReduxStore {
-    constructor(reduxStore) {
-        this.store = reduxStore;
-    }
+	constructor (reduxStore) {
+		this.store = reduxStore;
+	}
 
-    update = (data) => {
-        this.store.dispatch(setRetrievedHistoryData(data));
-    }
+	update = (data) => {
+		this.store.dispatch(setRetrievedHistoryData(data));
+	};
 }
 
 class History extends HistoryBase {
-    constructor(reduxStore, indexedDb) {
-        super(new HistoryReduxStore(reduxStore), new HistoryIdbStorage(indexedDb));
-    }
+	constructor (reduxStore, indexedDb) {
+		super(new HistoryReduxStore(reduxStore), new HistoryIdbStorage(indexedDb));
+	}
 }
 
 export default History;

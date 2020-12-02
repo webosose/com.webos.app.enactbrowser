@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2019 LG Electronics, Inc.
+// Copyright (c) 2018-2020 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -12,18 +12,18 @@
  */
 
 import $L from '@enact/i18n/$L';
-import BodyText from '@enact/moonstone/BodyText';
-import Button from '@enact/moonstone/Button';
+import BodyText from '@enact/agate/BodyText';
+import Button from '@enact/agate/Button';
 import {connect} from 'react-redux';
 import Group from '@enact/ui/Group';
-import Icon from '@enact/moonstone/Icon';
-import Input from '@enact/moonstone/Input';
-import Notification from '@enact/moonstone/Notification';
+// import Icon from '@enact/agate/Icon';
+// import Input from '@enact/agate/Input';
+// import Popup from '@enact/agate/Popup';
 import PropTypes from 'prop-types';
-import RadioItem from '@enact/moonstone/RadioItem';
+import RadioItem from '@enact/agate/RadioItem';
 import React, {Component} from 'react';
 import ri from '@enact/ui/resolution';
-import VirtualList from '@enact/moonstone/VirtualList';
+import VirtualList from '@enact/agate/VirtualList';
 
 import {
 	selectAllApprovedSites,
@@ -43,7 +43,7 @@ import css from './SiteFiltering.module.less';
 const filteringOptions = ['off', 'whitelist', 'blacklist'];
 const filteringOptionsText = [$L('Off'), $L('Approved Sites'), $L('Blocked Sites')];
 
-function isApproved(option) {
+function isApproved (option) {
 	return option === filteringOptions[1];
 }
 
@@ -51,11 +51,17 @@ class SiteFilteringBase extends Component {
 	static propTypes = {
 		browser: PropTypes.any,
 		data: PropTypes.array,
-		selected: PropTypes.array,
-		siteFiltering: PropTypes.string,
+		deselectAllApprovedSites: PropTypes.func,
+		deselectAllBlockedSites: PropTypes.func,
+		deselectAllSites: PropTypes.func,
+		selectAllApprovedSites: PropTypes.func,
+		selectAllBlockedSites: PropTypes.func,
 		selectAllSites: PropTypes.func,
-		deselectAllSites: PropTypes.func
-	}
+		selected: PropTypes.array,
+		setApprovedSites: PropTypes.func,
+		setBlockedSites: PropTypes.func,
+		siteFiltering: PropTypes.string
+	};
 
 	constructor (props) {
 		super(props);
@@ -69,21 +75,20 @@ class SiteFilteringBase extends Component {
 
 	loadSiteList () {
 		const {
-				siteFiltering: filteringMode,
-				browser: {siteFiltering: {filterStorages}}
-			} = this.props;
+			siteFiltering: filteringMode,
+			browser: {siteFiltering: {filterStorages}}
+		} = this.props;
 
 		if (filteringMode === filteringOptions[1]) {
 			filterStorages[filteringMode].getAll()
-			.then((values) => {
-				this.props.setApprovedSites(values);
-			})
-		}
-		else if (filteringMode === filteringOptions[2]) {
+				.then((values) => {
+					this.props.setApprovedSites(values);
+				});
+		} else if (filteringMode === filteringOptions[2]) {
 			filterStorages[filteringMode].getAll()
-			.then((values) => {
-				this.props.setBlockedSites(values);
-			})
+				.then((values) => {
+					this.props.setBlockedSites(values);
+				});
 		}
 	}
 
@@ -93,9 +98,9 @@ class SiteFilteringBase extends Component {
 			newMode = filteringOptions[selected];
 
 		settings.setSiteFiltering(newMode)
-		.then(() => siteFiltering.setMode(newMode))
-		.then(() => this.loadSiteList());
-	}
+			.then(() => siteFiltering.setMode(newMode))
+			.then(() => this.loadSiteList());
+	};
 
 	renderItem = ({index, ...rest}) => {
 		const data = this.props.data;
@@ -106,16 +111,16 @@ class SiteFilteringBase extends Component {
 				url={data[index]}
 				isApproved={isApproved(this.props.siteFiltering)}
 			/>
-		)
-	}
+		);
+	};
 
 	onChange = (ev) => {
 		this.setState({urlToAdd: ev.value});
-	}
+	};
 
 	onAdd = (ev) => {
 		ev.preventDefault();
-	}
+	};
 
 	onSelectAll = () => {
 		const
@@ -138,38 +143,38 @@ class SiteFilteringBase extends Component {
 				this.props.selectAllBlockedSites(ids);
 			}
 		}
-	}
+	};
 
 	onDelete = () => {
 		this.setState({deletePopupOpen: true});
-	}
+	};
 
 	onDeleteYes = () => {
 		this.setState({deletePopupOpen: false});
-	}
+	};
 
 	onDeleteNo = () => {
 		this.setState({deletePopupOpen: false});
-	}
+	};
 
 	onOpenResetPinPopup = () => {
 		this.setState({resetPinCodePopupOpen: true});
-	}
+	};
 
 	onCloseResetPinPopup = () => {
 		this.setState({resetPinCodePopupOpen: false});
-	}
+	};
 
 	onSubmitPinCode = (pinCode) => {
 		this.props.browser.settings.setPinCode(pinCode)
 			.then(() => {
 				this.setState({resetPinCodePopupOpen: false});
 			});
-	}
+	};
 
 	render () {
 		const
-			{data, selected, siteFiltering, ...rest} = this.props,
+			{data, siteFiltering, ...rest} = this.props,
 			optionIndex = filteringOptions.indexOf(siteFiltering);
 
 		delete rest.browser;
@@ -185,7 +190,7 @@ class SiteFilteringBase extends Component {
 				<BodyText>Site Filtering</BodyText>
 				<Group
 					childComponent={RadioItem}
-					itemProps={{inline: true}}
+					itemProps={{inline: true, className: css.inlineGroupItem}}
 					select="radio"
 					selectedProp="selected"
 					defaultSelected={optionIndex}
@@ -204,7 +209,8 @@ class SiteFilteringBase extends Component {
 				{(optionIndex === 1 || optionIndex === 2) &&
 					<div>
 						{/*
-						<Notification
+						<Popup
+							centered
 							open={this.state.deletePopupOpen}
 							noAutoDismiss
 						>
@@ -215,7 +221,7 @@ class SiteFilteringBase extends Component {
 								<Button onClick={this.onDeleteNo}>No</Button>
 								<Button onClick={this.onDeleteYes}>Yes</Button>
 							</buttons>
-						</Notification>
+						</Popup>
 						<form onSubmit={this.onAdd}>
 							<div className={css.inputContainer}>
 								<Input
@@ -251,8 +257,8 @@ class SiteFilteringBase extends Component {
 									itemRenderer={this.renderItem}
 									className={css.list}
 									itemSize={ri.scale(70)}
-								/>
-							: null
+								/> :
+								null
 						}
 					</div>
 				}

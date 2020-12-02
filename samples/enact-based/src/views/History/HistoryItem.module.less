@@ -1,31 +1,48 @@
 /* HistoryItem.module.less */
-@import '~@enact/moonstone/styles/skin.less';
+@import '~@enact/agate/styles/skin.less';
+@import '~@enact/agate/styles/mixins.less';
 
 .historyItem {
-	height: 70px;
+	height: 72px;
 	width: 100%;
 	display: flex;
 	align-items: center;
 }
 
 .checkbox {
-	margin-right: 10px;
+	margin-right: 9px;
 	.applySkins({
 		color: white;
 	});
 }
 
 .title {
+	.applySkins({
+		line-height: 72px;
+	});
+}
+
+.title {
 	width: 95%;
-	line-height: 70px;
 }
 
 .date {
+	width: 100%;
 	.applySkins({
 		color: lightgrey;
 		opacity: 1;
-	});
+		line-height: 60px;
 
-	width: 100%;
-	border-bottom: solid 1px;
+		&:last-child {
+			border-bottom-color: @agate-accent;
+
+		}
+
+		.focus({
+			border-color: transparent;
+			border-bottom-color: @agate-accent;
+			background-color: transparent;
+			color: lightgrey;
+		});
+	});
 }

@@ -307,7 +307,7 @@ class BrowserBase {
 
         let tab_id = this.tabs.getSelectedId();
         let tab_family_id = null;
-        
+
         if (this.webViews[tab_id].tabFamilyId === null) {
             this.webViews[tab_id].tabFamilyId = tab_id;
             tab_family_id = tab_id;

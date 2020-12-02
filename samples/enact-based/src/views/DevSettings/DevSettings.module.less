@@ -1,28 +1,43 @@
 /* DevSettings.module.less */
-@import '~@enact/moonstone/styles/mixins.less';
-@import '~@enact/moonstone/styles/skin.less';
+@import '~@enact/agate/styles/mixins.less';
+@import '~@enact/agate/styles/skin.less';
+@import '~@enact/agate/styles/variables-base.less';
 
 .scroller {
-	height: 75vh;
+	height: ~"calc(100vh - " 236px ~")";
+	&.shrinkHeight {
+		// shirnk as much as bookmarkbar height (84px)
+		height: ~"calc(100vh - " 238px + 84px ~")";
+	}
 }
 
 .settings {
 	width: 100%;
-	padding: 0 100px 20px 100px;
+	padding: 0 100px 21px 100px;
 	flex: 1;
 	box-sizing: border-box;
 }
 
 .indent {
-	padding-left: 32px;
+	padding-left: 33px;
+}
+
+.inlineGroupItem {
+	.applySkins({
+		border-bottom-color: transparent;
+	})
 }
 
 p {
-	-webkit-margin-after: 16px;
-	-webkit-margin-before: 16px;
+	-webkit-margin-after: 15px;
+	-webkit-margin-before: 15px;
 }
 
 .menu {
 	display: inline-block;
 	margin-right: 24px;
+}
+
+.pickerParent {
+	display: flex;
 }

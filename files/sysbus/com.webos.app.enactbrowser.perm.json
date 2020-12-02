@@ -4,6 +4,7 @@
         "applications.internal",
         "intent.operation",
         "media",
+        "session.management",
         "settings.read",
         "signals.all"
     ],

@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2019 LG Electronics, Inc.
+// Copyright (c) 2018-2020 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -14,11 +14,14 @@
 import $L from '@enact/i18n/$L';
 import {connect} from 'react-redux';
 import kind from '@enact/core/kind';
-import IconButton from '@enact/moonstone/IconButton';
+import Button from '@enact/agate/Button';
 import PropTypes from 'prop-types';
 import React from 'react';
+import TooltipDecorator from '@enact/agate/TooltipDecorator';
 
 import css from './NavigationBox.module.less';
+
+const TooltipButton = TooltipDecorator({tooltipDestinationProp: 'decoration'}, Button);
 
 const nop = () => {};
 
@@ -29,6 +32,7 @@ const NavigationBoxBase = kind({
 		browser: PropTypes.object,
 		canGoBack: PropTypes.bool,
 		canGoForward: PropTypes.bool,
+		dispatch: PropTypes.func,
 		onBack: PropTypes.func,
 		onForward: PropTypes.func
 	},
@@ -60,22 +64,22 @@ const NavigationBoxBase = kind({
 
 		return (
 			<div {...rest}>
-				<IconButton
+				<TooltipButton
 					backgroundOpacity="transparent"
 					disabled={!canGoBack}
 					onClick={onBack}
 					tooltipText={$L('Previous')}
-				>
-					arrowlargeleft
-				</IconButton>
-				<IconButton
+					icon="arrowlargeleft"
+					size="small"
+				/>
+				<TooltipButton
 					backgroundOpacity="transparent"
 					disabled={!canGoForward}
 					onClick={onForward}
 					tooltipText={$L('Next')}
-				>
-					arrowlargeright
-				</IconButton>
+					icon="arrowlargeright"
+					size="small"
+				/>
 			</div>
 		);
 	}
@@ -91,7 +95,7 @@ const mapStateToProps = ({tabsState}) => {
 			return {
 				canGoBack: navState.canGoBack,
 				canGoForward: navState.canGoForward
-			}
+			};
 		}
 	} else {
 		return {

@@ -6,17 +6,19 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
-/*global chrome*/
+/* global chrome*/
 /**
  * Main
  *
  */
 
 import $L from '@enact/i18n/$L';
-import {contextTypes} from '@enact/i18n/I18nDecorator';
-import IconButton from '@enact/moonstone/IconButton';
+import contextTypes from '@enact/i18n/I18nDecorator';
+import Button from '@enact/agate/Button';
 import Spotlight from '@enact/spotlight';
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
+import TooltipDecorator from '@enact/agate/TooltipDecorator';
 
 import {Browser, TabTypes} from '../../NevaLib/BrowserModel';
 
@@ -26,15 +28,22 @@ import Dialog from '../../components/Dialog';
 import Menu from '../../components/Menu';
 import NavigationBox from '../../components/NavigationBox';
 import Omnibox from '../../components/Omnibox';
+import Share from '../../components/Share';
 import {TabBar} from '../../components/TabBar';
 import ZoomControl from '../../components/ZoomControl';
 
 import css from './Main.module.less';
 
+const TooltipButton = TooltipDecorator({tooltipDestinationProp: 'decoration'}, Button);
+
 const maxTab = 7;
 
 class Main extends Component {
 	static contextTypes = contextTypes;
+
+	static propTypes = {
+		store: PropTypes.any
+	};
 
 	constructor (props) {
 		super(props);
@@ -81,7 +90,7 @@ class Main extends Component {
 		}
 	}
 
-	componentWillUnmount() {
+	componentWillUnmount () {
 		document.removeEventListener('webOSRelaunch');
 	}
 
@@ -95,28 +104,28 @@ class Main extends Component {
 		} else {
 			return null;
 		}
-	}
+	};
 
 	onDialogClose = () => {
 		this.setState({dialog: null});
-	}
+	};
 
 	onDialog = (ev) => {
 		ev.preventDefault();
 		this.setState({dialog: ev});
-	}
+	};
 
 	onFullScreen = () => {
 		this.setState({fullScreen: true});
-	}
+	};
 
 	onExitFullScreen = () => {
 		this.setState({fullScreen: false});
-	}
+	};
 
 	onClick = () => {
 		Spotlight.resume();
-	}
+	};
 
 	onMouseLeave = () => {
 		if (this.getSelectedWebview()) {
@@ -124,7 +133,7 @@ class Main extends Component {
 		} else if (document.activeElement.tagName !== 'INPUT') {
 			Spotlight.resume();
 		}
-	}
+	};
 
 	onRelaunch = (ev) => {
 		if (ev.detail) {
@@ -144,11 +153,11 @@ class Main extends Component {
 				}
 			}
 		}
-	}
+	};
 
 	onLocaleChange = () => {
-		chrome.runtime.sendMessage({event: "localechange"});
-	}
+		chrome.runtime.sendMessage({event: 'localechange'});
+	};
 
 	render () {
 		const
@@ -160,17 +169,18 @@ class Main extends Component {
 		return (
 			<div {...props}>
 				<div onClick={this.onClick} onMouseLeave={this.onMouseLeave}>
-					{ fullScreen == false && <div className={css['flexbox-row']}>
+					{ fullScreen === false && <div className={css['flexbox-row']}>
 						<NavigationBox browser={browser} />
+						<Share />
 						<Omnibox browser={browser} />
 						<ZoomControl browser={browser} />
-						<Menu browser={browser}/>
-						<IconButton
+						<Menu browser={browser} />
+						<TooltipButton
 							onClick={this.onFullScreen}
+							icon="fullscreen"
 							tooltipText={$L('Full screen')}
-						>
-							fullscreen
-						</IconButton>
+							size="small"
+						/>
 					</div> }
 					<TabBar fullScreen={fullScreen} browser={browser} />
 				</div>
@@ -180,16 +190,16 @@ class Main extends Component {
 					onExitFullScreen={this.onExitFullScreen}
 					fullScreen={fullScreen}
 				/>
-			{
-				dialog ?
-				<Dialog
-					dialog={dialog}
-					onOK={this.onDialogClose}
-					onCancel={this.onDialogClose}
-				/>
-				: null
-			}
-				{fullScreen == false && <DialogView />}
+				{
+					dialog ?
+						<Dialog
+							dialog={dialog}
+							onOK={this.onDialogClose}
+							onCancel={this.onDialogClose}
+						/> :
+						null
+				}
+				{fullScreen === false && <DialogView />}
 			</div>
 		);
 	}

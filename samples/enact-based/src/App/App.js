@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2019 LG Electronics, Inc.
+// Copyright (c) 2018-2020 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -7,10 +7,12 @@
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
 import kind from '@enact/core/kind';
-import MoonstoneDecorator from '@enact/moonstone/MoonstoneDecorator';
+import ThemeDecorator from '@enact/agate/ThemeDecorator';
 import React from 'react';
 
 import Main from '../views/Main';
+
+import AppDecorator from './AppDecorator';
 
 import css from './App.module.less';
 
@@ -27,4 +29,4 @@ const App = kind({
 	)
 });
 
-export default MoonstoneDecorator({overlay: true}, App);
+export default AppDecorator(ThemeDecorator(App));

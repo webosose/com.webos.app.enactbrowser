@@ -11,22 +11,23 @@
  *
  */
 
-import $L from '@enact/i18n/$L';
-import BodyText from '@enact/moonstone/BodyText';
-import Button from '@enact/moonstone/Button';
-import {connect} from 'react-redux';
-import classNames from 'classnames';
-import ExpandableInput from '@enact/moonstone/ExpandableInput';
-import Group from '@enact/ui/Group';
+import BodyText from '@enact/agate/BodyText';
+import Button from '@enact/agate/Button';
+import Input from '@enact/agate/Input';
+import Popup from '@enact/agate/Popup';
+import RadioItem from '@enact/agate/RadioItem';
+import Scroller from '@enact/agate/Scroller';
+import ToggleButton from '@enact/agate/ToggleButton';
 import kind from '@enact/core/kind';
-import Notification from '@enact/moonstone/Notification';
+import $L from '@enact/i18n/$L';
+import Group from '@enact/ui/Group';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import RadioItem from '@enact/moonstone/RadioItem';
 import React, {Component} from 'react';
-import Scroller from '@enact/moonstone/Scroller';
-import ToggleButton from '@enact/moonstone/ToggleButton';
+import {connect} from 'react-redux';
 
 import PinPopup from '../../components/PinPopup';
+
 import css from './Settings.module.less';
 
 const OnOffButton = kind({
@@ -37,6 +38,7 @@ const OnOffButton = kind({
 				toggleOffLabel={$L('Off')}
 				toggleOnLabel={$L('On')}
 				size="small"
+				underline
 				{...props}
 			/>
 		);
@@ -51,12 +53,12 @@ class SettingsBase extends Component {
 	static propTypes = {
 		alwaysShowBookmarks: PropTypes.bool,
 		browser: PropTypes.any,
-		startupPage: PropTypes.string,
 		homePageUrl: PropTypes.string,
-		searchEngine: PropTypes.string,
 		privateBrowsing: PropTypes.bool,
-		siteFiltering: PropTypes.string
-	}
+		searchEngine: PropTypes.string,
+		siteFiltering: PropTypes.string,
+		startupPage: PropTypes.string
+	};
 
 	constructor (props) {
 		super(props);
@@ -67,41 +69,39 @@ class SettingsBase extends Component {
 			clearing: false,
 			completePopupOpen: false,
 			matchedPin: 'yet'
-		}
+		};
 	}
 
 	onChange = (ev) => {
-		this.setState({value: ev.value});
-	}
-
-	onClose = () => {
 		const {browser} = this.props;
-		browser.settings.setHomePageUrl(this.state.value);
-	}
+		this.setState({value: ev.value});
+		browser.settings.setHomePageUrl(ev.value);
+
+	};
 
 	onToggleShowBookmarks = () => {
 		const {browser, alwaysShowBookmarks} = this.props;
 		browser.settings.setAlwaysShowBookmarks(!alwaysShowBookmarks);
-	}
+	};
 
 	onSelectStartupOption = ({selected}) => {
 		const {browser} = this.props;
 		browser.settings.setStartupPage(startupOptions[selected]);
-	}
+	};
 
 	onSelectSearchEngine = ({selected}) => {
 		const {browser} = this.props;
 		browser.settings.setSearchEngine(searchEngines[selected]);
-	}
+	};
 
 	onTogglePrivateBrowsing = () => {
 		const {browser, privateBrowsing} = this.props;
 		browser.setPrivateBrowsing(!privateBrowsing);
-	}
+	};
 
 	onClearBrowsingData = () => {
 		this.setState({clearPopupOpen: true});
-	}
+	};
 
 	onClearYes = () => {
 		const
@@ -128,15 +128,15 @@ class SettingsBase extends Component {
 				}, 1500);
 			}
 		);
-	}
+	};
 
 	onClearNo = () => {
 		this.setState({clearPopupOpen: false});
-	}
+	};
 
 	startSiteFiltering = () => {
 		this.setState({siteFilteringOpen: true});
-	}
+	};
 
 	onSubmitPinCode = (pinCode) => {
 		const {browser} = this.props;
@@ -146,11 +146,11 @@ class SettingsBase extends Component {
 		} else {
 			this.setState({matchedPin: 'incorrect'});
 		}
-	}
+	};
 
 	onClosePinPopup = () => {
 		this.setState({siteFilteringOpen: false, matchedPin: 'yet'});
-	}
+	};
 
 	render () {
 		const
@@ -164,7 +164,7 @@ class SettingsBase extends Component {
 				...rest
 			} = this.props,
 			scrollerClass = classNames(css.scroller, {[css.shrinkHeight]: alwaysShowBookmarks}),
-			settingContentsClass= classNames(className, css.settings),
+			settingContentsClass = classNames(className, css.settings),
 			startupOption = startupOptions.indexOf(startupPage);
 
 		delete rest.browser;
@@ -190,12 +190,12 @@ class SettingsBase extends Component {
 								$L('Home page:')
 							]}
 						</Group>
-						<ExpandableInput
-							disabled={(startupOption !== 2)}
-							title={$L('Enter URL')}
+						<Input
+							className={css.homePageInput}
+							placeholder={$L('Enter URL')}
 							value={this.state.value}
 							onChange={this.onChange}
-							onClose={this.onClose}
+							disabled={startupOption !== 2}
 						/>
 					</div>
 
@@ -203,7 +203,7 @@ class SettingsBase extends Component {
 					<div className={css.indent}>
 						<Group
 							childComponent={RadioItem}
-							itemProps={{inline: true}}
+							itemProps={{inline: true, className: css.inlineGroupItem}}
 							select="radio"
 							selectedProp="selected"
 							defaultSelected={searchEngines.indexOf(searchEngine)}
@@ -224,29 +224,30 @@ class SettingsBase extends Component {
 					<OnOffButton onClick={this.startSiteFiltering} selected={(siteFiltering !== 'off')} />
 					<br />
 
-					<Notification
+					<Popup
+						centered
 						open={this.state.clearPopupOpen}
 						noAutoDismiss
 					>
 						{this.state.clearing ?
-							<span>{$L('Clearing all browsing data...')}</span>
-							:
+							<span>{$L('Clearing all browsing data...')}</span> :
 							<span>{$L('Do you want to clear all browsing data?')}</span>
 						}
 						{this.state.clearing ?
 							null :
 							<buttons>
-								<Button onClick={this.onClearNo}>{$L('NO')}</Button>
-								<Button onClick={this.onClearYes}>{$L('YES')}</Button>
+								<Button onClick={this.onClearNo} size="small">{$L('NO')}</Button>
+								<Button onClick={this.onClearYes} size="small">{$L('YES')}</Button>
 							</buttons>
 						}
-					</Notification>
-					<Notification
+					</Popup>
+					<Popup
+						centered
 						open={this.state.completePopupOpen}
 						noAutoDismiss
 					>
 						<span>{$L('All browsing data has been deleted.')}</span>
-					</Notification>
+					</Popup>
 
 					<Button onClick={this.onClearBrowsingData} css={css} size="small">{$L('CLEAR BROWSING DATA')}</Button>
 

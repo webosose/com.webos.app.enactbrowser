@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2019 LG Electronics, Inc.
+// Copyright (c) 2018-2020 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -14,17 +14,20 @@
 import $L from '@enact/i18n/$L';
 import {connect} from 'react-redux';
 import classNames from 'classnames';
+import Button from '@enact/agate/Button';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
+import TooltipDecorator from '@enact/agate/TooltipDecorator';
 
-import {BrowserIconButton as IconButton} from '../BrowserIconButton';
 import Tab from './Tab';
 import {TabTypes} from '../../NevaLib/BrowserModel';
 import Sortable from '../Sortable';
 import Spotlight from '@enact/spotlight';
 
 import css from './TabBar.module.less';
+
+const TooltipButton = TooltipDecorator({tooltipDestinationProp: 'decoration'}, Button);
 
 const placeholder = (typeof document === 'object') ? document.createElement('li') : null;
 
@@ -44,11 +47,12 @@ const NewTabButton = kind({
 	},
 	render: ({onNew, ...rest}) => (
 		<li {...rest}>
-			<IconButton
+			<TooltipButton
 				backgroundOpacity="transparent"
 				onClick={onNew}
-				type="newTabButton"
-				withBg
+				icon="plus"
+				size="small"
+				tooltipText={$L('New Tab')}
 			/>
 		</li>
 	)
@@ -58,12 +62,12 @@ class TabBarBase extends Component {
 	static propTypes = {
 		browser: PropTypes.object,
 		component: PropTypes.any,
+		fullScreen: PropTypes.bool,
+		ids: PropTypes.array,
 		numOfTabs: PropTypes.number,
 		selectedIndex: PropTypes.number,
-		tabStates: PropTypes.object,
-		ids: PropTypes.array,
-		fullScreen: PropTypes.bool
-	}
+		tabStates: PropTypes.object
+	};
 
 	componentWillReceiveProps (nextProps) {
 		if (this.props.selectedIndex !== nextProps.selectedIndex) {
@@ -72,9 +76,9 @@ class TabBarBase extends Component {
 				prevSelectedId = ids[this.props.selectedIndex],
 				webViewToBlur = browser.webViews[prevSelectedId];
 
-				if (webViewToBlur) {
-					webViewToBlur.blur();
-				}
+			if (webViewToBlur) {
+				webViewToBlur.blur();
+			}
 		}
 	}
 
@@ -143,7 +147,7 @@ class TabBarBase extends Component {
 		}
 
 		return tabs;
-	}
+	};
 
 	onNew = () => {
 		const {browser, numOfTabs} = this.props;
@@ -151,11 +155,11 @@ class TabBarBase extends Component {
 		if (numOfTabs < browser.tabs.maxTabs) {
 			browser.createNewTab();
 		}
-	}
+	};
 
 	onMove = (fromIndex, toIndex) => {
 		this.props.browser.moveTab(fromIndex, toIndex);
-	}
+	};
 
 	render = () => {
 		const
@@ -173,13 +177,13 @@ class TabBarBase extends Component {
 
 		return (
 			!fullScreen ?
-			<ul className={classes} {...rest}>
-				{this.tabs()}
-				{numOfTabs < 7 ? <NewTabButton onNew={this.onNew} /> : null}
-			</ul>
-			: null
+				<ul className={classes} {...rest}>
+					{this.tabs()}
+					{numOfTabs < 7 ? <NewTabButton onNew={this.onNew} /> : null}
+				</ul> :
+				null
 		);
-	}
+	};
 }
 
 const SortableTabBar = Sortable({component: Tab, placeholder}, TabBarBase);
@@ -191,7 +195,7 @@ const mapStateToProps = ({tabsState}) => {
 		numOfTabs: ids.length,
 		ids,
 		selectedIndex,
-		tabStates: tabs,
+		tabStates: tabs
 	};
 };
 
