@@ -1,0 +1,22 @@
+{
+    "name": "com.webos.app.enactbrowser",
+    "id": "enactbrowser",
+    "projectType": "webos-web",
+    "sourceLocale": "en-KR",
+    "pseudoLocale": ["zxx-XX", "zxx-Cyrl-XX", "zxx-Hans-XX", "zxx-Hebr-XX"],
+    "resourceDirs": {
+        "json":"resources"
+    },
+    "resourceFileTypes": {
+        "json":"ilib-loctool-webos-json-resource"
+    },
+    "plugins": [
+        "ilib-loctool-webos-javascript",
+        "ilib-loctool-webos-appinfo-json"
+    ],
+    "excludes": [
+        ".*",
+        "assets",
+        "scripts"
+    ]
+}
