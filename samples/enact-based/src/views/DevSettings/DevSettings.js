@@ -50,8 +50,8 @@ class SimplePolicySettings extends Component {
 	constructor (props) {
 		super(props);
 		this.state = {
-			maxActive: props.simplePolicy.maxActiveTabFamilies,
-			maxSuspended: props.simplePolicy.maxSuspendedTabFamilies
+			maxActiveTabFamilies: props.simplePolicy.maxActiveTabFamilies,
+			maxSuspendedTabFamilies: props.simplePolicy.maxSuspendedTabFamilies
 		};
 	}
 
@@ -60,7 +60,7 @@ class SimplePolicySettings extends Component {
 		simplePolicy.setMaxActiveTabFamilies(ev.value)
 			.catch((err) => console.error(`SimplePolicySettings::setMaxActiveTabFamilies error: ${err}`)) // eslint-disable-line no-console
 			.finally(() => this.setState({
-				maxActive: simplePolicy.maxActiveTabFamilies
+				maxActiveTabFamilies: simplePolicy.maxActiveTabFamilies
 			}));
 	};
 
@@ -69,7 +69,7 @@ class SimplePolicySettings extends Component {
 		simplePolicy.setMaxSuspendedTabFamilies(ev.value)
 			.catch((err) => console.error(`SimplePolicySettings::setMaxSuspendedTabFamilies error: ${err}`)) // eslint-disable-line no-console
 			.finally(() => this.setState({
-				maxSuspended: simplePolicy.maxSuspendedTabFamilies
+				maxSuspendedTabFamilies: simplePolicy.maxSuspendedTabFamilies
 			}));
 	};
 
@@ -81,7 +81,7 @@ class SimplePolicySettings extends Component {
 					<div className={css.pickerParent}>
 						<RangePicker
 							min={1} max={100}
-							value={this.state.maxActive}
+							value={this.state.maxActiveTabFamilies}
 							onChange={this.onChangeMaxActiveTabFamilies}
 							orientation="horizontal"
 						/>
@@ -90,7 +90,7 @@ class SimplePolicySettings extends Component {
 					<div className={css.pickerParent}>
 						<RangePicker
 							min={0} max={100}
-							value={this.state.maxSuspended}
+							value={this.state.maxSuspendedTabFamilies}
 							onChange={this.onChangeMaxSuspendedTabFamilies}
 							orientation="horizontal"
 						/>
