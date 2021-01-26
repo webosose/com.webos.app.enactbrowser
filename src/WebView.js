@@ -74,17 +74,6 @@ const WebViewMixinBase = {
     suspend: function WebViewMixin_suspend() {
         console.log('SUSPEND ' + this.rootId);
         if (this.activeState === 'activated') {
-            let script = `
-                var elements = document.body.getElementsByClassName('vkbInset');
-                if (elements.length !== 0) {
-                    window.scrollTo(0, window.pageYOffset - parseInt(elements[0].style.height));
-                    for (let i = elements.length - 1; i >= 0; --i) {
-                        elements[i].remove();
-                    }
-                }
-            `;
-            script += `document.activeElement.blur();`;
-            this.executeScript({ code: script});
             if (WebView.prototype.suspend) {
                 WebView.prototype.suspend.call(this);
             }
