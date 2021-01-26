@@ -1,18 +1,16 @@
 {
     "com.webos.app.enactbrowser-*": [
-        "applications",
-        "applications.internal",
+        "application.operation",
+        "application.launcher",
         "intent.operation",
-        "media",
+        "media.operation",
         "session.management",
-        "settings.read",
-        "signals.all"
+        "settings.query"
     ],
     "com.webos.chromium.memory.*": [
-        "system",
-        "signals.all"
+        "memorymanager.query"
     ],
     "com.webos.rm.client.*": [
-        "media"
+        "media.operation"
     ]
 }
