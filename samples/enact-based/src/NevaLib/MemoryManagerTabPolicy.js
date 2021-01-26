@@ -8,7 +8,7 @@
 
 import {RendererPerTabPolicy as SimplePolicy} from './RendererPerTabPolicy.js';
 
-const maxActiveTabFamilies = 1;
+const maxActive = 1;
 
 class MemoryManagerTabPolicy {
 	constructor (
@@ -21,7 +21,7 @@ class MemoryManagerTabPolicy {
 		this.simplePolicy = new SimplePolicy(
 			tabs,
 			webViews,
-			maxActiveTabFamilies,
+			maxActive,
 			maxSuspendedCritical
 		);
 		this.maxSuspendedNormal = maxSuspendedNormal;
@@ -76,8 +76,8 @@ class MemoryManagerTabPolicy {
 	_handleLevelChanged = (ev) => {
 		console.log('Handle memory level change ' + ev.current); // eslint-disable-line no-console
 		const policy = this.simplePolicy;
-		policy.maxSuspendedTabFamilies = this.statusToMaxSuspended(ev.current);
-		while (policy.queue.length > policy.maxSuspendedTabFamilies + policy.maxActiveTabFamilies) {
+		policy.maxSuspended = this.statusToMaxSuspended(ev.current);
+		while (policy.queue.length > policy.maxSuspended + policy.maxActive) {
 			const id = policy.queue.pop();
 			policy.webViews[id].deactivate();
 		}
