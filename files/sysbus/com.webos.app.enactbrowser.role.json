@@ -1,6 +1,7 @@
 {
     "appId": "com.webos.app.enactbrowser",
     "type": "privileged",
+    "trustLevel" : "oem",
     "allowedNames": [
         "com.webos.app.enactbrowser-*"
     ],
