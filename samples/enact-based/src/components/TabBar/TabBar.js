@@ -77,6 +77,12 @@ class TabBarBase extends Component {
 				webViewToBlur = browser.webViews[prevSelectedId];
 
 			if (webViewToBlur) {
+				// Restore WebView content after shifting from VKB if needed
+				let script = `
+					if (typeof document_style_transform_backup != "undefined")
+						document.body.style.transform = document_style_transform_backup;
+					`;
+				webViewToBlur.executeScript({ code: script});
 				webViewToBlur.blur();
 			}
 		}

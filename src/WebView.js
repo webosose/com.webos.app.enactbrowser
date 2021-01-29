@@ -74,6 +74,12 @@ const WebViewMixinBase = {
     suspend: function WebViewMixin_suspend() {
         console.log('SUSPEND ' + this.rootId);
         if (this.activeState === 'activated') {
+            // Restore WebView content after shifting from VKB if needed
+            let script = `
+			    if (typeof document_style_transform_backup != "undefined")
+				    document.body.style.transform = document_style_transform_backup;
+            `;
+            this.executeScript({ code: script});
             if (WebView.prototype.suspend) {
                 WebView.prototype.suspend.call(this);
             }

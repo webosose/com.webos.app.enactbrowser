@@ -77,6 +77,7 @@ class Main extends Component {
 
 		document.addEventListener('webOSRelaunch', this.onRelaunch);
 		document.addEventListener('webOSLocaleChange', this.onLocaleChange);
+		document.addEventListener('shiftContent', this.onShiftContent);
 	}
 
 	componentDidUpdate () {
@@ -157,6 +158,40 @@ class Main extends Component {
 
 	onLocaleChange = () => {
 		chrome.runtime.sendMessage({event: 'localechange'});
+	};
+
+	onShiftContent = (ev) => {
+		const height = ev.detail;
+		if (height > 0) {
+			this.shiftWebView(height);
+		} else {
+			this.restoreWebView();
+		}
+	};
+
+	shiftWebView = (height) => {
+		var selectedWebview = this.getSelectedWebview();
+		if (!selectedWebview) {
+			return;
+		}
+		let script = `
+			if (typeof document_style_transform_backup == "undefined")
+				var document_style_transform_backup = document.body.style.transform;
+			document.body.style.transform = document.body.style.transform + "translateY(-${height}px)";
+		`;
+		selectedWebview.executeScript({ code: script});
+	};
+
+	restoreWebView = () => {
+		const selectedWebview = this.getSelectedWebview();
+		if (!selectedWebview) {
+			return;
+		}
+		let script = `
+			if (typeof document_style_transform_backup != "undefined")
+				document.body.style.transform = document_style_transform_backup;
+		`;
+		selectedWebview.executeScript({ code: script});
 	};
 
 	render () {
