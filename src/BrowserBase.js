@@ -425,7 +425,11 @@ class BrowserBase {
     _handleLoadStop = (tabId) => {
         const tab = this.tabs.getTab(tabId);
         if (tab.state) {
-            const navState = Object.assign({}, tab.state.navState, {isLoading: false});
+            const navState = Object.assign({}, tab.state.navState, {
+                isLoading: false,
+                canGoBack: this.webViews[tabId].canGoBack(),
+                canGoForward: this.webViews[tabId].canGoForward()
+            });
             tab.setNavState(navState);
         }
     }
