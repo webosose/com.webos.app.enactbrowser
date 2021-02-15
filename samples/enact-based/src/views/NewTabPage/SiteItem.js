@@ -12,20 +12,25 @@
  */
 
 import ImageItem from '@enact/agate/ImageItem';
-import Button from '@enact/agate/Button';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
+import Spottable from '@enact/spotlight/Spottable';
+import Icon from '@enact/agate/Icon';
 
 import css from './SiteItem.module.less';
 
+const SpottableDiv = Spottable('div');
+
 const
 	CloseButton = (props) => (
-		<Button
+		<SpottableDiv
 			{...props}
 			className={css.xbutton}
-			size="small"
-			icon="closex"
-		/>
+		>
+			<Icon
+				size="small"
+			>closex</Icon>
+		</SpottableDiv>
 	),
 	EmptyItem = (props) => (
 		<div className={css.emptyContainer} {...props} />
@@ -51,19 +56,7 @@ class SiteItem extends Component {
 
 	constructor (props) {
 		super(props);
-
-		this.state = {
-			showingCloseButton: false
-		};
 	}
-
-	onMouseEnter = () => {
-		this.setState({showingCloseButton: true});
-	};
-
-	onMouseLeave = () => {
-		this.setState({showingCloseButton: false});
-	};
 
 	onClick = () => {
 		this.props.browser.mostVisited.remove(this.props.url);
@@ -81,20 +74,15 @@ class SiteItem extends Component {
 				<ImageItem
 					{...rest}
 					className={css.siteItem}
-					onMouseEnter={this.onMouseEnter}
-					onMouseLeave={this.onMouseLeave}
 					placeholder={placeholder}
 					src={source}
 				>
 					{children}
 				</ImageItem>
 				{
-					this.state.showingCloseButton && title ?
-						<CloseButton
-							onClick={this.onClick}
-							onMouseEnter={this.onMouseEnter}
-							onMouseLeave={this.onMouseLeave}
-						/> : null
+					title ? <CloseButton
+						onClick={this.onClick}
+					/> : null
 				}
 			</div>
 		);
