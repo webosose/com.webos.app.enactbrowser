@@ -53,7 +53,7 @@ function tabsState (state = initialTabsState, action) {
 			state.ids.splice(action.index, 1);
 
 			return Object.assign({}, state, {
-				selectedIndex: action.newSelectedIndex,
+				selectedIndex: state.ids.length <= action.newSelectedIndex ? 0 : action.newSelectedIndex,
 				ids: [...state.ids],
 				tabs: newTabs
 			});
