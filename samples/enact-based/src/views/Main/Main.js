@@ -174,12 +174,10 @@ class Main extends Component {
 		if (!selectedWebview) {
 			return;
 		}
-		console.log("height" + height);
-		// FIXME: The below translateY "+100" is the code I put temporarily as a position adjustment for the search input of google. This issue must be delivered with accurate numbers from Blink.
 		let script = `
 			if (typeof document_style_transform_backup == "undefined")
 				var document_style_transform_backup = document.body.style.transform;
-			document.body.style.transform = document.body.style.transform + "translateY(-${height + 100}px)";
+			document.body.style.transform = document.body.style.transform + "translateY(-${height}px)";
 		`;
 		selectedWebview.executeScript({ code: script});
 	};
