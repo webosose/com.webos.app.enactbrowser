@@ -5,7 +5,12 @@
         "intent.operation",
         "media.operation",
         "session.management",
-        "settings.query"
+        "settings.query",
+        "mediapipeline.resourcemanagement",
+        "mediapipeline.operation",
+        "mediacontroller.operation",
+        "mediacontroller.query",
+        "mediacontroller.management"
     ],
     "com.webos.chromium.memory.*": [
         "memorymanager.query"
