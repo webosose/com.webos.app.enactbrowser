@@ -141,9 +141,9 @@ class TabsBase extends EventEmitter {
 
         let selectedIndex = this.store.getSelectedIndex();
         const tab = this.getTab(this.getIdByIndex(selectedIndex));
-        this.emitEvent('select', {selectedIndex, state: tab.state});
 
         this.emitEvent('delete', {state, index});
+        this.emitEvent('select', {selectedIndex, state: tab.state});
         this._callOnContentDelete(contentId);
     }
 

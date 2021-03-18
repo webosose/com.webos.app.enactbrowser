@@ -12,8 +12,8 @@ import {actionTypes as types} from './constants';
 
 const
 	initialTabsState = {
-		selectedIndex: 0,
-		ids: [],
+		selectedIndex: 0, // index in ids[]
+		ids: [], //  tab ids (strings) in actual order. Represents tabs order in browser UI (left -> right)
 		tabs: {} /* id as index, {id, type, canGoBack, canGoForward, isLoading, url, title, favicon} */
 	};
 
@@ -46,14 +46,19 @@ function tabsState (state = initialTabsState, action) {
 			});
 		}
 		case types.CLOSE_TAB: {
+			console.log(`tabsState.CLOSE_TAB reducer. state:`);
+			console.log(state);
 			let newTabs;
-			let currentId = state.tabs[state.ids[action.index]];
+			console.log(`previously selected tab index in ids[] = ${state.selectedIndex}`);
+			let selectedId = state.tabs[state.ids[state.selectedIndex]].id;
+			console.log(`selected tab id = ${selectedId}`);
 
 			delete state.tabs[state.ids[action.index]];
 			newTabs = Object.assign({}, state.tabs);
 			state.ids.splice(action.index, 1);
 
-			let newSelectedIndex = state.ids.indexOf(currentId);
+			let newSelectedIndex = state.ids.indexOf(selectedId);
+			console.log(`newly selected tab index in ids[] = ${newSelectedIndex}`);
 
 			// currently selected tab was removed => select next right tab
 			if (newSelectedIndex < 0) {
