@@ -82,7 +82,7 @@ class MemoryManagerTabPolicy {
         policy.maxSuspendedTabFamilies = this.statusToMaxSuspended(ev.current);
         while (policy.queue.length > policy.maxSuspendedTabFamilies + policy.maxActiveTabFamilies) {
             const id = policy.queue.pop();
-            policy.webViews[id].deactivate();
+            policy.deactivateTabFamily(id);
         }
         console.log('_handleLevelChanged');
         console.log(policy);
