@@ -1,27 +1,33 @@
-function blobToDataUrl(data, onready) {
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-        onready(ev.target.result);
-    }
-    reader.readAsDataURL(data);
+function blobToDataUrl(data) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            resolve(ev.target.result);
+        }
+        reader.onAbort = () => {
+            reject();
+        }
+        reader.readAsDataURL(data);
+    });
 }
 
-function fetchImage(url, callback) {
-    const xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = () => {
-        if (xhr.readyState === 4 &&
-            xhr.status === 200 &&
-            xhr.response) {
-            blobToDataUrl(xhr.response, callback);
-        }
-        else if (xhr.readyState === 4) {
-            // failed to load icon
-            callback(null);
-        }
-    };
-    xhr.responseType = "blob";
-    xhr.open('GET', url, true);
-    xhr.send();
+function fetchImage(imageUrl) {
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4 &&
+                xhr.status === 200 &&
+                xhr.response) {
+                resolve(xhr.response);
+            }
+            else if (xhr.readyState === 4) {
+                reject(); // failed to load icon
+            }
+        };
+        xhr.responseType = "blob";
+        xhr.open('GET', imageUrl, true);
+        xhr.send();
+    });
 }
 
 function getBest(a, b, evaluateFns) {
@@ -49,8 +55,27 @@ function chooseBestSuitableIcon(favicons, sizePref, typePref) {
         (icon) => typeIsOk(icon, typePref),
         (icon) => sizeIsOk(icon, sizePref)
     ];
-    return favicons.reduce(
-        (best, current) => getBest(best, current, evaluateFns));
+    if (favicons.length > 0)
+        return favicons.reduce(
+            (best, current) => getBest(best, current, evaluateFns));
+}
+
+function mapUntilFirstSuccess(arr, func, index = 0) {
+    return func(arr[index])
+        .then((result) => {
+            return result;
+        }).catch(() => {
+            if(index < arr.length) {
+                return mapUntilFirstSuccess(arr, func, ++index);
+            }
+        });
+}
+
+function getImage(url) {
+    return fetchImage(url)
+        .then((data) => {
+            return blobToDataUrl(data);
+        });
 }
 
 /* Chooses best suitable favicon, fetches it and converts it
@@ -71,19 +96,22 @@ function fetchFaviconAsDataUrl(
     sizePref='32x32',
     typePref='image/png') {
 
-    let faviconUrl;
-    if (favicons.length !== 0) {
-        faviconUrl = chooseBestSuitableIcon(favicons, sizePref, typePref).href;
-    }
-    else {
-        faviconUrl = rootUrl + 'favicon.ico';
-    }
+    let urls = [];
+    const bestIcon = chooseBestSuitableIcon(favicons, sizePref, typePref);
+    // favicons priority:
+    // 1. best suitabe link icon
+    // 2. other link icons
+    // 3. root favicon
+    if (bestIcon)
+        urls.push(bestIcon.href);
+    urls = urls.concat(favicons.map(icon => icon.href)).concat([rootUrl + 'favicon.ico']);
 
-    return new Promise((resolve) => {
-        fetchImage(faviconUrl, (img) => {
-            resolve(img);
-        });
-    });
+
+    urls = urls.filter((value, index, self) => { // remove duplicates
+        return self.indexOf(value) === index;
+    })
+
+    return mapUntilFirstSuccess(urls, getImage);
 }
 
 export default fetchFaviconAsDataUrl;

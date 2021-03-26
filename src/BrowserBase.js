@@ -238,15 +238,10 @@ class BrowserBase {
             this._updateTitle(tab, ev.detail.title);
         });
         webview.addEventListener('iconchange', (ev) => {
-            if (ev.detail.favicons) {
-                fetchFaviconAsDataUrl(ev.detail.favicons, ev.detail.rootUrl)
+            fetchFaviconAsDataUrl(ev.detail.favicons, ev.detail.rootUrl)
                 .then((dataUrl) => {
                     this.tabs.getTab(state.id).setIcon(dataUrl);
                 });
-            }
-            else {
-                this.tabs.getTab(state.id).setIcon(null);
-            }
         });
         // This code overrides webview's behavior of reseting zoom on navigation
         webview.addEventListener('zoomchange', (ev) => {

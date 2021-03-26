@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Favicon fetching test</title>
+        <link rel="icon" sizes="32x32" type="image/png" href="/icons/icon_unavailable.png" />
+        <link rel="icon" sizes="32x32" type="image/gif" href="/icon.gif" />
+        <link rel="icon" sizes="32x32" type="image/png" href="/icon.png" />
+        <link rel="icon" type="image/x-icon" href="second" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="apple">
+        <link rel="shortcut icon" href="ie6" />
+        <link rel="address bar icon" href="low ie" />
+    </head>
+    <body>
+        <b>Given:</b> First link icon href is broken, second one is available.<br />
+        <b>Expected:</b> Blue GIF icon is loaded as tab icon from '/icon.gif' file <img style="vertical-align: middle" src="/icon.gif" />
+    </body>
+</html>
