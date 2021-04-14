@@ -4,7 +4,7 @@
 
 .div {
 	display: flex;
-	flex-grow: 0.9;
+	flex-grow: 1;
 }
 
 .form {
@@ -12,40 +12,6 @@
 	flex-grow: 1;
 	position: relative;
 	margin-top: 18px;
-}
-
-@media only screen and (min-width: 1280px) {
-	.form {
-		margin-right: 42px;
-	}
-}
-
-@media only screen and (min-width: 1280px) and (max-width: 1600px) {
-	.popup {
-		width: 810px;
-	}
-}
-
-@media only screen and (min-width: 1600px) and (max-width: 1920px) {
-	.popup {
-		width: 1020px;
-	}
-}
-
-@media only screen and (min-width: 1920px) {
-	.popup {
-		width: 1260px;
-	}
-}
-
-@media only screen and (max-width: 1280px) {
-	.form {
-		margin-right: 0;
-	}
-
-	.popup {
-		width: 620px;
-	}
 }
 
 .form div:first-child {
@@ -58,7 +24,6 @@
 	padding: 12px 80px;
 	input {
 		flex-grow: 1;
-		padding-right: 80px;
 		font-weight: 700;
 		margin-top: -11px;
 	}
@@ -78,7 +43,6 @@
 	@media only screen and (min-width: 720px) and (max-width: 1024px) {
 		input {
 			font-size: 28px;
-			width: 51px;
 		}
 	}
 
