@@ -34,12 +34,12 @@ class MemoryManagerTabPolicy {
             Promise.race([
                 new Promise((resolve) => {
                     window.navigator.memorymanager.getMemoryStatus((ev) => {
-                        resolve(ev.currentLevel);
+                        resolve(ev);
                     });
                 }),
                 new Promise((resolve) => {
                     window.navigator.memorymanager.onlevelchanged = (ev) => {
-                        resolve(ev.current);
+                        resolve(ev);
                     };
                 })
             ]).then((memoryStatus) => {
@@ -77,9 +77,9 @@ class MemoryManagerTabPolicy {
         }
     */
     _handleLevelChanged = (ev) => {
-        console.log('Handle memory level change ' + ev.current);
+        console.log('Handle memory level change ' + ev);
         const policy = this.simplePolicy;
-        policy.maxSuspendedTabFamilies = this.statusToMaxSuspended(ev.current);
+        policy.maxSuspendedTabFamilies = this.statusToMaxSuspended(ev);
         while (policy.queue.length > policy.maxSuspendedTabFamilies + policy.maxActiveTabFamilies) {
             const id = policy.queue.pop();
             policy.deactivateTabFamily(id);
