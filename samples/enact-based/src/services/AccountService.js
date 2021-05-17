@@ -1,4 +1,4 @@
-// Copyright (c) 2020 LG Electronics, Inc.
+// Copyright (c) 2020~2021 LG Electronics, Inc.
 //
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
@@ -9,15 +9,15 @@
 
 import LS2Request from '@enact/webos/LS2Request';
 
-const SessionService = {
+const AccountService = {
 	/*
-	 * luna-send -f -n 1 luna://com.webos.service.sessionmanager/getSessionList '{}'
+	 * luna-send -f -n 1 luna://com.webos.service.account/getSessions '{}'
 	 */
 	getSessionIds: ({onSuccess, onFailure}) => {
 		const req = new LS2Request();
 		req.send({
-			service: 'luna://com.webos.service.sessionmanager',
-			method: 'getSessionList',
+			service: 'luna://com.webos.service.account',
+			method: 'getSessions',
 			subscribe: true,
 			onSuccess: (res) => {
 				// The following normalizes the data for faster lookups
@@ -25,12 +25,11 @@ const SessionService = {
 				//
 				// from this, an object:
 				// {
-				//     "sessionList": [
+				//     "sessions": [
 				//         {
 				//             "status": "running",
-				//             "pid": 1544,
-				//             "userInfo": {
-				//                 "userId": "driver0"
+				//             "accountInfo": {
+				//                 "accountId": "driver0"
 				//             },
 				//             "deviceSetInfo": {
 				//                 "resolution": "1920x720",
@@ -51,16 +50,16 @@ const SessionService = {
 				//
 				// to this, an array of objects:
 				//  [
-				//      {"userId":"driver0", deviceSetId":"AVN", sessionId:"xxxx-xxxx-xxxx"}
+				//      {"name":"driver0", deviceSetId":"AVN", sessionId:"xxxx-xxxx-xxxx"}
 				//  ]
 
 				const
-					{sessionList} = res,
+					{sessions} = res,
 					retval = [];
 
-				sessionList.forEach( ({userInfo: {userId}, deviceSetInfo: {deviceSetId}, sessionId}) => {
+				sessions.forEach( ({accountInfo: {name}, deviceSetInfo: {deviceSetId}, sessionId}) => {
 					retval.push({
-						userId,
+						name,
 						deviceSetId,
 						sessionId
 					});
@@ -78,4 +77,4 @@ const SessionService = {
 	}
 };
 
-export default SessionService;
+export default AccountService;

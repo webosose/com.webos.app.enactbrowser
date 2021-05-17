@@ -18,7 +18,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
 // services
-import SessionService from '../../services/SessionService';
+import AccountService from '../../services/AccountService';
 import IntentService from '../../services/IntentService';
 
 const RecieverButton = kind({
@@ -87,8 +87,10 @@ class ShareBase extends Component {
 			}
 		}
 
-		SessionService.getSessionIds({
+		AccountService.getSessionIds({
 			onSuccess: (value) => {
+
+                        console.warn('Succeed to get session info: ',value);
 				this.setState({
 					allSessionIds: value,
 					disabled: false
@@ -121,12 +123,12 @@ class ShareBase extends Component {
 		receivers.forEach(receiver => {
 			buttons.push(
 				<RecieverButton
-					key={receiver.userId}
+					key={receiver.name}
 					sessionId={receiver.sessionId}
 					size="small"
 					onClick={this.onShareURL}
 				>
-					{`${receiver.userId} (${receiver.deviceSetId})`}
+					{`${receiver.name} (${receiver.deviceSetId})`}
 				</RecieverButton>
 			);
 		});
