@@ -50,6 +50,16 @@ class Menu extends Component {
 		};
 	}
 
+	componentDidMount () {
+		document.addEventListener('webOSLocaleChange', this.onLocaleChange);
+	}
+
+	onLocaleChange = () => {
+		setTimeout(() => {
+			this.forceUpdate();
+		}, 1000);
+	}
+
 	renderPopup = () => (
 		<div className={css.menuContainer} onClick={this.closeMenu}>
 			<Item css={css} onClick={this.openHistory} skinVariants={{'night': false}}>{$L('History')}</Item>

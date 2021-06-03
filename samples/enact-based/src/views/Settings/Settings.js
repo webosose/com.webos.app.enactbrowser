@@ -72,6 +72,16 @@ class SettingsBase extends Component {
 		};
 	}
 
+	componentDidMount () {
+		document.addEventListener('webOSLocaleChange', this.onLocaleChange);
+	}
+
+	onLocaleChange = () => {
+		setTimeout(() => {
+			this.forceUpdate();
+		}, 1000);
+	}
+
 	onChange = (ev) => {
 		const {browser} = this.props;
 		this.setState({value: ev.value});

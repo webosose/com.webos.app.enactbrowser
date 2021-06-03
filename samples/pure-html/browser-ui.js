@@ -28,7 +28,7 @@ window.onclick = function(event) {
     }
     document.querySelector('#global_overlay').style.display = 'none';
   }
-}
+};
 
 function switchOmniboxSmartButton(state) {
   if (state == 'loading') {
@@ -56,11 +56,11 @@ var browser = null;
 window.onload = function() {
   document.querySelector('#tools-dropdown').onclick = function() {
     toggleDropdown('tools-dropdown__content');
-  }
+  };
 
   browser = createNevaBrowser();
   browser.createWebView();
-  browser.insertWebView("neva_view", document.body)
+  browser.insertWebView("neva_view", document.body);
   doLayout();
 
   var version = navigator.appVersion.substr(navigator.appVersion.lastIndexOf('Chrome/') + 7);
@@ -85,15 +85,15 @@ window.onload = function() {
   document.querySelector('#omnibox__add-to-favourites').onclick = function(e) {
     e.preventDefault();
     console.log('#omnibox__add-to-favourites.onclick');
-  }
+  };
   document.querySelector('#omnibox__stop-button').onclick = function(e) {
     e.preventDefault();
     console.log('#omnibox__stop-button.onclick');
-  }
+  };
   document.querySelector('#omnibox__reload-button').onclick = function(e) {
     e.preventDefault();
     console.log('#omnibox__reload-button.onclick');
-  }
+  };
   document.querySelector('#omnibox__url-input').oninput = function(e) {
     console.log('omnibox__url-input ONINPUT');
     if (!isInput) {

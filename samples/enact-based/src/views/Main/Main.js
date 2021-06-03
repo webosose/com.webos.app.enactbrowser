@@ -157,7 +157,13 @@ class Main extends Component {
 	};
 
 	onLocaleChange = () => {
-		chrome.runtime.sendMessage({event: 'localechange'});
+		console.log("Main Locale Changed. Called forceUpdate");
+		setTimeout(() => {
+			this.forceUpdate();
+			setTimeout(() => {
+				this.state.browser.reloadStop();
+			}, 1000);
+		}, 1000);
 	};
 
 	onShiftContent = (ev) => {

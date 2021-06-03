@@ -69,6 +69,16 @@ class TabBarBase extends Component {
 		tabStates: PropTypes.object
 	};
 
+	componentDidMount () {
+		document.addEventListener('webOSLocaleChange', this.onLocaleChange);
+	}
+
+	onLocaleChange = () => {
+		setTimeout(() => {
+			this.forceUpdate();
+		}, 1000);
+	}
+
 	componentWillReceiveProps (nextProps) {
 		if (this.props.selectedIndex !== nextProps.selectedIndex) {
 			const

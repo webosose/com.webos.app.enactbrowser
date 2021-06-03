@@ -39,6 +39,16 @@ class NewTabPageBase extends Component {
 		props.browser.mostVisited.retrieveWithThumbnails(numOfMostVisited);
 	}
 
+	componentDidMount () {
+		document.addEventListener('webOSLocaleChange', this.onLocaleChange);
+	}
+
+	onLocaleChange = () => {
+		setTimeout(() => {
+			this.forceUpdate();
+		}, 1000);
+	}
+
 	componentWillReceiveProps (nextProps) {
 		if (!this.props.isSelectedTab && nextProps.isSelectedTab) {
 			this.retrieveRecentlyClosed();

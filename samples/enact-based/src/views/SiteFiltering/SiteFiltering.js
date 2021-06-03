@@ -73,6 +73,16 @@ class SiteFilteringBase extends Component {
 		this.loadSiteList();
 	}
 
+	componentDidMount () {
+		document.addEventListener('webOSLocaleChange', this.onLocaleChange);
+	}
+
+	onLocaleChange = () => {
+		setTimeout(() => {
+			this.forceUpdate();
+		}, 1000);
+	}
+
 	loadSiteList () {
 		const {
 			siteFiltering: filteringMode,

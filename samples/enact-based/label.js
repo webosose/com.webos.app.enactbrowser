@@ -23,7 +23,7 @@ let webviewHostInjectionComplete = false;
 			};
 			embedder.postMessage(data, '*');
 		};
-		actions['getTitle'] = function (ev) {
+		actions.getTitle = function (ev) {
 			let data = ev.data;
 			// bind embedder
 			let embedder = ev.source;
@@ -51,7 +51,7 @@ let webviewHostInjectionComplete = false;
 			postTitle(embedder);
 		};
 
-		actions['getFavicons'] = function (ev) {
+		actions.getFavicons = function (ev) {
 			let links = document.querySelectorAll('link[rel*="icon"]');
 
 			let favicons = [];

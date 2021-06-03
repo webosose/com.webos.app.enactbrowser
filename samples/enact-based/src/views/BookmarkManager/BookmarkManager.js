@@ -46,6 +46,16 @@ class BookmarkManagerBase extends Component {
 		};
 	}
 
+	componentDidMount () {
+		document.addEventListener('webOSLocaleChange', this.onLocaleChange);
+	}
+
+	onLocaleChange = () => {
+		setTimeout(() => {
+			this.forceUpdate();
+		}, 1000);
+	}
+
 	onSelectAll = () => {
 		const {data} = this.props;
 		if (data.length === this.props.hasSelection) {

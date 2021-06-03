@@ -316,15 +316,19 @@ class BrowserBase {
         }
 
         let selectNewTab = false;
+        let state = null;
         switch (ev.windowOpenDisposition) {
             case 'new_foreground_tab':
                 selectNewTab = true;
+                state = this._createWebViewPage(ev.targetUrl, ev.window, tab_family_id);
+                this.tabs.addTab(state, selectNewTab);
+                break;
             case 'new_background_tab':
-                const state = this._createWebViewPage(ev.targetUrl, ev.window, tab_family_id);
+                state = this._createWebViewPage(ev.targetUrl, ev.window, tab_family_id);
                 this.tabs.addTab(state, selectNewTab);
                 break;
             case 'new_popup': {
-                const state = this._createWebViewPage(ev.targetUrl, ev.window, tab_family_id);
+                state = this._createWebViewPage(ev.targetUrl, ev.window, tab_family_id);
                 this.tabs.addTab(state, true);
                 break;
             }
