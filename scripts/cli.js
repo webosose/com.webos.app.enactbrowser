@@ -15,8 +15,7 @@ const minimum = [6, 4, 0];
 const active = process.versions.node.split('.').map(val => parseInt(val));
 if(active[0] < minimum[0] || (active[0] === minimum[0] && active[1] < minimum[1])) {
     const chalk = require('chalk');
-    console.log(chalk.red('You are running Node ' + active.join('.') + '.\nbrowser lib requires Node '
-            + minimum.join('.') + ' or higher. \n' + chalk.bold('Please update your version of Node.')));
+    console.log(chalk.red('You are running Node ' + active.join('.') + '.\nbrowser lib requires Node ' + minimum.join('.') + ' or higher. \n' + chalk.bold('Please update your version of Node.')));
     process.exit(1);
 }
 
