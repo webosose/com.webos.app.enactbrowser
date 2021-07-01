@@ -15,7 +15,6 @@ import {HistoryMixin} from 'js-browser-lib/HistoryMixin';
 import {TabTitles, TabTypes} from 'js-browser-lib/TabsConsts';
 
 import Bookmarks from './Bookmarks';
-import Config from './Config';
 import {getDefaults} from './BrowserDefaults'
 import History from './History';
 import MostVisited from './MostVisited';
@@ -77,7 +76,6 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
 
         const browser = this;
         browser.webViewFactory.browser = browser;
-        browser.config = new Config();
         browser.settings = new Settings(store, db, browser);
         browser.prevSessionTabs = undefined;
         browser.recentlyClosed = new RecentlyClosed(store, db, tabsModel);
@@ -86,16 +84,12 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
         browser.tabPolicy = undefined;
         browser.devSettingsEnabled = false;
         browser.siteFiltering = new SiteFiltering(this.webViews, tabsModel, db);
+        browser.prevSessionTabs = new PreviousSessionTabs(
+            browser, db, browser.settings.getRestorePrevSessionPolicy());
+        browser.tabPolicy = createTabPolicy(
+            tabsModel, browser.webViews, browser.settings);
 
-
-        browser.config.initialize(getDefaults().config)
-        .then(() => {
-            browser.prevSessionTabs = new PreviousSessionTabs(
-                browser, db, browser.config.restorePrevSessionPolicy);
-            browser.tabPolicy = createTabPolicy(
-                tabsModel, browser.webViews, browser.config);
-            return db.open(DB_NAME);
-        })
+        db.open(DB_NAME)
         .then((dbHasCreated) => {
             if (dbHasCreated) {
                 return browser.initializeWithDefaults();

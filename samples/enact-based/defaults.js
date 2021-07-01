@@ -14,32 +14,24 @@ function getBrowserDefaults() {
             {url:'http://www.bbc.com/news/', icon:null, title: 'BBC'},
             {url:'https://stackoverflow.com/', icon:null, title: 'Stackoverflow'}
         ],
-        config: {
-            useBuiltInErrorPages: false,
-            restorePrevSessionPolicy: 'onlyLastTab', /*OR allTabs*/
-            // Limitations for Simple Tab management policy
-            simplePolicy: {
-                'maxActiveTabFamilies': 1,
-                'maxSuspendedTabFamilies': 2
-            },
-            // Limitations for MemoryManager aware tab policy
-            memoryManager: {
-                'maxSuspendedNormal': 3,
-                'maxSuspendedLow': 1,
-                'maxSuspendedCritical': 0
-            },
-            alertsCountBeforePreventionRequest: 3,
-            privateBrowsingCueBgColor: '#910137',
-            privateBrowsingCueTextColor: '#ce2e6b'
-        },
         settings: {
+            useJSErrorPage: false,
+            restorePrevSessionPolicy: 'onlyLastTab', /*OR allTabs*/
+            maxActiveTabFamilies: 1,
+            maxSuspendedTabFamilies: 2,
+            maxSuspendedNormal: 3,
+            maxSuspendedLow: 1,
+            maxSuspendedCritical: 0,
             startupPage: 'newTabPage', /*OR continue OR homePage*/
             homePageUrl: 'https://www.google.com',
             searchEngine: 'Google',
             alwaysShowBookmarks: false,
             privateBrowsing: false,
             siteFiltering: 'off', /*OR whitelist OR blacklist*/
-            pinNumber: '0000'
+            pinNumber: '0000',
+            alertsCountBeforePreventionRequest: 3,
+            privateBrowsingCueBgColor: '#910137',
+            privateBrowsingCueTextColor: '#ce2e6b'
         },
         sitefiltering: {
             whitelist: ['*google*', '*://*yandex*'],

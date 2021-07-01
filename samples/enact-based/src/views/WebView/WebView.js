@@ -89,7 +89,7 @@ class WebView extends Component {
 						break;
 
 					default:
-						if (!browser.config.useBuiltInErrorPages) {
+						if (browser.settings.getUseJSErrorPage()) {
 							state_set.show_error_page = true;
 						} else {
 							state_set.show_webview = true;

@@ -117,32 +117,32 @@ const restoreSessionOptions = ['onlyLastTab', 'allTabs'];
 
 class SimplePolicySettings extends Component {
 	static propTypes = {
-		simplePolicy: PropTypes.object
+		settings: PropTypes.object
 	}
 
 	constructor (props) {
 		super(props);
 		this.state = {
-			maxActiveTabFamilies: props.simplePolicy.maxActiveTabFamilies,
-			maxSuspendedTabFamilies: props.simplePolicy.maxSuspendedTabFamilies
+			maxActiveTabFamilies: props.settings.getMaxActiveTabFamilies(),
+			maxSuspendedTabFamilies: props.settings.getMaxSuspendedTabFamilies()
 		}
 	}
 
 	onChangeMaxActiveTabFamilies = (ev) => {
-		const {simplePolicy} = this.props;
-		simplePolicy.setMaxActiveTabFamilies(ev.value)
+		const {settings} = this.props;
+		settings.setMaxActiveTabFamilies(ev.value)
 		.catch((err) => console.error(`SimplePolicySettings::setMaxActiveTabFamilies error: ${err}`))
 		.finally(() => this.setState({
-				maxActiveTabFamilies: simplePolicy.maxActiveTabFamilies
+				maxActiveTabFamilies: settings.getMaxActiveTabFamilies()
 			}));
 	}
 
 	onChangeMaxSuspendedTabFamilies = (ev) => {
-		const {simplePolicy} = this.props;
-		simplePolicy.setMaxSuspendedTabFamilies(ev.value)
+		const {settings} = this.props;
+		settings.setMaxSuspendedTabFamilies(ev.value)
 		.catch((err) => console.error(`SimplePolicySettings::setMaxSuspendedTabFamilies error: ${err}`))
 		.finally(() => this.setState({
-				maxSuspendedTabFamilies: simplePolicy.maxSuspendedTabFamilies
+				maxSuspendedTabFamilies: settings.getMaxSuspendedTabFamilies()
 			}));
 	}
 
@@ -170,27 +170,33 @@ class SimplePolicySettings extends Component {
 
 class MemoryManagerSettings extends Component {
 	static propTypes = {
-		memoryManager: PropTypes.object
+		settings: PropTypes.object
 	}
 
 	constructor (props) {
 		super(props);
 		this.state = {
-			maxNormal: props.memoryManager.maxSuspendedNormal,
-			maxLow: props.memoryManager.maxSuspendedLow,
-			maxCritical: props.memoryManager.maxSuspendedCritical
+			maxNormal: props.settings.getMaxSuspendedNormal(),
+			maxLow: props.settings.getMaxSuspendedLow(),
+			maxCritical: props.settings.getMaxSuspendedCritical()
 		}
 	}
 
 	setSuspendedNumbersState = (normal, low, critical) => {
-		const {memoryManager} = this.props;
-		memoryManager.setSuspendedNumbers(normal, low, critical)
+		const {settings} = this.props;
+		settings.setMaxSuspendedNormal(normal)
+		.then(() => {
+			return settings.setMaxSuspendedLow(low);
+		})
+		.then(() => {
+			return settings.setMaxSuspendedCritical(critical);
+		})
 		.catch((err) => console.error(`MemoryManagerSettings::setSuspendedNumbersState error: ${err}`))
 		.finally(() => this.setState({
-				maxNormal: memoryManager.maxSuspendedNormal,
-				maxLow: memoryManager.maxSuspendedLow,
-				maxCritical: memoryManager.maxSuspendedCritical
-			}));
+			maxNormal: settings.getMaxSuspendedNormal(),
+			maxLow: settings.getMaxSuspendedLow(),
+			maxCritical: settings.getMaxSuspendedCritical()
+		}));
 	}
 
 	onChangeMaxSuspendedTabsNormal = (ev) => {
@@ -256,7 +262,7 @@ class MemoryManagerSettings extends Component {
 
 class DevSettingsBase extends Component {
 	static propTypes = {
-		config: PropTypes.object,
+		settings: PropTypes.object,
 		tabPolicy: PropTypes.string,
 		browser: PropTypes.object
 	}
@@ -264,35 +270,35 @@ class DevSettingsBase extends Component {
 	constructor (props) {
 		super(props);
 		this.state = {
-			useBuiltInErrorPages: props.config.useBuiltInErrorPages,
-			restorePrevSessionPolicy: props.config.restorePrevSessionPolicy
+			useJSErrorPage: props.browser.settings.getUseJSErrorPage(),
+			restorePrevSessionPolicy: props.browser.settings.getRestorePrevSessionPolicy()
 		}
 	}
 
-	onToggleUseBuiltInErrorPages = () => {
-		const {config} = this.props;
-		config.setUseBuiltInErrorPages(!this.state.useBuiltInErrorPages)
-		.catch((err) => console.error(`DevSettingsBase::onToggleUseBuiltInErrorPages ${err}`))
-		.finally(() => this.setState({useBuiltInErrorPages: config.useBuiltInErrorPages}));
+	onToggleUseJSErrorPage = () => {
+		const {browser} = this.props;
+		browser.settings.setUseJSErrorPage(!this.state.useJSErrorPage)
+		.catch((err) => console.error(`DevSettingsBase::onToggleUseJSErrorPage ${err}`))
+		.finally(() => this.setState({useJSErrorPage: browser.settings.getUseJSErrorPage()}));
 	}
 
 	onSelectRestoreSessionPolicy = ({selected}) => {
-		const {config} = this.props;
-		config.setRestorePrevSessionPolicy(restoreSessionOptions[selected])
+		const {settings} = this.props.browser;
+		settings.setRestorePrevSessionPolicy(restoreSessionOptions[selected])
 		.catch((err) => console.error(`DevSettingsBase::onSelectRestoreSessionPolicy ${err}`))
-		.finally(() => this.setState({restorePrevSessionPolicy: config.restorePrevSessionPolicy}));
+		.finally(() => this.setState({restorePrevSessionPolicy: settings.getRestorePrevSessionPolicy()}));
 	}
 
 	render () {
 		const
 			{
 				className,
-				config,
+				settings,
 				tabPolicy,
 				browser,
 				...rest
 			} = this.props,
-			version = config.versionString,
+			version = settings.getVersionString(),
 			classes = classNames(className, css.settings);
 
 		return (
@@ -303,10 +309,10 @@ class DevSettingsBase extends Component {
 						<BodyText className={css.menu}>Version string: {version}</BodyText>
 						<br />
 
-						<BodyText className={css.menu}>Use built in error pages</BodyText>
+						<BodyText className={css.menu}>Use JS error pages</BodyText>
 						<OnOffButton
-							onClick={this.onToggleUseBuiltInErrorPages}
-							selected={this.state.useBuiltInErrorPages}
+							onClick={this.onToggleUseJSErrorPage}
+							selected={this.state.useJSErrorPage}
 						/>
 						<br />
 
@@ -330,11 +336,11 @@ class DevSettingsBase extends Component {
 						</div>
 
 						{tabPolicy === 'RendererPerTabPolicy' &&
-							<SimplePolicySettings simplePolicy={config.simplePolicy} />
+							<SimplePolicySettings settings={browser.settings} />
 						}
 
 						{tabPolicy === 'MemoryManagerTabPolicy' &&
-							<MemoryManagerSettings memoryManager={config.memoryManager} />
+							<MemoryManagerSettings settings={browser.settings} />
 						}
 					</div>
 				</Scroller>

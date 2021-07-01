@@ -6,6 +6,8 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
+/*global chrome*/
+
 import SettingsBase from 'js-browser-lib/SettingsBase';
 import {IdbKeyValueStorage} from 'js-browser-lib/IdbKeyValueStorage';
 import {
@@ -15,7 +17,14 @@ import {
     setPrivateBrowsing,
     setAlwaysShowBookmarks,
     setSiteFiltering,
-    setPinNumber
+    setPinNumber,
+    setUseJSErrorPage,
+    setRestorePrevSessionPolicy,
+    setMaxActiveTabFamilies,
+    setMaxSuspendedTabFamilies,
+    setMaxSuspendedNormal,
+    setMaxSuspendedLow,
+    setMaxSuspendedCritical,
 } from  './actions.js';
 
 const STORE_NAME = 'settings';
@@ -27,7 +36,17 @@ const SettingsKeys = {
     ALWAYS_SHOW_BOOKMARKS_KEY: 'alwaysShowBookmarks',
     PRIVATE_BROWSING_KEY: 'privateBrowsing',
     SITE_FILTERING_KEY: 'siteFiltering',
-    PIN_NUMBER_KEY: 'pinNumber'
+    PIN_NUMBER_KEY: 'pinNumber',
+    USE_JS_ERROR_PAGE: 'useJSErrorPage',
+    RESTORE_PREV_SESSION_POLICY: 'restorePrevSessionPolicy',
+    MAX_ACTIVE_TAB_FAMILIES: 'maxActiveTabFamilies',
+    MAX_SUSPENDED_TAB_FAMILIES: 'maxSuspendedTabFamilies',
+    MAX_SUSPENDED_NORMAL: 'maxSuspendedNormal',
+    MAX_SUSPENDED_LOW: 'maxSuspendedLow',
+    MAX_SUSPENDED_CRITICAL: 'maxSuspendedCritical',
+    ALERTS_COUNT_BEFORE_PREVENTION_REQUEST: 'alertsCountBeforePreventionRequest',
+    PRIVATE_BROWSING_CUE_BG_COLOR: 'privateBrowsingCueBgColor',
+    PRIVATE_BROWSING_CUE_TEXT_COLOR: 'privateBrowsingCueTextColor',
 };
 
 const SettingsConsts = {
@@ -44,6 +63,13 @@ const setStore = (store, values) => {
     store.dispatch(setPrivateBrowsing(values[SettingsKeys.PRIVATE_BROWSING_KEY]));
     store.dispatch(setSiteFiltering(values[SettingsKeys.SITE_FILTERING_KEY]));
     store.dispatch(setPinNumber(values[SettingsKeys.PIN_NUMBER_KEY]));
+    store.dispatch(setUseJSErrorPage(values[SettingsKeys.USE_JS_ERROR_PAGE]));
+    store.dispatch(setRestorePrevSessionPolicy(values[SettingsKeys.RESTORE_PREV_SESSION_POLICY]));
+    store.dispatch(setMaxActiveTabFamilies(values[SettingsKeys.MAX_ACTIVE_TAB_FAMILIES]));
+    store.dispatch(setMaxSuspendedTabFamilies(values[SettingsKeys.MAX_SUSPENDED_TAB_FAMILIES]));
+    store.dispatch(setMaxSuspendedNormal(values[SettingsKeys.MAX_SUSPENDED_NORMAL]));
+    store.dispatch(setMaxSuspendedLow(values[SettingsKeys.MAX_SUSPENDED_LOW]));
+    store.dispatch(setMaxSuspendedCritical(values[SettingsKeys.MAX_SUSPENDED_CRITICAL]));
 }
 
 // Reference implementation of settings
@@ -105,7 +131,7 @@ class Settings extends SettingsBase {
         return this.storage.set(SettingsKeys.ALWAYS_SHOW_BOOKMARKS_KEY, bool)
             .then(() => {
                 this.store.dispatch(setAlwaysShowBookmarks(bool));
-        })
+            })
     }
 
     setPrivateBrowsing = (bool) => {
@@ -136,6 +162,100 @@ class Settings extends SettingsBase {
                 this.store.dispatch(setPinNumber(code));
             });
     }
+
+    setUseJSErrorPage = (bool) => {
+        return this.storage.set(SettingsKeys.USE_JS_ERROR_PAGE, bool)
+            .then(() => {
+                this.store.dispatch(setUseJSErrorPage(bool));
+            });
+    }
+
+    getUseJSErrorPage = () => {
+        return this.store.getState().settingsState.useJSErrorPage;
+    }
+
+    setRestorePrevSessionPolicy = (string) => {
+        return this.storage.set(SettingsKeys.RESTORE_PREV_SESSION_POLICY, string)
+            .then(() => {
+                this.store.dispatch(setRestorePrevSessionPolicy(string));
+            });
+    }
+
+    getRestorePrevSessionPolicy = () => {
+        return this.store.getState().settingsState.restorePrevSessionPolicy;
+    }
+
+    setMaxActiveTabFamilies = (number) => {
+        return this.storage.set(SettingsKeys.MAX_ACTIVE_TAB_FAMILIES, number)
+            .then(() => {
+                this.store.dispatch(setMaxActiveTabFamilies(number));
+            });
+    }
+
+    getMaxActiveTabFamilies = () => {
+        return this.store.getState().settingsState.maxActiveTabFamilies;
+    }
+
+    setMaxSuspendedTabFamilies = (number) => {
+        return this.storage.set(SettingsKeys.MAX_SUSPENDED_TAB_FAMILIES, number)
+            .then(() => {
+                this.store.dispatch(setMaxSuspendedTabFamilies(number));
+            });
+    }
+
+    getMaxSuspendedTabFamilies = () => {
+        return this.store.getState().settingsState.maxSuspendedTabFamilies;
+    }
+
+    setMaxSuspendedNormal = (number) => {
+        return this.storage.set(SettingsKeys.MAX_SUSPENDED_NORMAL, number)
+            .then(() => {
+                this.store.dispatch(setMaxSuspendedNormal(number));
+            });
+    }
+
+    getMaxSuspendedNormal = () => {
+        return this.store.getState().settingsState.maxSuspendedNormal;
+    }
+
+    setMaxSuspendedLow = (number) => {
+        return this.storage.set(SettingsKeys.MAX_SUSPENDED_LOW, number)
+            .then(() => {
+                this.store.dispatch(setMaxSuspendedLow(number));
+            });
+    }
+
+    getMaxSuspendedLow = () => {
+        return this.store.getState().settingsState.maxSuspendedLow;
+    }
+
+    setMaxSuspendedCritical = (number) => {
+        return this.storage.set(SettingsKeys.MAX_SUSPENDED_CRITICAL, number)
+            .then(() => {
+                this.store.dispatch(setMaxSuspendedCritical(number));
+            });
+    }
+
+    getMaxSuspendedCritical = () => {
+        return this.store.getState().settingsState.maxSuspendedCritical;
+    }
+
+    getAlertsCountBeforePreventionRequest = () => {
+        return this.store.getState().settingsState.alertsCountBeforePreventionRequest;
+    }
+
+    getPrivateBrowsingCueBgColor = () => {
+        return this.store.getState().settingsState.privateBrowsingCueBgColor;
+    }
+
+    getPrivateBrowsingCueTextColor = () => {
+        return this.store.getState().settingsState.privateBrowsingCueTextColor;
+    }
+
+    getVersionString = () => {
+        return chrome.runtime.getManifest().version_name;
+    }
+
 
     matchPinCode = (pinCode) => {
         return this.store.getState().settingsState.pinNumber === pinCode;

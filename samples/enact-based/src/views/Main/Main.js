@@ -120,7 +120,7 @@ class MainBase extends Component {
 					...ev,
 					alertsCount: selectedWebview.alertsCount,
 					isAlertsAllowed: selectedWebview.isAlertsAllowed,
-					alertsCountBeforePreventionRequest: browser.config.alertsCountBeforePreventionRequest
+					alertsCountBeforePreventionRequest: browser.settings.getAlertsCountBeforePreventionRequest()
 				}});
 				selectedWebview.alertsCount++;
 			}
@@ -188,9 +188,9 @@ class MainBase extends Component {
 
 		let privateBrowsingCueBgColor = undefined;
 		let privateBrowsingCueTextColor = undefined;
-		if (browser.config !== undefined) {
-			privateBrowsingCueBgColor = browser.config.privateBrowsingCueBgColor;
-			privateBrowsingCueTextColor = browser.config.privateBrowsingCueTextColor;
+		if (browser.settings !== undefined) {
+			privateBrowsingCueBgColor = browser.settings.getPrivateBrowsingCueBgColor();
+			privateBrowsingCueTextColor = browser.settings.getPrivateBrowsingCueTextColor();
 		}
 
 		let private_mode = false;

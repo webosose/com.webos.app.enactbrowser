@@ -18,9 +18,17 @@ const
 		alwaysShowBookmarks: false,
 		privateBrowsing: false,
 		pinNumber: '',
+		alertsCountBeforePreventionRequest: 3,
 		siteFiltering: '',
 		approvedSites: [],
-		blockedSites: []
+		blockedSites: [],
+		useJSErrorPage: false,
+		restorePrevSessionPolicy: 'onlyLastTab',
+		maxActiveTabFamilies: 1,
+		maxSuspendedTabFamilies: 2,
+		maxSuspendedNormal: 3,
+		maxSuspendedLow: 1,
+		maxSuspendedCritical: 0,
 	};
 
 function settingsState (state = initialSettingsState, action) {
@@ -106,6 +114,45 @@ function settingsState (state = initialSettingsState, action) {
 				blockedSites: [...newData]
 			});
 		}
+		case types.SET_USE_JS_ERROR_PAGE: {
+			return Object.assign({}, state, {
+				useJSErrorPage: action.bool
+			});
+		}
+		case types.SET_RESTORE_PREV_SESSION_POLICY: {
+			return Object.assign({}, state, {
+				restorePrevSessionPolicy: action.string
+			});
+		}
+		case types.SET_MAX_ACTIVE_TAB_FAMILIES: {
+			return Object.assign({}, state, {
+				maxActiveTabFamilies: action.number
+			});
+		}
+		case types.SET_MAX_SUSPENDED_TAB_FAMILIES: {
+			return Object.assign({}, state, {
+				maxSuspendedTabFamilies: action.number
+			});
+		}
+
+		case types.SET_MAX_SUSPENDED_NORMAL: {
+			return Object.assign({}, state, {
+				maxSuspendedNormal: action.number
+			});
+		}
+
+		case types.SET_MAX_SUSPENDED_LOW: {
+			return Object.assign({}, state, {
+				maxSuspendedLow: action.number
+			});
+		}
+
+		case types.SET_MAX_SUSPENDED_CRITICAL: {
+			return Object.assign({}, state, {
+				maxSuspendedCritical: action.number
+			});
+		}
+
 		default:
 			return state;
 	}

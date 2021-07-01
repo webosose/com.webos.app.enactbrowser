@@ -15,6 +15,12 @@ function getDefaults() {
     }
     else {
         return {
+            bookmarks: [
+                {url:'https://google.com/', icon:null, title: 'Google'},
+                {url:'https://www.w3.org/', icon:null, title: 'W3C'},
+                {url:'http://www.bbc.com/news/', icon:null, title: 'BBC'},
+                {url:'https://stackoverflow.com/', icon:null, title: 'Stackoverflow'}
+            ],
             settings: {
                 startupPage: 'newTabPage',
                 homePageUrl: 'https://www.google.com',
@@ -22,24 +28,22 @@ function getDefaults() {
                 alwaysShowBookmarks: false,
                 privateBrowsing: false,
                 siteFiltering: 'off',
-                pinNumber: '0000'
-            },
-            config: {
-                useBuiltInErrorPages: true,
+                pinNumber: '0000',
+                useJSErrorPage: false,
                 restorePrevSessionPolicy: 'onlyLastTab',
-                simplePolicy: {
-                    'maxActiveTabFamilies': 1,
-                    'maxSuspendedTabFamilies': 2
-                },
-                memoryManager: {
-                    'maxSuspendedNormal': 3,
-                    'maxSuspendedLow': 1,
-                    'maxSuspendedCritical': 0
-                },
+                maxActiveTabFamilies: 1,
+                maxSuspendedTabFamilies: 2,
+                maxSuspendedNormal: 3,
+                maxSuspendedLow: 1,
+                maxSuspendedCritical: 0,
                 alertsCountBeforePreventionRequest: 3,
                 privateBrowsingCueBgColor: '#910137',
-                privateBrowsingCueTextColor: '#ce2e6b'
-            }
+                privateBrowsingCueTextColor: '#ce2e6b',
+            },
+            sitefiltering: {
+                whitelist: ['*google*', '*://*yandex*'],
+                blacklist: ['*://www.youtube.*', '*://youtube.*', '*lenta.ru*']
+            },
         };
     }
 }

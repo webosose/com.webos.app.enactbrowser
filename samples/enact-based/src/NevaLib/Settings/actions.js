@@ -73,7 +73,42 @@ const addBlockedSite = (url) => ({
 const removeBlockedSites = (urls) => ({
 	type: types.REMOVE_BLOCKED_SITES,
 	urls
-})
+});
+
+const setUseJSErrorPage = (bool) => ({
+	type: types.SET_USE_JS_ERROR_PAGE,
+	bool
+});
+
+const setRestorePrevSessionPolicy = (string) => ({
+	type: types.SET_RESTORE_PREV_SESSION_POLICY,
+	string
+});
+
+const setMaxActiveTabFamilies = (number) => ({
+	type: types.SET_MAX_ACTIVE_TAB_FAMILIES,
+	number
+});
+
+const setMaxSuspendedTabFamilies = (number) => ({
+	type: types.SET_MAX_SUSPENDED_TAB_FAMILIES,
+	number
+});
+
+const setMaxSuspendedNormal = (number) => ({
+	type: types.SET_MAX_SUSPENDED_NORMAL,
+	number
+});
+
+const setMaxSuspendedLow = (number) => ({
+	type: types.SET_MAX_SUSPENDED_LOW,
+	number
+});
+
+const setMaxSuspendedCritical = (number) => ({
+	type: types.SET_MAX_SUSPENDED_CRITICAL,
+	number
+});
 
 export {
 	setStartupPage,
@@ -88,5 +123,12 @@ export {
 	removeApprovedSites,
 	setBlockedSites,
 	addBlockedSite,
-	removeBlockedSites
+	removeBlockedSites,
+	setUseJSErrorPage,
+	setRestorePrevSessionPolicy,
+	setMaxActiveTabFamilies,
+	setMaxSuspendedTabFamilies,
+	setMaxSuspendedNormal,
+	setMaxSuspendedLow,
+	setMaxSuspendedCritical,
 }

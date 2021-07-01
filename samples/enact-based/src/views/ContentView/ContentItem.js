@@ -64,7 +64,7 @@ const ContentItem = kind({
             case TabTypes.DEV_SETTINGS:
                 return <DevSettings
                     style={style}
-                    config={browser.config}
+                    settings={browser.settings}
                     tabPolicy={browser.tabPolicy.constructor.name}
                     browser={browser}
                 />;

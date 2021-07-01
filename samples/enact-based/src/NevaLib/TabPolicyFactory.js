@@ -9,15 +9,15 @@
 import {RendererPerTabPolicy as SimplePolicy} from './RendererPerTabPolicy.js';
 import {MemoryManagerTabPolicy} from './MemoryManagerTabPolicy.js';
 
-function createTabPolicy(tabs, webViews, config) {
+function createTabPolicy(tabs, webViews, settings) {
     if (window.navigator && window.navigator.memorymanager) {
         console.log('Create MemoryManagerTabPolicy');
         return new MemoryManagerTabPolicy(
             tabs,
             webViews,
-            config.memoryManager.maxSuspendedNormal,
-            config.memoryManager.maxSuspendedLow,
-            config.memoryManager.maxSuspendedCritical
+            settings.getMaxSuspendedNormal(),
+            settings.getMaxSuspendedLow(),
+            settings.getMaxSuspendedCritical()
         );
     }
     else {
@@ -25,8 +25,8 @@ function createTabPolicy(tabs, webViews, config) {
         return new SimplePolicy(
             tabs,
             webViews,
-            config.simplePolicy.maxActiveTabFamilies,
-            config.simplePolicy.maxSuspendedTabFamilies
+            settings.getMaxActiveTabFamilies(),
+            settings.getMaxSuspendedTabFamilies()
         );
     }
 }
