@@ -68,25 +68,7 @@ class TabBarBase extends Component {
 
 	componentWillReceiveProps (nextProps) {
 		if (this.props.selectedIndex !== nextProps.selectedIndex) {
-			const
-				{browser, ids} = this.props,
-				prevSelectedId = ids[this.props.selectedIndex],
-				webViewToBlur = browser.webViews[prevSelectedId];
-
-				if (webViewToBlur) {
-					let script = `
-						var elements = document.body.getElementsByClassName('vkbInset');
-						if (elements.length !== 0) {
-							window.scrollTo(0, window.pageYOffset - parseInt(elements[0].style.height));
-							for (let i = elements.length - 1; i >= 0; --i) {
-								elements[i].remove();
-							}
-						}
-					`;
-					script += `document.activeElement.blur();`;
-					webViewToBlur.executeScript({ code: script});
-					webViewToBlur.blur();
-				}
+			console.log(`WVE remove vkb inset when hide vkb. (NEVA-6205)`);
 		}
 	}
 

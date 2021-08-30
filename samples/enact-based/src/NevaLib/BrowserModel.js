@@ -271,26 +271,10 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
         if (this.useragentOverride &&
             (this.useragentOverride.indexOf('WebOS') > -1 ||
              this.useragentOverride.indexOf('Web0S') > -1)) {
-            this.webViews[state.id].addContentScripts([{
-                name: 'handForLinks',
-                matches: ['http://*/*', 'https://*/*'],
-                css: { code: 'a:-webkit-any-link { cursor: pointer; }' },
-                run_at: 'document_start'
-            }]);
+            console.log(`WVE set Hand shaped cursor for links (NEVA-6228)`);
         }
         // Support for RCU back key, when focus is on <webview>
-        this.webViews[state.id].addContentScripts([{
-            name: 'goBackFromRCU',
-            matches: ['http://*/*', 'https://*/*'],
-            js: { code: `
-                document.addEventListener("keydown", ({keyCode}) => {
-                    if (keyCode === 0x1CD) {
-                        history.back();
-                    }
-                });
-            ` },
-            run_at: 'document_start'
-        }]);
+        console.log(`WVE Handle RCU goback key.(NEVA-6413)`);
         return state;
     }
 }

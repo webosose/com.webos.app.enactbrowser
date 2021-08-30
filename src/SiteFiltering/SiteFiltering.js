@@ -44,17 +44,11 @@ class SiteFiltering {
     }
 
     _addBeforeRrequestHandlerToWebview(id) {
-        this.webviews[id].request.onBeforeRequest.addListener(
-            this._handleBeforeRequest,
-            {urls: ["*://*/*"]},
-            ["blocking"]
-        );
+        console.log(`WVE Sitefiltering add listener (NEVA-6476)`)
     }
 
     _removeBeforeRequestHandlerFromWebview(id) {
-        this.webviews[id].request.onBeforeRequest.removeListener(
-            this._handleBeforeRequest
-        );
+        console.log(`WVE Sitefiltering remove listener (NEVA-6476)`)
     }
 
     _handleBeforeRequest = ({url, type}) => {

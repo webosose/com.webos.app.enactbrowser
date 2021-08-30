@@ -199,11 +199,16 @@ class WebView extends Component {
 	}
 
 	render () {
-		const {id, tabs, style, ...rest} = this.props,
+		let {id, tabs, style, ...rest} = this.props,
 			{show_error_page, show_webview, show_error_dialog, suppressDialog} = this.state,
 			{show_blocked_page_notification} = this.state,
 			err = tabs[id].error,
 			id_ = id + WebViewWrapperId;
+
+			// TBD: In case of BS, getBoundingClientRect is used to get container div size and position.
+			// It works only if the element is visible.
+			// Need to refactor this module for WVE support (ErrorPage and Webview show/hide logic)
+			show_webview = true;
 
 		delete rest.webView;
 		delete rest.browser;

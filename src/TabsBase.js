@@ -145,6 +145,7 @@ class TabsBase extends EventEmitter {
         this.emitEvent('delete', {state, index});
         this.emitEvent('select', {selectedIndex, state: tab.state});
         this._callOnContentDelete(contentId);
+        console.log(`WVE delete WVE (NEVA-6475)`)
     }
 
     moveTab(from, to) {

@@ -6,7 +6,6 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
-/*global chrome*/
 /*global window*/
 /*global document*/
 import {getUrlWithPrefix, fetchFaviconAsDataUrl} from './Utilities';
@@ -103,8 +102,8 @@ class BrowserBase {
         const
             url = userUrl ? getUrlWithPrefix(userUrl) : 'about:blank',
             {type: tabType, id} = this.getSelectedTabState();
+        const newState = this._createWebViewPage(url);
         if (tabType !== TabTypes.WEBVIEW) {
-            const newState = this._createWebViewPage(url);
             this.tabs.replaceTab(this.tabs.store.getSelectedIndex(), newState);
         }
         else {
@@ -265,11 +264,7 @@ class BrowserBase {
         });
         webview.addEventListener('permissionrequest', this._handlePermissionRequest);
 
-        webview.request.onAuthRequired.addListener(
-            (details, callback) => this._handleAuthRequired(state.id, callback),
-            { urls: ['*://*/*'] },
-            [ 'asyncBlocking' ]
-        );
+        console.log(`WVE Authentication dialog event listener (NEVA-6204)`);
 
         return state;
     }

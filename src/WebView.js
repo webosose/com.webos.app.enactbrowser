@@ -8,6 +8,19 @@
 
 /*global window*/
 
+class WebView_ {}
+
+setTimeout(() => {
+    window.WebView = WebView_;
+    WebView.prototype.setZoom = () => {console.log(`WVE setZoom (NEVA-6223)`)};
+    WebView.prototype.suspend = () => {console.log(`WVE suspend (NEVA-6169)`)};
+    WebView.prototype.resume = () => {console.log(`WVE resume (NEVA-6172)`)};
+    WebView.prototype.back = () => {console.log(`WVE back (NEVA-6176)`)};
+    WebView.prototype.forward = () => {console.log(`WVE forward (NEVA-6178)`)};
+    WebView.prototype.captureVisibleRegion = () => {console.log(`WVE captureVisibleRegion (NEVA-6175)`)};
+    WebView.prototype.clearData = () => {console.log(`WVE clearData (NEVA-6212)`)};
+}, 0);
+
 class WebviewMessageProxy {
     constructor() {
         this.counter = 0;
@@ -55,15 +68,16 @@ let msgProxy = null;
 const WebViewMixinBase = {
     insertIntoDom: function WebViewMixin_insertIntoDom(rootId) { // TODO: remove unnecessary function
         this.rootId = rootId;
-        if (this.activeState === 'activated') {
-            document.getElementById(rootId).appendChild(this);
-        }
+        let container_div = document.getElementById(rootId);
+        let r = container_div.getBoundingClientRect()
+        console.log(`WVE set position(x:${r.x}, y:${r.y}) (NEVA-6229)`);
+        console.log(`WVE set size(width:${r.width}, height:${r.height}) (NEVA-6229)`);
     },
 
     activate: function WebViewMixin_activate() {
         console.log('ACTIVATE ' + this.rootId);
         if (this.activeState === 'deactivated' && this.rootId) {
-            document.getElementById(this.rootId).appendChild(this); // TODO: change to reload()
+            console.log(`WVE activate ${this.rootId} (NEVA-6478)`);
         }
         else if (this.activeState === 'suspended' && WebView.prototype.resume) {
             WebView.prototype.resume.call(this);
@@ -84,7 +98,7 @@ const WebViewMixinBase = {
                 }
             `;
             script += `document.activeElement.blur();`;
-            this.executeScript({ code: script});
+            console.log(`WVE handle vkb (overlap). (NEVA-6205)`)
             if (WebView.prototype.suspend) {
                 WebView.prototype.suspend.call(this);
             }
@@ -101,7 +115,7 @@ const WebViewMixinBase = {
     deactivate: function WebViewMixin_deactivate() {
         console.log('DEACTIVATE ' + this.rootId);
         if (this.activeState !== 'deactivated') {
-            document.getElementById(this.rootId).removeChild(this); // TODO: change to terminate
+            console.log(`WVE deactivate ${this.rootId} (NEVA-6479`);
             this.activeState = 'deactivated';
         }
     },
@@ -139,7 +153,7 @@ const WebViewMixinBase = {
 
     setZoom: function WebViewMixin_setZoom(zoomFactor) {
         this.zoomFactor = zoomFactor;
-        WebView.prototype.setZoom.call(this, zoomFactor);
+        console.log(`WVE.setZoom (NEVA-6223)`);
     },
 
     captureVisibleRegion: function WebViewMixin_captureVisibleRegion(params) {
@@ -277,6 +291,11 @@ function WebViewMixin(webView, {activeState, ...rest}) {
             alertsCount: 0,
             tabFamilyId: null
         });
+        Object.assign(webView, WebView_, {
+            reload: function mixin_reload() {
+                console.log(`WVE reload (NEVA-6155)`)
+            }
+        })
 
     // TODO: use local property and Singleton
     if (!msgProxy) { // initializing global object, as it uses window
@@ -297,7 +316,8 @@ function WebViewMixin(webView, {activeState, ...rest}) {
     We should create webview via CustomWebView function and insert it to DOM.
 */
 function CustomWebView(params) {
-    return WebViewMixin(document.createElement('webview'), params);
+    console.log(`WVE Create WVE (NEVA-6474)`)
+    return WebViewMixin(document.createElement('div'), params);
 }
 
 export default CustomWebView;
