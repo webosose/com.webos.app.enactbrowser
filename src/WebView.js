@@ -72,10 +72,13 @@ const WebViewMixinBase = {
         let r = container_div.getBoundingClientRect()
         console.log(`WVE set position(x:${r.x}, y:${r.y}) (NEVA-6229)`);
         console.log(`WVE set size(width:${r.width}, height:${r.height}) (NEVA-6229)`);
+        this.tabView.setBounds(Math.round(r.x), Math.round(r.y), Math.round(r.width), Math.round(r.height));
     },
 
     activate: function WebViewMixin_activate() {
         console.log('ACTIVATE ' + this.rootId);
+        this.tabView.setVisible(true);
+        this.tabView.bringToFront();
         if (this.activeState === 'deactivated' && this.rootId) {
             console.log(`WVE activate ${this.rootId} (NEVA-6478)`);
         }
@@ -87,6 +90,8 @@ const WebViewMixinBase = {
 
     suspend: function WebViewMixin_suspend() {
         console.log('SUSPEND ' + this.rootId);
+        this.tabView.setVisible(false);
+        this.tabView.sendToBack();
         if (this.activeState === 'activated') {
             let script = `
                 var elements = document.body.getElementsByClassName('vkbInset');
@@ -123,17 +128,17 @@ const WebViewMixinBase = {
     navigate: function WebViewMixin_navigate(url) {
         const event = new CustomEvent('navigate', {
             detail: {
-                call_after_render: () => this.src = url
+                call_after_render: () => this.tabView.pageContents.loadURL(url)
             }
         });
         this.dispatchEvent(event);
     },
 
     back: function WebViewMixin_back() {
-        if (this.canGoBack()) {
+        if (this.tabView.pageContents.canGoBack()) {
             const event = new CustomEvent('navigate', {
                 detail: {
-                    call_after_render: () => WebView.prototype.back.call(this)
+                    call_after_render: () => this.tabView.pageContents.goBack()
                 }
             });
             this.dispatchEvent(event);
@@ -141,10 +146,10 @@ const WebViewMixinBase = {
     },
 
     forward: function WebViewMixin_forward() {
-        if (this.canGoForward()) {
+        if (this.tabView.pageContents.canGoForward()) {
             const event = new CustomEvent('navigate', {
                 detail: {
-                    call_after_render: () => WebView.prototype.forward.call(this)
+                    call_after_render: () => this.tabView.pageContents.goForward()
                 }
             });
             this.dispatchEvent(event);
@@ -183,6 +188,9 @@ const WebViewMixinBase = {
     },
 
     _initWebView: function WebViewMixin_initWebView(params) {
+        this.tabView = new PageView;
+        window.shell.shellWindow.pageView.addChildView(this.tabView);
+
         this.url = params.url ? params.url : '';
         this.isLoading = false;
         // partition assignment should be before any assignment of src
@@ -190,6 +198,7 @@ const WebViewMixinBase = {
 
         if (!params.newWindow) {
             this.src = this.url;
+            this.tabView.pageContents.loadURL(this.url);
         }
         else {
             params.newWindow.attach(this);

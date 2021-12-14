@@ -42,6 +42,9 @@ class RendererPerTabPolicy {
     _handleTabSelect = (ev) => {
         const tab = ev.state;
         if (tab.type !== TabTypes.WEBVIEW) {
+            if (this.queue.length > 0) {
+              this.suspendTabFamily(this.queue[0]);
+            }
             return;
         }
 

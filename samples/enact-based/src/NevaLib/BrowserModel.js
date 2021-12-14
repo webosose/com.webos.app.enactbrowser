@@ -119,23 +119,9 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
 
     initializeTabs() {
         let hasTargetInLaunchParams = false;
-        if (chrome.app.launchArgs) {
-            const launchArgs = JSON.parse(chrome.app.launchArgs);
-            if (launchArgs['override_user_agent_string']) {
-                this.useragentOverride = launchArgs['override_user_agent_string'];
-            }
-            if (launchArgs.target) {
-                hasTargetInLaunchParams = true;
-                this.tabs.addTab(this._createWebViewPage(launchArgs.target));
-            }
-            if (launchArgs.newtab) {
-                hasTargetInLaunchParams = true;
-                this.createTab(TabTypes.NEW_TAB_PAGE);
-            }
-            if (launchArgs.devSettings) {
-                this.devSettingsEnabled = true;
-            }
-        }
+        hasTargetInLaunchParams = true;
+        this.createTab(TabTypes.NEW_TAB_PAGE);
+
         if (!hasTargetInLaunchParams) {
             if (this.settings.getPrivateBrowsing()) {
                 this.createTab(TabTypes.NEW_TAB_PAGE);
