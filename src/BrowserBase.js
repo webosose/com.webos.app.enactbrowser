@@ -9,11 +9,11 @@
 /*global chrome*/
 /*global window*/
 /*global document*/
-import {getUrlWithPrefix, fetchFaviconAsDataUrl} from './Utilities';
-import {BrowserConsts} from './BrowserConsts.js';
-import {TabTitles, TabTypes} from './TabsConsts';
+import { getUrlWithPrefix, fetchFaviconAsDataUrl } from './Utilities';
+import { BrowserConsts } from './BrowserConsts.js';
+import { TabTitles, TabTypes } from './TabsConsts';
 import WebView from './WebView.js';
-import {IdGenerator, TabsBase as TabsModel} from './TabsBase.js';
+import { IdGenerator, TabsBase as TabsModel } from './TabsBase.js';
 
 class WebViewFactoryBase {
     constructor(browser) {
@@ -29,12 +29,12 @@ class WebViewFactoryBase {
         return 'persist:default';
     }
 
-    getState({newWindow}) {
+    getState({ newWindow }) {
         // Hack to fix advertisement self closing popunder tabs
         return newWindow ? 'activated' : this.browser.defaultWebviewState;
     }
 
-    getUrl({newWindow, url}) {
+    getUrl({ newWindow, url }) {
         return !newWindow ? getUrlWithPrefix(url) : null;
     }
 
@@ -60,7 +60,7 @@ class WebViewFactoryBase {
 
 // We allways have at least one view
 class BrowserBase {
-    constructor ({tabsModel, defaultWebviewState = 'activated', webViewFactory}) {
+    constructor({ tabsModel, defaultWebviewState = 'activated', webViewFactory }) {
         this.defaultWebviewState = defaultWebviewState;
         this.webViewFactory = webViewFactory || new WebViewFactoryBase(this);
         this.webViews = [];
@@ -102,7 +102,7 @@ class BrowserBase {
     navigate(userUrl) {
         const
             url = userUrl ? getUrlWithPrefix(userUrl) : 'about:blank',
-            {type: tabType, id} = this.getSelectedTabState();
+            { type: tabType, id } = this.getSelectedTabState();
         if (tabType !== TabTypes.WEBVIEW) {
             const newState = this._createWebViewPage(url);
             this.tabs.replaceTab(this.tabs.store.getSelectedIndex(), newState);
@@ -115,13 +115,13 @@ class BrowserBase {
 
     reloadStop() {
         const
-            {id, navState: {isLoading}} = this.getSelectedTabState(),
+            { id, navState: { isLoading } } = this.getSelectedTabState(),
             webView = this.webViews[this.tabs.getSelectedId()];
         if (isLoading) {
             webView.stop();
         }
         else {
-             webView.reload();
+            webView.reload();
         }
     }
 
@@ -218,7 +218,7 @@ class BrowserBase {
 
         webview.addEventListener('loadabort', (ev) => {
             if (ev.isTopLevel) {
-                const {reason} = ev;
+                const { reason } = ev;
                 const isError =
                     reason !== 'ERR_ABORTED' &&
                     webview.activeState !== 'deactivated';
@@ -235,9 +235,9 @@ class BrowserBase {
         webview.addEventListener('iconchange', (ev) => {
             if (ev.detail.favicons) {
                 fetchFaviconAsDataUrl(ev.detail.favicons, ev.detail.rootUrl)
-                .then((dataUrl) => {
-                    this.tabs.getTab(state.id).setIcon(dataUrl);
-                });
+                    .then((dataUrl) => {
+                        this.tabs.getTab(state.id).setIcon(dataUrl);
+                    });
             }
             else {
                 this.tabs.getTab(state.id).setIcon(null);
@@ -268,7 +268,7 @@ class BrowserBase {
         webview.request.onAuthRequired.addListener(
             (details, callback) => this._handleAuthRequired(state.id, callback),
             { urls: ['*://*/*'] },
-            [ 'asyncBlocking' ]
+            ['asyncBlocking']
         );
 
         return state;
@@ -392,7 +392,7 @@ class BrowserBase {
                 titleIconChange = true;
             }
 
-            navState.url = ev.url;
+            // navState.url = ev.url;
             navState.isLoading = true;
 
             tab.setNavState(navState);
@@ -451,4 +451,4 @@ class BrowserBase {
 
 }
 
-export {TabTypes, BrowserBase, WebViewFactoryBase};
+export { TabTypes, BrowserBase, WebViewFactoryBase };
