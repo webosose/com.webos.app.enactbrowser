@@ -6,16 +6,16 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
-function getBrowserDefaults () {
+function getBrowserDefaults() {
 	return {
 		bookmarks: [
-			{url:'https://google.com/', icon:null, title: 'Google'},
-			{url:'https://www.w3.org/', icon:null, title: 'W3C'},
-			{url:'http://www.bbc.com/news/', icon:null, title: 'BBC'},
-			{url:'https://stackoverflow.com/', icon:null, title: 'Stackoverflow'}
+			{ url: 'https://google.com/', icon: null, title: 'Google' },
+			{ url: 'https://www.w3.org/', icon: null, title: 'W3C' },
+			{ url: 'http://www.bbc.com/news/', icon: null, title: 'BBC' },
+			{ url: 'https://stackoverflow.com/', icon: null, title: 'Stackoverflow' }
 		],
 		config: {
-			useBuiltInErrorPages: true,
+			useBuiltInErrorPages: false,
 			restorePrevSessionPolicy: 'onlyLastTab', /* OR allTabs*/
 			// Limitations for Simple Tab management policy
 			simplePolicy: {

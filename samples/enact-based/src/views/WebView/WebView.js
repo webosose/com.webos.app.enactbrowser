@@ -15,7 +15,7 @@ import Button from '@enact/agate/Button';
 import Popup from '@enact/agate/Popup';
 import $L from '@enact/i18n/$L';
 import PropTypes from 'prop-types';
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 import ErrorPage from '../ErrorPage';
 
@@ -23,12 +23,14 @@ const
 	WebViewWrapperId = '_webview',
 	errorRendererCrashed = 'RENDERER_CRASHED',
 	errorUnresponsive = 'PAGE_UNRESPONSIVE',
+	errorNameNotResolved = "ERR_NAME_NOT_RESOLVED",
+	errorNetworkchanged = "ERR_NETWORK_CHANGED",
 	timeoutToSuppressDialog = 30000;
 
 const LOAD_STATE = {
 	UNLOADED: 0,
-	READY:1,
-	LOADED:2
+	READY: 1,
+	LOADED: 2
 };
 
 class WebView extends Component {
@@ -38,7 +40,7 @@ class WebView extends Component {
 		webView: PropTypes.object
 	};
 
-	constructor (props) {
+	constructor(props) {
 		super(props);
 
 		this.state = {
@@ -52,9 +54,19 @@ class WebView extends Component {
 
 	static getDerivedStateFromProps = (nextProps, prevState) => {
 		let
-			{browser, id, tabs} = nextProps,
-			{load} = prevState,
+			{ browser, id, tabs } = nextProps,
+			{ load } = prevState,
 			error = tabs[id].error;
+
+		if (load === LOAD_STATE.LOADED) {
+			if (error === errorNameNotResolved || error === errorNetworkchanged) {
+				return {
+					hideDialog: true,
+					hideErrorPage: false,
+					hideWebview: true
+				};
+			}
+		}
 
 		if (load === LOAD_STATE.READY) {
 			if (error === null) {
@@ -96,7 +108,7 @@ class WebView extends Component {
 		return null;
 	};
 
-	componentDidMount () {
+	componentDidMount() {
 		this.props.webView.insertIntoDom(this.props.id + WebViewWrapperId);
 		this.props.webView.addEventListener('loadcommit', this.onLoadCommit);
 		this.props.webView.addEventListener('contentload', this.onLoadContent);
@@ -104,23 +116,23 @@ class WebView extends Component {
 
 	onLoadCommit = () => {
 		if (this.state.load !== LOAD_STATE.READY) {
-			this.setState({load: LOAD_STATE.READY});
+			this.setState({ load: LOAD_STATE.READY });
 		}
 	};
 
 	onLoadContent = () => {
 		if (this.state.load === LOAD_STATE.READY) {
-			this.setState({load: LOAD_STATE.LOADED});
+			this.setState({ load: LOAD_STATE.LOADED });
 		}
 	};
 
 	enableDialog = () => {
-		this.setState({suppressDialog: false});
+		this.setState({ suppressDialog: false });
 	};
 
 	onWait = () => {
 		setTimeout(this.enableDialog, timeoutToSuppressDialog);
-		this.setState({suppressDialog: true});
+		this.setState({ suppressDialog: true });
 	};
 
 	onStop = () => {
@@ -133,10 +145,10 @@ class WebView extends Component {
 		});
 	};
 
-	render () {
+	render() {
 		const
-			{id, tabs, style, ...rest} = this.props,
-			{hideDialog, hideErrorPage, hideWebview} = this.state;
+			{ id, tabs, style, ...rest } = this.props,
+			{ hideDialog, hideErrorPage, hideWebview } = this.state;
 
 		delete rest.browser;
 		delete rest.webView;

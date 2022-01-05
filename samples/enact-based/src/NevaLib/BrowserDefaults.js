@@ -7,7 +7,7 @@
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
 // if defaults.js file is missing then browser will work anyway
-function getDefaults () {
+function getDefaults() {
 	if (typeof window.getBrowserDefaults === 'function') {
 		return window.getBrowserDefaults();
 	} else {
@@ -22,7 +22,7 @@ function getDefaults () {
 				pinNumber: '0000'
 			},
 			config: {
-				useBuiltInErrorPages: true,
+				useBuiltInErrorPages: false,
 				restorePrevSessionPolicy: 'onlyLastTab',
 				simplePolicy: {
 					'maxActiveTabFamilies': 1,
@@ -39,4 +39,4 @@ function getDefaults () {
 }
 
 export default getDefaults;
-export {getDefaults};
+export { getDefaults };
