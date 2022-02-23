@@ -18,7 +18,7 @@ const
 		alwaysShowBookmarks: false,
 		privateBrowsing: false,
 		pinNumber: '',
-		siteFiltering: '',
+		siteFiltering: 'off',
 		approvedSites: [],
 		blockedSites: []
 	};

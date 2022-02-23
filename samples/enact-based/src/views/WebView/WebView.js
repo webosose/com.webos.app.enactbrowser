@@ -25,6 +25,7 @@ const
 	errorUnresponsive = 'PAGE_UNRESPONSIVE',
 	errorNameNotResolved = "ERR_NAME_NOT_RESOLVED",
 	errorNetworkchanged = "ERR_NETWORK_CHANGED",
+	errorBlockedBySiteFilter = "ERR_BLOCKED_BY_SITEFILTER",
 	timeoutToSuppressDialog = 30000;
 
 const LOAD_STATE = {
@@ -57,7 +58,13 @@ class WebView extends Component {
 			{ browser, id, tabs } = nextProps,
 			{ load } = prevState,
 			error = tabs[id].error;
-
+		if(load === LOAD_STATE.UNLOADED && error === errorBlockedBySiteFilter) {
+			return {
+				hideDialog: true,
+				hideErrorPage: false,
+				hideWebview: true
+			};
+		}
 		if (load === LOAD_STATE.LOADED) {
 			if (error === errorNameNotResolved || error === errorNetworkchanged) {
 				return {
@@ -152,7 +159,6 @@ class WebView extends Component {
 
 		delete rest.browser;
 		delete rest.webView;
-
 		return (
 			<div>
 				<div

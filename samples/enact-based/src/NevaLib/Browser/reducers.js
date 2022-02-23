@@ -13,6 +13,7 @@ import tabsState from '../Tabs/reducers';
 import settingsState from '../Settings/reducers';
 import historyState from '../History/reducers';
 import bookmarksState from '../Bookmarks/reducers';
+import siteFilterState from '../SiteFiltering/reducers';
 
 const
 	initialBrowserState = {
@@ -61,5 +62,6 @@ export {
 	tabsState,
 	settingsState,
 	historyState,
-	bookmarksState
+	bookmarksState,
+	siteFilterState
 };

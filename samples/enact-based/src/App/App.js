@@ -15,6 +15,8 @@ import Main from '../views/Main';
 import AppDecorator from './AppDecorator';
 
 import css from './App.module.less';
+// import UrlManager from '../components/UrlManager/UrlManager';
+
 
 const App = kind({
 	name: 'App',
@@ -26,6 +28,7 @@ const App = kind({
 
 	render: (props) => (
 		<Main {...props} />
+		// <UrlManager/>
 	)
 });
 

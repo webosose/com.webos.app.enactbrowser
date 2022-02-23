@@ -85,9 +85,6 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
 		browser.searchService = new SearchService();
 		browser.tabPolicy = undefined; // eslint-disable-line no-undefined
 		browser.devSettingsEnabled = false;
-		browser.siteFiltering = new SiteFiltering(this.webViews, tabsModel, db);
-
-
 		browser.config.initialize(getDefaults().config)
 			.then(() => {
 				browser.prevSessionTabs = new PreviousSessionTabs(
@@ -104,6 +101,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
 				}
 			})
 			.then(() => {
+				browser.siteFiltering = new SiteFiltering(store,this.getNavigatorSiteFilter(),db);
 				browser.siteFiltering.setMode(browser.settings.getSiteFiltering());
 				browser.searchService.engine = browser.settings.getSearchEngine();
 				browser.setStatisticsGathering(browser.settings.getPrivateBrowsing());
@@ -117,7 +115,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
 		return Promise.all([
 			this.settings.initialize(defaults.settings),
 			this.bookmarks.initialize(defaults.bookmarks),
-			this.siteFiltering.initialize(defaults.sitefiltering)
+			// this.siteFiltering.initialize(defaults.sitefiltering)
 		]);
 	}
 

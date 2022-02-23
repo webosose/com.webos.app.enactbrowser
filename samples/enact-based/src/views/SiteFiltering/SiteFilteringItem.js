@@ -15,7 +15,7 @@ import {connect} from 'react-redux';
 import CheckboxItem from '@enact/agate/CheckboxItem';
 
 import PropTypes from 'prop-types';
-import React, {Component} from 'react';
+import {Component} from 'react';
 
 import {selectApprovedSite, selectBlockedSite} from '../../actions';
 

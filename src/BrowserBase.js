@@ -69,8 +69,12 @@ class BrowserBase {
         this.tabs = tabsModel;
         this.tabs.onContentDelete = this._handleContentDelete;
         this.tabs.addEventListener('update', this._handleTabsStateUpdate);
+        this.dummyWebView = null;
     }
-
+    getNavigatorSiteFilter (){
+        console.log('getNavigatorSiteFilter...')
+       return navigator.sitefilter;
+    }
     initializeTabs() {
         this.tabs.addTab(this._createNewTabPage());
     }

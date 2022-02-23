@@ -6,73 +6,73 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
-import {TabTypes} from '../TabsConsts';
-
 /**
     Blocks webview requests to resources, which urls is not allowed
     by filter
 */
 class SiteFiltering {
-    constructor(webviews, tabs) {
-        Object.assign(this, {filter: null, webviews, tabs});
+    constructor(navigatorSiteFilter) {
+        this.navigatorSiteFilter = navigatorSiteFilter;
     }
-
-    /**
-        expectcs object with method isAllowed(url):Boolean,
-        which returns false, if request to url should be blocked
-        OR
-        null if you want to disable site filterting
+    getURLS(callback) {
+        this.navigatorSiteFilter.getURLs((value) => {
+            callback(value);
+        });
+    }
+    /*
+    *  Off - 0       Approved Sites - 1      Blocked Sites -2
+    * This value need to store in the DB and call initial browser launch
     */
-    setFilter(filter) {
-        if (filter && !this.filter) {
-            // setting filter when no filter is set
-            this.tabs.addEventListener('add', this._handleNewTab);
-            this.tabs.addEventListener('replace', this._handleNewTab);
-            Object.keys(this.webviews).forEach((id) => {
-                this._addBeforeRrequestHandlerToWebview(id);
-            });
+    setState(value, callback) {
+        //notifySiteFilterState
+        const response = this.navigatorSiteFilter.setType(value)
+        if (response) {
+            this.getURLS(callback);
         }
-        else if (!filter && this.filter) {
-            // removing filter
-            this.tabs.removeEventListener('add', this._handleNewTab);
-            this.tabs.removeEventListener('replace', this._handleNewTab);
-            Object.keys(this.webviews).forEach((id) => {
-                this._removeBeforeRequestHandlerFromWebview(id);
-            });
+    }
+
+
+    /*
+    * Add url
+    * Allowed or blocked sites decide based on the site filter state
+    */
+    addURL(url, callback) {
+        if (url) {
+            const response = this.navigatorSiteFilter.addURL(url);
+            if (response) {
+                this.getURLS(callback);
+            }
         }
-        this.filter = filter;
     }
 
-    _addBeforeRrequestHandlerToWebview(id) {
-        this.webviews[id].request.onBeforeRequest.addListener(
-            this._handleBeforeRequest,
-            {urls: ["*://*/*"]},
-            ["blocking"]
-        );
+    /*
+     * Add url
+     * Allowed or blocked sites decide based on the site filter state
+     */
+    updateURL(oldURL, newURL, callback) {
+        if (newURL) {
+            const response = this.navigatorSiteFilter.updateURL(oldURL, newURL);
+            if (response) {
+                this.getURLS(callback);
+            }
+        }
     }
 
-    _removeBeforeRequestHandlerFromWebview(id) {
-        this.webviews[id].request.onBeforeRequest.removeListener(
-            this._handleBeforeRequest
-        );
-    }
+    /*
+     * Delete urls
+     * Allowed or blocked sites decide based on the site filter state
+     */
+    deletURLs(urls, callback) {
+        if (urls) {
+            this.navigatorSiteFilter.deleteURLs(urls, (status) => {
+                if (status) {
+                    this.getURLS(callback);
+                }
+            });
 
-    _handleBeforeRequest = ({url, type}) => {
-        // check for request type to block only request to web pages
-        // and not to block requests to resources such images, fonts, css, etc
-        const shouldCancelRequest =
-            (type === 'main_frame' || type === 'sub_frame') &&
-            this.filter &&
-            !this.filter.isAllowed(url);
-        return { cancel: shouldCancelRequest };
-    }
-
-    _handleNewTab = ({state: {id, type}}) => {
-        if (type === TabTypes.WEBVIEW) {
-            this._addBeforeRrequestHandlerToWebview(id);
         }
     }
 }
 
 export default SiteFiltering;
-export {SiteFiltering};
+export { SiteFiltering };

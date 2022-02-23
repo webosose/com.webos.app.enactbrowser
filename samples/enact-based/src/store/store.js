@@ -13,7 +13,8 @@ import {
 	tabsState,
 	settingsState,
 	historyState,
-	bookmarksState
+	bookmarksState,
+	siteFilterState
 } from '../NevaLib/Browser/reducers'; // TBD: fix path to '../NevaLib'
 
 const combinedReducers = combineReducers({
@@ -25,7 +26,8 @@ const combinedReducers = combineReducers({
 	historyUIState,
 	bookmarkUIState,
 	approvedSitesUIState,
-	blockedSitesUIState
+	blockedSitesUIState,
+	siteFilterState
 });
 
 export default function configureStore (initialState) {
