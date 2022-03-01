@@ -13,11 +13,11 @@
 
 import $L from '@enact/i18n/$L';
 import ContextualPopupDecorator from '@enact/moonstone/ContextualPopupDecorator';
-import Item from '@enact/moonstone/Item';
 import React, {Component} from 'react';
 
 import BrowserIconButton from '../BrowserIconButton';
 import css from './Menu.less';
+import MenuPopup from './MenuPopup';
 
 const MenuPopupButton = ContextualPopupDecorator(BrowserIconButton);
 
@@ -29,36 +29,15 @@ class Menu extends Component {
 		}
 	}
 
-	renderPopup = () => (
-		<div onClick={this.closeMenu}>
-			<Item onClick={this.openHistory}>{$L('History')}</Item>
-			<Item onClick={this.openBookmarks}>{$L('Bookmarks')}</Item>
-			<Item onClick={this.openSettings}>{$L('Settings')}</Item>
-			{this.props.browser.devSettingsEnabled &&
-				<Item onClick={this.openDevSettings}>DevSettings</Item>
-			}
-		</div>
-	)
+	renderPopup = () => {
+		return (
+			<MenuPopup {...this.props}/>
+		);
+	}
 
 	toggleMenu = () => {
 		const isOpened = !this.state.isOpened;
 		setTimeout(()=> {this.setState({isOpened});}, 100);
-	}
-
-	closeMenu = () => {
-		this.setState({isOpened: false});
-	}
-
-	openHistory = () => {
-		this.props.browser.openHistory();
-	}
-
-	openBookmarks = () => {
-		this.props.browser.openBookmarks();
-	}
-
-	openSettings = () => {
-		this.props.browser.openSettings();
 	}
 
 	openDevSettings = () => {

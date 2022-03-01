@@ -70,6 +70,33 @@ class BrowserBase {
         this.tabs.addEventListener('update', this._handleTabsStateUpdate);
     }
 
+    showMenuAbove(id) {
+        console.log(`show browser menu`);
+        let container_div = document.getElementById(id).parentElement; // popup decorator
+        let r = container_div.getBoundingClientRect();
+        console.log(`nevaBrowserMenu set position(x:${r.x}, y:${r.y})`);
+        console.log(`nevaBrowserMenu set size(width:${r.width}, height:${r.height})`);
+        this.menuPopupView.setBounds(Math.round(r.x), Math.round(r.y), Math.round(r.width), Math.round(r.height));
+        this.menuPopupView.setVisible(true);
+        this.menuPopupView.bringToFront();
+    }
+
+    createMenu() {
+        console.log(`create browser menu`);
+        if (!this.menuPopupView) {
+            this.menuPopupView = new PageView;
+        }
+        window.shell.shellWindow.pageView.addChildView(this.menuPopupView);
+        this.menuPopupView.pageContents.loadURL("http://google.com");
+    }
+
+    hideMenu() {
+        console.log(`hide browser menu`);
+        if (this.menuPopupView) {
+            window.shell.shellWindow.pageView.removeChildView(this.menuPopupView);
+        }
+    }
+
     initializeTabs() {
         this.tabs.addTab(this._createNewTabPage());
     }
@@ -186,7 +213,7 @@ class BrowserBase {
             });
             // we can't call webview's methods until it inserted into DOM
             // other way there won't be any effect
-            webView.addEventListener('loadstart', () => {
+            webView.addEventListener('did-start-loading', () => {
                 webView.clearData(options, types).then(() => {
                     if (document.body.contains(webView)) {
                         document.body.removeChild(webView);
@@ -214,13 +241,14 @@ class BrowserBase {
         webview.tabFamilyId = tab_family_id !== null ? tab_family_id : state.id;
         console.log(`created webview.tabFamilyId = ${webview.tabFamilyId}`);
 
-        webview.addEventListener('loadstart', (ev) => this._handleLoadStart(state.id, ev));
-        webview.addEventListener('loadcommit', (ev) => this._handleLoadCommit(state.id, ev));
+        webview.addEventListener('did-start-loading', (ev) => this._handleLoadStart(state.id, ev));
+        webview.addEventListener('load-progress-changed', (ev) => this._handleLoadCommit(state.id, ev));
         webview.addEventListener('contentload', () => this._handleContentLoad(state.id));
-        webview.addEventListener('loadstop', () => this._handleLoadStop(state.id));
+        webview.addEventListener('did-stop-loading', () => this._handleLoadStop(state.id));
+        webview.addEventListener('did-finish-load', () => this._handleLoadStop(state.id));
         webview.addEventListener('newwindow', this._handleNewWindow);
 
-        webview.addEventListener('loadabort', (ev) => {
+        webview.addEventListener('did-fail-load', (ev) => {
             if (ev.isTopLevel) {
                 const {reason} = ev;
                 const isError =
@@ -374,38 +402,35 @@ class BrowserBase {
         });
     }
 
-    _handleLoadStart = (tabId, ev) => {
-        if (ev.isTopLevel) {
-            const
-                tab = this.tabs.getTab(tabId),
-                navState = Object.assign({}, tab.state.navState);
+    _handleLoadStart = (tabId) => {
+        const
+            url = this.webViews[tabId].url,
+            tab = this.tabs.getTab(tabId),
+            navState = Object.assign({}, tab.state.navState);
 
-            let titleIconChange = false;
-            if (navState.url !== ev.url) {
-                titleIconChange = true;
-            }
+        let titleIconChange = false;
+        if (navState.url !== url) {
+            titleIconChange = true;
+        }
 
-            navState.url = ev.url;
-            navState.isLoading = true;
+        navState.url = url;
+        navState.isLoading = true;
 
-            tab.setNavState(navState);
+        tab.setNavState(navState);
 
-            if (titleIconChange) {
-                tab.setTitle(ev.url);
-                tab.setIcon(null);
-            }
+        if (titleIconChange) {
+            tab.setTitle(url);
+            tab.setIcon(null);
         }
     }
 
     _handleLoadCommit = (tabId, ev) => {
-        if (ev.isTopLevel) {
-            const
-                tab = this.tabs.getTab(tabId),
-                navState = Object.assign({}, tab.state.navState);
-            if (navState.url !== ev.url) {
-                navState.url = ev.url;
-                tab.setNavState(navState);
-            }
+        const
+            tab = this.tabs.getTab(tabId),
+            navState = Object.assign({}, tab.state.navState);
+        if (navState.url !== ev.url) {
+            navState.url = ev.url;
+            tab.setNavState(navState);
         }
     }
 

@@ -173,9 +173,9 @@ class WebView extends Component {
 
 	componentDidMount () {
 		this.props.webView.insertIntoDom(this.props.id + WebViewWrapperId);
-		this.props.webView.addEventListener('loadcommit', this.onLoadCommit);
-		this.props.webView.addEventListener('loadstart', this.onLoadStart);
-		this.props.webView.addEventListener('loadstop', this.onLoadStop);
+		this.props.webView.addEventListener('load-progress-changed', this.onLoadCommit);
+		this.props.webView.addEventListener('did-start-loading', this.onLoadStart);
+		this.props.webView.addEventListener('did-stop-loading', this.onLoadStop);
 		this.props.webView.addEventListener('navigate', this.onNavigate);
 	}
 

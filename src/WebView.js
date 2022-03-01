@@ -8,74 +8,82 @@
 
 /*global window*/
 
-class WebView_ {}
-
-setTimeout(() => {
-    window.WebView = WebView_;
-    WebView.prototype.setZoom = () => {console.log(`WVE setZoom (NEVA-6223)`)};
-    WebView.prototype.suspend = () => {console.log(`WVE suspend (NEVA-6169)`)};
-    WebView.prototype.resume = () => {console.log(`WVE resume (NEVA-6172)`)};
-    WebView.prototype.back = () => {console.log(`WVE back (NEVA-6176)`)};
-    WebView.prototype.forward = () => {console.log(`WVE forward (NEVA-6178)`)};
-    WebView.prototype.captureVisibleRegion = () => {console.log(`WVE captureVisibleRegion (NEVA-6175)`)};
-    WebView.prototype.clearData = () => {console.log(`WVE clearData (NEVA-6212)`)};
-}, 0);
-
-class WebviewMessageProxy {
-    constructor() {
-        this.counter = 0;
-        this.requests = {};
-        window.addEventListener('message', this.handleWebviewMessage);
+class PageContentsWrapper {
+    constructor(params) {
+        this.activeState = 'activated';
+        this._scriptInjectionAttempted = false;
+        this.rootId = null;
+        this.isAborted = false;
+        this.msgListenerId = null;
+        this.isAlertsAllowed = true;
+        this.alertsCount = 0;
+        this.tabFamilyId = null;
+        this._initWebView(params);
+    }
+    
+    addEventListener(event, callback) {
+        console.log(`pageContents addEventListener(${event}, ...)`);
+        if (!this.eventListeners[event])
+            this.eventListeners[event] = [];
+        this.eventListeners[event].push(callback);
     }
 
-    sendMessage(id, webview, message, callback) {
-        if (!this.requests[id]) {
-            console.warn('Can\'t send message for webview, as it doesn\'t have msgListenerId');
-            return;
+    _initWebView(params) {
+        this.eventListeners = [];
+        this.tabView = new PageView;
+        window.shell.shellWindow.pageView.addChildView(this.tabView);
+
+        this.url = params.url ? params.url : '';
+        this.isLoading = false;
+        // partition assignment should be before any assignment of src
+        this.partition = params.partition ? params.partition : '';
+
+        if (!params.newWindow) {
+            this.src = this.url;
+            this.tabView.pageContents.loadURL(this.url);
+        }
+        else {
+            params.newWindow.attach(this);
         }
 
-        const
-            action = message.action,
-            isNeva = true;
-        if (callback) {
-            this.requests[id][action] = {webview, callback};
+        let tabEventHandlerFactory = (event) => (ev) => {
+            console.log(`event ${event} occured`);
+            this.eventListeners[event].forEach(callback => callback());
         }
-        webview.contentWindow.postMessage(
-            Object.assign({id, isNeva}, message), '*');
-    }
 
-    handleWebviewMessage = (ev) => {
-        const data = ev.data;
-        if (data) {
-            this.requests[data.id][data.action].callback(data);
-        } else {
-            console.warn('Warning: Message from guest contains no data');
+        // It is needed to subscribe to Browser Shell events before adding event listeners with addEventListener
+        ['did-start-loading',
+         'did-fail-load',
+         'did-finish-load',
+         'did-start-navigation',
+         'did-stop-loading',
+         'dom-ready',
+         'laod-progress-changed',
+         'page-title-updated',
+        ].forEach(event => {
+            this.tabView.pageContents.on(event, tabEventHandlerFactory(event));
+        });
+
+        this.addEventListener('did-start-loading', this.handleDidStartLoading.bind(this));
+        this.addEventListener('laod-progress-changed', this.handleLoadProgressChanged.bind(this));
+        this.addEventListener('did-fail-load', this.handleDidFailLoad.bind(this));
+
+        this.setZoom(params.zoomFactor ? params.zoomFactor : 1);
+        if (params.useragentOverride) {
+            this.setUserAgentOverride(params.useragentOverride);
         }
     }
 
-    addMessageListener() {
-        this.requests[this.counter] = {};
-        return this.counter++;
-    }
-
-    removeMessageListener(id) {
-        delete this.requests[id];
-    }
-}
-
-let msgProxy = null;
-
-const WebViewMixinBase = {
-    insertIntoDom: function WebViewMixin_insertIntoDom(rootId) { // TODO: remove unnecessary function
+    insertIntoDom(rootId) { // TODO: remove unnecessary function
         this.rootId = rootId;
         let container_div = document.getElementById(rootId);
         let r = container_div.getBoundingClientRect()
         console.log(`WVE set position(x:${r.x}, y:${r.y}) (NEVA-6229)`);
         console.log(`WVE set size(width:${r.width}, height:${r.height}) (NEVA-6229)`);
         this.tabView.setBounds(Math.round(r.x), Math.round(r.y), Math.round(r.width), Math.round(r.height));
-    },
+    }
 
-    activate: function WebViewMixin_activate() {
+    activate() {
         console.log('ACTIVATE ' + this.rootId);
         this.tabView.setVisible(true);
         this.tabView.bringToFront();
@@ -86,9 +94,9 @@ const WebViewMixinBase = {
             WebView.prototype.resume.call(this);
         }
         this.activeState = 'activated';
-    },
+    }
 
-    suspend: function WebViewMixin_suspend() {
+    suspend() {
         console.log('SUSPEND ' + this.rootId);
         this.tabView.setVisible(false);
         this.tabView.sendToBack();
@@ -115,26 +123,48 @@ const WebViewMixinBase = {
         else if (this.activeState === 'deactivated') {
             console.error('Can\'t suspend webview from deactivated state');
         }
-    },
+    }
 
-    deactivate: function WebViewMixin_deactivate() {
+    deactivate() {
         console.log('DEACTIVATE ' + this.rootId);
         if (this.activeState !== 'deactivated') {
             console.log(`WVE deactivate ${this.rootId} (NEVA-6479`);
             this.activeState = 'deactivated';
         }
-    },
+    }
 
-    navigate: function WebViewMixin_navigate(url) {
+    canGoBack() {
+        console.log(`pageContents canGoBack`);
+        if (this.tabView.pageContents.canGoBack) {
+            return this.tabView.pageContents.canGoBack();
+        } else {
+            console.log(`pageContents.canGoBack() not implemented`);
+            return false;
+        }
+    }
+
+    canGoForward() {
+        console.log(`pageContents canGoForward`);
+        if (this.tabView.pageContents.canGoForward) {
+            return this.tabView.pageContents.canGoForward();
+        } else {
+            console.log(`pageContents.canGoForward() not implemented`);
+            return false;
+        }
+    }
+
+    navigate(url) {
+        console.log(`navigate`);
+        this.url = url;
         const event = new CustomEvent('navigate', {
             detail: {
                 call_after_render: () => this.tabView.pageContents.loadURL(url)
             }
         });
         this.dispatchEvent(event);
-    },
+    }
 
-    back: function WebViewMixin_back() {
+    back() {
         if (this.tabView.pageContents.canGoBack()) {
             const event = new CustomEvent('navigate', {
                 detail: {
@@ -143,9 +173,9 @@ const WebViewMixinBase = {
             });
             this.dispatchEvent(event);
         }
-    },
+    }
 
-    forward: function WebViewMixin_forward() {
+    forward() {
         if (this.tabView.pageContents.canGoForward()) {
             const event = new CustomEvent('navigate', {
                 detail: {
@@ -154,79 +184,46 @@ const WebViewMixinBase = {
             });
             this.dispatchEvent(event);
         }
-    },
+    }
 
-    setZoom: function WebViewMixin_setZoom(zoomFactor) {
+    setZoom(zoomFactor) {
         this.zoomFactor = zoomFactor;
         console.log(`WVE.setZoom (NEVA-6223)`);
-    },
+    }
 
-    captureVisibleRegion: function WebViewMixin_captureVisibleRegion(params) {
-        return new Promise((resolve) => {
+    focus() {console.log(`focus`);}
+
+    reload() {console.log(`reload`);}
+
+    captureVisibleRegion(params) {
+        console.log(`captureVisibleRegion`);
+        /* TDB: reimplement it
+          return new Promise((resolve) => {
             WebView.prototype.captureVisibleRegion.call(
                 this, params, (dataUrl) => {
-                    resolve(dataUrl);
+                resolve(dataUrl);
             });
-        });
-    },
+            });*/
+        return new Promise((resolve) => {});
+    }
 
-    // Clears browsing data for the webview partition
-    clearData: function WebViewMixin_clearData(options, types) {
-        return new Promise((resolve) => {
-            WebView.prototype.clearData.call(
-                this, options, types, () => {
-                    resolve();
-            });
-        });
-    },
+    clearData() {console.log(`clearData`);}
+    beforeWebviewDelete() {
+        console.log(`beforeWebviewDelete`);
+        // TBD !! remove event listeners
+    }
 
-    // should be called before webview destruction to prevent memory leak
-    beforeWebviewDelete: function WebViewMixin_beforeWebviewDelete() {
-        if (this.msgListenerId !== null) {
-            msgProxy.removeMessageListener(this.msgListenerId);
-        }
-    },
+    handleDidStartLoading () {
+        console.log(`handleDidStartLoading`);
+        this._scriptInjectionAttempted = false;
+        this._scriptInjected = false;
+        this.isAborted = false;
+        this.isAlertsAllowed = true;
+        this.alertsCount = 0;
+    }
 
-    _initWebView: function WebViewMixin_initWebView(params) {
-        this.tabView = new PageView;
-        window.shell.shellWindow.pageView.addChildView(this.tabView);
-
-        this.url = params.url ? params.url : '';
-        this.isLoading = false;
-        // partition assignment should be before any assignment of src
-        this.partition = params.partition ? params.partition : '';
-
-        if (!params.newWindow) {
-            this.src = this.url;
-            this.tabView.pageContents.loadURL(this.url);
-        }
-        else {
-            params.newWindow.attach(this);
-        }
-
-        this.addEventListener('loadstart', this.handleLoadStart.bind(this));
-        this.addEventListener('loadcommit', this.handleLoadCommit.bind(this));
-        this.addEventListener('loadabort', this.handleLoadAbort.bind(this));
-
-        this.setZoom(params.zoomFactor ? params.zoomFactor : 1);
-        if (params.useragentOverride) {
-            this.setUserAgentOverride(params.useragentOverride);
-        }
-
-    },
-
-    handleLoadStart: function WebViewMixin_handleLoadStart(ev) {
-        if (ev.isTopLevel) {
-            this._scriptInjectionAttempted = false;
-            this._scriptInjected = false;
-            this.isAborted = false;
-            this.isAlertsAllowed = true;
-            this.alertsCount = 0;
-        }
-    },
-
-    handleLoadCommit: function WebViewMixin_handleLoadCommit(ev) {
-        if (ev.isTopLevel && !this.isAborted) {
+    handleLoadProgressChanged(ev) {
+        if (!this.isAborted) {
             if (!this._scriptInjectionAttempted) {
                 // Try to inject title-update-messaging script
                 this.executeScript(
@@ -236,97 +233,16 @@ const WebViewMixinBase = {
                 this._scriptInjectionAttempted = true;
             }
         }
-    },
-
-    handleLoadAbort: function WebViewMixin_handleLoadAbort(ev) {
-        if (ev.isTopLevel) {
-            this.isAborted = true;
-        }
-        else {
-            console.warn("The load has aborted with error " + ev.code + " : " + ev.reason + ' url = ' + ev.url);
-        }
-    },
-
-    handleLabelScriptInjected: function handleLabelScriptInjected(results) {
-        if (chrome.runtime.lastError) {
-            console.warn('Warning: Failed to inject title.js : ' + chrome.runtime.lastError.message);
-        } else if (!results || !results.length) {
-            console.warn('Warning: Failed to inject title.js results are empty');
-        } else {
-            // Send a message to the <webview> so it can get a reference to
-            // the embedder
-            this._scriptInjected = true;
-            this.msgListenerId = msgProxy.addMessageListener();
-            msgProxy.sendMessage(
-                this.msgListenerId,
-                this,
-                {action: 'getTitle'},
-                (data) => {
-                    if (data.title && data.title !== '[no title]') {
-                        const event = new CustomEvent('titlechange', {detail: {title: data.title}});
-                        this.dispatchEvent(event);
-                    }
-                    else {
-                        console.warn(
-                            'Warning: Expected message from guest to contain title, but got:',
-                            data);
-                    }
-                }
-            );
-            msgProxy.sendMessage(
-                this.msgListenerId,
-                this,
-                {action: 'getFavicons'},
-                (data) => {
-                    const event = new CustomEvent(
-                        'iconchange',
-                        {detail: {favicons: data.favicons, rootUrl: data.rootUrl}}
-                    );
-                    this.dispatchEvent(event);
-                }
-            );
-        }
-    }
-}
-
-function WebViewMixin(webView, {activeState, ...rest}) {
-    Object.assign(webView, WebViewMixinBase, {
-            activeState,
-            _scriptInjectionAttempted: false,
-            rootId: null,
-            isAborted: false,
-            msgListenerId: null,
-            isAlertsAllowed: true,
-            alertsCount: 0,
-            tabFamilyId: null
-        });
-        Object.assign(webView, WebView_, {
-            reload: function mixin_reload() {
-                console.log(`WVE reload (NEVA-6155)`)
-            }
-        })
-
-    // TODO: use local property and Singleton
-    if (!msgProxy) { // initializing global object, as it uses window
-        msgProxy = new WebviewMessageProxy();
     }
 
-    webView._initWebView(rest);
+    handleDidFailLoad(ev) {
+        this.isAborted = true;
+        console.warn("The load has aborted with error " + ev.code + " : " + ev.reason + ' url = ' + ev.url);
+    }
+};
 
-    return webView;
-}
-
-/*
-    <webview> tag can't be extended via customElement.define(), it seems
-    that when custom <webview> is created it can't insert shadow dom (exception
-    is thrown). The only possible way to extend functionality of <webview> is
-    to add new properties dynamicaly to newly created instance of <webview>.
-    The drawback of this solution is that we can't use <webview> tag in markup.
-    We should create webview via CustomWebView function and insert it to DOM.
-*/
 function CustomWebView(params) {
-    console.log(`WVE Create WVE (NEVA-6474)`)
-    return WebViewMixin(document.createElement('div'), params);
-}
+    return new PageContentsWrapper(params);
+};
 
 export default CustomWebView;
