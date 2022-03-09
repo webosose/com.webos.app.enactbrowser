@@ -48,7 +48,7 @@ class PageContentsWrapper {
 
         let tabEventHandlerFactory = (event) => (ev) => {
             console.log(`event ${event} occured`);
-            this.eventListeners[event].forEach(callback => callback());
+            this.eventListeners[event].forEach(callback => callback(ev));
         }
 
         // It is needed to subscribe to Browser Shell events before adding event listeners with addEventListener

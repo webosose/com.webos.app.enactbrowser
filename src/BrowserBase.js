@@ -260,9 +260,10 @@ class BrowserBase {
                 }
             }
         });
-        webview.addEventListener('titlechange', (ev) => {
+        webview.addEventListener('page-title-updated', (title) => {
+            console.log(`page title updated event: ${title}`);
             const tab = this.tabs.getTab(state.id);
-            this._updateTitle(tab, ev.detail.title);
+            this._updateTitle(tab, title);
         });
         webview.addEventListener('iconchange', (ev) => {
             fetchFaviconAsDataUrl(ev.detail.favicons, ev.detail.rootUrl)
