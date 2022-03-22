@@ -160,10 +160,28 @@ class TabsBase extends EventEmitter {
         const oldId = this.store.getIds()[index];
         if (index < this.count()) {
             const oldState = this.getTab(oldId).state;
+
+            // copy navigation history
+            const oldHistory = oldState.navState.history;
+            const newHistory = newState.navState.history;
+
+            // 'newState' is always a newly created webview tab
+            // combine history from both tabs
+            newState.navState.history = {
+                index: oldHistory.index + 1,
+                // entries and views should have identical sizes.
+                entries: [oldHistory.entries[0], newHistory.entries[0]],
+                views: [oldHistory.views[0], newHistory.views[0]],
+            }
+
             this.store.replace(index, newState);
             this.emitEvent('replace', {index, state: newState, oldState});
             this.emitEvent('delete', {state: oldState});
             this._callOnContentDelete(oldId);
+
+            console.log(`replaceTab. selected index: ${this.store.getSelectedIndex()}, index: ${index}`);
+            console.log(newState);
+
             if (this.store.getSelectedIndex() === index) {
                 this.emitEvent('select', {index, state: newState});
             }
@@ -215,11 +233,17 @@ class TabsBase extends EventEmitter {
         return {
             id: id,
             type: type,
+            initialType: type,
             navState: {
                 canGoBack: false,
                 canGoForward: false,
                 isLoading: false,
-                url: ''
+                url: '',
+                history: {
+                    entries: [type],
+                    index: 0,
+                    views: []
+                },
             },
             title: null,
             icon: null,

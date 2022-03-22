@@ -126,14 +126,24 @@ class BrowserBase {
     }
 
     navigate(userUrl) {
-        const
-            url = userUrl ? getUrlWithPrefix(userUrl) : 'about:blank',
-            {type: tabType, id} = this.getSelectedTabState();
+        console.log(`BrowserBase::navigate`);
+        const url = userUrl ? getUrlWithPrefix(userUrl) : 'about:blank';
+
+        const history = this.getSelectedTabState().navState.history;
+        const type = history.entries[history.index];
+
         const newState = this._createWebViewPage(url);
-        if (tabType !== TabTypes.WEBVIEW) {
+        if (type !== TabTypes.WEBVIEW) {
+
+            const oldState = this.tabs.getTab(this.tabs.getSelectedId()).state;
+            if (oldState.navState.history.views[1] !== undefined) {
+                //TBD: need to destruct this pageView: this.webViews[oldState.navState.history.views[1]]
+            }
+
             this.tabs.replaceTab(this.tabs.store.getSelectedIndex(), newState);
         }
         else {
+            const id = history.views[history.index];
             this.webViews[id].navigate(url);
             this.webViews[id].tabFamilyId = newState;
         }
@@ -147,25 +157,56 @@ class BrowserBase {
             webView.stop();
         }
         else {
-            const event = new CustomEvent('navigate', {
-                detail: {
-                  call_after_render: () => webView.reload()
-                }
-            });
-            webView.dispatchEvent(event);
+            webView.reload();
         }
     }
 
     back() {
-        const webView = this.webViews[this.tabs.getSelectedId()];
-        if (webView) {
+        console.log(`BrowserBase::back`);
+        const {navState: {history}, navState} = this.getSelectedTabState();
+        console.log(history);
+
+        const webView = this.webViews[history.views[history.index]];
+
+        if (webView.canGoBack === true) {
             webView.back();
+        } else {
+            //update state
+            let tabId = this.tabs.getSelectedId();
+            const newNavState = Object.assign({}, navState, {
+                history: {
+                    index: 0,
+                    entries: navState.history.entries,
+                    views: navState.history.views
+                },
+                canGoBack: false,
+                canGoForward: true
+            });
+            this.tabs.getTab(this.tabs.getSelectedId()).setNavState(newNavState);
+            webView.suspend();
         }
     }
 
     forward() {
-        const webView = this.webViews[this.tabs.getSelectedId()];
-        if (webView) {
+        console.log(`BrowserBase::forward`);
+        const {navState: {history}, navState} = this.getSelectedTabState();
+
+        const webView = this.webViews[history.views[1]];
+
+        if (history.index === 0) {
+            // updated state
+            const newNavState = Object.assign({}, navState, {
+                history: {
+                    index: 1,
+                    entries: navState.history.entries,
+                    views: navState.history.views
+                },
+                canGoBack: true,
+                canGoForward: webView.canGoForward
+            });
+            this.tabs.getTab(this.tabs.getSelectedId()).setNavState(newNavState);
+            webView.activate();
+        } else {
             webView.forward();
         }
     }
@@ -240,6 +281,8 @@ class BrowserBase {
 
         webview.tabFamilyId = tab_family_id !== null ? tab_family_id : state.id;
         console.log(`created webview.tabFamilyId = ${webview.tabFamilyId}`);
+
+        state.navState.history.views[state.navState.history.index] = state.id;
 
         webview.addEventListener('did-start-loading', (ev) => this._handleLoadStart(state.id, ev));
         webview.addEventListener('load-progress-changed', (ev) => this._handleLoadCommit(state.id, ev));
@@ -435,25 +478,52 @@ class BrowserBase {
         }
     }
 
+    _canGoBack = (tabId) => {
+        const tab = this.tabs.getTab(tabId);
+        console.log(tab);
+        return (this.webViews[tabId].canGoBack
+                || tab.state.navState.history.index !== 0);
+    }
+
+    _canGoForward = (tabId) => {
+        const tab = this.tabs.getTab(tabId);
+        const history = tab.state.navState.history;
+        console.log(tab);
+
+        if (history.index === 0) {
+            if (history.views[1] !== undefined) {
+                return true;
+            }
+        } else {
+            return this.webViews[tabId].canGoBack;
+        }
+        return false;
+    }
+
     _handleContentLoad = (tabId) => {
+        console.log(`BrowserBase::_handleLoadStart`);
+
         const
-            tab = this.tabs.getTab(tabId),
-            navState = Object.assign({}, tab.state.navState, {
-                canGoBack: this.webViews[tabId].canGoBack(),
-                canGoForward: this.webViews[tabId].canGoForward()
-            });
+        tab = this.tabs.getTab(tabId),
+        navState = Object.assign({}, tab.state.navState, {
+            canGoBack: this._canGoBack(tabId),
+            canGoForward: this.webViews[tabId].canGoForward
+        });
         tab.setNavState(navState);
     }
 
     _handleLoadStop = (tabId) => {
+        console.log(`BrowserBase::_handleLoadStop`);
         const tab = this.tabs.getTab(tabId);
+
         if (tab.state) {
             const navState = Object.assign({}, tab.state.navState, {
                 isLoading: false,
-                canGoBack: this.webViews[tabId].canGoBack(),
-                canGoForward: this.webViews[tabId].canGoForward()
+                canGoBack: this._canGoBack(tabId),
+                canGoForward: this.webViews[tabId].canGoForward
             });
             tab.setNavState(navState);
+            this.webViews[tabId].emit('needToUpdateUI');
         }
     }
 

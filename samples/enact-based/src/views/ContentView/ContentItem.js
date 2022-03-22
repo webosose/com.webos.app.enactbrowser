@@ -43,6 +43,9 @@ const ContentItem = kind({
     },
     render: ({alwaysShowBookmarks, browser, fullScreen, isSelectedTab, id, tabs}) => {
         let style = Object.assign({}, hideStyle);
+        const tab = tabs[id];
+        const historyIndex = tab.navState.history.index;
+        const viewId = tab.navState.history.views[historyIndex];
         if (isSelectedTab) {
             style = {};
             if (fullScreen) {
@@ -50,14 +53,14 @@ const ContentItem = kind({
             }
         }
 
-        switch (tabs[id].type) {
+        switch (tab.navState.history.entries[historyIndex]) {
             case TabTypes.WEBVIEW: {
                 if (!fullScreen && alwaysShowBookmarks) {
                     style.top = ri.scale(269) + 'px';
                 }
 
                 return (
-                    <WebView style={style} id={id} webView={browser.webViews[id]} className={css.webView}
+                    <WebView style={style} id={viewId} webView={browser.webViews[viewId]} className={css.webView}
                         tabs={tabs} browser={browser} />
                 );
             }

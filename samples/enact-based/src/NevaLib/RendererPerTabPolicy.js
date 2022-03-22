@@ -41,14 +41,18 @@ class RendererPerTabPolicy {
 
     _handleTabSelect = (ev) => {
         const tab = ev.state;
-        if (tab.type !== TabTypes.WEBVIEW) {
+        const history = tab.navState.history;
+        const type = history.entries[history.index];
+
+        if (type !== TabTypes.WEBVIEW) {
             if (this.queue.length > 0) {
               this.suspendTabFamily(this.queue[0]);
             }
             return;
         }
+        const viewId = history.views[history.index];
 
-        let tab_family_id = this.webViews[tab.id].tabFamilyId;
+        let tab_family_id = this.webViews[viewId].tabFamilyId;
 
         this.queue.unshift(tab_family_id);
         this.queue = [...new Set(this.queue)]; // remove duplicates

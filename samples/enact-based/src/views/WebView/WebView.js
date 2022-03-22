@@ -177,6 +177,7 @@ class WebView extends Component {
 		this.props.webView.addEventListener('did-start-loading', this.onLoadStart);
 		this.props.webView.addEventListener('did-stop-loading', this.onLoadStop);
 		this.props.webView.addEventListener('navigate', this.onNavigate);
+		this.props.webView.addEventListener('needToUpdateUI', this.onUINeedsToBeUpdated);
 	}
 
 	onWait = () => {
@@ -196,6 +197,11 @@ class WebView extends Component {
 
 	openSiteFiltering = () => {
 		this.props.browser.openSettings();
+	}
+
+	onUINeedsToBeUpdated = () => {
+		console.log(`onUINeedsToBeUpdated`);
+		this.forceUpdate();
 	}
 
 	render () {
