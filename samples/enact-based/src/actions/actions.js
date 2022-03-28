@@ -6,6 +6,11 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
+const setFullScreen = (enable) => ({
+	type: 'SET_FULLSCREEN',
+	enable
+});
+
 const selectHistory = (id, selected) => ({
 	type: 'SELECT_HISTORY',
 	id,
@@ -73,6 +78,7 @@ const deselectAllBlockedSites = () => ({
 });
 
 export {
+	setFullScreen,
 	selectHistory,
 	selectAllHistory,
 	deselectAllHistory,

@@ -16,6 +16,7 @@ import bookmarksState from '../Bookmarks/reducers';
 
 const
 	initialBrowserState = {
+		fullScreen: false,
 		zoomFactor: 1,
 		recentlyClosed: [],
 		urlSuggestions: [],
@@ -24,6 +25,12 @@ const
 
 function browserState (state = initialBrowserState, action) {
 	switch (action.type) {
+		case types.SET_FULLSCREEN: {
+			console.log(`Browser::reducer::SET_FULLSCREEN`);
+			return Object.assign({}, state, {
+				fullScreen: action.enable
+			});
+		}
 		case types.SET_ZOOM_FACTOR: {
 			return Object.assign({}, state, {
 				zoomFactor: action.value

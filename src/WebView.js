@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2019 LG Electronics, Inc.
+// Copyright (c) 2018 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -80,6 +80,8 @@ class PageContentsWrapper {
          'laod-progress-changed',
          'page-title-updated',
          'needToUpdateUI',
+         'enter-html-fullscreen',
+         'leave-html-fullscreen'
         ].forEach(event => {
             this.tabView.pageContents.on(event, tabEventHandlerFactory(event));
         });
@@ -88,6 +90,7 @@ class PageContentsWrapper {
         this.addEventListener('laod-progress-changed', this.handleLoadProgressChanged.bind(this));
         this.addEventListener('did-fail-load', this.handleDidFailLoad.bind(this));
         this.addEventListener('dom-ready', this.handleDomReady.bind(this));
+        this.addEventListener('leave-html-fullscreen', this.handleLeaveHtmlFullscreen.bind(this));
 
         this.setZoom(params.zoomFactor ? params.zoomFactor : 1);
         if (params.useragentOverride) {
@@ -95,13 +98,31 @@ class PageContentsWrapper {
         }
     }
 
-    insertIntoDom(rootId) { // TODO: remove unnecessary function
-        this.rootId = rootId;
-        let container_div = document.getElementById(rootId);
+    handleLeaveHtmlFullscreen(ev) {
+        console.log(`Leave HTML fullscreen`);
+        this.tabView.pageContents.executeJavaScriptInMainFrame("document.webkitExitFullscreen();");
+    }
+
+    adjustBounds() {
+        if (!this.rootId)
+            return;
+
+        console.log(`WebVIew::adjustBounds`);
+
+        let container_div = document.getElementById(this.rootId);
         let r = container_div.getBoundingClientRect()
+        if (r.y < 1) {
+            r.y = 1; // pageView should not overlap 'exit fullscreen' button div
+                     // (1px heigh)
+        }
         console.log(`WVE set position(x:${r.x}, y:${r.y}) (NEVA-6229)`);
         console.log(`WVE set size(width:${r.width}, height:${r.height}) (NEVA-6229)`);
         this.tabView.setBounds(Math.round(r.x), Math.round(r.y), Math.round(r.width), Math.round(r.height));
+    }
+
+    insertIntoDom(rootId) {
+        this.rootId = rootId;
+        this.adjustBounds();
     }
 
     activate() {

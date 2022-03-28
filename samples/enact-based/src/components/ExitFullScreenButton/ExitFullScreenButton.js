@@ -11,8 +11,6 @@
  *
  */
 
-import $L from '@enact/i18n/$L';
-import {Button} from '@enact/moonstone/Button';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import {Job} from '@enact/core/util';
@@ -22,7 +20,8 @@ import css from './ExitFullScreenButton.less';
 class ExitFullScreenButton extends Component {
 	static props = {
 		fullScreen: PropTypes.bool,
-		onExitFullScreen: PropTypes.func
+		onExitFullScreen: PropTypes.func,
+		browser: PropTypes.object
 	}
 
 	constructor (props) {
@@ -33,11 +32,16 @@ class ExitFullScreenButton extends Component {
 	}
 
 	componentDidMount () {
+		console.log(`ExitFullScreenButton::componentDidMount`);
 		this.startHideExitFullScreen.start();
+		this.props.browser.createExitFullscreenButton();
+		this.hide();
 	}
 
 	componentWillUnmount() {
 		this.startHideExitFullScreen.stop();
+		this.hide();
+		// TBD: destroy pageVIew
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -51,11 +55,11 @@ class ExitFullScreenButton extends Component {
 	}
 
 	show = () => {
-		this.setState({animation: css.show});
+		this.props.browser.showExitFullscreenButton();
 	}
 
 	hide = () => {
-		this.setState({animation: css.hide});
+		this.props.browser.hideExitFullscreenButton();
 	}
 
 	startHideExitFullScreen = new Job(this.hide, 4000);
@@ -71,24 +75,8 @@ class ExitFullScreenButton extends Component {
 	}
 
 	render () {
-		const
-			{animation} = this.state,
-			{fullScreen} = this.props;
-
 		return (
-			<div className={css.topArea} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
-				{
-					fullScreen ?
-					<Button
-						className={animation}
-						onClick={this.props.onExitFullScreen}
-						onMouseEnter={this.onMouseEnter}
-					>
-					{$L('Exit Full Screen')}
-					</Button>
-					: null
-				}
-			</div>
+			<div className={css.topArea} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave} />
 		);
 	}
 }

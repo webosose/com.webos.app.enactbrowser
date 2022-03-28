@@ -1,0 +1,12 @@
+{
+	"id": "exitfullscreenbutton",
+	"version": "1.0.0",
+	"vendor": "LGE-NEVA",
+	"type": "web",
+	"main": "index.html",
+	"title": "Neva Browser Exit Button",
+	"icon": "icon.png",
+	"miniicon": "icon-mini.png",
+	"largeIcon": "icon-large.png",
+	"uiRevision": 2
+}

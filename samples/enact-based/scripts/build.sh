@@ -11,8 +11,12 @@ ENACT_DEV=${ENACT_DEV:-enact}
 )
 
 $ENACT_NPM install
-git apply enact-fix.patch || git apply enact-fix.patch -R --check
-
 $ENACT_DEV pack $1
+
 cp label.js background.js webos-locale.js defaults.js dist
 ./scripts/install-manifest.js --from=manifest.json --to=dist/manifest.json --version_suffix=`git rev-parse HEAD`
+
+(
+    cd ../../exitFullscreenButton
+    scripts/build.sh $1
+)

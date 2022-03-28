@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2020 LG Electronics, Inc.
+// Copyright (c) 2018 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -28,6 +28,7 @@ import Menu from '../../components/Menu';
 import NavigationBox from '../../components/NavigationBox';
 import Omnibox from '../../components/Omnibox';
 import PropTypes from 'prop-types';
+import {setFullScreen} from '../../actions';
 import {TabBar} from '../../components/TabBar';
 import ZoomControl from '../../components/ZoomControl';
 
@@ -39,6 +40,7 @@ class MainBase extends Component {
 	static contextTypes = contextTypes;
 	static propTypes = {
 		privateBrowsing: PropTypes.bool,
+		fullScreen: PropTypes.bool,
 	}
 
 	constructor (props) {
@@ -63,6 +65,13 @@ class MainBase extends Component {
 		}
 	}
 
+	static getDerivedStateFromProps = (props, state) => {
+		if (props.fullScreen !== state.fullScreen) {
+			return {...state, fullScreen: props.fullScreen};
+		}
+		return null;
+	}
+
 	componentDidMount () {
 		const browser = new Browser(this.props.store, maxTab);
 		// eslint-disable-next-line react/no-did-mount-set-state
@@ -75,6 +84,7 @@ class MainBase extends Component {
 			}
 		});
 		document.addEventListener('setInsetY', this.onSetInsetY);
+		browser.exitFullscreenButtonIpc.subscribe('exit-fullscreen', this.onExitFullScreen.bind(this));
 	}
 
 	componentDidUpdate () {
@@ -128,11 +138,13 @@ class MainBase extends Component {
 	}
 
 	onFullScreen = () => {
-		this.setState({fullScreen: true});
+			console.log(`Main::onFullScreen`);
+			this.props.setFullScreen(true);
 	}
 
 	onExitFullScreen = () => {
-		this.setState({fullScreen: false});
+		console.log(`Main::onExitFullScreen`);
+		this.props.setFullScreen(false);
 	}
 
 	onClose = () => {
@@ -255,10 +267,19 @@ class MainBase extends Component {
 	}
 }
 
-const mapStateToProps = ({settingsState}) => ({
-	privateBrowsing: settingsState.privateBrowsing,
-});
+const mapStateToProps = ({settingsState, browserState}) =>  {
+	return ({
+		privateBrowsing: settingsState.privateBrowsing,
+		fullScreen: browserState.fullScreen
+	})
+};
 
-const Main = connect(mapStateToProps, null)(MainBase);
+const mapDispatchToProps = (dispatch) => {
+	return ({
+		setFullScreen: (enable) => dispatch(setFullScreen(enable))
+	})
+};
+
+const Main = connect(mapStateToProps, mapDispatchToProps)(MainBase);
 
 export default Main;

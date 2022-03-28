@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2020 LG Electronics, Inc.
+// Copyright (c) 2018 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -11,17 +11,19 @@
  *
  */
 
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ErrorPage from '../ErrorPage';
 import BlockedPageNotification from '../BlockedPageNotification';
+import {setFullScreen} from '../../actions';
 
 const
 	WebViewWrapperId = '_webview',
 	DialogSupressTimeout = 30000;
 
 
-class WebView extends Component {
+class WebViewBase extends Component {
 	static propTypes = {
 		id: PropTypes.string,
 		webView: PropTypes.object
@@ -178,6 +180,13 @@ class WebView extends Component {
 		this.props.webView.addEventListener('did-stop-loading', this.onLoadStop);
 		this.props.webView.addEventListener('navigate', this.onNavigate);
 		this.props.webView.addEventListener('needToUpdateUI', this.onUINeedsToBeUpdated);
+		this.props.webView.addEventListener('enter-html-fullscreen', this.enableFullScreen.bind(this));
+		this.props.webView.addEventListener('leave-html-fullscreen', this.disableFullScreen.bind(this));
+	}
+
+	componentDidUpdate () {
+		console.log(`views::WebView::componentDidUpdate`);
+		this.props.webView.adjustBounds(this.props.id + WebViewWrapperId);
 	}
 
 	onWait = () => {
@@ -202,6 +211,16 @@ class WebView extends Component {
 	onUINeedsToBeUpdated = () => {
 		console.log(`onUINeedsToBeUpdated`);
 		this.forceUpdate();
+	}
+
+	enableFullScreen() {
+		console.log(`WebView::enableFullScreen`);
+		this.props.setFullScreen(true);
+	}
+
+	disableFullScreen() {
+		console.log(`WebView::disableFullScreen`);
+		this.props.setFullScreen(false);
 	}
 
 	render () {
@@ -255,5 +274,13 @@ class WebView extends Component {
 		);
 	}
 }
+
+
+const mapDispatchToProps = (dispatch) => {
+	return ({
+		setFullScreen: (enable) => dispatch(setFullScreen(enable))
+})};
+
+const WebView = connect(null, mapDispatchToProps)(WebViewBase);
 
 export default WebView;

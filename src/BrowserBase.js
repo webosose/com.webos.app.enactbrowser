@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2019 LG Electronics, Inc.
+// Copyright (c) 2018 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -8,11 +8,41 @@
 
 /*global window*/
 /*global document*/
+/*global ShellIpc*/
 import {getUrlWithPrefix, fetchFaviconAsDataUrl} from './Utilities';
 import {BrowserConsts} from './BrowserConsts.js';
 import {TabTitles, TabTypes} from './TabsConsts';
 import WebView from './WebView.js';
 import {IdGenerator, TabsBase as TabsModel} from './TabsBase.js';
+
+class Ipc {
+    constructor (ipcObjectName) {
+        this.messages = [];
+        this.ipcObject = new ShellIpc(ipcObjectName);
+    }
+
+    createHandler(message, handlers) {
+        return ((ev) => {
+            console.log(`handle ${message} IPC message`);
+            handlers.forEach((callback) => {
+                try {
+                    callback(ev);
+                } catch (err) {
+                    console.log(`${message} handler cause exception ${err}`);
+                }
+            });
+        })
+    }
+
+    subscribe(message, callback) {
+        const messages = this.messages;
+        if (messages[message] === undefined) {
+            messages[message] = [];
+            this.ipcObject.on(message, this.createHandler(message, messages[message]));
+        }
+        messages[message].push(callback);
+    }
+};
 
 class WebViewFactoryBase {
     constructor(browser) {
@@ -68,6 +98,8 @@ class BrowserBase {
         this.tabs = tabsModel;
         this.tabs.onContentDelete = this._handleContentDelete;
         this.tabs.addEventListener('update', this._handleTabsStateUpdate);
+        this.exitFullscreenButton = null;
+        this.exitFullscreenButtonIpc = new Ipc("ipc_exit_fs_button");
     }
 
     showMenuAbove(id) {
@@ -95,6 +127,59 @@ class BrowserBase {
         if (this.menuPopupView) {
             window.shell.shellWindow.pageView.removeChildView(this.menuPopupView);
         }
+    }
+
+    createExitFullscreenButton() {
+        if (!this.exitFullscreenButton) {
+            this.exitFullscreenButton = new PageView;
+            this.exitFullscreenButton.pageContents = new PageContents({
+                "api": ["v8/browser_shell_ipc"]
+            });
+        }
+        window.shell.shellWindow.pageView.addChildView(this.exitFullscreenButton);
+
+        const button_width = 260;
+        const button_heigh = 110;
+
+        const x = Math.round((window.innerWidth / 2) - (button_width / 2));
+        const y = 20;
+
+        console.log(`Exit FS button set position(x:${x}, y:${y})`);
+        console.log(`Exit FS button set size(width:${button_width}, height:${button_heigh})`);
+
+        this.exitFullscreenButton.setBounds(x, y, button_width, button_heigh);
+        this.exitFullscreenButton.pageContents.setPageBaseBackgroundColor('#00000000');
+        // Current impl on Browser Shell do not support relative file paths
+        // loadURL and absolute path will be replaced with loadFile(<rel path>) when it will be implemented in Browser Shell
+        this.exitFullscreenButton.pageContents.loadURL("file:///home/lup/work/NEVA-6042/dist/exitbtn/index.html")
+
+        this.exitFullscreenButtonIpc.subscribe("exit-fullscreen", (() => {
+            console.log(`exit-fullscreen message from 'exit fullscreen' button`);
+
+            const {navState: {history}} = this.getSelectedTabState();
+            if (history.entries[history.index] === TabTypes.WEBVIEW) {
+                const webView = this.webViews[history.views[history.index]];
+                webView.emit('leave-html-fullscreen');
+            }
+        }).bind(this));
+    }
+
+    showExitFullscreenButton() {
+        console.log(`BrowserBase::showExitFullscreenButton`);
+        this.exitFullscreenButton.setVisible(true);
+        this.exitFullscreenButton.bringToFront();
+    }
+
+    hideExitFullscreenButton() {
+        console.log(`BrowserBase::hideExitFullscreenButton`);
+        this.exitFullscreenButton.setVisible(false);
+        this.exitFullscreenButton.sendToBack();
+    }
+
+    destroyExitFullscreenButton() {
+        console.log(`BrowserBase::destroyExitFullscreenButton`);
+        window.shell.shellWindow.pageView.removeChildView(this.exitFullscreenButton);
+        // TDB!!! destroy pageView
     }
 
     initializeTabs() {
