@@ -6,7 +6,6 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
-/*global chrome*/
 import {BookmarksMixin} from 'js-browser-lib/BookmarksMixin';
 import {BrowserBase, WebViewFactoryBase} from 'js-browser-lib/BrowserBase';
 import {BrowserConsts} from 'js-browser-lib/BrowserConsts';
