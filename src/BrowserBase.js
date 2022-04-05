@@ -265,7 +265,8 @@ class BrowserBase {
                     views: navState.history.views
                 },
                 canGoBack: false,
-                canGoForward: true
+                canGoForward: true,
+                url: ""
             });
             this.tabs.getTab(this.tabs.getSelectedId()).setNavState(newNavState);
             webView.suspend();
@@ -287,7 +288,8 @@ class BrowserBase {
                     views: navState.history.views
                 },
                 canGoBack: true,
-                canGoForward: webView.canGoForward
+                canGoForward: webView.canGoForward,
+                url: webView.url
             });
             this.tabs.getTab(this.tabs.getSelectedId()).setNavState(newNavState);
             webView.activate();
@@ -373,8 +375,9 @@ class BrowserBase {
         webview.addEventListener('load-progress-changed', (ev) => this._handleLoadCommit(state.id, ev));
         webview.addEventListener('contentload', () => this._handleContentLoad(state.id));
         webview.addEventListener('did-stop-loading', () => this._handleLoadStop(state.id));
-        webview.addEventListener('did-finish-load', () => this._handleLoadStop(state.id));
+        webview.addEventListener('did-finish-load', this._handleFinishLoading(state.id));
         webview.addEventListener('newwindow', this._handleNewWindow);
+        webview.addEventListener('did-start-navigation', this._handleStartNavigation(state.id));
 
         webview.addEventListener('did-fail-load', (ev) => {
             if (ev.isTopLevel) {
@@ -595,6 +598,33 @@ class BrowserBase {
             canGoForward: this.webViews[tabId].canGoForward
         });
         tab.setNavState(navState);
+    }
+
+    _handleFinishLoading = (tabId) => (url) => {
+        console.log(`BrowserBase::_handleFinishLoading ${url}`);
+        const tab = this.tabs.getTab(tabId);
+
+        if (tab.state) {
+            const navState = Object.assign({}, tab.state.navState, {
+                isLoading: false,
+                canGoBack: this._canGoBack(tabId),
+                canGoForward: this.webViews[tabId].canGoForward,
+                url: url
+            });
+            tab.setNavState(navState);
+            this.webViews[tabId].emit('needToUpdateUI');
+        }
+    }
+
+    _handleStartNavigation = (tabId) => (url) => {
+        console.log(`BrowserBase::_handleStartNavigation ${url}`);
+        const tab = this.tabs.getTab(tabId);
+        if (tab.state) {
+            const navState = Object.assign({}, tab.state.navState, {
+                url: url
+            });
+            tab.setNavState(navState);
+        }
     }
 
     _handleLoadStop = (tabId) => {
