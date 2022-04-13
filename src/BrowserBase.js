@@ -11,38 +11,11 @@
 /*global ShellIpc*/
 import {getUrlWithPrefix, fetchFaviconAsDataUrl} from './Utilities';
 import {BrowserConsts} from './BrowserConsts.js';
+import Ipc from './Ipc';
+import {Menu as MenuBase} from './MenuBase';
 import {TabTitles, TabTypes} from './TabsConsts';
 import WebView from './WebView.js';
 import {IdGenerator, TabsBase as TabsModel} from './TabsBase.js';
-
-class Ipc {
-    constructor (ipcObjectName) {
-        this.messages = [];
-        this.ipcObject = new ShellIpc(ipcObjectName);
-    }
-
-    createHandler(message, handlers) {
-        return ((ev) => {
-            console.log(`handle ${message} IPC message`);
-            handlers.forEach((callback) => {
-                try {
-                    callback(ev);
-                } catch (err) {
-                    console.log(`${message} handler cause exception ${err}`);
-                }
-            });
-        })
-    }
-
-    subscribe(message, callback) {
-        const messages = this.messages;
-        if (messages[message] === undefined) {
-            messages[message] = [];
-            this.ipcObject.on(message, this.createHandler(message, messages[message]));
-        }
-        messages[message].push(callback);
-    }
-};
 
 class WebViewFactoryBase {
     constructor(browser) {
@@ -100,33 +73,9 @@ class BrowserBase {
         this.tabs.addEventListener('update', this._handleTabsStateUpdate);
         this.exitFullscreenButton = null;
         this.exitFullscreenButtonIpc = new Ipc("ipc_exit_fs_button");
-    }
 
-    showMenuAbove(id) {
-        console.log(`show browser menu`);
-        let container_div = document.getElementById(id).parentElement; // popup decorator
-        let r = container_div.getBoundingClientRect();
-        console.log(`nevaBrowserMenu set position(x:${r.x}, y:${r.y})`);
-        console.log(`nevaBrowserMenu set size(width:${r.width}, height:${r.height})`);
-        this.menuPopupView.setBounds(Math.round(r.x), Math.round(r.y), Math.round(r.width), Math.round(r.height));
-        this.menuPopupView.setVisible(true);
-        this.menuPopupView.bringToFront();
-    }
-
-    createMenu() {
-        console.log(`create browser menu`);
-        if (!this.menuPopupView) {
-            this.menuPopupView = new PageView;
-        }
-        window.shell.shellWindow.pageView.addChildView(this.menuPopupView);
-        this.menuPopupView.pageContents.loadURL("http://google.com");
-    }
-
-    hideMenu() {
-        console.log(`hide browser menu`);
-        if (this.menuPopupView) {
-            window.shell.shellWindow.pageView.removeChildView(this.menuPopupView);
-        }
+        this.menu = new MenuBase();
+        this.menu.create();
     }
 
     createExitFullscreenButton() {

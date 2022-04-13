@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2020 LG Electronics, Inc.
+// Copyright (c) 2018-2022 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -11,6 +11,7 @@ import {BrowserBase, WebViewFactoryBase} from 'js-browser-lib/BrowserBase';
 import {BrowserConsts} from 'js-browser-lib/BrowserConsts';
 import {IndexedDb} from 'js-browser-lib/IndexedDb';
 import {HistoryMixin} from 'js-browser-lib/HistoryMixin';
+import Ipc from 'js-browser-lib/Ipc';
 import {TabTitles, TabTypes} from 'js-browser-lib/TabsConsts';
 
 import Bookmarks from './Bookmarks';
@@ -87,6 +88,27 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
             browser, db, browser.settings.getRestorePrevSessionPolicy());
         browser.tabPolicy = createTabPolicy(
             tabsModel, browser.webViews, browser.settings);
+
+        this.menuIpc = new Ipc("ipc_menu");
+        this.menuIpc.subscribe('click', ({menuItem}) => {
+            switch(menuItem) {
+                case "history":
+                    this.createTab(TabTypes.HISTORY)
+                    break;
+
+                case "bookmarks":
+                    this.createTab(TabTypes.BOOKMARKS)
+                    break;
+
+                case "settings":
+                    this.createTab(TabTypes.SETTINGS)
+                    break;
+
+                case "devSettings":
+                    this.createTab(TabTypes.DEV_SETTINGS)
+                    break;
+            }
+        });
 
         db.open(DB_NAME)
         .then((dbHasCreated) => {

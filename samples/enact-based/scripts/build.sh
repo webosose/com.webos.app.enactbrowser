@@ -20,3 +20,8 @@ cp label.js background.js webos-locale.js defaults.js dist
     cd ../../exitFullscreenButton
     scripts/build.sh $1
 )
+
+(
+    cd ../../browserMenu
+    scripts/build.sh $1
+)

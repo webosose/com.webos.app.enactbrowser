@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2019 LG Electronics, Inc.
+// Copyright (c) 2018-2022 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -11,28 +11,23 @@
  *
  */
 
-import $L from '@enact/i18n/$L';
-import ContextualPopupDecorator from '@enact/moonstone/ContextualPopupDecorator';
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 
-import BrowserIconButton from '../BrowserIconButton';
+import {BrowserIconButton as IconButton} from '../BrowserIconButton';
 import css from './Menu.less';
-import MenuPopup from './MenuPopup';
-
-const MenuPopupButton = ContextualPopupDecorator(BrowserIconButton);
 
 class Menu extends Component {
+	static propTypes = {
+		browser: PropTypes.object,
+	}
+
 	constructor (props) {
 		super(props);
 		this.state = {
 			isOpened: false
 		}
-	}
-
-	renderPopup = () => {
-		return (
-			<MenuPopup {...this.props}/>
-		);
+		this.menu = props.browser.menu;
 	}
 
 	toggleMenu = () => {
@@ -40,25 +35,26 @@ class Menu extends Component {
 		setTimeout(()=> {this.setState({isOpened});}, 100);
 	}
 
-	openDevSettings = () => {
-		this.props.browser.openDevSettings();
+	componentDidUpdate () {
+		if (this.state.isOpened) {
+			this.props.browser.menu.showAbove("nevaBrowserMenuButton");
+		} else {
+			this.props.browser.menu.hide();
+		}
 	}
 
-	render () {
+    render () {
 		const props = Object.assign({}, this.props);
 		delete props.children;
 		delete props.browser;
 
 		return (
-			<MenuPopupButton
+			<IconButton
+				id="nevaBrowserMenuButton"
 				backgroundOpacity="transparent"
 				className={css.menuButton}
-				direction="down"
 				onClick={this.toggleMenu}
-				onClose={this.closeMenu}
 				open={this.state.isOpened}
-				popupComponent={this.renderPopup}
-				tooltipText={$L('Menu')}
 				type="menuButton"
 				{...props}
 			/>

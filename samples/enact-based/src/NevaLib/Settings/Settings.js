@@ -6,8 +6,6 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
-/*global chrome*/
-
 import SettingsBase from 'js-browser-lib/SettingsBase';
 import {IdbKeyValueStorage} from 'js-browser-lib/IdbKeyValueStorage';
 import {
@@ -253,7 +251,9 @@ class Settings extends SettingsBase {
     }
 
     getVersionString = () => {
-        return chrome.runtime.getManifest().version_name;
+        return "version TBD";
+        // chrome.runtime.getManifest().version_name;
+        // TBD: reimplement in NEVA-6979
     }
 
 
