@@ -11,7 +11,7 @@
 class ExitButton {
     constructor() {
         console.log(`ExitButton created`);
-        this.ipc = new ShellIpc("ipc_exit_fs_button");
+        this.ipc = new ShellIpc("ipc_exit_fullscreen_button");
     }
 
     click() {

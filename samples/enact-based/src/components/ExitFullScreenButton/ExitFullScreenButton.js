@@ -13,7 +13,6 @@
 
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
-import {Job} from '@enact/core/util';
 
 import css from './ExitFullScreenButton.less';
 
@@ -33,36 +32,28 @@ class ExitFullScreenButton extends Component {
 
 	componentDidMount () {
 		console.log(`ExitFullScreenButton::componentDidMount`);
-		this.startHideExitFullScreen.start();
-		this.props.browser.createExitFullscreenButton();
 		this.hide();
 	}
 
 	componentWillUnmount() {
-		this.startHideExitFullScreen.stop();
 		this.hide();
-		// TBD: destroy pageVIew
 	}
 
 	componentWillReceiveProps (nextProps) {
 		if (nextProps.fullScreen) {
 			this.show();
-			this.startHideExitFullScreen.start();
 		} else {
-			this.startHideExitFullScreen.stop();
 			this.hide();
 		}
 	}
 
 	show = () => {
-		this.props.browser.showExitFullscreenButton();
+		this.props.browser.exitFullscreenButton.show();
 	}
 
 	hide = () => {
-		this.props.browser.hideExitFullscreenButton();
+		this.props.browser.exitFullscreenButton.hide();
 	}
-
-	startHideExitFullScreen = new Job(this.hide, 4000);
 
 	onMouseEnter = () => {
 		if (this.props.fullScreen) {
@@ -71,7 +62,7 @@ class ExitFullScreenButton extends Component {
 	}
 
 	onMouseLeave = () => {
-		this.startHideExitFullScreen.start();
+		// TBD: implement input focus management
 	}
 
 	render () {
