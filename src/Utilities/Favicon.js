@@ -44,14 +44,12 @@ function getBest(a, b, evaluateFns) {
     return a;
 }
 
-const relIsOk = (icon) => icon.rel === 'icon' || icon.rel === 'shortcut icon';
 const typeIsOk = (icon, pref) => icon.type === pref;
 const sizeIsOk = (icon, pref) =>
     icon.sizes && (icon.sizes.includes(pref) || icon.sizes === 'any');
 
 function chooseBestSuitableIcon(favicons, sizePref, typePref) {
     const evaluateFns = [
-        relIsOk,
         (icon) => typeIsOk(icon, typePref),
         (icon) => sizeIsOk(icon, sizePref)
     ];
@@ -103,8 +101,8 @@ function fetchFaviconAsDataUrl(
     // 2. other link icons
     // 3. root favicon
     if (bestIcon)
-        urls.push(bestIcon.href);
-    urls = urls.concat(favicons.map(icon => icon.href)).concat([rootUrl + 'favicon.ico']);
+        urls.push(bestIcon.url);
+    urls = urls.concat(favicons.map(icon => icon.url)).concat([rootUrl + 'favicon.ico']);
 
 
     urls = urls.filter((value, index, self) => { // remove duplicates

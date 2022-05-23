@@ -76,6 +76,7 @@ class PageContentsWrapper {
          'did-finish-load',
          'did-start-navigation',
          'did-stop-loading',
+         'did-update-favicon-url',
          'dom-ready',
          'laod-progress-changed',
          'page-title-updated',

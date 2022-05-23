@@ -287,6 +287,7 @@ class BrowserBase {
         webview.addEventListener('did-finish-load', this._handleFinishLoading(state.id));
         webview.addEventListener('newwindow', this._handleNewWindow);
         webview.addEventListener('did-start-navigation', this._handleStartNavigation(state.id));
+        webview.addEventListener('did-update-favicon-url', this._handleUpdateFaviconUrl(state.id, webview));
 
         webview.addEventListener('did-fail-load', (ev) => {
             if (ev.isTopLevel) {
@@ -304,12 +305,6 @@ class BrowserBase {
             console.log(`page title updated event: ${title}`);
             const tab = this.tabs.getTab(state.id);
             this._updateTitle(tab, title);
-        });
-        webview.addEventListener('iconchange', (ev) => {
-            fetchFaviconAsDataUrl(ev.detail.favicons, ev.detail.rootUrl)
-                .then((dataUrl) => {
-                    this.tabs.getTab(state.id).setIcon(dataUrl);
-                });
         });
         // This code overrides webview's behavior of reseting zoom on navigation
         webview.addEventListener('zoomchange', (ev) => {
@@ -360,6 +355,25 @@ class BrowserBase {
         }
         return this.tabs.states[id];
     }
+
+    _handleUpdateFaviconUrl = (tabId, webview) => (favicons) => {
+        // favicons => [{url, type, sizes}, ...]
+        console.log(`did-update-favicon-url event occured`);
+
+        const origin_regexp = /.*?:\/\/.*?\//;
+        const result = origin_regexp.exec(webview.url);
+        const rootUrl = result && result[0] ? result[0] : '';
+        const tab = this.tabs.getTab(tabId);
+
+        fetchFaviconAsDataUrl(favicons, rootUrl)
+        .then((dataUrl) => {
+            tab.setIcon(dataUrl);
+            const navState = Object.assign({}, tab.state.navState, {
+                isLoading: false,
+            });
+            tab.setNavState(navState);
+        });
+    };
 
     // handles new tab request from webView
     _handleNewWindow = (ev) => {
@@ -449,9 +463,9 @@ class BrowserBase {
             tab = this.tabs.getTab(tabId),
             navState = Object.assign({}, tab.state.navState);
 
-        let titleIconChange = false;
+        let titleChange = false;
         if (navState.url !== url) {
-            titleIconChange = true;
+            titleChange = true;
         }
 
         navState.url = url;
@@ -459,9 +473,8 @@ class BrowserBase {
 
         tab.setNavState(navState);
 
-        if (titleIconChange) {
+        if (titleChange) {
             tab.setTitle(url);
-            tab.setIcon(null);
         }
     }
 
@@ -515,7 +528,6 @@ class BrowserBase {
 
         if (tab.state) {
             const navState = Object.assign({}, tab.state.navState, {
-                isLoading: false,
                 canGoBack: this._canGoBack(tabId),
                 canGoForward: this.webViews[tabId].canGoForward,
                 url: url
@@ -539,15 +551,28 @@ class BrowserBase {
     _handleLoadStop = (tabId) => {
         console.log(`BrowserBase::_handleLoadStop`);
         const tab = this.tabs.getTab(tabId);
+        const isLoading = tab.state.icon ? false : true;
 
         if (tab.state) {
             const navState = Object.assign({}, tab.state.navState, {
-                isLoading: false,
+                isLoading: isLoading,
                 canGoBack: this._canGoBack(tabId),
                 canGoForward: this.webViews[tabId].canGoForward
             });
             tab.setNavState(navState);
             this.webViews[tabId].emit('needToUpdateUI');
+
+            if (isLoading) {
+                // There is no constant sequence of 'did-stop-loading' and 'did-update-favicon-url'
+                // events coming.
+                // Lets wait a bit if favicon is not still provided. And then stop loading indication.
+                console.log(`Stop loading indication by timeout`);
+                setTimeout(() => {
+                    tab.setNavState(Object.assign({}, tab.state.navState, {
+                        isLoading: false
+                    }));
+                }, 1000);
+            }
         }
     }
 
