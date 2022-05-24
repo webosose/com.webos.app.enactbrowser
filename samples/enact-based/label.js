@@ -53,7 +53,6 @@ let webviewHostInjectionComplete = false;
 
 		actions.getFavicons = function (ev) {
 			let links = document.querySelectorAll('link[rel*="icon"]');
-
 			let favicons = [];
 			links.forEach(function (link) {
 				favicons.push({
@@ -71,12 +70,12 @@ let webviewHostInjectionComplete = false;
 				favicons: favicons,
 				action: ev.data.action
 			};
-			ev.source.postMessage(data, '*');
+			ev.source.postMessage(data, 'chrome-extension://aghbafhkpnlmgikmhdeeneldnbljdkgo');
 		};
 
 		// Wait for message that gives us a reference to the embedder
 		window.addEventListener('message', function (ev) {
-			if (ev.data && ev.data.isNeva) {
+			if (ev.origin === 'chrome-extension://aghbafhkpnlmgikmhdeeneldnbljdkgo' && ev.data && ev.data.isNeva) {
 				actions[ev.data.action](ev);
 			}
 		});

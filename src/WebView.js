@@ -28,15 +28,17 @@ class WebviewMessageProxy {
             this.requests[id][action] = {webview, callback};
         }
         webview.contentWindow.postMessage(
-            Object.assign({id, isNeva}, message), '*');
+            Object.assign({id, isNeva}, message), webview.src);
     }
 
     handleWebviewMessage = (ev) => {
-        const data = ev.data;
-        if (data) {
-            this.requests[data.id][data.action].callback(data);
-        } else {
-            console.warn('Warning: Message from guest contains no data');
+        if(this.requests[ev.data.id][ev.data.action].webview.src === ev.origin+"/"){
+            const data = ev.data;
+            if (data) {
+                this.requests[data.id][data.action].callback(data);
+            } else {
+                console.warn('Warning: Message from guest contains no data');
+            }
         }
     }
 
