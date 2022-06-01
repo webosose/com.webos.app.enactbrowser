@@ -32,7 +32,7 @@ class Menu {
         this.menuPopupView.setBounds(0, 0, document.documentElement.clientWidth, document.documentElement.clientHeight);
         // Current impl on Browser Shell do not support relative file paths
         // loadURL and absolute path will be replaced with loadFile(<rel path>) when it will be implemented in Browser Shell
-        this.menuPopupView.pageContents.loadURL("file:///home/lup/work/NEVA-6928/dist/menu/index.html");
+        this.menuPopupView.pageContents.loadFile("menu/index.html");
 
         this.ipc.subscribe("created", (({width, height}) => {
             console.log(`menu created (${width}, ${height})`);

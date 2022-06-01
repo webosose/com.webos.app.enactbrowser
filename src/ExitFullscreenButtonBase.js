@@ -38,7 +38,7 @@ class ExitFullscreenButtonBase {
         this.button.pageContents.setPageBaseBackgroundColor('#00000000');
         // Current impl on Browser Shell do not support relative file paths
         // loadURL and absolute path will be replaced with loadFile(<rel path>) when it will be implemented in Browser Shell
-        this.button.pageContents.loadURL("file:///home/lup/work/NEVA-6042/dist/exitbtn/index.html")
+        this.button.pageContents.loadFile("exitbtn/index.html")
 
         this.hide();
     }
