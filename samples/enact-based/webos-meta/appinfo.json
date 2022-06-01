@@ -2,7 +2,7 @@
 	"id": "com.webos.app.enactbrowser",
 	"version": "1.0.0",
 	"vendor": "LG Electronics, Inc.",
-	"type": "native_appshell",
+	"type": "native_browsershell",
 	"title": "Web Browser",
 	"iconColor": "#009999",
 	"icon": "webbrowser_icon.png",
