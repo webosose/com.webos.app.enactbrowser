@@ -11,7 +11,9 @@
 class Menu {
     constructor() {
         console.log(`Menu created`);
-        this.ipc = new ShellIpc("ipc_menu");
+        if (typeof ShellIpc !== 'undefined') {
+            this.ipc = new ShellIpc("ipc_menu");
+        }
     }
 
     click(menuItem) {

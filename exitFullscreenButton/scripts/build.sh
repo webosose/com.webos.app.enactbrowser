@@ -10,7 +10,7 @@ ENACT_DEV=${ENACT_DEV:-enact}
 
 $ENACT_NPM install
 
-$ENACT_DEV pack $1
+$ENACT_DEV pack --isomorphic $1
 
 mkdir $BROWSER_DIST/exitbtn/
 cp -r dist/* $BROWSER_DIST/exitbtn/
