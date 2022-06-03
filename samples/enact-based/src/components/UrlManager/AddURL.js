@@ -41,13 +41,18 @@ class AddURL extends Component {
             })
         }
     }
+    keyPressHandler = (event) => {
+        if (event.key === "Enter") {
+            this.addURL();
+          }
+    }
     render() {
         const { url, urlValidation } = this.state;
         const { onClose } = this.props;
         return (
             <div className={css.container}>
                 <div className={css.inputCnt}>
-                    <Input type='url' ref={this.inputEl} value={url} onChange={this.onChangeURL} />
+                    <Input type='url' ref={this.inputEl} value={url} onKeyPress={this.keyPressHandler} onChange={this.onChangeURL} />
                     <p className={css.error}>{urlValidation}</p>
                 </div>
                 <div className={css.buttonCnt}>
