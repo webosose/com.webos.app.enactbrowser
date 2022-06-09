@@ -88,6 +88,11 @@ class SettingsBase extends Component {
 		browser.settings.setHomePageUrl(ev.value);
 
 	};
+	keyPressHandler = (event) => {
+        if (event.key === "Enter") {
+            document.activeElement.blur();
+          }
+    }
 
 	onToggleShowBookmarks = () => {
 		const {browser, alwaysShowBookmarks} = this.props;
@@ -205,6 +210,7 @@ class SettingsBase extends Component {
 							placeholder={$L('Enter URL')}
 							value={this.state.value}
 							onChange={this.onChange}
+							onKeyPress={this.keyPressHandler}
 							disabled={startupOption !== 2}
 						/>
 					</div>
