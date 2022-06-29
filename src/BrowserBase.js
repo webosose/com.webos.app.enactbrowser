@@ -17,6 +17,7 @@ import {Menu as MenuBase} from './MenuBase';
 import {TabTitles, TabTypes} from './TabsConsts';
 import WebView from './WebView.js';
 import {IdGenerator, TabsBase as TabsModel} from './TabsBase.js';
+import initLogging from './Logger';
 
 class WebViewFactoryBase {
     constructor(browser) {
@@ -72,6 +73,8 @@ class BrowserBase {
         this.tabs = tabsModel;
         this.tabs.onContentDelete = this._handleContentDelete;
         this.tabs.addEventListener('update', this._handleTabsStateUpdate);
+
+        initLogging();
 
         this.exitFullscreenButton = new ExitFullscreenButtonBase();
         this.exitFullscreenButton.create();

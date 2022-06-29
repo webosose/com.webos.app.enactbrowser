@@ -8,8 +8,13 @@
 
 /*global ShellIpc*/
 
+import initLogging from '../../../src/Logger';
+
 class Menu {
     constructor() {
+        if (typeof window !== 'undefined') {
+            initLogging();
+        }
         console.log(`Menu created`);
         if (typeof ShellIpc !== 'undefined') {
             this.ipc = new ShellIpc("ipc_menu");

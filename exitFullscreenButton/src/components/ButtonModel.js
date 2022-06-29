@@ -8,8 +8,13 @@
 
 /*global ShellIpc*/
 
+import initLogging from '../../../src/Logger';
+
 class ExitButton {
     constructor() {
+        if (typeof window !== 'undefined') {
+            initLogging();
+        }
         console.log(`ExitButton created`);
         if (typeof ShellIpc !== 'undefined') {
             this.ipc = new ShellIpc("ipc_exit_fullscreen_button");

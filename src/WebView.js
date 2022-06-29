@@ -127,7 +127,7 @@ class PageContentsWrapper {
     }
 
     activate() {
-        console.log('ACTIVATE ' + this.rootId);
+        QALog('ACTIVATE ' + this.rootId);
         this.tabView.setVisible(true);
         this.tabView.bringToFront();
         if (this.activeState === 'deactivated' && this.rootId) {
@@ -140,7 +140,7 @@ class PageContentsWrapper {
     }
 
     suspend() {
-        console.log('SUSPEND ' + this.rootId);
+        QALog('SUSPEND ' + this.rootId);
         this.tabView.setVisible(false);
         this.tabView.sendToBack();
         if (this.activeState === 'activated') {
@@ -165,7 +165,7 @@ class PageContentsWrapper {
     }
 
     deactivate() {
-        console.log('DEACTIVATE ' + this.rootId);
+        QALog('DEACTIVATE ' + this.rootId);
         if (this.activeState !== 'deactivated') {
             console.log(`WVE deactivate ${this.rootId} (NEVA-6479`);
             this.activeState = 'deactivated';
