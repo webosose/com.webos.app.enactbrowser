@@ -92,11 +92,20 @@ class PageContentsWrapper {
         this.addEventListener('did-fail-load', this.handleDidFailLoad.bind(this));
         this.addEventListener('dom-ready', this.handleDomReady.bind(this));
         this.addEventListener('leave-html-fullscreen', this.handleLeaveHtmlFullscreen.bind(this));
+        this.addEventListener('did-finish-load', this.handleFinishLoading.bind(this));
 
         this.setZoom(params.zoomFactor ? params.zoomFactor : 1);
         if (params.useragentOverride) {
             this.setUserAgentOverride(params.useragentOverride);
         }
+    }
+
+    handleFinishLoading() {
+        this.tabView.pageContents.executeJavaScriptInAllFrames(
+            `var style = document.createElement('style')
+            style.innerHTML = 'a:-webkit-any-link { cursor: pointer; }'
+            document.head.appendChild(style)`
+        );
     }
 
     handleLeaveHtmlFullscreen(ev) {
