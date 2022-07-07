@@ -1,41 +1,42 @@
 /* HistoryItem.module.less */
-@import '~@enact/agate/styles/skin.less';
-@import '~@enact/agate/styles/mixins.less';
+@import "~@enact/agate/styles/skin.less";
+@import "~@enact/agate/styles/mixins.less";
 
 .historyItem {
-	height: 72px;
-	width: 100%;
-	display: flex;
-	align-items: center;
+  height: 72px;
+  width: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .checkbox {
-	margin-right: 9px;
-	.applySkins({
+  margin-right: 9px;
+  .applySkins({
 		color: white;
 	});
 }
 
 .title {
-	.applySkins({
+  .applySkins({
 		line-height: 72px;
-	});
+        height: 3rem;
+});
 }
 
 .title {
-	width: 95%;
+  width: 95%;
 }
 
 .date {
-	width: 100%;
-	.applySkins({
+  width: 100%;
+  .applySkins({
 		color: lightgrey;
 		opacity: 1;
 		line-height: 60px;
+		height: 3rem;
 
 		&:last-child {
 			border-bottom-color: @agate-accent;
-
 		}
 
 		.focus({

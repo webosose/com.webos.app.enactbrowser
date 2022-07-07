@@ -1,48 +1,62 @@
 /* Settings.module.less */
-@import '~@enact/agate/styles/mixins.less';
-@import '~@enact/agate/styles/skin.less';
+@import "~@enact/agate/styles/mixins.less";
+@import "~@enact/agate/styles/skin.less";
 
 .scroller {
-	height: ~"calc(100vh - " 236px ~")";
-	&.shrinkHeight {
-		// shirnk as much as bookmarkbar height (84px)
-		height: ~"calc(100vh - " 238px + 84px ~")";
-	}
+  height: ~"calc(100vh - " 236px ~")";
+  &.shrinkHeight {
+    // shirnk as much as bookmarkbar height (84px)
+    height: ~"calc(100vh - " 238px + 84px ~")";
+  }
 }
 
 .settings {
-	width: 100%;
-	padding: 0 100px 20px 100px;
-	flex: 1;
-	box-sizing: border-box;
+  width: 100%;
+  padding: 0 100px 20px 100px;
+  flex: 1;
+  box-sizing: border-box;
 }
 
 .indent {
-	padding-left: 33px;
+  padding-left: 33px;
+  .applySkins({
+	.item.inline{
+			max-width: 20rem;
+	}
+});
 }
 
 .homePageInput {
-	padding-left: 36px;
+  padding-left: 36px;
 }
 
 .inlineGroupItem {
-	.applySkins({
+  max-width: 20rem !important;
+  .applySkins({
 		border-bottom-color: transparent;
-	})
+  });
 }
 
 p {
-	-webkit-margin-after: 15px;
-	-webkit-margin-before: 15px;
+  -webkit-margin-after: 15px;
+  -webkit-margin-before: 15px;
 }
 
 .menu {
-	display: inline-block;
-	margin-right: 24px;
+  display: inline-block;
+  margin-right: 24px;
 }
 
 .button {
-	.applySkins({
+  .applySkins({
 		font-weight: 700;
 	});
+}
+
+.alignSearchEngines {
+  .applySkins({
+	.item.inline{
+			max-width: 20rem;
+	};
+});
 }

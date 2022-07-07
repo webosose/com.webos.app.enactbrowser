@@ -6,30 +6,30 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
-import kind from '@enact/core/kind';
-import ThemeDecorator from '@enact/agate/ThemeDecorator';
-import React from 'react';
+import kind from "@enact/core/kind";
+import ThemeDecorator from "@enact/agate/ThemeDecorator";
+import React from "react";
 
-import Main from '../views/Main';
+import Main from "../views/Main";
 
-import AppDecorator from './AppDecorator';
+import AppDecorator from "./AppDecorator";
 
-import css from './App.module.less';
+import css from "./App.module.less";
 // import UrlManager from '../components/UrlManager/UrlManager';
 
-
+console.log("css is ==>", css);
 const App = kind({
-	name: 'App',
+  name: "App",
 
-	styles: {
-		css,
-		className: 'app'
-	},
+  styles: {
+    css,
+    className: "app",
+  },
 
-	render: (props) => (
-		<Main {...props} />
-		// <UrlManager/>
-	)
+  render: (props) => (
+    <Main {...props} className={css.app} />
+    // <UrlManager/>
+  ),
 });
 
 export default AppDecorator(ThemeDecorator(App));

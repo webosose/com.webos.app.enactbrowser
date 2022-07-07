@@ -1,97 +1,106 @@
 /* Omnibox.module.less */
-@import '~@enact/agate/styles/mixins.less';
-@import '~@enact/agate/styles/skin.less';
-@import '~@enact/agate/styles/colors-base.less';
+@import "~@enact/agate/styles/mixins.less";
+@import "~@enact/agate/styles/skin.less";
+@import "~@enact/agate/styles/colors-base.less";
 
 .div {
-	display: flex;
-	flex-grow: 0.9;
+  display: flex;
+  flex-grow: 0.9;
 }
 
 .form {
-	display: flex;
-	flex-grow: 1;
-	position: relative;
-	align-items: center;
+  display: flex;
+  flex-grow: 1;
+  position: relative;
+  align-items: center;
 }
 
 .invisible {
-	visibility: hidden;
+  visibility: hidden;
 }
 
 .invisible {
-	visibility: hidden;
+  visibility: hidden;
+}
+
+.popup {
+  background-color: white !important;
 }
 
 @media only screen and (min-width: 1280px) {
-	.form {
-		margin-left: 21px;
-		margin-right: 21px;
-	}
+  .form {
+    margin-left: 21px;
+    margin-right: 21px;
+  }
 }
 
 @media only screen and (min-width: 1280px) and (max-width: 1600px) {
-	.popup {
-		width: 810px;
-	}
+  .popup {
+    width: 810px;
+  }
 }
 
 @media only screen and (min-width: 1600px) and (max-width: 1920px) {
-	.popup {
-		width: 1020px;
-	}
+  .popup {
+    width: 1020px;
+  }
 }
 
 @media only screen and (min-width: 1920px) {
-	.popup {
-		width: 1260px;
-	}
+  .popup {
+    width: 1260px;
+  }
 }
 
 @media only screen and (max-width: 1280px) {
-	.form {
-		margin-right: 0;
-	}
+  .form {
+    margin-right: 0;
+  }
 
-	.popup {
-		width: 621px;
-	}
+  .popup {
+    width: 621px;
+  }
 }
 
 .form > div:first-child {
-	align-items: center;
-	display: flex;
-	flex-grow: inherit;
+  align-items: center;
+  display: flex;
+  flex-grow: inherit;
 }
 
 .inputBox {
-	height: 60px;
-	padding: 3px 12px 3px 72px;
+  height: 60px;
+  padding: 3px 12px 3px 72px;
 
-	@media only screen and (min-width: 1280px) {
-		input {
-			font-size: 45px;
-		}
-	}
+  @media only screen and (min-width: 1280px) {
+    input {
+      font-size: 45px;
+    }
+  }
 
-	@media only screen and (max-width: 1280px) {
-		input {
-			font-size: 27px;
-		}
-	}
+  @media only screen and (max-width: 1280px) {
+    input {
+      font-size: 27px;
+    }
+  }
 
-	@media only screen and (min-width: 720px) and (max-width: 1024px) {
-		input {
-			font-size: 27px;
-			width: 51px;
-		}
-	}
+  @media only screen and (min-width: 720px) and (max-width: 1024px) {
+    input {
+      font-size: 27px;
+      width: 51px;
+    }
+  }
 
-	.applySkins({
+  .applySkins({
 		align-items: center;
 		background-color: #D3D3D3;
 		display: flex;
 		flex-grow: inherit;
+		
+		//New styles
+		max-width: 100%;
+		background-color: white !important;
+		border: white;
 
 		.input {
 			border-bottom: 0;
@@ -116,64 +125,62 @@
 			}
 		};
 	});
-
 }
 
 .iconButton {
-	.applySkins({
+  .applySkins({
 		.bg{
 			border-color: transparent;
 		}
 	});
 
-	&.small {
-		&.reloadStopButton {
-			padding: 0 24px;
-			position: absolute;
-			right: 24px;
+  &.small {
+    &.reloadStopButton {
+      padding: 0 24px;
+      position: absolute;
+      right: 24px;
 
-			.icon {
-				color: @agate-black;
-			}
+      .icon {
+        color: @agate-black;
+      }
 
-			.focus({
+      .focus({
 				.icon {
 					color: @agate-white;
 				}
-			})
-		}
+			});
+    }
 
+    &.bookmarkButton {
+      padding: 0 24px;
+      position: absolute;
+      right: 81px;
 
-		&.bookmarkButton {
-			padding: 0 24px;
-			position: absolute;
-			right: 81px;
+      .icon {
+        color: @agate-black;
+      }
 
-			.icon {
-				color: @agate-black;
-			}
-
-			.focus({
+      .focus({
 				.icon {
 					color: @agate-white;
 				}
-			})
-		}
-	}
+			});
+    }
+  }
 }
 
 .searchIcon {
-	padding: 0 24px;
-	pointer-events: none;
-	opacity: 0.6;
+  padding: 0 24px;
+  pointer-events: none;
+  opacity: 0.6;
 
-	.applySkins({
+  .applySkins({
 		margin: 0 12px;
 		position: absolute;
 		color: @agate-black;
-	})
+	});
 }
 
 .addBookmarkToHome {
-	padding-right: 7%;
+  padding-right: 7%;
 }

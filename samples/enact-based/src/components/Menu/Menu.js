@@ -11,110 +11,132 @@
  *
  */
 
-import kind from '@enact/core/kind';
-import $L from '@enact/i18n/$L';
-import Button from '@enact/agate/Button';
-import ContextualPopupDecorator from '@enact/agate/ContextualPopupDecorator';
-import Item from '@enact/agate/Item';
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import TooltipDecorator from '@enact/agate/TooltipDecorator';
-
-import css from './Menu.module.less';
+import kind from "@enact/core/kind";
+import $L from "@enact/i18n/$L";
+import Button from "@enact/agate/Button";
+import ContextualPopupDecorator from "@enact/agate/ContextualPopupDecorator";
+import Item from "@enact/agate/Item";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import TooltipDecorator from "@enact/agate/TooltipDecorator";
+import css from "./Menu.module.less";
 
 const MenuIconButton = kind({
-	name: 'MenuIconButton',
-	render: (props) => (
-		<TooltipButton
-			{...props}
-			icon="menu"
-			size="small"
-		/>
-	)
+  name: "MenuIconButton",
+  render: (props) => <TooltipButton {...props} icon="menu" size="small" />,
 });
 
 const MenuPopupButton = ContextualPopupDecorator(MenuIconButton);
-const TooltipButton = TooltipDecorator({tooltipDestinationProp: 'decoration'}, Button);
+const TooltipButton = TooltipDecorator(
+  { tooltipDestinationProp: "decoration" },
+  Button
+);
 
 class Menu extends Component {
-	static get propTypes () {
-		return {
-			browser: PropTypes.any
-		};
-	}
+  static get propTypes() {
+    return {
+      browser: PropTypes.any,
+    };
+  }
 
-	constructor (props) {
-		super(props);
-		this.state = {
-			isOpened: false
-		};
-	}
+  constructor(props) {
+    super(props);
+    this.state = {
+      isOpened: false,
+    };
+  }
 
-	componentDidMount () {
-		document.addEventListener('webOSLocaleChange', this.onLocaleChange);
-	}
+  componentDidMount() {
+    document.addEventListener("webOSLocaleChange", this.onLocaleChange);
+  }
 
-	onLocaleChange = () => {
-		setTimeout(() => {
-			this.forceUpdate();
-		}, 1000);
-	}
+  onLocaleChange = () => {
+    setTimeout(() => {
+      this.forceUpdate();
+    }, 1000);
+  };
 
-	renderPopup = () => (
-		<div className={css.menuContainer} onClick={this.closeMenu}>
-			<Item css={css} onClick={this.openHistory} skinVariants={{'night': false}}>{$L('History')}</Item>
-			<Item css={css} onClick={this.openBookmarks} skinVariants={{'night': false}}>{$L('Bookmarks')}</Item>
-			<Item css={css} onClick={this.openSettings} skinVariants={{'night': false}}>{$L('Settings')}</Item>
-			{this.props.browser.devSettingsEnabled &&
-				<Item css={css} onClick={this.openDevSettings} skinVariants={{'night': false}}>DevSettings</Item>
-			}
-		</div>
-	);
+  renderPopup = () => (
+    <div className={css.menuContainer} onClick={this.closeMenu}>
+      <Item
+        css={css}
+        onClick={this.openHistory}
+        skinVariants={{ night: false }}
+      >
+        {$L("History")}
+      </Item>
+      <Item
+        css={css}
+        onClick={this.openBookmarks}
+        skinVariants={{ night: false }}
+      >
+        {$L("Bookmarks")}
+      </Item>
+      <Item
+        css={css}
+        onClick={this.openSettings}
+        skinVariants={{ night: false }}
+      >
+        {$L("Settings")}
+      </Item>
+      {this.props.browser.devSettingsEnabled && (
+        <Item
+          css={css}
+          onClick={this.openDevSettings}
+          skinVariants={{ night: false }}
+        >
+          DevSettings
+        </Item>
+      )}
+    </div>
+  );
 
-	toggleMenu = () => {
-		const isOpened = !this.state.isOpened;
-		setTimeout(() => {
-			this.setState({isOpened});
-		}, 100);
-	};
+  toggleMenu = () => {
+    const isOpened = !this.state.isOpened;
+    setTimeout(() => {
+      this.setState({ isOpened });
+    }, 100);
+  };
 
-	closeMenu = () => {
-		this.setState({isOpened: false});
-	};
+  closeMenu = () => {
+    this.setState({ isOpened: false });
+  };
 
-	openHistory = () => {
-		this.props.browser.openHistory();
-	};
+  openHistory = () => {
+    this.props.browser.openHistory();
+  };
 
-	openBookmarks = () => {
-		this.props.browser.openBookmarks();
-	};
+  openBookmarks = () => {
+    this.props.browser.openBookmarks();
+  };
 
-	openSettings = () => {
-		this.props.browser.openSettings();
-	};
+  openSettings = () => {
+    this.props.browser.openSettings();
+  };
 
-	openDevSettings = () => {
-		this.props.browser.openDevSettings();
-	};
+  openDevSettings = () => {
+    this.props.browser.openDevSettings();
+  };
 
-	render () {
-		const props = Object.assign({}, this.props);
-		delete props.children;
-		delete props.browser;
+  render() {
+    const props = Object.assign({}, this.props);
+    delete props.children;
+    delete props.browser;
 
-		return (
-			<MenuPopupButton
-				onClick={this.toggleMenu}
-				onClose={this.closeMenu}
-				open={this.state.isOpened}
-				popupComponent={this.renderPopup}
-				tooltipText={$L('Menu')}
-				size="small"
-				{...props}
-			/>
-		);
-	}
+    return (
+      <MenuPopupButton
+        className={css.Menu}
+        css={css}
+        onClick={this.toggleMenu}
+        onClose={this.closeMenu}
+        open={this.state.isOpened}
+        popupComponent={this.renderPopup}
+        tooltipText={$L("Menu")}
+        size="small"
+        {...props}
+      />
+    );
+  }
 }
 
 export default Menu;

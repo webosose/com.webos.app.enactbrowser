@@ -1,12 +1,21 @@
 /* NavigationBox.module.less */
+@import "~@enact/agate/styles/skin.less";
 
 .navigation-box {
-	width: 160px;
-	display: flex;
-	flex-flow: row;
-	justify-content: center;
+  width: 160px;
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
 }
 
 .forwardButton {
-	margin-left: 10px;
+  margin-left: 10px;
+}
+
+.navigationArrowButtons {
+  .applySkins({
+	.icon {
+	  color: white
+   }
+	 });
 }
