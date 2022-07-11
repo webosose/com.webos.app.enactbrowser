@@ -206,7 +206,7 @@ class BrowserBase {
 
         state.navState.url = url ? '' : 'about:blank';
         state.title = url;
-
+        this.webViews.forEach(v=>v.clearTextInputFocus());
         const webview = this.webViews[state.id] = this.webViewFactory.create({
             url, newWindow
         });
