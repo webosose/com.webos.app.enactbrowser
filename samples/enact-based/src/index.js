@@ -12,11 +12,13 @@ import {render} from 'react-dom';
 
 import App from './App';
 import configureStore from './store';
+import {UIOverlay} from 'js-browser-lib/UIOverlay';
 
 const store = configureStore();
+const uioverlay = new UIOverlay();
 
 let appElement = (
-	<Provider store={store}>
+	<Provider store={store} uioverlay={uioverlay}>
 		<App store={store} />
 	</Provider>
 );
