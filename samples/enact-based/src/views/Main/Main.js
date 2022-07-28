@@ -54,7 +54,7 @@ class MainBase extends Component {
 
 		this.fullScreenContentItem = React.createRef();
 		this.showExitButton = true;
-		if (typeof chrome === 'object' && chrome.app.launchArgs) {
+		if (typeof chrome === 'object' && typeof chrome.app === 'object' && chrome.app.launchArgs) {
 			const launchArgs = JSON.parse(chrome.app.launchArgs);
 			if (launchArgs.fullMode) {
 				this.state.fullScreen = true;
