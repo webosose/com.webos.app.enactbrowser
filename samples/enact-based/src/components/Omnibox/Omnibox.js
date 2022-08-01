@@ -13,7 +13,6 @@
 
 import $L from '@enact/i18n/$L';
 import {connect} from 'react-redux';
-import ContextualPopupDecorator from '@enact/moonstone/ContextualPopupDecorator';
 import Input from '@enact/moonstone/Input';
 import Notification from '@enact/moonstone/Notification';
 import PropTypes from 'prop-types';
@@ -21,12 +20,9 @@ import React, {Component} from 'react';
 import Spotlight from '@enact/spotlight';
 
 import {BrowserIconButton as IconButton} from '../BrowserIconButton';
-import SuggestedItem from './SuggestedItem';
 import {TabTypes} from '../../NevaLib/BrowserModel';
 
 import css from './Omnibox.less';
-
-const ContextualPopupInput = ContextualPopupDecorator(Input);
 
 class OmniboxBase extends Component {
 
@@ -47,25 +43,48 @@ class OmniboxBase extends Component {
 			addBookmarkCompleted: false,
 			open: false,
 			removeBookmarkCompleted: false,
-			value: props.url ? props.url : ''
+			value: props.url ? props.url : '',
+			isEditing: false,
 		}
 	}
 
 	prevOpen = false
-	isEditing = false
 
 	componentWillReceiveProps (nextProps) {
 		if (this.props.selectedIndex !== nextProps.selectedIndex ||
-			(!this.isEditing && !this.state.open) ||
+			(!this.state.isEditing && !this.state.open) ||
 			(this.props.url === '' && nextProps.url !== '')) {
-			this.isEditing = false;
-			this.setState({value: nextProps.url});
+				this.setState({isEditing: false});
+				this.setState({value: nextProps.url});
 		}
 	}
 
+	componentDidMount() {
+		const inputElem = document.getElementById("omniboxInput");
+		const inputHeight = inputElem.offsetHeight + 20;
+		const borderWidth = (document.body.clientWidth / 100) * 10;  // 10% of the document width
+		const width = document.body.clientWidth - borderWidth - borderWidth;
+		this.props.uioverlay.setBounds(borderWidth, inputHeight, width, 50);
+		this.props.uioverlay.ipc.subscribe("click_suggested_item", ({clickedIndex}) => {
+			console.log(`click_suggested_item message ${clickedIndex}`);
+			this.onClickSuggestedItems(clickedIndex);
+		});
+		this.props.uioverlay.switchContent("input_suggestion_list");
+	}
+
+	openSuggestionList(shouldOpen) {
+		if (shouldOpen) {
+			this.props.uioverlay.switchContent("input_suggestion_list");
+		}
+		this.props.uioverlay.setVisible(shouldOpen);
+		this.setState({open: shouldOpen});
+		console.log(`openSuggestionList setVisible(${shouldOpen})`);
+	}
+
 	onNavigate = (ev) => {
+		console.log(`Omnibox::onNavigate >>>`);
 		ev.preventDefault();
-		this.isEditing = false;
+		this.setState({isEditing: false});
 		this.prevOpen = false;
 		this.setState({open: false});
 
@@ -76,17 +95,18 @@ class OmniboxBase extends Component {
 			url = browser.searchService.getSearchUrl(url);
 		}
 		this.pauseAndNavigate(url);
-
 	}
 
 	pauseAndNavigate = (url) => {
+		this.openSuggestionList(false);
 		this.props.browser.navigate(url);
 		Spotlight.pause();
 	}
 
 	onChange = (ev) => {
+		console.log(`Omnibox::onChange >>>`);
 		this.prevOpen = this.state.open;
-		this.isEditing = true;
+		this.setState({iEditing: true});
 		// Trick to prevent focus on popup content after opening the popup
 		if (!this.prevOpen) {
 			Spotlight.setPointerMode(true);
@@ -95,9 +115,31 @@ class OmniboxBase extends Component {
 		this.props.browser.mostVisited.getSuggestions(ev.value, 5);
 	}
 
-	onClose = () => {
-		if(Spotlight.getPointerMode()) {
-			this.setState({open: false});
+	componentDidUpdate(prevProps, prevState) {
+		if (!this.props.urlSuggestions) {
+			return;
+		}
+
+		if (!prevProps.urlSuggestions) {
+			this.createAndApplySuggestionList();
+			return;
+		}
+
+		if (prevState.value !== this.state.value) {
+			this.createAndApplySuggestionList();
+			return;
+		}
+
+		if (prevProps.urlSuggestions.length !== this.props.urlSuggestions.length) {
+			this.createAndApplySuggestionList();
+			return;
+		}
+
+		for (let i = 0; i < prevProps.urlSuggestions.length; i ++) {
+			if (prevProps.urlSuggestions[i].url !== this.props.urlSuggestions[i].url) {
+				this.createAndApplySuggestionList();
+				return;
+			}
 		}
 	}
 
@@ -126,7 +168,7 @@ class OmniboxBase extends Component {
 	getOmniboxIcon = () => {
 		const {url} = this.props;
 
-		if (this.isEditing) {
+		if (this.state.isEditing) {
 			return "searchButton";
 		} else if (url === 'chrome://bookmarks') {
 			return "bookmarksButton";
@@ -145,61 +187,72 @@ class OmniboxBase extends Component {
 		Spotlight.focus('suggestedList');
 	}
 
-	onClickSuggestedItems = (ev) => {
+	onClickSuggestedItems = (index) => {
 		this.setState({open: false});
-		this.isEditing = false;
-		const
-			{browser, urlSuggestions} = this.props,
-			i = ev.currentTarget.dataset.index;
+		this.setState({isEditing: false});
+		const {browser, urlSuggestions} = this.props;
 
-		if (!isNaN(i)) {
-			if (i === '0') {
-				this.pauseAndNavigate(browser.searchService.getSearchUrl(this.state.value));
-			} else {
-				this.pauseAndNavigate(urlSuggestions[i - 1].url);
-			}
+		if (index === 0) {
+			this.pauseAndNavigate(browser.searchService.getSearchUrl(this.state.value));
+		} else {
+			this.pauseAndNavigate(urlSuggestions[index - 1].url);
 		}
 	}
 
-	getSuggestedItems = () => {
+	createAndApplySuggestionList = () => {
 		const
-			{bookmarksData, urlSuggestions} = this.props,
-			items = [];
+			{bookmarksData, urlSuggestions} = this.props;
+		let items = [];
+
+		items.push({
+			dataIndex: 0,
+			icon: "searchButton",
+			title: `${this.props.searchEngine} ${$L('Search')}`,
+			url: this.state.value,
+			key: 0
+		});
 
 		if (urlSuggestions) {
 			for (let i = 0; i < urlSuggestions.length; i ++) {
-				items.push(
-					<SuggestedItem
-						data-index={i + 1}
-						icon={bookmarksData.some(
-							(bookmark) => bookmark.url === urlSuggestions[i].url
-						) ? "bookmarksButton" : "historyButton"}
-						key={i + 1}
-						onClick={this.onClickSuggestedItems}
-						title={urlSuggestions[i].title}
-						url={urlSuggestions[i].url}
-					/>
-				);
+				items.push({
+					dataIndex: i + 1,
+					icon: bookmarksData.some(
+						(bookmark) => bookmark.url === urlSuggestions[i].url
+					) ? "bookmarksButton" : "historyButton",
+					key: i + 1,
+					onClick:this.onClickSuggestedItems,
+					title: urlSuggestions[i].title,
+					url: urlSuggestions[i].url
+					});
 			}
+		}
+
+		if (this.state.value === "") {
+			this.openSuggestionList(false);
+		} else {
+			if (this.state.isEditing === true) {
+				this.openSuggestionList(true);
+			}
+			this.props.uioverlay.ipc.post('suggestionList', items);
 		}
 		return items;
 	}
 
-	renderPopup = () => (
-		<div>
-			<SuggestedItem
-				data-index={0}
-				icon="searchButton"
-				onClick={this.onClickSuggestedItems}
-				title={`${this.props.searchEngine} ${$L('Search')}`}
-				url={this.state.value}
-			/>
-			{this.getSuggestedItems()}
-		</div>
-	)
-
 	onClick = (ev) => {
 		ev.stopPropagation();
+	}
+
+	onActivate = () => {
+		console.log("Omnibox::Input::onActivate");
+		if (this.state.value !== "") {
+			this.openSuggestionList(true);
+		}
+		this.setState({isEditing: true});
+	}
+
+	onDeactivate = () => {
+		console.log("Omnibox::Input::onDeactivate");
+		this.setState({isEditing: false});
 	}
 
 	render () {
@@ -219,19 +272,18 @@ class OmniboxBase extends Component {
 		return (
 			<div {...rest} className={css.div}>
 				<form className={css.form} onSubmit={this.onNavigate}>
-					<ContextualPopupInput
+					<Input
+						id="omniboxInput"
 						autoFocus={open}
 						className={css.inputBox}
 						dismissOnEnter
 						onClick={this.onClick}
 						onChange={this.onChange}
-						onClose={this.onClose}
 						onSpotlightDown={this.spotSuggested}
 						open={open}
-						popupClassName={css.popup}
-						popupComponent={this.renderPopup}
-						popupSpotlightId="suggestedList"
 						value={value}
+						onActivate={this.onActivate}
+						onDeactivate={this.onDeactivate}
 					/>
 					<IconButton
 						backgroundOpacity="transparent"

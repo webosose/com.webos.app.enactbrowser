@@ -8,9 +8,13 @@
 
 import React from 'react';
 import {render} from 'react-dom';
-import App from './App';
+import InputSuggestionList from './App/InputSuggestionList';
+import InputSuggestionListModel from './components/InputSuggestionListModel';
 
-const appElement = (<App />);
+// eslint-disable-next-line no-unused-vars
+const islModel = new InputSuggestionListModel(); // Input Suggestion List model
+
+const appElement = (<InputSuggestionList />);
 
 // In a browser environment, render instead of exporting
 if (typeof window !== 'undefined') {

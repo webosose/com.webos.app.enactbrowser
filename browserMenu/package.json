@@ -30,14 +30,14 @@
 		"dist/*"
 	],
 	"dependencies": {
-		"@enact/core": "^1.15.0",
-		"@enact/i18n": "^1.15.0",
-		"@enact/moonstone": "^1.15.0",
-		"@enact/spotlight": "^1.15.0",
-		"@enact/ui": "^1.15.0",
-		"@enact/webos": "^1.15.0",
+		"@enact/core": "^2.0.0-rc.1",
+		"@enact/i18n": "^2.0.0-rc.1",
+		"@enact/moonstone": "^2.0.0-rc.1",
+		"@enact/spotlight": "^2.0.0-rc.1",
+		"@enact/ui": "^2.0.0-rc.1",
+		"@enact/webos": "^2.0.0-rc.1",
 		"prop-types": "^15.6.0",
-		"react": "^15.6.2",
-		"react-dom": "^15.6.2"
+		"react": "^16.12.0",
+		"react-dom": "^16.12.0"
 	}
 }

@@ -18,8 +18,8 @@ const store = configureStore();
 const uioverlay = new UIOverlay();
 
 let appElement = (
-	<Provider store={store} uioverlay={uioverlay}>
-		<App store={store} />
+	<Provider store={store}>
+		<App store={store} uioverlay={uioverlay}/>
 	</Provider>
 );
 

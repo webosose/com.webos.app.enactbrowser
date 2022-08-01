@@ -11,7 +11,9 @@
 class Ipc {
     constructor (ipcObjectName) {
         this.messages = [];
-        this.ipcObject = new ShellIpc(ipcObjectName);
+        if (typeof ShellIpc !== 'undefined') {
+            this.ipcObject = new ShellIpc(ipcObjectName);
+        }
     }
 
     createHandler(message, handlers) {
@@ -34,6 +36,10 @@ class Ipc {
             this.ipcObject.on(message, this.createHandler(message, messages[message]));
         }
         messages[message].push(callback);
+    }
+
+    post(message, payload) {
+        this.ipcObject.post(message, payload || {});
     }
 };
 
