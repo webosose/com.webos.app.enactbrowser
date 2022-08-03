@@ -24,7 +24,9 @@ class Menu {
         if (!this.menuPopupView) {
             this.menuPopupView = new PageView;
             this.menuPopupView.pageContents = new PageContents({
-                "api": ["v8/browser_shell_ipc"]
+                "api": ["v8/browser_shell_ipc"],
+                "allow-file-access" : true,
+                "allow-universal-access" : true
             });
             this.menuPopupView.pageContents.setPageBaseBackgroundColor('#FFFFFF11');
         }
