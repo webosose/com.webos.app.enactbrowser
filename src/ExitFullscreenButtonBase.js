@@ -21,7 +21,6 @@ class ExitFullscreenButtonBase {
             this.button = new PageView;
             this.button.pageContents = new PageContents({
                 "api": ["v8/browser_shell_ipc"],
-                "allow-file-access": true,
                 "allow-universal-access": true
             });
         }
