@@ -23,8 +23,8 @@ import $L from '@enact/i18n/$L';
 import Group from '@enact/ui/Group';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import PinPopup from '../../components/PinPopup';
 
@@ -60,7 +60,7 @@ class SettingsBase extends Component {
 		startupPage: PropTypes.string
 	};
 
-	constructor (props) {
+	constructor(props) {
 		super(props);
 		this.state = {
 			value: props.homePageUrl,
@@ -72,7 +72,7 @@ class SettingsBase extends Component {
 		};
 	}
 
-	componentDidMount () {
+	componentDidMount() {
 		document.addEventListener('webOSLocaleChange', this.onLocaleChange);
 	}
 
@@ -83,47 +83,47 @@ class SettingsBase extends Component {
 	}
 
 	onChange = (ev) => {
-		const {browser} = this.props;
-		this.setState({value: ev.value});
+		const { browser } = this.props;
+		this.setState({ value: ev.value });
 		browser.settings.setHomePageUrl(ev.value);
 
 	};
 	keyPressHandler = (event) => {
-        if (event.key === "Enter") {
-            document.activeElement.blur();
-          }
-    }
+		if (event.key === "Enter") {
+			document.activeElement.blur();
+		}
+	}
 
 	onToggleShowBookmarks = () => {
-		const {browser, alwaysShowBookmarks} = this.props;
+		const { browser, alwaysShowBookmarks } = this.props;
 		browser.settings.setAlwaysShowBookmarks(!alwaysShowBookmarks);
 	};
 
-	onSelectStartupOption = ({selected}) => {
-		const {browser} = this.props;
+	onSelectStartupOption = ({ selected }) => {
+		const { browser } = this.props;
 		browser.settings.setStartupPage(startupOptions[selected]);
 	};
 
-	onSelectSearchEngine = ({selected}) => {
-		const {browser} = this.props;
+	onSelectSearchEngine = ({ selected }) => {
+		const { browser } = this.props;
 		browser.settings.setSearchEngine(searchEngines[selected]);
 	};
 
 	onTogglePrivateBrowsing = () => {
-		const {browser, privateBrowsing} = this.props;
+		const { browser, privateBrowsing } = this.props;
 		browser.setPrivateBrowsing(!privateBrowsing);
 	};
 
 	onClearBrowsingData = () => {
-		this.setState({clearPopupOpen: true});
+		this.setState({ clearPopupOpen: true });
 	};
 
 	onClearYes = () => {
 		const
-			{browser} = this.props,
+			{ browser } = this.props,
 			obj = this;
 
-		this.setState({clearing: true});
+		this.setState({ clearing: true, clearPopupOpen:false});
 		Promise.race([
 			browser.clearData(),
 			new Promise((resolve) => {
@@ -131,43 +131,43 @@ class SettingsBase extends Component {
 			})
 		]).then(
 			() => {
-				obj.setState({clearPopupOpen: false, clearing: false, completePopupOpen: true});
+				obj.setState({ clearing: false, completePopupOpen: true });
 				setTimeout(() => {
-					obj.setState({completePopupOpen: false});
+					obj.setState({ completePopupOpen: false });
 				}, 1500);
 			},
 			() => {
-				obj.setState({clearPopupOpen: false, clearing: false, completePopupOpen: true});
+				obj.setState({ clearing: false, completePopupOpen: true });
 				setTimeout(() => {
-					obj.setState({completePopupOpen: false});
+					obj.setState({ completePopupOpen: false });
 				}, 1500);
 			}
 		);
 	};
 
 	onClearNo = () => {
-		this.setState({clearPopupOpen: false});
+		this.setState({ clearPopupOpen: false });
 	};
 
 	startSiteFiltering = () => {
-		this.setState({siteFilteringOpen: true});
+		this.setState({ siteFilteringOpen: true });
 	};
 
 	onSubmitPinCode = (pinCode) => {
-		const {browser} = this.props;
+		const { browser } = this.props;
 		if (browser.settings.matchPinCode(pinCode)) {
-			this.setState({matchedPin: 'correct'});
+			this.setState({ matchedPin: 'correct' });
 			browser.openSiteFiltering();
 		} else {
-			this.setState({matchedPin: 'incorrect'});
+			this.setState({ matchedPin: 'incorrect' });
 		}
 	};
 
 	onClosePinPopup = () => {
-		this.setState({siteFilteringOpen: false, matchedPin: 'yet'});
+		this.setState({ siteFilteringOpen: false, matchedPin: 'yet' });
 	};
 
-	render () {
+	render() {
 		const
 			{
 				className,
@@ -178,7 +178,7 @@ class SettingsBase extends Component {
 				privateBrowsing,
 				...rest
 			} = this.props,
-			scrollerClass = classNames(css.scroller, {[css.shrinkHeight]: alwaysShowBookmarks}),
+			scrollerClass = classNames(css.scroller, { [css.shrinkHeight]: alwaysShowBookmarks }),
 			settingContentsClass = classNames(className, css.settings),
 			startupOption = startupOptions.indexOf(startupPage);
 
@@ -193,7 +193,7 @@ class SettingsBase extends Component {
 					<div className={css.indent}>
 						<Group
 							childComponent={RadioItem}
-							itemProps={{inline: false}}
+							itemProps={{ inline: false }}
 							select="radio"
 							selectedProp="selected"
 							defaultSelected={startupOption}
@@ -219,7 +219,7 @@ class SettingsBase extends Component {
 					<div className={css.indent}>
 						<Group
 							childComponent={RadioItem}
-							itemProps={{inline: true, className: css.inlineGroupItem}}
+							itemProps={{ inline: true, className: css.inlineGroupItem }}
 							select="radio"
 							selectedProp="selected"
 							defaultSelected={searchEngines.indexOf(searchEngine)}
@@ -245,26 +245,19 @@ class SettingsBase extends Component {
 						open={this.state.clearPopupOpen}
 						noAutoDismiss
 					>
-						{this.state.clearing ?
-							<span>{$L('Clearing all browsing data...')}</span> :
-							<span>{$L('Do you want to clear all browsing data?')}</span>
-						}
-						{this.state.clearing ?
-							null :
-							<buttons>
-								<Button onClick={this.onClearNo} size="small">{$L('NO')}</Button>
-								<Button onClick={this.onClearYes} size="small">{$L('YES')}</Button>
-							</buttons>
-						}
+						<span>{$L('Do you want to clear all browsing data?')}</span>
+						<buttons>
+							<Button onClick={this.onClearNo} size="small">{$L('NO')}</Button>
+							<Button onClick={this.onClearYes} size="small">{$L('YES')}</Button>
+						</buttons>
 					</Popup>
 					<Popup
 						centered
-						open={this.state.completePopupOpen}
+						open={this.state.completePopupOpen || this.state.clearing}
 						noAutoDismiss
 					>
-						<span>{$L('All browsing data has been deleted.')}</span>
+						{this.state.clearing ? <span>{$L('Clearing all browsing data...')}</span> : <span>{$L('All browsing data has been deleted.')}</span>}
 					</Popup>
-
 					<Button onClick={this.onClearBrowsingData} css={css} size="small">{$L('CLEAR BROWSING DATA')}</Button>
 
 					<PinPopup
@@ -281,7 +274,7 @@ class SettingsBase extends Component {
 
 }
 
-const mapStateToProps = ({settingsState}) => ({
+const mapStateToProps = ({ settingsState }) => ({
 	startupPage: settingsState.startupPage,
 	alwaysShowBookmarks: settingsState.alwaysShowBookmarks,
 	homePageUrl: settingsState.homePageUrl,
