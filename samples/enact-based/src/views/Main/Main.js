@@ -220,7 +220,7 @@ class MainBase extends Component {
 						<NavigationBox browser={browser} />
 						<Omnibox browser={browser} uioverlay={this.props.uioverlay}/>
 						<ZoomControl browser={browser} />
-						<Menu browser={browser}/>
+						<Menu browser={browser} menu={this.props.menu}/>
 						<IconButton
 							backgroundOpacity="transparent"
 							className={css.button}

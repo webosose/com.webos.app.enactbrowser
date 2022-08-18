@@ -6,64 +6,42 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
+import React, { useState, useEffect } from 'react';
 import MoonstoneDecorator from '@enact/moonstone/MoonstoneDecorator';
-import Item from '@enact/moonstone/Item';
-import React, {Component} from 'react';
-import $L from '@enact/i18n/$L';
-import {Menu} from '../components/MenuModel';
 
-import css from './App.less';
+import Menu from './../Views/Menu';
+import InputSuggestionList from './../Views/InputSuggestionList';
 
-class App extends Component {
-	constructor(props) {
-		super(props);
+function App({model}) {
+    console.log(`App render`);
 
-		this.state = {
-			menu: new Menu(),
-		}
-	}
+    function updateDocumentSize() {
+        const element = document.getElementById('app');
+        if (element) {
+            console.log(`send document size (${element.clientHeight})`);
+            model.ipc.post('documentSize', {h: element.clientHeight});
+        }
+    }
 
-	onClick = (menuItem) => () => {
-		this.state.menu.click(menuItem);
-	}
+    const [contentType, setContentType] = useState("default");
+    useEffect(updateDocumentSize);
+    useEffect(() => {
+        model.ipc.subscribe('switchContent', ({type}) => {
+            console.log(`switch content to ${type}`);
+            setContentType(type);
+        });
+    }, []);
 
-	componentDidMount() {
-		this.state.menu.notifyCreated();
-	}
+    switch(contentType) {
+        case 'input_suggestion_list':
+            return <InputSuggestionList model={model.inputSuggestionList} onUpdate={updateDocumentSize}/>;
 
-	render() {
-		return (
-			<div id="menu" {...this.props} className={css.topArea}>
-				<Item
-					minWidth={false}
-					className={css.menuItem}
-					onClick={this.onClick('history')}
-				>
-					{$L('History')}
-				</Item>
-				<Item
-					minWidth={false}
-					onClick={this.onClick('bookmarks')}
-				>
-					{$L('Bookmarks')}
-				</Item>
-				<Item
-					minWidth={false}
-					className={css.menuItem}
-					onClick={this.onClick('settings')}
-				>
-					{$L('Settings')}
-				</Item>
-				<Item
-					minWidth={false}
-					className={css.menuItem}
-					onClick={this.onClick('devSettings')}
-				>
-					{$L('Dev Settings')}
-				</Item>
-			</div>
-		);
-	}
+        case 'browser_menu':
+            return <Menu model={model.menu}/>;
+
+        default:
+            return <div/>;
+    }
 }
 
 export default MoonstoneDecorator(App);

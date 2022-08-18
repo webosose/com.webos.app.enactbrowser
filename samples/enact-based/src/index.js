@@ -13,13 +13,18 @@ import {render} from 'react-dom';
 import App from './App';
 import configureStore from './store';
 import {UIOverlay} from 'js-browser-lib/UIOverlay';
+import {Menu as MenuBase} from 'js-browser-lib/MenuBase';
+
 
 const store = configureStore();
 const uioverlay = new UIOverlay();
 
+const menu = new MenuBase(uioverlay);
+
+
 let appElement = (
 	<Provider store={store}>
-		<App store={store} uioverlay={uioverlay}/>
+		<App store={store} uioverlay={uioverlay} menu={menu}/>
 	</Provider>
 );
 

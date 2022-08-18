@@ -27,7 +27,7 @@ class Menu extends Component {
 		this.state = {
 			isOpened: false
 		}
-		this.menu = props.browser.menu;
+		this.menu = props.menu;
 	}
 
 	toggleMenu = () => {
@@ -37,9 +37,9 @@ class Menu extends Component {
 
 	componentDidUpdate () {
 		if (this.state.isOpened) {
-			this.props.browser.menu.showAbove("nevaBrowserMenuButton");
+			this.menu.showAbove("nevaBrowserMenuButton");
 		} else {
-			this.props.browser.menu.hide();
+			this.menu.hide();
 		}
 	}
 

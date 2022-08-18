@@ -36,62 +36,53 @@ class UIOverlay {
         this.ipc = new Ipc("ipc_uioverlay");
 
         // receive document size from UIOverlay content
-        this.ipc.subscribe("documentSize", ({width, height}) => {
-            this.width = width || this.width;
-            this.height = height || this.height;
-            this.view.setBounds(Math.round(this.x), Math.round(this.y), Math.round(this.width), Math.round(this.height));
+        this.ipc.subscribe("documentSize", (size) => {
+            console.log(`UIOverlay::onDocumentSize`);
+            this.setBounds(size);
         });
-        this.contentName = "";
+        this.contentName = "default";
+        this.view.pageContents.loadFile("menu/index.html");
+        this.sizes = [];
+        this.sizes["default"] = {x: 0, y: 0, w: 0, h: 0};
     }
 
     setVisible(visible) {
         console.log(`UIOverlay::setVisible(${visible})`);
         if (visible) {
+            this.setBounds({});
             this.view.bringToFront();
         } else {
             this.view.sendToBack();
         }
         this.view.setVisible(visible);
-        console.trace();
     }
 
-    setPosition(x, y) {
-        console.log(`UIOverlay::setPosition(${x}, ${y})`);
-        this.x = x;
-        this.y = y;
-        this.view.setBounds(Math.round(this.x), Math.round(this.y), Math.round(this.width), Math.round(this.height));
-    }
+    setBounds({x, y, w, h}) {
+        this.sizes[this.contentName].x = x || this.sizes[this.contentName].x;
+        this.sizes[this.contentName].y = y || this.sizes[this.contentName].y;
+        this.sizes[this.contentName].w = w || this.sizes[this.contentName].w;
+        this.sizes[this.contentName].h = h || this.sizes[this.contentName].h;
 
-    setBounds(x, y, w, h) {
-        console.log(`UIOverlay::setBounds(${x}, ${y}, ${w}, ${h})`);
-        this.x = x;
-        this.y = y;
-        this.width = w;
-        this.height = h;
-        this.view.setBounds(Math.round(x), Math.round(y), Math.round(w), Math.round(h));
+        this.view.setBounds(
+            Math.round(this.sizes[this.contentName].x), 
+            Math.round(this.sizes[this.contentName].y), 
+            Math.round(this.sizes[this.contentName].w), 
+            Math.round(this.sizes[this.contentName].h)
+        );
     }
 
     switchContent(target) {
-        console.log(`UIOverlay::switchContent(${target})`);
-
         if (this.contentName === target) {
             return;
         }
         this.contentName = target;
 
-        switch(target) {
-            case "exit_fullscreen_button":
-                this.view.pageContents.loadFile("exitbtn/index.html")
-                break;
-
-            case "browser_menu":
-                this.view.pageContents.loadFile("menu/index.html");
-                break;
-
-            case "input_suggestion_list":
-                this.view.pageContents.loadFile("menu/index.html");
-                break;
+        if (!this.sizes[this.contentName]) {
+            this.sizes[this.contentName] = {x: 0, y: 0, w: 0, h: 0};
         }
+
+        console.log(`UIOverlay::switchContent(${target})`);
+        this.ipc.post("switchContent", {type: target});
     }
 }
 

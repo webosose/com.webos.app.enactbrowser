@@ -8,14 +8,13 @@
 
 /*global CustomEvent*/
 
-import MoonstoneDecorator from '@enact/moonstone/MoonstoneDecorator';
 import React, {Component} from 'react';
 
-import SuggestedItem from '../../../samples/enact-based/src/components/Omnibox/SuggestedItem';
+import SuggestedItem from '../../../../samples/enact-based/src/components/Omnibox/SuggestedItem';
 
 import css from './InputSuggestionList.less'
 
-class InputSuggectionList extends Component {
+class InputSuggestionList extends Component {
     constructor (props) {
         super(props);
         this.state = { suggestions: [] };
@@ -37,11 +36,7 @@ class InputSuggectionList extends Component {
     }
 
     componentDidUpdate() {
-        const element = document.getElementById("inputSuggestionList");
-        const event = new CustomEvent("documentSize", { detail: {
-            height: element.clientHeight,
-        }});
-        document.dispatchEvent(event);
+        this.props.onUpdate();
     }
 
     render() {
@@ -63,11 +58,15 @@ class InputSuggectionList extends Component {
             );
         }
 
+        if (items.length === 0) {
+            return <div id="app"/>
+        }
+
         return (
-            <div id="inputSuggestionList" className={css.itemsContainer} >
+            <div id="app" className={css.itemsContainer} >
                 {items}
             </div>);
     }
 }
 
-export default MoonstoneDecorator(InputSuggectionList);
+export default InputSuggestionList;

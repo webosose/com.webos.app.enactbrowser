@@ -64,12 +64,16 @@ class OmniboxBase extends Component {
 		const inputHeight = inputElem.offsetHeight + 20;
 		const borderWidth = (document.body.clientWidth / 100) * 10;  // 10% of the document width
 		const width = document.body.clientWidth - borderWidth - borderWidth;
-		this.props.uioverlay.setBounds(borderWidth, inputHeight, width, 50);
+		this.props.uioverlay.switchContent("input_suggestion_list");
+		this.props.uioverlay.setBounds({
+			x: borderWidth,
+			y: inputHeight,
+			w: width
+		});
 		this.props.uioverlay.ipc.subscribe("click_suggested_item", ({clickedIndex}) => {
 			console.log(`click_suggested_item message ${clickedIndex}`);
 			this.onClickSuggestedItems(clickedIndex);
 		});
-		this.props.uioverlay.switchContent("input_suggestion_list");
 	}
 
 	openSuggestionList(shouldOpen) {

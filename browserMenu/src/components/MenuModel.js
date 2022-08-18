@@ -8,13 +8,8 @@
 
 /*global ShellIpc*/
 
-import initLogging from '../../../src/Logger';
-
-class Menu {
+class MenuModel {
     constructor() {
-        if (typeof window !== 'undefined') {
-            initLogging();
-        }
         console.log(`Menu created`);
         if (typeof ShellIpc !== 'undefined') {
             this.ipc = new ShellIpc("ipc_menu");
@@ -22,16 +17,11 @@ class Menu {
     }
 
     click(menuItem) {
-        console.log(`Menu::click()`);
-        this.ipc.post('click', {menuItem: menuItem});
-    }
-
-    notifyCreated() {
-        this.ipc.post('created', {
-            width: 160,
-            height: 180
-        });
+        return () => {
+            console.log(`Menu::click()`);
+            this.ipc.post('click', {menuItem: menuItem});
+        }
     }
 }
 
-export {Menu};
+export default MenuModel;

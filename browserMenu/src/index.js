@@ -8,17 +8,27 @@
 
 import React from 'react';
 import {render} from 'react-dom';
-import InputSuggestionList from './App/InputSuggestionList';
+import App from './App';
 import InputSuggestionListModel from './components/InputSuggestionListModel';
+import MenuModel from './components/MenuModel';
+import Ipc from '../../src/Ipc';
+import initLogging from '../../src/Logger';
 
-// eslint-disable-next-line no-unused-vars
-const islModel = new InputSuggestionListModel(); // Input Suggestion List model
+if (typeof window !== 'undefined') {
+    initLogging();
+}
 
-const appElement = (<InputSuggestionList />);
+const model = {
+    inputSuggestionList: new InputSuggestionListModel(),
+    menu: new MenuModel(),
+    ipc: new Ipc('ipc_uioverlay')
+};
+
+const appElement = (typeof window !== 'undefined') ? (<App model={model} />) : (<div />);
 
 // In a browser environment, render instead of exporting
 if (typeof window !== 'undefined') {
-	render(appElement, document.getElementById('root'));
+    render(appElement, document.getElementById('root'));
 }
 
 export default appElement;

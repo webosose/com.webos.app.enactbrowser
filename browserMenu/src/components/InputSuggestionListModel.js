@@ -10,15 +10,10 @@
 /*global window*/
 /*global CustomEvent*/
 
-import initLogging from '../../../src/Logger';
 import Ipc from '../../../src/Ipc';
 
 class InputSuggectionListModel {
     constructor() {
-        if (typeof window !== 'undefined') {
-            initLogging();
-        }
-
         if (typeof ShellIpc !== 'undefined') { // it is for prerenderer.
             this.ipc = new Ipc('ipc_uioverlay');
             this.ipc.subscribe('suggestionList', (suggestions) => {
@@ -32,10 +27,6 @@ class InputSuggectionListModel {
         }
 
         if (typeof window !== 'undefined') { // it is for prerenderer.
-            window.document.addEventListener("documentSize", (ev) => {
-                this.ipc.post('documentSize', ev.detail);
-            })
-
             window.document.addEventListener("clickSuggestedItem", (ev) => {
                 this.ipc.post('click_suggested_item', ev.detail);
             })

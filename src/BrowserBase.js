@@ -13,7 +13,6 @@ import {getUrlWithPrefix, fetchFaviconAsDataUrl} from './Utilities';
 import {BrowserConsts} from './BrowserConsts.js';
 import ExitFullscreenButtonBase from './ExitFullscreenButtonBase';
 import Ipc from './Ipc';
-import {Menu as MenuBase} from './MenuBase';
 import {TabTitles, TabTypes} from './TabsConsts';
 import WebView from './WebView.js';
 import {IdGenerator, TabsBase as TabsModel} from './TabsBase.js';
@@ -89,9 +88,6 @@ class BrowserBase {
                 webView.emit('leave-html-fullscreen');
             }
         }).bind(this));
-
-        this.menu = new MenuBase();
-        this.menu.create();
     }
 
     initializeTabs() {
