@@ -13,18 +13,27 @@ import {render} from 'react-dom';
 import App from './App';
 import configureStore from './store';
 import {UIOverlay} from 'js-browser-lib/UIOverlay';
+import {ExitFullscreenButtonBase} from 'js-browser-lib/ExitFullscreenButtonBase';
 import {Menu as MenuBase} from 'js-browser-lib/MenuBase';
+import {initLogging} from 'js-browser-lib/Logger';
 
+if (typeof window !== 'undefined') {
+	initLogging();
+}
 
 const store = configureStore();
 const uioverlay = new UIOverlay();
-
 const menu = new MenuBase(uioverlay);
+const exitFullscreenButton = new ExitFullscreenButtonBase(uioverlay);
 
 
 let appElement = (
 	<Provider store={store}>
-		<App store={store} uioverlay={uioverlay} menu={menu}/>
+		<App store={store}
+			uioverlay={uioverlay}
+			menu={menu}
+			exitFullscreenButton={exitFullscreenButton}
+		/>
 	</Provider>
 );
 

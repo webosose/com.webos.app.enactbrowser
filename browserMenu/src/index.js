@@ -10,6 +10,7 @@ import React from 'react';
 import {render} from 'react-dom';
 import App from './App';
 import InputSuggestionListModel from './components/InputSuggestionListModel';
+import ExitFullscreenButtonModel from './components/ExitFullscreenButtonModel';
 import MenuModel from './components/MenuModel';
 import Ipc from '../../src/Ipc';
 import initLogging from '../../src/Logger';
@@ -18,10 +19,27 @@ if (typeof window !== 'undefined') {
     initLogging();
 }
 
+function makeUniqueId() {
+    return Math.random().toString() + Math.random().toString();
+}
+
+let genericIpc = new Ipc('ipc_uioverlay');
+let ipcChannelName = makeUniqueId();
+let ipc;
+
+if (typeof window !== 'undefined') {
+    ipc = new Promise((resolve) => {
+        resolve(new Ipc(ipcChannelName));
+    });
+    console.log(`Created IPC channel named ${ipcChannelName}`);
+}
+
 const model = {
-    inputSuggestionList: new InputSuggestionListModel(),
+    inputSuggestionList: new InputSuggestionListModel(ipc),
     menu: new MenuModel(),
-    ipc: new Ipc('ipc_uioverlay')
+    ipc: ipc,
+    genericIpc: genericIpc,
+    exitFullscreenButton: new ExitFullscreenButtonModel()
 };
 
 const appElement = (typeof window !== 'undefined') ? (<App model={model} />) : (<div />);

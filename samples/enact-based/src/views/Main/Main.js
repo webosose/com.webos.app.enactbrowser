@@ -41,6 +41,7 @@ class MainBase extends Component {
 	static propTypes = {
 		privateBrowsing: PropTypes.bool,
 		fullScreen: PropTypes.bool,
+		exitFullscreenButton: PropTypes.object
 	}
 
 	constructor (props) {
@@ -84,7 +85,7 @@ class MainBase extends Component {
 			}
 		});
 		document.addEventListener('setInsetY', this.onSetInsetY);
-		browser.exitFullscreenButtonIpc.subscribe('exit-fullscreen', this.onExitFullScreen.bind(this));
+		this.props.exitFullscreenButton.ipc.subscribe('exit-fullscreen', this.onExitFullScreen.bind(this));
 	}
 
 	componentDidUpdate () {
@@ -251,6 +252,7 @@ class MainBase extends Component {
 					ref={this.fullScreenContentItem}
 					onExitFullScreen={this.onExitFullScreen}
 					fullScreen={fullScreen}
+					exitFullscreenButton={this.props.exitFullscreenButton}
 				/>
 			{
 				dialog ?

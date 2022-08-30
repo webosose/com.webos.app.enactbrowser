@@ -33,13 +33,14 @@ const ContentViewBase = kind({
 		tabs: PropTypes.object,
 		selectedIndex: PropTypes.number,
 		innerRef: PropTypes.object,
-		onExitFullScreen: PropTypes.any
+		onExitFullScreen: PropTypes.any,
+		exitFullscreenButton: PropTypes.object
 	},
 	styles: {
 		css,
 		className: 'contentView'
 	},
-	render: ({alwaysShowBookmarks, browser, fullScreen, selectedIndex, ids, tabs, innerRef, onExitFullScreen, ...rest}) => {
+	render: ({alwaysShowBookmarks, browser, fullScreen, selectedIndex, ids, tabs, innerRef, onExitFullScreen, exitFullscreenButton, ...rest}) => {
 		const
 			sortedIds = ids.slice(),
 			selectedId = ids[selectedIndex];
@@ -64,6 +65,7 @@ const ContentViewBase = kind({
 									fullScreen={fullScreen}
 									onExitFullScreen={onExitFullScreen}
 									browser={browser}
+									exitFullscreenButton={exitFullscreenButton}
 								/>
 							}
 						</div>

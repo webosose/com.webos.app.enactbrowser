@@ -11,7 +11,6 @@
 /*global ShellIpc*/
 import {getUrlWithPrefix, fetchFaviconAsDataUrl} from './Utilities';
 import {BrowserConsts} from './BrowserConsts.js';
-import ExitFullscreenButtonBase from './ExitFullscreenButtonBase';
 import Ipc from './Ipc';
 import {TabTitles, TabTypes} from './TabsConsts';
 import WebView from './WebView.js';
@@ -72,22 +71,6 @@ class BrowserBase {
         this.tabs = tabsModel;
         this.tabs.onContentDelete = this._handleContentDelete;
         this.tabs.addEventListener('update', this._handleTabsStateUpdate);
-
-        initLogging();
-
-        this.exitFullscreenButton = new ExitFullscreenButtonBase();
-        this.exitFullscreenButton.create();
-
-        this.exitFullscreenButtonIpc = new Ipc("ipc_exit_fullscreen_button");
-        this.exitFullscreenButtonIpc.subscribe("exit-fullscreen", (() => {
-            console.log(`exit-fullscreen message from 'exit fullscreen' button`);
-
-            const {navState: {history}} = this.getSelectedTabState();
-            if (history.entries[history.index] === TabTypes.WEBVIEW) {
-                const webView = this.webViews[history.views[history.index]];
-                webView.emit('leave-html-fullscreen');
-            }
-        }).bind(this));
     }
 
     initializeTabs() {

@@ -24,14 +24,13 @@ class Menu {
         const leftBorderWidth = (document.body.clientWidth / 100) * 70;  // 10% of the document width
         const width = document.body.clientWidth - leftBorderWidth;
 
-        this.uioverlay.switchContent('browser_menu');
-        this.uioverlay.setBounds({
-            x: leftBorderWidth,
-            y: buttonHeight,
-            w: width
-        });
-
-        this.uioverlay.setVisible(true);
+        this.uioverlay.switchContent('browser_menu')
+            .then(() => this.uioverlay.setBounds({
+                x: leftBorderWidth,
+                y: buttonHeight,
+                w: width
+            }, 'browser_menu'))
+            .then(() => this.uioverlay.setVisible(true));
     }
 
     destroy() {}

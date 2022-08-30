@@ -49,3 +49,4 @@ const initLogging = function() {
 };
 
 export default initLogging;
+export {initLogging};

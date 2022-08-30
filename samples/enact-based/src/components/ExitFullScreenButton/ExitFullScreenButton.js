@@ -20,13 +20,15 @@ class ExitFullScreenButton extends Component {
 	static props = {
 		fullScreen: PropTypes.bool,
 		onExitFullScreen: PropTypes.func,
-		browser: PropTypes.object
+		browser: PropTypes.object,
+		exitFullscreenButton: PropTypes.object
 	}
 
 	constructor (props) {
 		super(props);
 		this.state = {
-			animation: css.show
+			animation: css.show,
+			timeoutId: 0
 		};
 	}
 
@@ -48,14 +50,15 @@ class ExitFullScreenButton extends Component {
 	}
 
 	show = () => {
-		this.props.browser.exitFullscreenButton.show();
+		this.props.exitFullscreenButton.show();
 	}
 
 	hide = () => {
-		this.props.browser.exitFullscreenButton.hide();
+		this.props.exitFullscreenButton.hide();
 	}
 
 	onMouseEnter = () => {
+		clearTimeout(this.state.timeoutId);
 		if (this.props.fullScreen) {
 			this.show();
 		}
@@ -63,6 +66,7 @@ class ExitFullScreenButton extends Component {
 
 	onMouseLeave = () => {
 		// TBD: implement input focus management
+		this.setState({timeoutId: setTimeout(() => {this.hide()}, 3000)});
 	}
 
 	render () {

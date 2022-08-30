@@ -6,29 +6,31 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
-/*global ShellIpc*/
 /*global window*/
 /*global CustomEvent*/
 
-import Ipc from '../../../src/Ipc';
-
 class InputSuggectionListModel {
-    constructor() {
-        if (typeof ShellIpc !== 'undefined') { // it is for prerenderer.
-            this.ipc = new Ipc('ipc_uioverlay');
-            this.ipc.subscribe('suggestionList', (suggestions) => {
-                console.log(`suggestionList arrived ${suggestions}`);
-                this.suggestions = suggestions;
+    constructor(ipcPromise) {
+        if (typeof CustomEvent !== 'undefined') { // it is for prerenderer.
+            this.ipcPromise = ipcPromise;
+            this.ipcPromise.then((ipc) => {
+                ipc.subscribe('suggestionList', (suggestions) => {
+                    console.log(`suggestionList arrived ${suggestions}`);
+                    this.suggestions = suggestions;
 
-                const event = new CustomEvent("suggestionListUpdated", { detail: this.suggestions });
-                document.dispatchEvent(event);
-            });
+                    const event = new CustomEvent("suggestionListUpdated", { detail: this.suggestions });
+                    document.dispatchEvent(event);
+                });
+            })
+
             console.log(`subscribed to suggestionList`);
         }
 
         if (typeof window !== 'undefined') { // it is for prerenderer.
             window.document.addEventListener("clickSuggestedItem", (ev) => {
-                this.ipc.post('click_suggested_item', ev.detail);
+                this.ipcPromise.then((ipc) => {
+                    ipc.post('click_suggested_item', ev.detail);
+                })
             })
         }
     }

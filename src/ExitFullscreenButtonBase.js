@@ -11,58 +11,30 @@
 import Ipc from './Ipc.js';
 
 class ExitFullscreenButtonBase {
-    constructor() {
-        this.button = null;
-        this.ipc = new Ipc("ipc_exit_fullscreen_button");
-    }
-
-    create() {
-        if (!this.button) {
-            this.button = new PageView;
-            this.button.pageContents = new PageContents({
-                "api": ["v8/browser_shell_ipc"],
-                "allow-universal-access": true
-            });
-        }
-        window.shell.shellWindow.pageView.addChildView(this.button);
-
-        const button_width = 260;
-        const button_heigh = 110;
-
-        const x = Math.round((window.innerWidth / 2) - (button_width / 2));
-        const y = 20;
-
-        console.log(`Exit FS button set position(x:${x}, y:${y})`);
-        console.log(`Exit FS button set size(width:${button_width}, height:${button_heigh})`);
-
-        this.button.setBounds(x, y, button_width, button_heigh);
-        this.button.pageContents.setPageBaseBackgroundColor('#00000000');
-        // Current impl on Browser Shell do not support relative file paths
-        // loadURL and absolute path will be replaced with loadFile(<rel path>) when it will be implemented in Browser Shell
-        this.button.pageContents.loadFile("exitbtn/index.html")
-
-        this.hide();
+    constructor(uioverlay) {
+        this.uioverlay = uioverlay;
+        this.ipc = new Ipc('ipc_exit_fullscreen_button');
     }
 
     show() {
         console.log(`BrowserBase::showExitFullscreenButton`);
-        this.button.setVisible(true);
-        this.button.bringToFront();
+
+        const button_width = 260;
+
+        this.uioverlay.switchContent('exit_fullscreen_button')
+            .then(() => this.uioverlay.setBounds({
+                x: (window.innerWidth / 2) - (button_width / 2),
+                y: 20,
+                w: button_width,
+                h: 130
+            }, 'exit_fullscreen_button'))
+            .then(() => this.uioverlay.setVisible(true));
     }
 
     hide() {
         console.log(`BrowserBase::hideExitFullscreenButton`);
-        this.button.setVisible(false);
-        this.button.sendToBack();
+        this.uioverlay.setVisible(false);
     }
-
-    destroy() {
-        console.log(`BrowserBase::destroyExitFullscreenButton`);
-        window.shell.shellWindow.pageView.removeChildView(this.button);
-        // TDB!!! destroy pageView
-    }
-
 };
 
-export default ExitFullscreenButtonBase;
 export {ExitFullscreenButtonBase};

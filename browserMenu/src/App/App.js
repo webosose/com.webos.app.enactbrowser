@@ -11,24 +11,32 @@ import MoonstoneDecorator from '@enact/moonstone/MoonstoneDecorator';
 
 import Menu from './../Views/Menu';
 import InputSuggestionList from './../Views/InputSuggestionList';
+import ExitFullscreenButton from './../Views/ExitFullscreenButton';
 
 function App({model}) {
     console.log(`App render`);
 
+    const [contentType, setContentType] = useState("default");
+
     function updateDocumentSize() {
         const element = document.getElementById('app');
         if (element) {
-            console.log(`send document size (${element.clientHeight})`);
-            model.ipc.post('documentSize', {h: element.clientHeight});
+            model.ipc.then((ipc) => {
+                console.log(`send document size (${element.clientHeight})`);
+                ipc.post('documentSize', {contentType: contentType, size: {h: element.clientHeight}});
+            });
         }
     }
 
-    const [contentType, setContentType] = useState("default");
     useEffect(updateDocumentSize);
     useEffect(() => {
-        model.ipc.subscribe('switchContent', ({type}) => {
-            console.log(`switch content to ${type}`);
-            setContentType(type);
+        model.ipc.then((ipc) => {
+            console.log(`subscribe to switchContent`);
+            ipc.subscribe('switchContent', ({type}) => {
+                console.log(`switch content to ${type}`);
+                setContentType(type);
+            })
+            model.genericIpc.post('created', ipc.ipcObject.channel);
         });
     }, []);
 
@@ -38,6 +46,9 @@ function App({model}) {
 
         case 'browser_menu':
             return <Menu model={model.menu}/>;
+
+        case 'exit_fullscreen_button':
+            return <ExitFullscreenButton model={model.exitFullscreenButton}/>;
 
         default:
             return <div/>;

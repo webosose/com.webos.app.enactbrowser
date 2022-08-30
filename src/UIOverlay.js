@@ -8,81 +8,132 @@
 
 /*global window*/
 /*global PageView*/
+/*global ShellIpc*/
 
-import {Ipc} from 'js-browser-lib/Ipc';
+const defaultChannelName = "default";
 
 class UIOverlay {
-    constructor(parentFrame) {
-        console.log(`UIOverlay constructor`);
+    static callChain = typeof ShellIpc !== 'undefined'
+        ? Promise.resolve(new ShellIpc(`ipc_uioverlay`))
+        : null
+    static ids = [];
+    static instances = [];
 
+    constructor() {
+        console.log(`UIOverlay constructor >>>`);
+
+        UIOverlay.instances.push(this);
         if (typeof PageView === 'undefined') {
             return; // in case of prerender
         }
 
-        this.view = new PageView({page_contents_params: {
-            visible: false,
-            "api": ["v8/browser_shell_ipc"]}});
-        window.shell.shellWindow.pageView.addChildView(this.view);
-        this.view.pageContents.setPageBaseBackgroundColor('#FFFFFF00');
+        const createPageView = () => {
+            this.view = new PageView({page_contents_params: {
+                visible: false,
+                "api": ["v8/browser_shell_ipc"]}});
+            window.shell.shellWindow.pageView.addChildView(this.view);
+            this.view.pageContents.loadFile("menu/index.html");
+            this.view.pageContents.setPageBaseBackgroundColor('#FFFFFF00');
+        }
 
         // It is for testing purposes
         window.UIOverlay = UIOverlay;
 
-        this.width = 0;
-        this.height = 0;
-        this.x = 0;
-        this.y = 0;
+        this.ipcChannelName = defaultChannelName;
 
-        this.ipc = new Ipc("ipc_uioverlay");
-
-        // receive document size from UIOverlay content
-        this.ipc.subscribe("documentSize", (size) => {
-            console.log(`UIOverlay::onDocumentSize`);
-            this.setBounds(size);
+        this.callChain = UIOverlay.callChain = UIOverlay.callChain.then((genericIpc) => {
+            return new Promise((resolve) => {
+                genericIpc.on("created", (ipcChannelName) => {
+                    if (!UIOverlay.ids.includes(ipcChannelName) && this.ipcChannelName === defaultChannelName) {
+                        console.log(`UIOverlay received new IPC channel name ${ipcChannelName}`);
+                        this.ipcChannelName = ipcChannelName;
+                        UIOverlay.ids.push(ipcChannelName);
+                        this.ipc = new ShellIpc(this.ipcChannelName);
+                        console.log(`UIOverlay IPC switched to individual channel named ${this.ipcChannelName}`);
+                        resolve(genericIpc);
+                    } else {
+                        reject(`allready handled channel`);
+                    }
+                });
+                createPageView();
+            })
+        }).then((genericIpc) => {
+            console.log(`UIOverlay:: lets subscribe to onDocumentSize ${this.contentName}`);
+            // receive document size from UIOverlay content
+            this.ipc.on("documentSize", ({contentType, size}) => {
+                console.log(`UIOverlay::onDocumentSize(${contentType})`);
+                this.setBounds(size, contentType);
+            });
+            console.log(`UIOverlay:: subscribed to onDocumentSize`);
+            return genericIpc;
+        }, (e) => {
+            console.log(`catch error: ${e}`);
         });
+
         this.contentName = "default";
-        this.view.pageContents.loadFile("menu/index.html");
         this.sizes = [];
-        this.sizes["default"] = {x: 0, y: 0, w: 0, h: 0};
+        this.sizes["default"] = {x: 10, y: 10, w: 10, h: 10};
+        console.log(`UIOverlay constructor <<<`);
+    }
+
+    getCallChain() {
+        return this.callChain;
     }
 
     setVisible(visible) {
-        console.log(`UIOverlay::setVisible(${visible})`);
-        if (visible) {
-            this.setBounds({});
-            this.view.bringToFront();
-        } else {
-            this.view.sendToBack();
-        }
-        this.view.setVisible(visible);
+        return this.callChain.then(() => {
+            console.log(`UIOverlay::setVisible(${visible})`);
+            if (visible) {
+                this.setBounds({});
+                this.view.bringToFront();
+            } else {
+                this.view.sendToBack();
+            }
+            this.view.setVisible(visible);
+        })
     }
 
-    setBounds({x, y, w, h}) {
-        this.sizes[this.contentName].x = x || this.sizes[this.contentName].x;
-        this.sizes[this.contentName].y = y || this.sizes[this.contentName].y;
-        this.sizes[this.contentName].w = w || this.sizes[this.contentName].w;
-        this.sizes[this.contentName].h = h || this.sizes[this.contentName].h;
+    setBounds({x, y, w, h}, contentType) {
+        return this.callChain.then(() => {
+            const content = !!contentType ? contentType : this.contentName;
+            console.log(`UIOverlay::setBounds({${x}, ${y}, ${w}, ${h}})`);
 
-        this.view.setBounds(
-            Math.round(this.sizes[this.contentName].x), 
-            Math.round(this.sizes[this.contentName].y), 
-            Math.round(this.sizes[this.contentName].w), 
-            Math.round(this.sizes[this.contentName].h)
-        );
+            if (!this.sizes[content]) {
+                this.sizes[content] = {x: 10, y: 10, w: 10, h: 10};
+            }
+            
+            this.sizes[content].x = x || this.sizes[content].x;
+            this.sizes[content].y = y || this.sizes[content].y;
+            this.sizes[content].w = w || this.sizes[content].w;
+            this.sizes[content].h = h || this.sizes[content].h;
+
+            console.log(`setBounds(${this.sizes[content].x}, ${this.sizes[content].y}, ${this.sizes[content].w}, ${this.sizes[content].h}, ${content})`);
+            this.view.setBounds(
+                Math.round(this.sizes[content].x),
+                Math.round(this.sizes[content].y),
+                Math.round(this.sizes[content].w),
+                Math.round(this.sizes[content].h)
+            );
+        })
     }
 
     switchContent(target) {
-        if (this.contentName === target) {
-            return;
-        }
-        this.contentName = target;
-
-        if (!this.sizes[this.contentName]) {
-            this.sizes[this.contentName] = {x: 0, y: 0, w: 0, h: 0};
-        }
-
         console.log(`UIOverlay::switchContent(${target})`);
-        this.ipc.post("switchContent", {type: target});
+        return this.callChain.then(() => {
+            console.log(`start switchingContent`);
+
+            if (this.contentName === target) {
+                return;
+            }
+            this.contentName = target;
+
+            if (!this.sizes[this.contentName]) {
+                this.sizes[this.contentName] = {x: 0, y: 0, w: 0, h: 0};
+            }
+
+            console.log(`UIOverlay::switchContent send switch content for (${target})`);
+            this.ipc.post("switchContent", {type: target});
+        }).then(() => this.setBounds({}));
     }
 }
 

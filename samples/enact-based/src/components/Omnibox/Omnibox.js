@@ -64,23 +64,24 @@ class OmniboxBase extends Component {
 		const inputHeight = inputElem.offsetHeight + 20;
 		const borderWidth = (document.body.clientWidth / 100) * 10;  // 10% of the document width
 		const width = document.body.clientWidth - borderWidth - borderWidth;
-		this.props.uioverlay.switchContent("input_suggestion_list");
-		this.props.uioverlay.setBounds({
-			x: borderWidth,
-			y: inputHeight,
-			w: width
-		});
-		this.props.uioverlay.ipc.subscribe("click_suggested_item", ({clickedIndex}) => {
-			console.log(`click_suggested_item message ${clickedIndex}`);
-			this.onClickSuggestedItems(clickedIndex);
-		});
+		this.props.uioverlay.switchContent("input_suggestion_list")
+			.then(() => this.props.uioverlay.setBounds({
+				x: borderWidth,
+				y: inputHeight,
+				w: width
+			}, "input_suggestion_list"))
+			.then(() => {
+				console.log(`subscribe to \"click_suggested_item\"`);
+				this.props.uioverlay.ipc.on("click_suggested_item", ({clickedIndex}) => {
+					console.log(`click_suggested_item message ${clickedIndex}`);
+					this.onClickSuggestedItems(clickedIndex);
+				});
+			})
 	}
 
 	openSuggestionList(shouldOpen) {
-		if (shouldOpen) {
-			this.props.uioverlay.switchContent("input_suggestion_list");
-		}
-		this.props.uioverlay.setVisible(shouldOpen);
+		let promiseChain = shouldOpen ? this.props.uioverlay.switchContent("input_suggestion_list") : Promise.resolve();
+		promiseChain.then(() => this.props.uioverlay.setVisible(shouldOpen));
 		this.setState({open: shouldOpen});
 		console.log(`openSuggestionList setVisible(${shouldOpen})`);
 	}
@@ -237,7 +238,8 @@ class OmniboxBase extends Component {
 			if (this.state.isEditing === true) {
 				this.openSuggestionList(true);
 			}
-			this.props.uioverlay.ipc.post('suggestionList', items);
+			this.props.uioverlay.getCallChain()
+				.then(() => this.props.uioverlay.ipc.post('suggestionList', items));
 		}
 		return items;
 	}
@@ -249,6 +251,7 @@ class OmniboxBase extends Component {
 	onActivate = () => {
 		console.log("Omnibox::Input::onActivate");
 		if (this.state.value !== "") {
+			this.props.uioverlay.switchContent("input_suggestion_list");
 			this.openSuggestionList(true);
 		}
 		this.setState({isEditing: true});
