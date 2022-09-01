@@ -14,6 +14,13 @@ import Ipc from './Ipc.js';
 class Menu {
     constructor(uioverlay) {
         this.uioverlay = uioverlay;
+
+        if (typeof window !== 'undefined') {
+            this.menuIpc = new Ipc("ipc_menu");
+            this.menuIpc.subscribe('click', () => {
+                this.hide();
+            });
+        }
     }
 
     showAbove(buttonId) {
