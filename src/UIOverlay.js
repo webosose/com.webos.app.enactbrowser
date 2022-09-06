@@ -28,9 +28,10 @@ class UIOverlay {
         }
 
         const createPageView = () => {
-            this.view = new PageView({page_contents_params: {
-                visible: false,
-                "api": ["v8/browser_shell_ipc"]}});
+            this.view = new PageView({"page-contents-params": {
+              "allow-universal-access": true,
+              "api": ["v8/browser_shell_ipc"]
+            }});
             window.shell.shellWindow.pageView.addChildView(this.view);
             this.view.pageContents.loadFile("menu/index.html");
             this.view.pageContents.setPageBaseBackgroundColor('#FFFFFF00');
