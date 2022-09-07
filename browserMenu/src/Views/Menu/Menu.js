@@ -14,7 +14,7 @@ import css from './Menu.less';
 
 function Menu({model}) {
     return (
-        <div id="app" className={css.topArea}>
+        <div className={css.topArea}>
             <Item
                 minWidth={false}
                 className={css.menuItem}

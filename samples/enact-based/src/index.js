@@ -15,7 +15,9 @@ import configureStore from './store';
 import {UIOverlay} from 'js-browser-lib/UIOverlay';
 import {ExitFullscreenButtonBase} from 'js-browser-lib/ExitFullscreenButtonBase';
 import {Menu as MenuBase} from 'js-browser-lib/MenuBase';
+import {ChromeExtensionsBase} from 'js-browser-lib/ChromeExtensionsBase';
 import {initLogging} from 'js-browser-lib/Logger';
+import {isWindowReady} from '@enact/core/snapshot';
 
 if (typeof window !== 'undefined') {
 	initLogging();
@@ -25,6 +27,7 @@ const store = configureStore();
 const uioverlay = new UIOverlay();
 const menu = new MenuBase(uioverlay);
 const exitFullscreenButton = new ExitFullscreenButtonBase(uioverlay);
+const chromeExtensionsMenu = (isWindowReady() && typeof window.neva !== 'undefined') ? new ChromeExtensionsBase(uioverlay) : null;
 
 
 let appElement = (
@@ -33,6 +36,7 @@ let appElement = (
 			uioverlay={uioverlay}
 			menu={menu}
 			exitFullscreenButton={exitFullscreenButton}
+			chromeExtensionsMenu={chromeExtensionsMenu}
 		/>
 	</Provider>
 );

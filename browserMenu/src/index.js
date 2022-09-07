@@ -8,9 +8,11 @@
 
 import React from 'react';
 import {render} from 'react-dom';
+import MoonstoneDecorator from '@enact/moonstone/MoonstoneDecorator';
 import App from './App';
 import InputSuggestionListModel from './components/InputSuggestionListModel';
 import ExitFullscreenButtonModel from './components/ExitFullscreenButtonModel';
+import ChromeExtensionsModel from './components/ChromeExtensionsModel';
 import MenuModel from './components/MenuModel';
 import Ipc from '../../src/Ipc';
 import initLogging from '../../src/Logger';
@@ -39,10 +41,15 @@ const model = {
     menu: new MenuModel(),
     ipc: ipc,
     genericIpc: genericIpc,
-    exitFullscreenButton: new ExitFullscreenButtonModel()
+    exitFullscreenButton: new ExitFullscreenButtonModel(),
+    chromeExtensions: new ChromeExtensionsModel()
 };
 
-const appElement = (typeof window !== 'undefined') ? (<App model={model} />) : (<div />);
+const PrerenderApp = MoonstoneDecorator(<div />);
+
+const appElement = (typeof window !== 'undefined') ?
+    (<App model={model} />) :
+    (<PrerenderApp />);
 
 // In a browser environment, render instead of exporting
 if (typeof window !== 'undefined') {

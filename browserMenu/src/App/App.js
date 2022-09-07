@@ -6,27 +6,28 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import MoonstoneDecorator from '@enact/moonstone/MoonstoneDecorator';
 
 import Menu from './../Views/Menu';
 import InputSuggestionList from './../Views/InputSuggestionList';
 import ExitFullscreenButton from './../Views/ExitFullscreenButton';
+import ChromeExtensions from './../Views/ChromeExtensions';
 
 function App({model}) {
     console.log(`App render`);
 
     const [contentType, setContentType] = useState("default");
 
-    function updateDocumentSize() {
+    const updateDocumentSize = useCallback(() => {
         const element = document.getElementById('app');
         if (element) {
             model.ipc.then((ipc) => {
-                console.log(`send document size (${element.clientHeight})`);
-                ipc.post('documentSize', {contentType: contentType, size: {h: element.clientHeight}});
+                console.log(`send document size (${element.offsetHeight})`);
+                ipc.post('documentSize', {contentType: contentType, size: {h: element.offsetHeight}});
             });
         }
-    }
+    }, [contentType]);
 
     useEffect(updateDocumentSize);
     useEffect(() => {
@@ -40,19 +41,34 @@ function App({model}) {
         });
     }, []);
 
+    let content;
     switch(contentType) {
         case 'input_suggestion_list':
-            return <InputSuggestionList model={model.inputSuggestionList} onUpdate={updateDocumentSize}/>;
+            content = (<InputSuggestionList model={model.inputSuggestionList} onUpdate={updateDocumentSize}/>);
+            break;
 
         case 'browser_menu':
-            return <Menu model={model.menu}/>;
+            content = (<Menu model={model.menu}/>);
+            break;
 
         case 'exit_fullscreen_button':
-            return <ExitFullscreenButton model={model.exitFullscreenButton}/>;
+            content = (<ExitFullscreenButton model={model.exitFullscreenButton}/>);
+            break;
+
+        case 'chrome_extensions':
+            content = (<ChromeExtensions model={model.chromeExtensions} onUpdate={updateDocumentSize}/>);
+            break;
 
         default:
-            return <div/>;
+            content = (<div />);
+            break;
     }
+
+    return (
+        <div id="app">
+            {content}
+        </div>
+    )
 }
 
 export default MoonstoneDecorator(App);

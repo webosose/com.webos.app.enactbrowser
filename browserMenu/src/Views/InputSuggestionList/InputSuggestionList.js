@@ -59,11 +59,11 @@ class InputSuggestionList extends Component {
         }
 
         if (items.length === 0) {
-            return <div id="app"/>
+            return <div/>
         }
 
         return (
-            <div id="app" className={css.itemsContainer} >
+            <div className={css.itemsContainer} >
                 {items}
             </div>);
     }

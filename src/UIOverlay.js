@@ -102,19 +102,21 @@ class UIOverlay {
             if (!this.sizes[content]) {
                 this.sizes[content] = {x: 10, y: 10, w: 10, h: 10};
             }
-            
+
             this.sizes[content].x = x || this.sizes[content].x;
             this.sizes[content].y = y || this.sizes[content].y;
             this.sizes[content].w = w || this.sizes[content].w;
             this.sizes[content].h = h || this.sizes[content].h;
 
-            console.log(`setBounds(${this.sizes[content].x}, ${this.sizes[content].y}, ${this.sizes[content].w}, ${this.sizes[content].h}, ${content})`);
-            this.view.setBounds(
-                Math.round(this.sizes[content].x),
-                Math.round(this.sizes[content].y),
-                Math.round(this.sizes[content].w),
-                Math.round(this.sizes[content].h)
-            );
+            if (this.contentName === contentType) {
+                console.log(`setBounds(${this.sizes[content].x}, ${this.sizes[content].y}, ${this.sizes[content].w}, ${this.sizes[content].h}, ${content})`);
+                this.view.setBounds(
+                    Math.round(this.sizes[content].x),
+                    Math.round(this.sizes[content].y),
+                    Math.round(this.sizes[content].w),
+                    Math.round(this.sizes[content].h)
+                );
+            }
         })
     }
 

@@ -65,6 +65,23 @@
 		}
 	}
 
+	&.extensionButton {
+		.icon-svg-common;
+		.applySkins({
+			&:not([disabled]) {
+				.focus({
+					.icon {
+						background-image: url('../../../assets/default/extension_hover.svg');
+					}
+				});
+			}
+
+			.icon {
+				background-image: url('../../../assets/default/extension_normal.svg');
+			}
+		});
+	}
+
 	&.menuButton {
 		.icon-svg-common;
 		.applySkins({

@@ -6,7 +6,7 @@ import css from './ExitFullscreenButton.less';
 
 function ExitFullscreenButton(props) {
     return (
-        <div {...props} id="app" className={css.topArea}>
+        <div {...props} className={css.topArea}>
             <Button
                 minWidth={false}
                 className={css.exitButton}

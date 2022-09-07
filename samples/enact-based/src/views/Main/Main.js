@@ -25,12 +25,14 @@ import ContentView from '../ContentView';
 import DialogView from '../DialogView';
 import Dialog from '../../components/Dialog';
 import Menu from '../../components/Menu';
+import ChromeExtensionsMenu from '../../components/ChromeExtensionsMenu';
 import NavigationBox from '../../components/NavigationBox';
 import Omnibox from '../../components/Omnibox';
 import PropTypes from 'prop-types';
 import {setFullScreen} from '../../actions';
 import {TabBar} from '../../components/TabBar';
 import ZoomControl from '../../components/ZoomControl';
+import {isWindowReady} from '@enact/core/snapshot';
 
 import css from './Main.less';
 
@@ -211,6 +213,10 @@ class MainBase extends Component {
 			private_mode = browser.getPrivateBrowsing();
 		}
 
+		const maybeChromeExtensionsMenu = (isWindowReady() && typeof window.neva !== 'undefined') ?
+			(<ChromeExtensionsMenu chromeExtensionsMenu={this.props.chromeExtensionsMenu}/>) :
+			(null)
+
 		return (
 			<div {...props}
 				style={{ '--cue-bg-color': privateBrowsingCueBgColor, '--cue-text-color': privateBrowsingCueTextColor }}
@@ -222,6 +228,8 @@ class MainBase extends Component {
 						<Omnibox browser={browser} uioverlay={this.props.uioverlay}/>
 						<ZoomControl browser={browser} />
 						<Menu browser={browser} menu={this.props.menu}/>
+						{maybeChromeExtensionsMenu}
+
 						<IconButton
 							backgroundOpacity="transparent"
 							className={css.button}
