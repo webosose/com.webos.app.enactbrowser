@@ -10,6 +10,7 @@
  * Contains the declaration for the WebView component.
  *
  */
+/* global shell */
 
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
@@ -17,6 +18,8 @@ import React, {Component} from 'react';
 import ErrorPage from '../ErrorPage';
 import BlockedPageNotification from '../BlockedPageNotification';
 import {setFullScreen} from '../../actions';
+
+import css from './WebView.less';
 
 const
 	WebViewWrapperId = '_webview',
@@ -43,7 +46,25 @@ class WebViewBase extends Component {
 			suppressDialog: false,
 			state: "navigating",
 			post_render_task: null,
+			vkbHeight: 0,
 		};
+
+		if (typeof shell !== "undefined") {
+			shell.shellWindow.on('vkb-overlap', ({height}) => {
+				this.setState({vkbInset: height});
+				this.props.webView.tabView.pageContents.executeJavaScriptInMainFrame(
+					`window.scrollBy(0, ${height})`
+				);
+			});
+			shell.shellWindow.on('vkb-change-state', (isShown) => {
+				if (!isShown) {
+					this.props.webView.tabView.pageContents.executeJavaScriptInMainFrame(
+						`window.scrollBy(0, ${-this.state.vkbInset})`
+					);
+					this.setState({vkbInset: 0});
+				}
+			});
+		}
 	}
 
 	static getDerivedStateFromProps = (nextProps, prevState) => {
@@ -239,12 +260,15 @@ class WebViewBase extends Component {
 		delete rest.browser;
 
 		const view_page =
-			<div
-				style={style}
-				id={id_}
-				hidden={!show_webview}
-				{...rest}
-			/>;
+			<div className={css.webViewContainer}>
+				<div
+					className={style}
+					id={id_}
+					hidden={!show_webview}
+					{...rest}
+				/>
+				<div style={{minHeight: `${this.state.vkbInset}px`}}/>
+			</div>
 
 		const error_page =
 			<ErrorPage
@@ -266,7 +290,7 @@ class WebViewBase extends Component {
 			/>;
 
 		return (
-			<div>
+			<div className={css.contentViewContainer}>
 				{view_page}
 				{error_page}
 				{blocked_page_notification}
