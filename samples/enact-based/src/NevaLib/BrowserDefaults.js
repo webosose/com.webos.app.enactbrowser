@@ -6,7 +6,8 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
-/*global window*/
+// FIXME(neva): Commented to fix build issue on RP build #2250
+// global window
 
 // if defaults.js file is missing then browser will work anyway
 function getDefaults() {

@@ -6,7 +6,9 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
-/*global window*/
+// FIXME(neva): Commented to fix build issue on RP build #2250
+//global window
+
 import {RendererPerTabPolicy as SimplePolicy} from './RendererPerTabPolicy.js';
 
 const maxActiveTabFamilies = 1;
