@@ -48,7 +48,7 @@ function App({model}) {
             break;
 
         case 'browser_menu':
-            content = (<Menu model={model.menu}/>);
+            content = (<Menu model={model.menu} onUpdate={updateDocumentSize}/>);
             break;
 
         case 'exit_fullscreen_button':

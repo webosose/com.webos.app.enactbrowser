@@ -9,6 +9,8 @@
 import React from 'react';
 import {render} from 'react-dom';
 import MoonstoneDecorator from '@enact/moonstone/MoonstoneDecorator';
+import store from './store'
+import { Provider } from 'react-redux'
 import App from './App';
 import InputSuggestionListModel from './components/InputSuggestionListModel';
 import ExitFullscreenButtonModel from './components/ExitFullscreenButtonModel';
@@ -51,9 +53,11 @@ const model = {
 
 const PrerenderApp = MoonstoneDecorator(<div />);
 
-const appElement = (typeof window !== 'undefined') ?
-    (<App model={model} />) :
-    (<PrerenderApp />);
+const appElement = (typeof window !== 'undefined') ? (
+    <Provider store={store}>
+        <App model={model} />
+    </Provider>
+) : (<PrerenderApp />);
 
 // In a browser environment, render instead of exporting
 if (typeof window !== 'undefined') {

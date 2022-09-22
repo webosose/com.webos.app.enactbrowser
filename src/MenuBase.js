@@ -20,7 +20,11 @@ class Menu {
             this.menuIpc.subscribe('click', () => {
                 this.hide();
             });
+            const launchArgs = window.shell.launchArgs;
+            this.devSettings = launchArgs.devSettings ? launchArgs.devSettings : false;    
         }
+
+        this.doneOnce = false;
     }
 
     showAbove(buttonId) {
@@ -31,14 +35,21 @@ class Menu {
         const leftBorderWidth = (document.body.clientWidth / 100) * 70;  // 10% of the document width
         const width = document.body.clientWidth - leftBorderWidth;
 
-        this.uioverlay.switchContent('browser_menu')
+        return this.uioverlay.switchContent('browser_menu')
             .then(() => this.uioverlay.setBounds({
                 x: leftBorderWidth,
                 y: buttonHeight,
                 w: width
             }, 'browser_menu'))
-            .then(() => this.uioverlay.setVisible(true));
-        this.uioverlay.view.pageContents.setFocus();
+            .then(() => this.uioverlay.setVisible(true))
+            .then(() => {
+                if (!this.doneOnce) {
+                    console.log(`browser.devSettingsEnabled = ${this.devSettings}`);
+                    this.menuIpc.post('showDevSettings', {showDevSettingsItem: this.devSettings});
+                    this.doneOnce = true;
+                }
+                this.uioverlay.view.pageContents.setFocus();
+            })
     }
 
     destroy() {}

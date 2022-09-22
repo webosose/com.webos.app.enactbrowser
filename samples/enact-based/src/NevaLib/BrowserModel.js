@@ -25,6 +25,7 @@ import {Settings, SettingsConsts} from './Settings';
 import SiteFiltering from './SiteFiltering';
 import {ReduxTabs as TabsModel} from './Tabs';
 import createTabPolicy from './TabPolicyFactory';
+import {isWindowReady} from '@enact/core/snapshot';
 
 Object.assign(TabTitles, {
     SITE_FILTERING_TITLE: 'Site Filtering',
@@ -144,8 +145,17 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
 
     initializeTabs() {
         let hasTargetInLaunchParams = false;
-        hasTargetInLaunchParams = true;
-        this.createTab(TabTypes.NEW_TAB_PAGE);
+        if (isWindowReady()) {
+            const launchArgs = window.shell.launchArgs;
+            if (launchArgs.target) {
+                hasTargetInLaunchParams = true;
+                this.tabs.addTab(this._createWebViewPage(launchArgs.target));
+            }
+            if (launchArgs.newtab) {
+                hasTargetInLaunchParams = true;
+                this.createTab(TabTypes.NEW_TAB_PAGE);
+            }
+        }
 
         if (!hasTargetInLaunchParams) {
             if (this.settings.getPrivateBrowsing()) {

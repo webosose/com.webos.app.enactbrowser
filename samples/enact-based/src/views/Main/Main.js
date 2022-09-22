@@ -6,7 +6,6 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
-/*global chrome*/
 /**
  * Main
  *
@@ -57,13 +56,18 @@ class MainBase extends Component {
 
 		this.fullScreenContentItem = React.createRef();
 		this.showExitButton = true;
-		if (typeof chrome === 'object' && typeof chrome.app === 'object' && chrome.app.launchArgs) {
-			const launchArgs = JSON.parse(chrome.app.launchArgs);
-			if (launchArgs.fullMode) {
-				this.state.fullScreen = true;
-			}
-			if (launchArgs.hide_exit_button) {
-				this.showExitButton = false;
+		if (isWindowReady()) {
+			try {
+				const launchArgs = window.shell.launchArgs;
+				if (launchArgs.fullMode) {
+					this.state.fullScreen = true;
+					this.onFullScreen();
+				}
+				if (launchArgs.hide_exit_button) {
+					this.showExitButton = false;
+				}
+			} catch (e) {
+				console.error(`exception during launch args processing: ${e}`);
 			}
 		}
 	}

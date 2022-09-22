@@ -9,39 +9,56 @@
 import Item from '@enact/moonstone/Item';
 import React from 'react';
 import $L from '@enact/i18n/$L';
+import { useSelector, useDispatch } from 'react-redux'
+import { useEffect, useState } from 'react';
+import { selectDevSettings, set } from '../../store/slice/menu/devSettingsSlice'
 
 import css from './Menu.less';
 
-function Menu({model}) {
+function Menu({model, onUpdate}) {
+    const dispatch = useDispatch();
+    const showDevSettings = useSelector(selectDevSettings);
+
+    useEffect(() => {
+        model.ipc.on('showDevSettings', ({showDevSettingsItem}) => {
+            console.log(`showDevSettings message arrived ${showDevSettingsItem}`);
+            dispatch(set(showDevSettingsItem));
+        });
+    }, []);
+
+    const [items, setItems] = useState([
+        {message: 'history', text: 'History'},
+        {message: 'bookmarks', text: 'Bookmarks'},
+        {message: 'settings', text: 'Settings'}]);
+
+    useEffect(() => {
+        if (showDevSettings === true) {
+            if (!items.find((item) => item.message === 'devSettings')) {
+                setItems([...items, {message: 'devSettings', text: 'Dev Settings'}]);
+            }
+        } else {
+            setItems(items.filter(item => item.message !== 'devSettings'));
+        }
+    }, [showDevSettings])
+
+    console.log(items)
+
+    const renderItems = items.map((element, index) => (
+        <Item
+            key={index}
+            minWidth={false}
+            className={css.menuItem}
+            onClick={model.click(element.message)}
+        >
+            {$L(element.text)}
+        </Item>
+    ));
+
+    useEffect(onUpdate, [renderItems, items, showDevSettings])
+
     return (
-        <div className={css.topArea}>
-            <Item
-                minWidth={false}
-                className={css.menuItem}
-                onClick={model.click('history')}
-            >
-                {$L('History')}
-            </Item>
-            <Item
-                minWidth={false}
-                onClick={model.click('bookmarks')}
-            >
-                {$L('Bookmarks')}
-            </Item>
-            <Item
-                minWidth={false}
-                className={css.menuItem}
-                onClick={model.click('settings')}
-            >
-                {$L('Settings')}
-            </Item>
-            <Item
-                minWidth={false}
-                className={css.menuItem}
-                onClick={model.click('devSettings')}
-            >
-                {$L('Dev Settings')}
-            </Item>
+        <div id="app" className={css.topArea}>
+            {renderItems}
         </div>
     );
 }
