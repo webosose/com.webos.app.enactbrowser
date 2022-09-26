@@ -58,8 +58,8 @@ const ContentViewBase = kind({
 					wrapperAttrs.key = id;
 
 					return (
-						<div {...wrapperAttrs} style={{height: "100%"}}>
-							<ContentItem {...itemAttrs} />
+						<div {...wrapperAttrs} style={ id === selectedId ? {height: '100%'} : {height: '0px'}}>
+							<ContentItem {...itemAttrs} style={ id === selectedId ? {height: '100%'} : {height: '0px'}} />
 							{ fullScreen &&
 								<ExitFullScreenButton
 									fullScreen={fullScreen}

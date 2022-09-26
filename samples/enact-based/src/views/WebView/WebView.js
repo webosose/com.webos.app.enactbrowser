@@ -260,14 +260,16 @@ class WebViewBase extends Component {
 		delete rest.browser;
 
 		const view_page =
-			<div className={css.webViewContainer}>
+			<div className={css.webViewContainer} style={
+				show_webview ? {height: '100%'} : {}
+			}>
 				<div
 					className={style}
 					id={id_}
 					hidden={!show_webview}
 					{...rest}
 				/>
-				<div style={{minHeight: `${this.state.vkbInset}px`}}/>
+				<div style={{height: `${this.state.vkbInset}px`}}/>
 			</div>
 
 		const error_page =
