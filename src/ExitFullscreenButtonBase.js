@@ -33,7 +33,7 @@ class ExitFullscreenButtonBase {
 
     hide() {
         console.log(`BrowserBase::hideExitFullscreenButton`);
-        this.uioverlay.setVisible(false);
+        this.uioverlay.setVisible(false, 'exit_fullscreen_button');
     }
 };
 

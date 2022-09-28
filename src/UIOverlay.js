@@ -57,6 +57,10 @@ class UIOverlay {
                     }
                 });
                 createPageView();
+                genericIpc.on('setFocusToUIOverlay', () => {
+                    console.log(`setFocusToUIOverlay message. set focus to UIOverlay`);
+                    this.setFocus();
+                })
             })
         }).then((genericIpc) => {
             console.log(`UIOverlay:: lets subscribe to onDocumentSize ${this.contentName}`);
@@ -71,6 +75,12 @@ class UIOverlay {
             console.log(`catch error: ${e}`);
         });
 
+        if (typeof window !== 'undefined') {
+            window.document.addEventListener('mouseover', () => {
+                window.shell.shellWindow.pageView.pageContents.setFocus();
+            })
+        }
+
         this.contentName = "default";
         this.sizes = [];
         this.sizes["default"] = {x: 10, y: 10, w: 10, h: 10};
@@ -81,7 +91,12 @@ class UIOverlay {
         return this.callChain;
     }
 
-    setVisible(visible) {
+    setVisible(visible, target) {
+        console.log(`UIOverlay::setVisible(${visible}, ${target})`);
+
+        if (target && target !== this.contentName) {
+            return this.callChain;
+        }
         return this.callChain.then(() => {
             console.log(`UIOverlay::setVisible(${visible})`);
             if (visible) {
@@ -89,8 +104,19 @@ class UIOverlay {
                 this.view.bringToFront();
             } else {
                 this.view.sendToBack();
+                if (typeof window !== 'undefined') {
+                    console.log(`UIOerlay::setVisible setFocus to main window`);
+                    window.shell.shellWindow.pageView.pageContents.setFocus();
+                }
             }
             this.view.setVisible(visible);
+        })
+    }
+
+    setFocus() {
+        return this.callChain.then(() => {
+            console.log(`UIOverlay::setFocus`);
+            this.view.pageContents.setFocus();
         })
     }
 

@@ -11,7 +11,7 @@
  *
  */
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 
 import {BrowserIconButton as IconButton} from '../BrowserIconButton';
 import css from './ChromeExtensionsMenu.less';
@@ -28,6 +28,21 @@ function ChromeExtensionsMenu({chromeExtensionsMenu}) {
 		}
 		setIsOpened(!isOpened);
 	}, [isOpened])
+
+	useEffect(() => {
+		if (isOpened) {
+			if (typeof window !== 'undefined') {
+				window.document.addEventListener('click', () => {
+					console.log(`ChromeExtensionsMenu::on document click event`);
+					if (isOpened) {
+						setIsOpened(false);
+					}
+				}, {once: true});
+			}
+		} else {
+			chromeExtensionsMenu.hide();
+		}
+	}, [isOpened]);
 
 	return (
 		<IconButton

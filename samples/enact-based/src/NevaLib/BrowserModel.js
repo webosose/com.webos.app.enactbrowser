@@ -91,6 +91,10 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
 
         this.menuIpc = new Ipc("ipc_menu");
         this.menuIpc.subscribe('click', ({menuItem}) => {
+            if (typeof window !== 'undefined') {
+                console.log(`menuIpc on click. setFoucus to main window`);
+                window.shell.shellWindow.pageView.pageContents.setFocus();
+            }
             switch(menuItem) {
                 case "history":
                     this.createTab(TabTypes.HISTORY)

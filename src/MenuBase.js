@@ -38,13 +38,14 @@ class Menu {
                 w: width
             }, 'browser_menu'))
             .then(() => this.uioverlay.setVisible(true));
+        this.uioverlay.view.pageContents.setFocus();
     }
 
     destroy() {}
 
     hide() {
         console.log(`hide browser menu`);
-        this.uioverlay.setVisible(false);
+        this.uioverlay.setVisible(false, 'browser_menu');
     }
 
 };

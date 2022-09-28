@@ -13,8 +13,10 @@
 
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+import { isWindowReady } from '@enact/core/snapshot';
 
 import {BrowserIconButton as IconButton} from '../BrowserIconButton';
+import Ipc from 'js-browser-lib/Ipc';
 import css from './Menu.less';
 
 class Menu extends Component {
@@ -28,6 +30,13 @@ class Menu extends Component {
 			isOpened: false
 		}
 		this.menu = props.menu;
+
+		if (isWindowReady()) {
+			this.menuIpc = new Ipc("ipc_menu");
+			this.menuIpc.subscribe('click', () => {
+				this.setState({isOpened: false});
+			});
+		}
 	}
 
 	toggleMenu = () => {
@@ -38,6 +47,15 @@ class Menu extends Component {
 	componentDidUpdate () {
 		if (this.state.isOpened) {
 			this.menu.showAbove("nevaBrowserMenuButton");
+
+			if (typeof window !== 'undefined') {
+				window.document.addEventListener('click', () => {
+					console.log(`Menu::on document click event`);
+					if (this.state.isOpened) {
+						this.setState({isOpened: false});
+					}
+				}, {once: true});
+			}
 		} else {
 			this.menu.hide();
 		}

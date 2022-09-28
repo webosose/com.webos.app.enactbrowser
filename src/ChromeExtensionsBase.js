@@ -19,6 +19,9 @@ class ChromeExtensionsBase {
             this.ipc = new Ipc("ipc_chrome_extensions");
             this.ipc.subscribe('click', () => {
                 this.hide();
+                if (typeof window !== 'undefined') {
+                    window.shell.shellWindow.pageView.pageContents.setFocus();
+                }
             });
         }
     }
@@ -47,13 +50,14 @@ class ChromeExtensionsBase {
                     });
                 })
             })
+        this.uioverlay.view.pageContents.setFocus();
     }
 
     destroy() {}
 
     hide() {
         console.log(`hide chrome extensions menu`);
-        this.uioverlay.setVisible(false);
+        this.uioverlay.setVisible(false, 'chrome_extensions');
     }
 
 };

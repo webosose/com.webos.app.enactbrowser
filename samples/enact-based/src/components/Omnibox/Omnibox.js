@@ -81,7 +81,17 @@ class OmniboxBase extends Component {
 
 	openSuggestionList(shouldOpen) {
 		let promiseChain = shouldOpen ? this.props.uioverlay.switchContent("input_suggestion_list") : Promise.resolve();
-		promiseChain.then(() => this.props.uioverlay.setVisible(shouldOpen));
+		promiseChain
+			.then(() => this.props.uioverlay.setVisible(shouldOpen, "input_suggestion_list"))
+			.then(() => {
+				if (shouldOpen) {
+					if (typeof window !== 'undefined') {
+						window.document.addEventListener('click', () => {
+							this.openSuggestionList(false);
+						}, {once: true});
+					}
+				}
+			});
 		this.setState({open: shouldOpen});
 		console.log(`openSuggestionList setVisible(${shouldOpen})`);
 	}
@@ -189,7 +199,9 @@ class OmniboxBase extends Component {
 	}
 
 	spotSuggested = () => {
-		Spotlight.focus('suggestedList');
+		if (this.state.open) {
+			this.props.uioverlay.setFocus();
+		}
 	}
 
 	onClickSuggestedItems = (index) => {

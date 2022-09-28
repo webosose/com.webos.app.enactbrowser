@@ -30,6 +30,12 @@ class ExitFullScreenButton extends Component {
 			animation: css.show,
 			timeoutId: 0
 		};
+
+		if (typeof window !== 'undefined') {
+			window.document.addEventListener('click', () => {
+				this.hide();
+			});
+		}
 	}
 
 	componentDidMount () {
@@ -51,6 +57,7 @@ class ExitFullScreenButton extends Component {
 
 	show = () => {
 		this.props.exitFullscreenButton.show();
+		this.props.exitFullscreenButton.uioverlay.setFocus();
 	}
 
 	hide = () => {
