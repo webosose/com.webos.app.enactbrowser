@@ -68,8 +68,6 @@ const NavigationBoxBase = kind({
     return (
       <div {...rest}>
         <TooltipButton
-          className={css.navigationArrowButtons}
-          css={css}
           backgroundOpacity="transparent"
           disabled={!canGoBack}
           onClick={onBack}
@@ -78,8 +76,6 @@ const NavigationBoxBase = kind({
           size="small"
         />
         <TooltipButton
-          className={css.navigationArrowButtons}
-          css={css}
           backgroundOpacity="transparent"
           disabled={!canGoForward}
           onClick={onForward}
