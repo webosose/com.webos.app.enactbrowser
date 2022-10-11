@@ -36,7 +36,16 @@ class PageContentsWrapper {
         this.canGoBack = false;
         this.canGoForward = false;
         this.eventListeners = [];
-        this.tabView = new PageView;
+
+        let pageContentsParams = {};
+        
+        if (params.useragentOverride) {
+            console.log(`WebView::_initWebView(user-agent: ${params.useragentOverride})`);
+            pageContentsParams["user-agent"] = params.useragentOverride;
+        }
+
+        this.tabView = new PageView({"page-contents-params": pageContentsParams});
+
         window.shell.shellWindow.pageView.addChildView(this.tabView);
 
         this.url = params.url ? params.url : '';
@@ -95,9 +104,6 @@ class PageContentsWrapper {
         this.addEventListener('did-finish-load', this.handleFinishLoading.bind(this));
 
         this.setZoom(params.zoomFactor ? params.zoomFactor : 1);
-        if (params.useragentOverride) {
-            this.setUserAgentOverride(params.useragentOverride);
-        }
     }
 
     handleFinishLoading() {

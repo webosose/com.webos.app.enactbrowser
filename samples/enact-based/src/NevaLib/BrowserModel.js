@@ -147,6 +147,10 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
         let hasTargetInLaunchParams = false;
         if (isWindowReady()) {
             const launchArgs = window.shell.launchArgs;
+            if (launchArgs.override_user_agent_string) {
+                console.log(`UA string: ${launchArgs.override_user_agent_string}`);
+                this.useragentOverride = launchArgs.override_user_agent_string;
+            }
             if (launchArgs.target) {
                 hasTargetInLaunchParams = true;
                 this.tabs.addTab(this._createWebViewPage(launchArgs.target));
