@@ -14,6 +14,7 @@ import settingsState from '../Settings/reducers';
 import historyState from '../History/reducers';
 import bookmarksState from '../Bookmarks/reducers';
 import siteFilterState from '../SiteFiltering/reducers';
+import popupState from '../Popup/reducers';
 
 const
 	initialBrowserState = {
@@ -63,5 +64,6 @@ export {
 	settingsState,
 	historyState,
 	bookmarksState,
-	siteFilterState
+	siteFilterState,
+	popupState
 };

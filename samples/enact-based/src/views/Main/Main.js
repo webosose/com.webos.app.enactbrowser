@@ -31,7 +31,9 @@ import Omnibox from "../../components/Omnibox";
 import Share from "../../components/Share";
 import { TabBar } from "../../components/TabBar";
 import ZoomControl from "../../components/ZoomControl";
-
+import { connect } from 'react-redux';
+import { set_allow_media_popup } from '../../NevaLib/Popup/actions';
+import PopupComponent from '../../components/Popup/Popup'
 import css from "./Main.module.less";
 
 const TooltipButton = TooltipDecorator(
@@ -55,6 +57,8 @@ class Main extends Component {
       browser: {},
       dialog: null,
       fullScreen: false,
+      domain: null,
+      detectedMedia: null,
     };
 
     this.fullScreenContentItem = React.createRef();
@@ -67,6 +71,9 @@ class Main extends Component {
   }
 
   componentDidMount() {
+    //Event listener "detectMedia" function is registered for listening to media detection event.
+    window.navigator.userpermission.onshowprompt = this.detectMedia;
+
     const browser = new Browser(this.props.store, maxTab);
     // eslint-disable-next-line react/no-did-mount-set-state
     this.setState({ browser });
@@ -81,6 +88,17 @@ class Main extends Component {
     document.addEventListener("webOSRelaunch", this.onRelaunch);
     document.addEventListener("webOSLocaleChange", this.onLocaleChange);
     document.addEventListener("shiftContent", this.onShiftContent);
+  }
+
+  detectMedia = (ev, ev1) => {
+    console.log("detected media details are...==>", ev, ev1)
+    let detectedMedia = ev1.includes(3) ? (ev1.includes(10) ? 'camera-mic' : 'camera') : ev1.includes(10) ? 'mic' : null
+    console.log("detectedMedia is ===> ", detectedMedia)
+    this.setState({
+      domain: ev,
+      detectedMedia,
+    })
+    this.props.set_allow_media_popup(true)
   }
 
   componentDidUpdate() {
@@ -205,9 +223,15 @@ class Main extends Component {
     selectedWebview.executeScript({ code: script });
   };
 
+  renderMediaPopup = () => (
+    <>
+      <PopupComponent />
+    </>
+  );
+
   render() {
     const props = Object.assign({}, this.props),
-      { browser, dialog, fullScreen } = this.state;
+      { browser, dialog, fullScreen, domain, detectedMedia } = this.state;
 
     delete props.store;
 
@@ -218,12 +242,12 @@ class Main extends Component {
             <div className={css["flexbox-row"]}>
               <NavigationBox browser={browser} />
               <Share />
-              <Omnibox browser={browser} />
+              <Omnibox browser={browser} domain={domain} detectedMedia={detectedMedia} />
               <ZoomControl browser={browser} />
               <Menu browser={browser} />
               <TooltipButton
                 className={css.fullscreen}
-				css={css}
+                css={css}
                 onClick={this.onFullScreen}
                 icon="fullscreen"
                 tooltipText={$L("Full screen")}
@@ -252,4 +276,12 @@ class Main extends Component {
   }
 }
 
-export default Main;
+const mapStateToProps = ({ popupState }) => ({
+  allow_media_popup: popupState.allow_media_popup
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  set_allow_media_popup: (data) => dispatch(set_allow_media_popup(data))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Main);

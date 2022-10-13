@@ -15,31 +15,35 @@ import classNames from 'classnames';
 import Button from '@enact/agate/Button';
 import ContextualPopupDecorator from '@enact/agate/ContextualPopupDecorator';
 import Icon from '@enact/agate/Icon';
-import {InputBase} from '@enact/agate/Input';
-import {InputSpotlightDecorator} from '@enact/agate/Input/InputSpotlightDecorator';
+import { InputBase } from '@enact/agate/Input';
+import { InputSpotlightDecorator } from '@enact/agate/Input/InputSpotlightDecorator';
 import Popup from '@enact/agate/Popup';
 import Skinnable from '@enact/agate/Skinnable';
 import $L from '@enact/i18n/$L';
-import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
+import { I18nContextDecorator } from '@enact/i18n/I18nDecorator';
 import Spotlight from '@enact/spotlight';
 import Changeable from '@enact/ui/Changeable';
 import Pure from '@enact/ui/internal/Pure';
 import PropTypes from 'prop-types';
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import TooltipDecorator from '@enact/agate/TooltipDecorator';
 
 import SuggestedItem from './SuggestedItem';
-import {TabTypes} from '../../NevaLib/BrowserModel';
+import { TabTypes } from '../../NevaLib/BrowserModel';
 
 import css from './Omnibox.module.less';
+import PopupComponent from '../../components/Popup/Popup';
+import kind from "@enact/core/kind";
+import { set_allow_media_popup } from '../../NevaLib/Popup/actions';
+
 
 const Input = Pure(
 	I18nContextDecorator(
-		{rtlProp: 'rtl'},
+		{ rtlProp: 'rtl' },
 		Changeable(
 			InputSpotlightDecorator(
-				{noLockPointer: true},
+				{ noLockPointer: true },
 				Skinnable(
 					InputBase
 				)
@@ -48,8 +52,19 @@ const Input = Pure(
 	)
 );
 
-const ContextualPopupInput = ContextualPopupDecorator({noArrow: true}, Input);
-const TooltipButton = TooltipDecorator({tooltipDestinationProp: 'decoration'}, Button);
+const ContextualPopupInput = ContextualPopupDecorator({ noArrow: true }, Input);
+const TooltipButton = TooltipDecorator({ tooltipDestinationProp: 'decoration' }, Button);
+
+
+const emptyButton = kind({
+	name: 'emptyButton',
+	render: () => (
+		<div></div>
+	)
+});
+
+const MediaPermissionPopupButton = ContextualPopupDecorator(emptyButton);
+
 
 class OmniboxBase extends Component {
 
@@ -67,29 +82,29 @@ class OmniboxBase extends Component {
 		urlSuggestions: PropTypes.array
 	};
 
-	constructor (props) {
+	constructor(props) {
 		super(props);
 		this.state = {
 			addBookmarkCompleted: false,
 			addBookmarkToHome: false,
 			open: false,
 			removeBookmarkCompleted: false,
-			value: props.url ? props.url : ''
+			value: props.url ? props.url : '',
 		};
 	}
 
-	componentDidMount () {
+	componentDidMount() {
 		if (typeof window !== 'undefined' && window.WebOSServiceBridge) {
 			this.webOSBridge = new window.WebOSServiceBridge();
 		}
 	}
 
-	componentWillReceiveProps (nextProps) {
+	componentWillReceiveProps(nextProps) {
 		if (this.props.selectedIndex !== nextProps.selectedIndex ||
 			(!this.isEditing && !this.state.open) ||
 			(this.props.url === '' && nextProps.url !== '')) {
 			this.isEditing = false;
-			this.setState({value: nextProps.url});
+			this.setState({ value: nextProps.url });
 		}
 	}
 
@@ -101,9 +116,9 @@ class OmniboxBase extends Component {
 		ev.preventDefault();
 		this.isEditing = false;
 		this.prevOpen = false;
-		this.setState({open: false});
+		this.setState({ open: false });
 
-		const {browser} = this.props;
+		const { browser } = this.props;
 		let url = this.state.value;
 
 		if (!browser.searchService.possiblyUrl(url)) {
@@ -136,7 +151,7 @@ class OmniboxBase extends Component {
 
 	onClose = () => {
 		if (Spotlight.getPointerMode()) {
-			this.setState({open: false});
+			this.setState({ open: false });
 		}
 	};
 
@@ -148,9 +163,9 @@ class OmniboxBase extends Component {
 
 	onBookmarkAdd = () => {
 		this.props.browser.addBookmark();
-		this.setState({addBookmarkCompleted: true, addBookmarkToHome: false});
+		this.setState({ addBookmarkCompleted: true, addBookmarkToHome: false });
 		setTimeout(() => {
-			this.setState({addBookmarkCompleted: false});
+			this.setState({ addBookmarkCompleted: false });
 		}, 1500);
 	};
 
@@ -170,22 +185,22 @@ class OmniboxBase extends Component {
 
 	onBookmarkRemove = () => {
 		this.props.browser.removeBookmark();
-		this.setState({removeBookmarkCompleted: true});
+		this.setState({ removeBookmarkCompleted: true });
 		setTimeout(() => {
-			this.setState({removeBookmarkCompleted: false});
+			this.setState({ removeBookmarkCompleted: false });
 		}, 1500);
 	};
 
 	showAddBookmarkToHome = () => {
-		this.setState({addBookmarkToHome: true});
+		this.setState({ addBookmarkToHome: true });
 	};
 
 	dismissAddBookmarkToHome = () => {
-		this.setState({addBookmarkToHome: false});
+		this.setState({ addBookmarkToHome: false });
 	};
 
 	getOmniboxIcon = () => {
-		const {url} = this.props;
+		const { url } = this.props;
 
 		if (this.isEditing) {
 			return 'search2';
@@ -207,10 +222,10 @@ class OmniboxBase extends Component {
 	};
 
 	onClickSuggestedItems = (ev) => {
-		this.setState({open: false});
+		this.setState({ open: false });
 		this.isEditing = false;
 		const
-			{browser, urlSuggestions} = this.props,
+			{ browser, urlSuggestions } = this.props,
 			i = ev.currentTarget.dataset.index;
 
 		if (!isNaN(i)) {
@@ -224,7 +239,7 @@ class OmniboxBase extends Component {
 
 	getSuggestedItems = () => {
 		const
-			{bookmarksData, urlSuggestions} = this.props,
+			{ bookmarksData, urlSuggestions } = this.props,
 			items = [];
 
 		if (urlSuggestions) {
@@ -259,15 +274,33 @@ class OmniboxBase extends Component {
 		</div>
 	);
 
+	renderMediaPopup = () => (
+		<>
+			<PopupComponent domain={this.props.domain} detectedMedia={this.props.detectedMedia} />
+		</>
+	);
+
 	onClick = (ev) => {
 		ev.stopPropagation();
 	};
 
-	render () {
+	//Responsible for popUp close action while switching tabs etc..
+	handleClose = () => {
+		console.log("HANDLE_CLOSE function entered - Omnibox.js")
+		// console.log("window is ===> ", window.navigator,"type is ===> ",typeof(window))
+		// console.log("window is ===> ", window.navigator.userpermission)
+		// let result = window.navigator.userpermission.onpromptresponse(3)  //sending close response
+		// console.log("API is called - Omnibox.js.Result is ===> ",result)
+		this.props.set_allow_media_popup(false)  //manually closing the  popup
+		console.log("Closed - Omnibox.js")
+	}
+
+	render() {
 		const
-			{isLoading, reloadDisabled, isBookmarked, ...rest} = this.props,
-			{addBookmarkCompleted, addBookmarkToHome, value, open, removeBookmarkCompleted} = this.state,
-			popupClassName = classNames(css.popup, {[css.invisible]:(open && !value.length)});
+			{ isLoading, reloadDisabled, isBookmarked, allow_media_popup, ...rest } = this.props,
+			{ addBookmarkCompleted, addBookmarkToHome, value, open, removeBookmarkCompleted } = this.state,
+			popupClassName = classNames(css.popup, { [css.invisible]: (open && !value.length) });
+
 
 		delete rest.bookmarksData;
 		delete rest.browser;
@@ -280,6 +313,16 @@ class OmniboxBase extends Component {
 
 		return (
 			<div {...rest} className={css.div}>
+				<MediaPermissionPopupButton  			//Media Permission Popup that is shown to ask for media permissions
+					css={css}
+					autoFocus={allow_media_popup}
+					onClose={this.handleClose}
+					open={allow_media_popup}
+					popupClassName={css.mediaPopup}
+					popupComponent={this.renderMediaPopup}
+					direction="below left"
+					noArrow={false}
+				/>
 				<form className={css.form} onSubmit={this.onNavigate}>
 					<ContextualPopupInput
 						autoFocus={open}
@@ -297,6 +340,7 @@ class OmniboxBase extends Component {
 						showCloseButton
 						value={value}
 					/>
+
 					<Icon
 						className={classNames(css.searchIcon)}
 						size="small"
@@ -358,11 +402,11 @@ class OmniboxBase extends Component {
 	}
 }
 
-const mapStateToProps = ({tabsState, bookmarksState, browserState, settingsState}) => {
-	const {selectedIndex, ids, tabs} = tabsState;
+const mapStateToProps = ({ tabsState, bookmarksState, browserState, settingsState, popupState }) => {
+	const { selectedIndex, ids, tabs } = tabsState;
 
 	if (ids.length > 0) {
-		const {navState, title, type} = tabs[ids[selectedIndex]];
+		const { navState, title, type } = tabs[ids[selectedIndex]];
 		if (navState) {
 			return {
 				bookmarksData: bookmarksState.data,
@@ -376,7 +420,8 @@ const mapStateToProps = ({tabsState, bookmarksState, browserState, settingsState
 				selectedIndex,
 				title,
 				url: navState.url,
-				urlSuggestions: browserState.urlSuggestions
+				urlSuggestions: browserState.urlSuggestions,
+				allow_media_popup: popupState.allow_media_popup
 			};
 		}
 	} else {
@@ -384,12 +429,16 @@ const mapStateToProps = ({tabsState, bookmarksState, browserState, settingsState
 			isLoading: true,
 			reloadDisabled: true,
 			url: '',
-			isBookmarked: false
+			isBookmarked: false,
+			allow_media_popup: popupState.allow_media_popup
 		};
 	}
 };
 
+const mapDispatchToProps = (dispatch) => ({
+	set_allow_media_popup: (data) => dispatch(set_allow_media_popup(data))
+});
 
-const Omnibox = connect(mapStateToProps, null)(OmniboxBase);
+const Omnibox = connect(mapStateToProps, mapDispatchToProps)(OmniboxBase);
 
 export default Omnibox;
