@@ -71,6 +71,17 @@ class BrowserBase {
         this.tabs = tabsModel;
         this.tabs.onContentDelete = this._handleContentDelete;
         this.tabs.addEventListener('update', this._handleTabsStateUpdate);
+
+        if (typeof window !== 'undefined' && typeof window.neva !== 'undefined') {
+            this.ipc = new Ipc("ipc_chrome_extensions");
+            this.ipc.subscribe('click', (extensionInfo) => {
+                let webView = this.webViews[this.tabs.getSelectedId()];
+                if (webView) {
+                    console.log(`window.neva.selectExtension(${webView.getPageContentsId()}, ${extensionInfo.id})`);
+                    window.neva.selectExtension(webView.getPageContentsId(), extensionInfo.id);
+                }
+            });
+        }
     }
 
     initializeTabs() {

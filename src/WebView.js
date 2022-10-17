@@ -106,6 +106,10 @@ class PageContentsWrapper {
         this.setZoom(params.zoomFactor ? params.zoomFactor : 1);
     }
 
+    getPageContentsId() {
+        return this.tabView.pageContents.id;
+    }
+
     handleFinishLoading() {
         this.tabView.pageContents.executeJavaScriptInAllFrames(
             `var style = document.createElement('style')
