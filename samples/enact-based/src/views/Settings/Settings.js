@@ -110,7 +110,7 @@ class SettingsBase extends Component {
 
 		this.setState({clearing: true});
 		Promise.race([
-			browser.clearData(),
+			browser.clearData('persist:default'),
 			new Promise((resolve) => {
 				setTimeout(resolve, 3000);
 			})

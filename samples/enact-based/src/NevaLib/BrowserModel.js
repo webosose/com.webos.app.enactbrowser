@@ -128,7 +128,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
             browser.siteFiltering.setMode(browser.settings.getSiteFiltering());
             browser.searchService.engine = browser.settings.getSearchEngine();
             browser.setStatisticsGathering(browser.settings.getPrivateBrowsing());
-            browser.private_browsing_partition_id = (new Date()).toString();
+            browser.private_browsing_partition_id = "guest:privateMode";
             browser.initializeTabs();
         });
 
@@ -205,9 +205,10 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
         }
     }
 
-    clearData() {
+    clearData(partitionId) {
+        console.log(`BrowserModel::clearData(${partitionId})`);
         return Promise.all([
-            super.clearData(),
+            super.clearData(partitionId),
             this.mostVisited.removeAll(),
             this.recentlyClosed.removeAll()
         ]);
@@ -272,9 +273,6 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
         if (usePrivateBrowsing === settings.getPrivateBrowsing()) {
             return;
         }
-        if (usePrivateBrowsing === true) { // start new clean session
-            this.private_browsing_partition_id = (new Date()).toString();
-        }
         // First, we should close all tabs with <webview>
         for (let i = tabs.count() - 1; i >= 0; i--) {
             const id = tabs.getIdByIndex(i), tabType = tabs.getTab(id).state.type;
@@ -282,6 +280,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
                 this.closeTab(i);
             }
         }
+        this.clearData("guest:privateMode")
         // Second, we should turn on/off statistics gathering for
         // for prev session tabs, most visited and recently closed
         this.setStatisticsGathering(usePrivateBrowsing);

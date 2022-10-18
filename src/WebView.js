@@ -32,11 +32,7 @@ class PageContentsWrapper {
         this.tabView.pageContents.emit(...arguments);
     }
 
-    _initWebView(params) {
-        this.canGoBack = false;
-        this.canGoForward = false;
-        this.eventListeners = [];
-
+    createPageContents(params) {
         let pageContentsParams = {};
 
         if (params.useragentOverride) {
@@ -44,16 +40,26 @@ class PageContentsWrapper {
             pageContentsParams["user-agent"] = params.useragentOverride;
         }
 
+        console.log(`WebView::_initWebView(${params.partition})`);
+        pageContentsParams["partition"] = params.partition ? params.partition : '';
+
         pageContentsParams["error-page-hidding"] = true;
 
-        this.tabView = new PageView({"page-contents-params": pageContentsParams});
+        return new PageView({"page-contents-params": pageContentsParams});
+    }
+
+    _initWebView(params) {
+        this.canGoBack = false;
+        this.canGoForward = false;
+        this.eventListeners = [];
+
+        this.tabView = this.createPageContents(params);
 
         window.shell.shellWindow.pageView.addChildView(this.tabView);
 
         this.url = params.url ? params.url : '';
         this.isLoading = false;
         // partition assignment should be before any assignment of src
-        this.partition = params.partition ? params.partition : '';
 
         if (!params.newWindow) {
             this.src = this.url;
@@ -148,7 +154,7 @@ class PageContentsWrapper {
     }
 
     activate() {
-        QALog('ACTIVATE ' + this.rootId);
+        window.QALog('ACTIVATE ' + this.rootId);
         this.tabView.setVisible(true);
         this.tabView.bringToFront();
         if (this.activeState === 'deactivated' && this.rootId) {
@@ -161,7 +167,7 @@ class PageContentsWrapper {
     }
 
     suspend() {
-        QALog('SUSPEND ' + this.rootId);
+        window.QALog('SUSPEND ' + this.rootId);
         this.tabView.setVisible(false);
         this.tabView.sendToBack();
         if (this.activeState === 'activated') {
@@ -186,7 +192,7 @@ class PageContentsWrapper {
     }
 
     deactivate() {
-        QALog('DEACTIVATE ' + this.rootId);
+        window.QALog('DEACTIVATE ' + this.rootId);
         if (this.activeState !== 'deactivated') {
             console.log(`WVE deactivate ${this.rootId} (NEVA-6479`);
             this.activeState = 'deactivated';
@@ -239,7 +245,11 @@ class PageContentsWrapper {
         return new Promise((resolve) => {});
     }
 
-    clearData() {console.log(`clearData`);}
+    clearData(options, types) {
+        console.log(`WebView::clearData`);
+        this.tabView.pageContents.clearData(options, types);
+    }
+
     beforeWebviewDelete() {
         console.log(`beforeWebviewDelete`);
         // TBD !! remove event listeners

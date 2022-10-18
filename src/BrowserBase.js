@@ -215,7 +215,7 @@ class BrowserBase {
         window.close();
     }
 
-    clearData() {
+    clearData(partitionId) {
         const options = {
             since: 0
         };
@@ -230,29 +230,18 @@ class BrowserBase {
             localStorage: true,
             webSQL: true
         };
-        for (let key in this.webViews) {
-            return this.webViews[key].clearData(options, types);
-        }
-        // if reached this place then we don't have tab with webview
-        // then creating dummy webview to clear partition storage data
-        return new Promise((resolve) => {
-            const webView = new WebView({
-                url: 'about:blank',
-                partition: 'persist:default',
-                activeState: 'activated'
-            });
-            // we can't call webview's methods until it inserted into DOM
-            // other way there won't be any effect
-            webView.addEventListener('did-start-loading', () => {
-                webView.clearData(options, types).then(() => {
-                    if (document.body.contains(webView)) {
-                        document.body.removeChild(webView);
-                    }
-                    resolve();
-                });
-            });
-            document.body.appendChild(webView);
-        });
+
+        let dummyView = new PageView({"page-contents-params": {"partition":partitionId}});
+        shell.shellWindow.pageView.addChildView(dummyView);
+        dummyView.setBounds(0, 0, 10, 10);
+        dummyView.setVisible(false);
+        dummyView.pageContents.on('did-start-loading', () => {
+            dummyView.pageContents.clearData(options, types);
+            shell.shellWindow.pageView.removeChildView(dummyView);
+            console.log(`clearData ${partitionId}`);
+            dummyView.pageContents.closeNow();
+        })
+        dummyView.pageContents.loadURL('about:blank');
     }
 
     _createWebViewPage(url, newWindow = null, tab_family_id = null) {

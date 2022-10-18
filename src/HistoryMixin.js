@@ -33,9 +33,9 @@ const HistoryMixin = (superclass) => (class extends superclass {
         });
     }
 
-    clearData() {
+    clearData(partitionId) {
         return Promise.all([
-            super.clearData(),
+            super.clearData(partitionId),
             this.history.clearAll()
         ]);
     }
