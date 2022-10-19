@@ -98,8 +98,8 @@ const WebViewMixinBase = {
     deactivate: function WebViewMixin_deactivate() {
         console.log('DEACTIVATE ' + this.rootId);
         if (this.activeState !== 'deactivated') {
-            // document.getElementById(this.rootId).removeChild(this); // TODO: change to terminate
-            // this.activeState = 'deactivated';
+            document.getElementById(this.rootId).removeChild(this); // TODO: change to terminate
+            this.activeState = 'deactivated';
         }
     },
 

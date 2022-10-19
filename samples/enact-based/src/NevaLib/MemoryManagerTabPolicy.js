@@ -6,23 +6,23 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
-import {RendererPerTabPolicy as SimplePolicy} from './RendererPerTabPolicy.js';
+import { RendererPerTabPolicy as SimplePolicy } from './RendererPerTabPolicy.js';
 
 const maxActive = 1;
 
 class MemoryManagerTabPolicy {
-	constructor (
-			tabs,
-			webViews,
-			maxSuspendedNormal,
-			maxSuspendedLow,
-			maxSuspendedCritical
+	constructor(
+		tabs,
+		webViews,
+		maxSuspendedNormal,
+		maxSuspendedLow,
+		maxSuspendedCritical
 	) {
 		this.simplePolicy = new SimplePolicy(
 			tabs,
 			webViews,
 			maxActive,
-			maxSuspendedCritical
+			maxSuspendedCritical,
 		);
 		this.maxSuspendedNormal = maxSuspendedNormal;
 		this.maxSuspendedLow = maxSuspendedLow;
@@ -33,27 +33,27 @@ class MemoryManagerTabPolicy {
 			Promise.race([
 				new Promise((resolve) => {
 					window.navigator.memorymanager.getMemoryStatus((ev) => {
-						resolve(ev.system.level);
+						resolve(ev)
 					});
 				}),
 				new Promise((resolve) => {
 					window.navigator.memorymanager.onlevelchanged = (ev) => {
-						resolve(ev.current);
+						resolve(ev);
 					};
 				})
 			]).then((memoryStatus) => {
 				console.log('Initializing memory status: ' + memoryStatus); // eslint-disable-line no-console
 				policy.simplePolicy.maxSuspendedTabFamilies =
-                    policy.statusToMaxSuspended(memoryStatus);
+					policy.statusToMaxSuspended(memoryStatus);
 				window.navigator.memorymanager.onlevelchanged =
-                    policy._handleLevelChanged;
+					policy._handleLevelChanged;
 			});
 		} else {
 			console.error('MemoryManager interface is not implemented! Check your WebOS version!'); // eslint-disable-line no-console
 		}
 	}
 
-	statusToMaxSuspended (memoryStatus) {
+	statusToMaxSuspended(memoryStatus) {
 		switch (memoryStatus) {
 			case 'normal':
 				return this.maxSuspendedNormal;
@@ -73,18 +73,18 @@ class MemoryManagerTabPolicy {
 			current: '[normal|low|critical]'
 		}
 	*/
+
 	_handleLevelChanged = (ev) => {
-		console.log('Handle memory level change ' + ev.current); // eslint-disable-line no-console
+		console.log('Memory level changed to ==>' + ev); // eslint-disable-line no-console
 		const policy = this.simplePolicy;
-		policy.maxSuspended = this.statusToMaxSuspended(ev.current);
-		while (policy.queue.length > policy.maxSuspended + policy.maxActive) {
-			const id = policy.queue.pop();
-			policy.webViews[id].deactivate();
+		if (ev == "critical") {
+			policy.criticalReached = true
+			policy._handleCriticalMemory()
+		} else {
+			policy.criticalReached = false
 		}
-		console.log('_handleLevelChanged'); // eslint-disable-line no-console
-		console.log(policy); // eslint-disable-line no-console
 	};
 }
 
 export default MemoryManagerTabPolicy;
-export {MemoryManagerTabPolicy};
+export { MemoryManagerTabPolicy };

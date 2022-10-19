@@ -7,7 +7,7 @@
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
 /**
- * Contains the declaration for the Menu component.
+ * Contains the declaration for the Popup component.
  *
  */
 import $L from '@enact/i18n/$L';
