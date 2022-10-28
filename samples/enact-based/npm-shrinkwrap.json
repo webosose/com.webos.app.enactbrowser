@@ -9,7 +9,7 @@
       "version": "2.0.0",
       "license": "LicenseRef-EnactBrowser-Evaluation",
       "dependencies": {
-        "@enact/agate": "^2.0.1",
+        "@enact/agate": "^2.0.2",
         "@enact/core": "^4.5.0",
         "@enact/i18n": "^4.5.0",
         "@enact/spotlight": "^4.5.0",
@@ -44,9 +44,9 @@
       }
     },
     "node_modules/@enact/agate": {
-      "version": "2.0.1",
-      "resolved": "https://registry.npmjs.org/@enact/agate/-/agate-2.0.1.tgz",
-      "integrity": "sha512-yqqvVfKoEY0xfrFAlcWF50Knr7wuYv/ypW51nWF2iHVk6AZtu8d5rUD2wGxbi41i6TY4iwwPBbjry0Q4qXlk4w==",
+      "version": "2.0.2",
+      "resolved": "https://registry.npmjs.org/@enact/agate/-/agate-2.0.2.tgz",
+      "integrity": "sha512-JgfkKvAw5WuSx2/IZZplj5HAlr2hxAi2iHDcpWMsSfr2+0Z0TbltLjSeoADSfT465hT32vP0Rcj48O7xgGT85Q==",
       "dependencies": {
         "@enact/core": "^4.5.0",
         "@enact/i18n": "^4.5.0",
@@ -479,9 +479,9 @@
       }
     },
     "@enact/agate": {
-      "version": "2.0.1",
-      "resolved": "https://registry.npmjs.org/@enact/agate/-/agate-2.0.1.tgz",
-      "integrity": "sha512-yqqvVfKoEY0xfrFAlcWF50Knr7wuYv/ypW51nWF2iHVk6AZtu8d5rUD2wGxbi41i6TY4iwwPBbjry0Q4qXlk4w==",
+      "version": "2.0.2",
+      "resolved": "https://registry.npmjs.org/@enact/agate/-/agate-2.0.2.tgz",
+      "integrity": "sha512-JgfkKvAw5WuSx2/IZZplj5HAlr2hxAi2iHDcpWMsSfr2+0Z0TbltLjSeoADSfT465hT32vP0Rcj48O7xgGT85Q==",
       "requires": {
         "@enact/core": "^4.5.0",
         "@enact/i18n": "^4.5.0",

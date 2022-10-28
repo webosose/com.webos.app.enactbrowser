@@ -34,7 +34,7 @@
     "extends": "enact"
   },
   "dependencies": {
-    "@enact/agate": "^2.0.1",
+    "@enact/agate": "^2.0.2",
     "@enact/core": "^4.5.0",
     "@enact/i18n": "^4.5.0",
     "@enact/spotlight": "^4.5.0",
