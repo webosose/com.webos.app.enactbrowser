@@ -282,16 +282,13 @@ class BrowserBase {
         webview.addEventListener('did-start-navigation', this._handleStartNavigation(state.id));
         webview.addEventListener('did-update-favicon-url', this._handleUpdateFaviconUrl(state.id, webview));
 
-        webview.addEventListener('did-fail-load', (ev) => {
-            if (ev.isTopLevel) {
-                const {reason} = ev;
-                const isError =
-                    reason !== 'ERR_ABORTED' &&
-                    webview.activeState !== 'deactivated';
-                if (isError) {
-                    const tab = this.tabs.getTab(state.id);
-                    tab.setError(reason);
-                }
+        webview.addEventListener('did-fail-load', (url, error, code) => {
+            const isError =
+                error !== 'ERR_ABORTED' &&
+                webview.activeState !== 'deactivated';
+            if (isError) {
+                const tab = this.tabs.getTab(state.id);
+                tab.setError(error);
             }
         });
         webview.addEventListener('page-title-updated', (title) => {

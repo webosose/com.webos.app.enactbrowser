@@ -38,11 +38,13 @@ class PageContentsWrapper {
         this.eventListeners = [];
 
         let pageContentsParams = {};
-        
+
         if (params.useragentOverride) {
             console.log(`WebView::_initWebView(user-agent: ${params.useragentOverride})`);
             pageContentsParams["user-agent"] = params.useragentOverride;
         }
+
+        pageContentsParams["error-page-hidding"] = true;
 
         this.tabView = new PageView({"page-contents-params": pageContentsParams});
 
@@ -61,7 +63,7 @@ class PageContentsWrapper {
             params.newWindow.attach(this);
         }
 
-        let tabEventHandlerFactory = (event) => (ev) => {
+        let tabEventHandlerFactory = (event) => (...evArguments) => {
             console.log(`event ${event} occured`);
 
             if (this.eventListeners[event] === undefined) {
@@ -71,7 +73,7 @@ class PageContentsWrapper {
 
             this.eventListeners[event].forEach((callback) => {
                 try {
-                    callback(ev);
+                    callback(...evArguments);
                 }
                 catch (e) {
                     console.log(`exception occured in ${event} handler (${e})`);

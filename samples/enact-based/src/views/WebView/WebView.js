@@ -251,11 +251,6 @@ class WebViewBase extends Component {
 			err = tabs[id].error,
 			id_ = id + WebViewWrapperId;
 
-			// TBD: In case of BS, getBoundingClientRect is used to get container div size and position.
-			// It works only if the element is visible.
-			// Need to refactor this module for WVE support (ErrorPage and Webview show/hide logic)
-			show_webview = true;
-
 		delete rest.webView;
 		delete rest.browser;
 
