@@ -16,6 +16,7 @@ import {UIOverlay} from 'js-browser-lib/UIOverlay';
 import {ExitFullscreenButtonBase} from 'js-browser-lib/ExitFullscreenButtonBase';
 import {Menu as MenuBase} from 'js-browser-lib/MenuBase';
 import {ChromeExtensionsBase} from 'js-browser-lib/ChromeExtensionsBase';
+import {DialogBase} from 'js-browser-lib/DialogBase';
 import {initLogging} from 'js-browser-lib/Logger';
 import {isWindowReady} from '@enact/core/snapshot';
 
@@ -28,6 +29,10 @@ const uioverlay = new UIOverlay();
 const menu = new MenuBase(uioverlay);
 const exitFullscreenButton = new ExitFullscreenButtonBase(uioverlay);
 const chromeExtensionsMenu = (isWindowReady() && typeof window.neva !== 'undefined') ? new ChromeExtensionsBase(uioverlay) : null;
+const dialog = new DialogBase(new UIOverlay());
+if (typeof window !== 'undefined') {
+	window.dialogOverlay = dialog;
+}
 
 
 let appElement = (
@@ -37,6 +42,7 @@ let appElement = (
 			menu={menu}
 			exitFullscreenButton={exitFullscreenButton}
 			chromeExtensionsMenu={chromeExtensionsMenu}
+			dialog={dialog}
 		/>
 	</Provider>
 );

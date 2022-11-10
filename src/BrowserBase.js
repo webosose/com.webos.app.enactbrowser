@@ -82,6 +82,12 @@ class BrowserBase {
                 }
             });
         }
+
+        this.browserBaseIpc = new ShellIpc('ipc_browser_base');
+        this.browserBaseIpc.on('closeCurrentTab', () => {
+            console.log(`BrowserBase:: close current tab ${this.tabs.count()}`);
+            this.closeTab(this.tabs.getIndexById(this.tabs.getSelectedId()));
+        });
     }
 
     initializeTabs() {
@@ -306,8 +312,6 @@ class BrowserBase {
             this.tabs.getTab(state.id).setError('PAGE_UNRESPONSIVE');
         });
         webview.addEventListener('permissionrequest', this._handlePermissionRequest);
-
-        console.log(`WVE Authentication dialog event listener (NEVA-6204)`);
 
         return state;
     }

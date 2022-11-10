@@ -59,8 +59,6 @@ class RendererPerTabPolicy {
 
         console.log(`tab family id: ${tab_family_id}. this.queue: ${this.queue.toString()}`);
 
-        this.activateTabFamily(tab_family_id);
-
         if (this.maxSuspendedTabFamilies > 0) {
             if (this.queue.length > this.maxActiveTabFamilies) {
                 this.suspendTabFamily(this.queue[this.maxActiveTabFamilies]);
@@ -72,6 +70,8 @@ class RendererPerTabPolicy {
         if (this.queue.length > maxNotDeactivated) {
             this.deactivateTabFamily(this.queue.pop());
         }
+
+        this.activateTabFamily(tab_family_id);
     }
 
     _handleTabDelete = (ev) => {

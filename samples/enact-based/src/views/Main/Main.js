@@ -22,7 +22,6 @@ import {BrowserIconButton as IconButton} from '../../components/BrowserIconButto
 import {connect} from 'react-redux';
 import ContentView from '../ContentView';
 import DialogView from '../DialogView';
-import Dialog from '../../components/Dialog';
 import Menu from '../../components/Menu';
 import ChromeExtensionsMenu from '../../components/ChromeExtensionsMenu';
 import NavigationBox from '../../components/NavigationBox';
@@ -50,7 +49,6 @@ class MainBase extends Component {
 
 		this.state = {
 			browser: {},
-			dialog: null,
 			fullScreen: false
 		};
 
@@ -84,7 +82,6 @@ class MainBase extends Component {
 		// eslint-disable-next-line react/no-did-mount-set-state
 		this.setState({browser});
 
-		document.addEventListener('dialog', this.onDialog);
 		document.addEventListener('keydown', ({keyCode}) => {
 			if (keyCode === 0x1CD) {
 				browser.back();
@@ -114,33 +111,6 @@ class MainBase extends Component {
 			return browser.webViews[selectedId];
 		} else {
 			return null;
-		}
-	}
-
-	onDialogClose = () => {
-		const selectedWebview = this.getSelectedWebview();
-		if (selectedWebview) {
-			selectedWebview.isAlertsAllowed = this.state.dialog.isAlertsAllowed;
-		}
-		this.setState({dialog: null});
-	}
-
-	onDialog = (ev) => {
-		const
-			selectedWebview = this.getSelectedWebview(),
-			{browser} = this.state;
-
-		if (selectedWebview) {
-			if (selectedWebview.isAlertsAllowed) {
-				ev.preventDefault();
-				this.setState({dialog: {
-					...ev,
-					alertsCount: selectedWebview.alertsCount,
-					isAlertsAllowed: selectedWebview.isAlertsAllowed,
-					alertsCountBeforePreventionRequest: browser.settings.getAlertsCountBeforePreventionRequest()
-				}});
-				selectedWebview.alertsCount++;
-			}
 		}
 	}
 
@@ -201,7 +171,7 @@ class MainBase extends Component {
 	render () {
 		const
 			props = Object.assign({}, this.props),
-			{browser, dialog, fullScreen} = this.state;
+			{browser, fullScreen} = this.state;
 
 		delete props.store;
 
@@ -266,15 +236,6 @@ class MainBase extends Component {
 					fullScreen={fullScreen}
 					exitFullscreenButton={this.props.exitFullscreenButton}
 				/>
-			{
-				dialog ?
-				<Dialog
-					dialog={dialog}
-					onOK={this.onDialogClose}
-					onCancel={this.onDialogClose}
-				/>
-				: null
-			}
 				{fullScreen === false && <DialogView />}
 			</div>
 		);

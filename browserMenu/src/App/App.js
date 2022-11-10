@@ -13,6 +13,7 @@ import Menu from './../Views/Menu';
 import InputSuggestionList from './../Views/InputSuggestionList';
 import ExitFullscreenButton from './../Views/ExitFullscreenButton';
 import ChromeExtensions from './../Views/ChromeExtensions';
+import Dialog from './../Views/Dialog';
 
 function App({model}) {
     console.log(`App render`);
@@ -29,7 +30,11 @@ function App({model}) {
         }
     }, [contentType]);
 
-    useEffect(updateDocumentSize);
+    useEffect(() => {
+        if (contentType !== "dialog") {
+            updateDocumentSize()
+        }
+    });
     useEffect(() => {
         model.ipc.then((ipc) => {
             console.log(`subscribe to switchContent`);
@@ -57,6 +62,10 @@ function App({model}) {
 
         case 'chrome_extensions':
             content = (<ChromeExtensions model={model.chromeExtensions} onUpdate={updateDocumentSize}/>);
+            break;
+
+        case 'dialog':
+            content = (<Dialog model={model.dialog}/>);
             break;
 
         default:

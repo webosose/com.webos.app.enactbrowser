@@ -82,7 +82,7 @@ class PageContentsWrapper {
                     callback(...evArguments);
                 }
                 catch (e) {
-                    console.log(`exception occured in ${event} handler (${e})`);
+                    console.error(`exception occured in ${event} handler (${e})`);
                 }
             });
         }
@@ -99,7 +99,11 @@ class PageContentsWrapper {
          'page-title-updated',
          'needToUpdateUI',
          'enter-html-fullscreen',
-         'leave-html-fullscreen'
+         'leave-html-fullscreen',
+         'dialog',
+         'login',
+         'unresponsive',
+         'responsive'
         ].forEach(event => {
             this.tabView.pageContents.on(event, tabEventHandlerFactory(event));
         });
@@ -110,8 +114,159 @@ class PageContentsWrapper {
         this.addEventListener('dom-ready', this.handleDomReady.bind(this));
         this.addEventListener('leave-html-fullscreen', this.handleLeaveHtmlFullscreen.bind(this));
         this.addEventListener('did-finish-load', this.handleFinishLoading.bind(this));
+        this.addEventListener('dialog', this.handleDialog.bind(this));
+        this.addEventListener('login', this.handleLogin.bind(this));
+        this.addEventListener('unresponsive', this.handleUnresponsive.bind(this));
+        this.addEventListener('responsive', this.handleResponsive.bind(this));
 
         this.setZoom(params.zoomFactor ? params.zoomFactor : 1);
+
+        this.dialogData = {
+            alertsCount: 0,
+            alertsAllowed: true,
+            showDialog: false,
+            messageType: "",
+            messageText: "",
+            controller: null,
+            responsive: true
+        };
+
+        this.dialogData.buttonPressedAuthHandler = ({button, login, password}) => {
+            console.log(`WebView::buttonPressedAuthHandler ${this.rootId} ${button} ${login} ${password}`);
+            if (button === 'ok') {
+                this.dialogData.controller.ok(login, password);
+            } else if (button === 'cancel') {
+                console.log(`login operation canceled`);
+            }
+            this.hideDialog();
+            this.unsubscribeDialogEvents();
+            this.dialogData.showDialog = false;
+        }
+
+        this.dialogData.buttonPressedDialogHandler = ({button, text}) => {
+            console.log(`WebView::buttonPressedDialogHandler ${this.rootId}`);
+            if (button === 'ok') {
+                this.dialogData.controller.ok(text);
+            } else if (button === 'cancel') {
+                this.dialogData.controller.cancel();
+            }
+            this.hideDialog();
+            this.unsubscribeDialogEvents();
+            this.dialogData.showDialog = false;
+        };
+
+        this.dialogData.blockDialogsHandler = () => {
+            this.dialogData.alertsAllowed = false;
+        };
+    }
+
+    handleUnresponsive() {
+        console.log(`WebView::handleUnresponsive`);
+        this.dialogData.responsive = false;
+        this.handleDialog('unresponsive', 'Web page is unresponsive', {
+            ok: () => {
+                console.log(`ok pressed`);
+                // wait for 10 sec
+                setTimeout(() => {
+                    if (this.dialogData.responsive === false) {
+                        this.showDialog();
+                    }
+                }, 10000);
+            },
+            cancel: () => {
+                console.log(`cancel pressed`);
+                let browserBaseIpc = new ShellIpc('ipc_browser_base');
+                browserBaseIpc.post('closeCurrentTab');
+            }
+        });
+    }
+
+    handleResponsive() {
+        console.log(`WebView::handleResponsive`);
+        this.dialogData.responsive = true;
+        this.dialogData.showDialog = false;
+        this.hideDialog();
+    }
+
+    handleLogin(e) {
+        console.log(`WebView:: login event ${this.rootId}`);
+
+        this.handleDialog('auth', e.url, {
+            ok: (login, password) => e.response(login, password),
+            cancel: () => {
+                this.dialogData.controller = null;
+                console.log(`login dialog cancel called`);
+            }
+        }); // messageType, messageText, controller
+    };
+
+    handleDialog(messageType, messageText, controller) {
+        console.log(`handleDialog ${this.rootId}>>>`);
+        this.dialogData.alertsCount ++;
+        this.dialogData.messageType = messageType;
+        this.dialogData.messageText = messageText;
+        this.dialogData.controller = controller;
+
+        if (this.dialogData.alertsAllowed) {
+            this.dialogData.showDialog = true;
+            this.showDialog();
+        } else {
+            controller.cancel();
+        }
+    }
+
+    showDialog() {
+        if (this.dialogData.alertsAllowed === false) {
+            return;
+        }
+
+        console.log(`WebView::showDialog ${this.rootId}>>>`);
+        const dialog = window.dialogOverlay;
+
+        this.subscribeDialogEvents();
+
+        dialog.show({
+            messageType: this.dialogData.messageType,
+            messageText: this.dialogData.messageText,
+            alertsCount: this.dialogData.alertsCount,
+            alertsCountBeforePreventionRequest: 3
+        }, this.tabView.getBounds());
+    }
+
+    getButtonPressHandler() {
+        switch (this.dialogData.messageType) {
+            case 'alert':
+            case 'prompt':
+            case 'unresponsive':
+                return this.dialogData.buttonPressedDialogHandler;
+
+            case 'auth':
+                return this.dialogData.buttonPressedAuthHandler;
+
+            default:
+                return null;
+        }
+    }
+
+    subscribeDialogEvents() {
+        console.log(`subscribeDialogEvents ${this.rootId}`);
+        const dialog = window.dialogOverlay;
+        dialog.ipc.ipcObject.on('button_pressed', this.getButtonPressHandler().bind(this));
+        dialog.ipc.ipcObject.on('block_dialogs', this.dialogData.blockDialogsHandler.bind(this));
+    }
+
+    unsubscribeDialogEvents() {
+        console.log(`unsubscribeDialogEvents ${this.rootId}`);
+        const dialog = window.dialogOverlay;
+        dialog.ipc.ipcObject.removeAllEventListeners('button_pressed');
+        dialog.ipc.ipcObject.removeAllEventListeners('block_dialogs');
+    }
+
+    hideDialog() {
+        console.log(`WebView::hideDialog >>>`);
+        const dialog = window.dialogOverlay;
+
+        dialog.hide();
     }
 
     getPageContentsId() {
@@ -151,6 +306,13 @@ class PageContentsWrapper {
         console.log(`WVE set position(x:${r.x}, y:${r.y}) (NEVA-6229)`);
         console.log(`WVE set size(width:${r.width}, height:${r.height}) (NEVA-6229)`);
         this.tabView.setBounds(Math.round(r.x), Math.round(r.y), Math.round(r.width), Math.round(r.height));
+
+        window.dialogOverlay.uioverlay.setBounds({
+            x: Math.round(r.x),
+            y: Math.round(r.y),
+            w: Math.round(r.width),
+            h: Math.round(r.height)
+        }, 'dialog');
     }
 
     insertIntoDom(rootId) {
@@ -160,6 +322,13 @@ class PageContentsWrapper {
 
     activate() {
         window.QALog('ACTIVATE ' + this.rootId);
+        this.tabView.setVisible(true);
+        this.tabView.bringToFront();
+
+        if (this.dialogData.showDialog === true) {
+            this.showDialog();
+        }
+
         if (this.activeState === 'deactivated' && this.rootId) {
             this.tabView.pageContents.resumeDOM();
             this.tabView.pageContents.resumeMedia();
@@ -197,6 +366,8 @@ class PageContentsWrapper {
         else if (this.activeState === 'deactivated') {
             console.error('Can\'t suspend webview from deactivated state');
         }
+        this.unsubscribeDialogEvents();
+        this.hideDialog();
     }
 
     deactivate() {

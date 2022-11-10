@@ -16,6 +16,7 @@ import InputSuggestionListModel from './components/InputSuggestionListModel';
 import ExitFullscreenButtonModel from './components/ExitFullscreenButtonModel';
 import ChromeExtensionsModel from './components/ChromeExtensionsModel';
 import MenuModel from './components/MenuModel';
+import createDialogModel from './components/DialogModel';
 import Ipc from '../../src/Ipc';
 import initLogging from '../../src/Logger';
 
@@ -38,7 +39,7 @@ if (typeof window !== 'undefined') {
     console.log(`Created IPC channel named ${ipcChannelName}`);
 
     window.document.addEventListener('mouseover', () => {
-        genericIpc.post('setFocusToUIOverlay', {});
+        ipc.then((channel) => { channel.post('setFocusToUIOverlay', {}) });
     })
 }
 
@@ -48,7 +49,8 @@ const model = {
     ipc: ipc,
     genericIpc: genericIpc,
     exitFullscreenButton: new ExitFullscreenButtonModel(),
-    chromeExtensions: new ChromeExtensionsModel()
+    chromeExtensions: new ChromeExtensionsModel(),
+    dialog: createDialogModel()
 };
 
 const PrerenderApp = MoonstoneDecorator(<div />);

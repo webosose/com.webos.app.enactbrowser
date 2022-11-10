@@ -57,10 +57,6 @@ class UIOverlay {
                     }
                 });
                 createPageView();
-                genericIpc.on('setFocusToUIOverlay', () => {
-                    console.log(`setFocusToUIOverlay message. set focus to UIOverlay`);
-                    this.setFocus();
-                })
             })
         }).then((genericIpc) => {
             console.log(`UIOverlay:: lets subscribe to onDocumentSize ${this.contentName}`);
@@ -69,6 +65,10 @@ class UIOverlay {
                 console.log(`UIOverlay::onDocumentSize(${contentType})`);
                 this.setBounds(size, contentType);
             });
+            this.ipc.on('setFocusToUIOverlay', () => {
+                console.log(`setFocusToUIOverlay message. set focus to UIOverlay`);
+                this.setFocus();
+            })
             console.log(`UIOverlay:: subscribed to onDocumentSize`);
             return genericIpc;
         }, (e) => {

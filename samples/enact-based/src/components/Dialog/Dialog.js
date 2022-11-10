@@ -23,48 +23,79 @@ import css from './Dialog.less';
 
 class Dialog extends Component {
 	static props = {
-		dialog: PropTypes.object,
-		onOK: PropTypes.func,
-		onCancel: PropTypes.func,
+		dialog: PropTypes.object
 	}
 
 	constructor (props) {
 		super(props);
 		this.state = {
-			value: props.dialog.defaultPromptText || ''
+			value: props.dialog.defaultPromptText || '',
+			passwdValue: '',
+			loginValue: ''
 		};
 	}
 
-	onDialogOK = (controller) => () => {
-		this.props.onOK();
-		controller.ok(this.state.value);
+	onOk = () => {
+		if (this.props.dialog.messageType === 'auth') {
+			this.props.dialog.ok(this.state.loginValue, this.state.passwdValue);
+		} else {
+			this.props.dialog.ok(this.state.value);
+		}
+		this.setState({loginValue: ""});
+		this.setState({passwdValue: ""});
+		this.setState({value: ""});
 	}
 
-	onDialogCancel = (controller) => () => {
-		this.props.onCancel();
-		controller.cancel();
+	onCancel = () => {
+		this.props.dialog.cancel();
+		this.setState({value: ""});
+	}
+
+	componentWillUnmount() {
+		this.onCancel();
 	}
 
 	onChange = (ev) => {
 		this.setState({value: ev.value});
 	}
 
+	onLoginChange = (ev) => {
+		this.setState({loginValue: ev.value});
+	}
+
+	onPasswdChange = (ev) => {
+		this.setState({passwdValue: ev.value});
+	}
+
 	onToggle = (ev) => {
-		this.props.dialog.isAlertsAllowed = !ev.selected;
+		if (ev.selected) {
+			this.props.dialog.blockDialogs();
+		}
 	}
 
 	render () {
 		const
 			{dialog} = this.props,
-			{value} = this.state,
-			{messageType, messageText, dialog: dialogController,
+			{value, loginValue, passwdValue} = this.state,
+			{messageType, messageText,
 				alertsCount, alertsCountBeforePreventionRequest} = dialog;
+		console.log(dialog);
+
+		let leftButtonText;
+		let rightButtonText;
+		if (messageType === 'unresponsive') {
+			leftButtonText = $L('WAIT 10 sec');
+			rightButtonText = $L('CLOSE PAGE');
+		} else {
+			leftButtonText = $L('OK');
+			rightButtonText = $L('CANCEL');
+		}
 
 		return (
 			<Notification
 				noAutoDismiss
 				open
-				onClose={this.onDialogCancel(dialogController)}
+				onClose={this.onCancel}
 				showCloseButton
 			>
 				<p>{messageText}</p>
@@ -78,6 +109,28 @@ class Dialog extends Component {
 					: null
 				}
 				{
+					(messageType === 'auth') ?
+					<div>
+						<div>
+							<span>{$L('  login')}</span>
+							<Input
+								className={css.input}
+								onChange={this.onLoginChange}
+								value={loginValue}
+							/>
+						</div>
+						<div>
+							<span>{$L('password')}</span>
+							<Input
+								className={css.input}
+								onChange={this.onPasswdChange}
+								value={passwdValue}
+							/>
+						</div>
+					</div>
+					: null
+				}
+				{
 					(alertsCount >= alertsCountBeforePreventionRequest) ?
 						<div>
 							<Checkbox className={css.checkbox} css={css} onToggle={this.onToggle}/>
@@ -86,11 +139,11 @@ class Dialog extends Component {
 					: null
 				}
 				<buttons>
-					<Button onClick={this.onDialogOK(dialogController)}>{$L('OK')}</Button>
+					<Button onClick={this.onOk}>{leftButtonText}</Button>
 					{
 						(messageType === 'alert') ?
 						null
-						: <Button onClick={this.onDialogCancel(dialogController)}>{$L('CANCEL')}</Button>
+						: <Button onClick={this.onCancel}>{rightButtonText}</Button>
 					}
 				</buttons>
 			</Notification>
@@ -99,3 +152,4 @@ class Dialog extends Component {
 }
 
 export default Dialog;
+export {Dialog};
