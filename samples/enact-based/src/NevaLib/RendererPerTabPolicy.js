@@ -90,6 +90,9 @@ class RendererPerTabPolicy {
             });
             return result !== undefined;
         });
+        const history = tab.navState.history;
+        const viewId = history.views[history.index];
+        this.webViews[viewId].delete();
     }
 }
 

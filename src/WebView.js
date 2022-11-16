@@ -118,6 +118,11 @@ class PageContentsWrapper {
         return this.tabView.pageContents.id;
     }
 
+    delete() {
+        console.log(`WebView::delete`);
+        this.tabView.pageContents.closeNow();
+    }
+
     handleFinishLoading() {
         this.tabView.pageContents.executeJavaScriptInAllFrames(
             `var style = document.createElement('style')
@@ -155,14 +160,17 @@ class PageContentsWrapper {
 
     activate() {
         window.QALog('ACTIVATE ' + this.rootId);
-        this.tabView.setVisible(true);
-        this.tabView.bringToFront();
         if (this.activeState === 'deactivated' && this.rootId) {
-            console.log(`WVE activate ${this.rootId} (NEVA-6478)`);
+            this.tabView.pageContents.resumeDOM();
+            this.tabView.pageContents.resumeMedia();
+            this.tabView.pageContents.activate();
         }
         else if (this.activeState === 'suspended') {
-            //WebView.prototype.resume.call(this);
+            this.tabView.pageContents.resumeDOM();
+            this.tabView.pageContents.resumeMedia();
         }
+        this.tabView.setVisible(true);
+        this.tabView.bringToFront();
         this.activeState = 'activated';
     }
 
@@ -182,8 +190,8 @@ class PageContentsWrapper {
             `;
             script += `document.activeElement.blur();`;
             console.log(`WVE handle vkb (overlap). (NEVA-6205)`)
-            //WebView.prototype.suspend.call(this);
-            console.warn('Suspend/resume extension is not implemeted');
+            this.tabView.pageContents.suspendMedia();
+            this.tabView.pageContents.suspendDOM();
             this.activeState = 'suspended';
         }
         else if (this.activeState === 'deactivated') {
@@ -194,7 +202,7 @@ class PageContentsWrapper {
     deactivate() {
         window.QALog('DEACTIVATE ' + this.rootId);
         if (this.activeState !== 'deactivated') {
-            console.log(`WVE deactivate ${this.rootId} (NEVA-6479`);
+            this.tabView.pageContents.deactivate();
             this.activeState = 'deactivated';
         }
     }
