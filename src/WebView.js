@@ -413,15 +413,12 @@ class PageContentsWrapper {
     }
 
     captureVisibleRegion(params) {
-        console.log(`captureVisibleRegion`);
-        /* TDB: reimplement it
-          return new Promise((resolve) => {
-            WebView.prototype.captureVisibleRegion.call(
-                this, params, (dataUrl) => {
-                resolve(dataUrl);
-            });
-            });*/
-        return new Promise((resolve) => {});
+        return new Promise((resolve) => {
+            this.tabView.pageContents.captureVisibleRegion(
+                params, (base64_data) => {
+                    resolve(base64_data);
+                });
+        });
     }
 
     clearData(options, types) {
