@@ -61,7 +61,7 @@ class ZoomControlBase extends Component {
 				orientation="vertical"
 				width={6}
 				onChange={this.onChange}
-				value={this.state.zoom}
+				value={zoomFactors.indexOf(this.props.browser.getZoom())}
 			>
 				{zoomLabels}
 			</Picker>

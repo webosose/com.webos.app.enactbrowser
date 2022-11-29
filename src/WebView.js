@@ -116,11 +116,10 @@ class PageContentsWrapper {
         this.addEventListener('leave-html-fullscreen', this.handleLeaveHtmlFullscreen.bind(this));
         this.addEventListener('did-finish-load', this.handleFinishLoading.bind(this));
         this.addEventListener('dialog', this.handleDialog.bind(this));
+        this.addEventListener('zoomchange', this.handleZoomChange.bind(this));
         this.addEventListener('login', this.handleLogin.bind(this));
         this.addEventListener('unresponsive', this.handleUnresponsive.bind(this));
         this.addEventListener('responsive', this.handleResponsive.bind(this));
-
-        this.setZoom(params.zoomFactor ? params.zoomFactor : 1);
 
         this.dialogData = {
             alertsCount: 0,
@@ -303,6 +302,10 @@ class PageContentsWrapper {
         );
     }
 
+    handleZoomChange(zoom) {
+        this.zoomFactor = zoom;
+    }
+
     handleLeaveHtmlFullscreen(ev) {
         console.log(`Leave HTML fullscreen`);
         this.tabView.pageContents.executeJavaScriptInMainFrame("document.webkitExitFullscreen();");
@@ -412,9 +415,13 @@ class PageContentsWrapper {
         }
     }
 
+    getZoom() {
+        return this.tabView.pageContents.zoomFactor;
+    }
+
     setZoom(zoomFactor) {
         this.zoomFactor = zoomFactor;
-        console.log(`WVE.setZoom (NEVA-6223)`);
+        this.tabView.pageContents.zoomFactor = this.zoomFactor;
     }
 
     focus() {console.log(`focus`);}

@@ -206,15 +206,16 @@ class BrowserBase {
         }
     }
 
+    getZoom() {
+        const {navState: {history}} = this.getSelectedTabState();
+        const webView = this.webViews[history.views[1]];
+        return webView.getZoom();
+    }
+
     setZoom(zoomFactor) {
         this.zoomFactor = zoomFactor;
-        const tabStates = this.tabs.store.getTabs();
-        for (let id in tabStates) {
-            let state = tabStates[id];
-            if (state.type === TabTypes.WEBVIEW) {
-                this.webViews[id].setZoom(Number(zoomFactor));
-            }
-        }
+        const {navState: {history}} = this.getSelectedTabState();
+        this.webViews[history.views[1]].setZoom(Number(zoomFactor));
     }
 
     shutdown() {
