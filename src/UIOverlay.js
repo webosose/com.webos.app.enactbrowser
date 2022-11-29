@@ -30,7 +30,8 @@ class UIOverlay {
         const createPageView = () => {
             this.view = new PageView({"page-contents-params": {
               "allow-universal-access": true,
-              "api": ["v8/browser_shell_ipc"]
+              "api": ["v8/browser_shell_ipc"],
+              "partition": ""
             }});
             window.shell.shellWindow.pageView.addChildView(this.view);
             this.view.pageContents.loadFile("menu/index.html");

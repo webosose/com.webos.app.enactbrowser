@@ -128,7 +128,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
             browser.siteFiltering.setMode(browser.settings.getSiteFiltering());
             browser.searchService.engine = browser.settings.getSearchEngine();
             browser.setStatisticsGathering(browser.settings.getPrivateBrowsing());
-            browser.private_browsing_partition_id = "guest:privateMode";
+            browser.private_browsing_partition_id = "private";
             browser.initializeTabs();
         });
 
@@ -280,7 +280,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
                 this.closeTab(i);
             }
         }
-        this.clearData("guest:privateMode")
+        this.clearData("private")
         // Second, we should turn on/off statistics gathering for
         // for prev session tabs, most visited and recently closed
         this.setStatisticsGathering(usePrivateBrowsing);
