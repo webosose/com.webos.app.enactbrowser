@@ -6,7 +6,6 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
-/*global window*/
 /*global CustomEvent*/
 
 class InputSuggectionListModel {
