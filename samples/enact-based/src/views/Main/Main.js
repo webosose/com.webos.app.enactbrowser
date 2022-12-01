@@ -82,11 +82,14 @@ class MainBase extends Component {
 		// eslint-disable-next-line react/no-did-mount-set-state
 		this.setState({browser});
 
-		document.addEventListener('keydown', ({keyCode}) => {
-			if (keyCode === 0x1CD) {
+		document.addEventListener('keydown', ({key}) => {
+			if (key === 'Escape') {
+				this.onExitFullScreen();
+			} else if (key === 'Backspace') {
 				browser.back();
 			}
 		});
+
 		document.addEventListener('setInsetY', this.onSetInsetY);
 		this.props.exitFullscreenButton.ipc.subscribe('exit-fullscreen', this.onExitFullScreen.bind(this));
 	}

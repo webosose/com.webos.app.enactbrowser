@@ -44,6 +44,7 @@ class PageContentsWrapper {
         pageContentsParams["partition"] = params.partition ? params.partition : '';
 
         pageContentsParams["error-page-hidding"] = true;
+        pageContentsParams["api"] = ["v8/browser_shell_ipc"];
 
         return new PageView({"page-contents-params": pageContentsParams});
     }
@@ -283,6 +284,22 @@ class PageContentsWrapper {
             `var style = document.createElement('style')
             style.innerHTML = 'a:-webkit-any-link { cursor: pointer; }'
             document.head.appendChild(style)`
+        );
+
+        this.keyDownIpc = new ShellIpc(`keydown_${this.rootId}`);
+        this.keyDownIpc.on('keydown', ({key}) => {
+            console.log(`keydown event ${key}`);
+            const event = new KeyboardEvent('keydown', {
+                key : key
+            });
+            document.dispatchEvent(event);
+        });
+
+        this.tabView.pageContents.executeJavaScriptInAllFrames(
+            `window.shellIpc = new ShellIpc('keydown_${this.rootId}');
+            window.addEventListener('keydown', ({key}) => {
+                window.shellIpc.post('keydown', {key: key});
+            })`
         );
     }
 
