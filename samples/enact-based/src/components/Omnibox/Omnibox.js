@@ -301,7 +301,10 @@ class OmniboxBase extends Component {
 			{ addBookmarkCompleted, addBookmarkToHome, value, open, removeBookmarkCompleted } = this.state,
 			popupClassName = classNames(css.popup, { [css.invisible]: (open && !value.length) });
 
-
+		var url_value = value;
+		if (value.includes('viewer.html?pdf_url=')) {
+			url_value = value.split("pdf_url=")[1];
+		}
 		delete rest.bookmarksData;
 		delete rest.browser;
 		delete rest.dispatch;
@@ -338,7 +341,7 @@ class OmniboxBase extends Component {
 						popupComponent={this.renderPopup}
 						popupSpotlightId="suggestedList"
 						showCloseButton
-						value={value}
+						value={url_value}
 					/>
 
 					<Icon
