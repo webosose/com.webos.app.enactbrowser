@@ -22,6 +22,7 @@ import {DragDropContext, Droppable} from 'react-beautiful-dnd';
 import Button from '@enact/agate/Button';
 import Tab from './Tab';
 import {TabTypes} from '../../NevaLib/BrowserModel';
+import {setRedIndicator} from '../../NevaLib/Tabs/actions';
 import Sortable from '../Sortable';
 import Spotlight from '@enact/spotlight';
 
@@ -56,6 +57,10 @@ const NewTabButton = kind({
 });
 
 class TabBarBase extends Component {
+	constructor(props) {
+		super(props)
+		this.state = {customEventSent: true}
+	}
 	static propTypes = {
 		browser: PropTypes.object,
 		component: PropTypes.any,
@@ -70,9 +75,54 @@ class TabBarBase extends Component {
 		if (this.props.selectedIndex !== nextProps.selectedIndex) {
 			console.log(`WVE remove vkb inset when hide vkb. (NEVA-6205)`);
 		}
+	};
+
+	componentDidMount() {
+		if (window?.navigator?.mediacapture) {
+			console.log('Listening to media events...')
+			window.navigator.mediacapture.onaudiocapturestate = this.handleAudioCapture
+			window.navigator.mediacapture.onvideocapturestate = this.handleVideoCapture
+		}
 	}
 
-	componentDidUpdate (prevProps) {
+	triggerCustomCloseEvent = (media) => {
+		if (!this.state.customEventSent) {
+			media == 'audio' && this.props.setRedIndicator({index: this.props.closedTabId, audio: false})
+			media == 'video' && this.props.setRedIndicator({index: this.props.closedTabId, video: false})
+		}
+	}
+
+	handleAudioCapture = (eventStatus) => {
+		console.log('AudioEvent Status ==> ', eventStatus)
+		let selectedTabIndex = Object.keys(this.props.tabStates)[this.props.selectedIndex]  //which TabId
+		if (this.props.closedTabId != null) {
+			!this.state.customEventSent && this.triggerCustomCloseEvent('audio')
+		} else if (this.props.closedTabId == null && this.state.customEventSent) {
+			this.props && this.props.setRedIndicator({index: selectedTabIndex, audio: eventStatus})
+		}
+	}
+
+	handleVideoCapture = (eventStatus) => {
+		console.log('VideoEvent Status ==> ', eventStatus)
+		let selectedTabIndex = Object.keys(this.props.tabStates)[this.props.selectedIndex]  //which TabId
+		if (this.props.closedTabId !== null) {
+			!this.state.customEventSent && this.triggerCustomCloseEvent('video')
+		} else if (this.props.closedTabId === null) {
+			if (this.state.customEventSent && this.props) {
+				this.props.setRedIndicator({index: selectedTabIndex, video: eventStatus})
+			}
+		}
+	}
+
+	componentWillReceiveProps(nextProps) {
+		//when tab with red indicator is closed
+		if (this.props.closedTabId !== nextProps.closedTabId) {
+			console.log('this.props.closedTabId=>', this.props.closedTabId, 'nextProps.closedTabId=>', nextProps.closedTabId)
+			this.setState({customEventSent: nextProps.closedTabId == null})
+		}
+	}
+
+	componentDidUpdate(prevProps) {
 		const
 			{browser, selectedIndex, tabStates, ids} = this.props,
 			prevSelectedId = ids[prevProps.selectedIndex],
@@ -91,7 +141,7 @@ class TabBarBase extends Component {
 	}
 
 	tabs = () => {
-		const {browser, component: TabElem, numOfTabs, selectedIndex, tabStates, ids} = this.props;
+		const {browser, component: TabElem, numOfTabs, selectedIndex, tabStates, ids, displayRedIndicator} = this.props;
 		let tabs = [];
 
 		for (let i = 0; i < numOfTabs; i++) {
@@ -118,6 +168,8 @@ class TabBarBase extends Component {
 				}
 			}
 
+			const showRedIndicator = displayRedIndicator && displayRedIndicator.length > 0 && displayRedIndicator.some(j => j['index'] == Object.keys(tabStates)[i] && (j['audio'] == true || j['video'] == true))
+
 			tabs.push(
 				<TabElem
 					browser={browser}
@@ -131,6 +183,7 @@ class TabBarBase extends Component {
 					selected={i === selectedIndex}
 					title={title}
 					type={type}
+					showRedIndicator={showRedIndicator}
 				/>
 			);
 		}
@@ -205,16 +258,22 @@ const SortableTabBar = Sortable({component: Tab, placeholder}, TabBarBase);
 
 const mapStateToProps = ({tabsState}) => {
 	const
-		{ids, selectedIndex, tabs} = tabsState;
+		{ids, selectedIndex, tabs, displayRedIndicator, closedTabId} = tabsState;
 	return {
 		numOfTabs: ids.length,
 		ids,
 		selectedIndex,
 		tabStates: tabs,
+		displayRedIndicator,
+		closedTabId,
 	};
 };
 
-const TabBar = connect(mapStateToProps, null)(SortableTabBar);
+const mapDispatchToProps = (dispatch) => ({
+	setRedIndicator: (data) => dispatch(setRedIndicator(data))
+});
+
+const TabBar = connect(mapStateToProps, mapDispatchToProps)(SortableTabBar);
 
 export default TabBar;
 export {TabBar, Tab};

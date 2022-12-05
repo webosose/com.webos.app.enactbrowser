@@ -20,8 +20,11 @@ import Spinner from '@enact/agate/Spinner';
 import Spottable from '@enact/spotlight/Spottable';
 import Spotlight from '@enact/spotlight';
 import {Draggable} from 'react-beautiful-dnd';
-
+import {connect} from 'react-redux';
 import Button from '@enact/agate/Button';
+import Skinnable from '@enact/agate/Skinnable';
+
+import redIndicator from '../../../assets/popup/Record_Icon.svg';
 import {TabTypes} from '../../NevaLib/BrowserModel';
 
 import css from './Tab.module.less';
@@ -94,7 +97,7 @@ const Tab = kind({
 			}
 		}
 	},
-	render: ({closable, onClose, iconUrl, isLoading, onSelect, title, iconClassName, index, isActive, ...rest}) => {
+	render: ({closable, onClose, iconUrl, isLoading, onSelect, title, iconClassName, index, isActive, skinVariants, showRedIndicator, selectedIndex, tabsState, ...rest}) => {
 		delete rest.browser;
 		delete rest.selected;
 		delete rest.index;
@@ -110,18 +113,19 @@ const Tab = kind({
 				{...provided.dragHandleProps}
 			>
 				<SpottableDiv onClick={onSelect}>
-					{
+				{
 					(isLoading && isActive) ?
-					<Spinner className={css.spinner} size="small" transparent />
-					:<div
-						style={iconUrl ? {
-							backgroundImage: 'url(' + iconUrl + ')',
-							backgroundSize: 'contain'
-						} : {}}
-						className={classNames(css.tabFavicon, iconClassName)}
-					/>
-					}
+						<Spinner color={skinVariants.night ? 'light' : 'dark'} size="small" /> :
+						<div
+							style={iconUrl ? {
+								backgroundImage: 'url(' + iconUrl + ')',
+								backgroundSize: 'contain'
+							} : {}}
+							className={classNames(css.tabFavicon, iconClassName)}
+						/>
+				}
 					<TitleDiv className={css.tabTitle} marqueeOn="hover">{title}</TitleDiv>
+					{showRedIndicator && <img src={redIndicator} width={25} />}
 					{
 						closable &&
 						<Button
@@ -140,4 +144,11 @@ const Tab = kind({
 	}
 });
 
-export default Tab;
+const TabBase = Skinnable({ variantsProp: 'skinVariants' }, Tab);
+
+const mapStateToProps = ({ tabsState }) => ({
+	selectedIndex: tabsState.selectedIndex,
+	tabsState: tabsState.tabs
+});
+
+export default connect(mapStateToProps, null)(TabBase);

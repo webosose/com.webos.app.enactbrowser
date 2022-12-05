@@ -48,11 +48,19 @@ const updateTabState = (id, newState) => ({
 	newState
 });
 
+const setRedIndicator = (data) => {
+	return ({
+		type: types.SET_RED_INDICATOR,
+		payload: data
+	});
+};
+
 export {
 	addTab,
 	replaceTab,
 	closeTab,
 	moveTab,
 	selectTab,
-	updateTabState
-}
+	updateTabState,
+	setRedIndicator,
+};
