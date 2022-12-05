@@ -16,7 +16,6 @@ import Popup from '@enact/agate/Popup';
 import $L from '@enact/i18n/$L';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-
 import ErrorPage from '../ErrorPage';
 
 const
@@ -49,7 +48,7 @@ class WebView extends Component {
 			hideErrorPage: true,
 			hideWebview: true,
 			load: LOAD_STATE.UNLOADED,
-			suppressDialog: false
+			suppressDialog: false,
 		};
 	}
 
@@ -58,7 +57,7 @@ class WebView extends Component {
 			{ browser, id, tabs } = nextProps,
 			{ load } = prevState,
 			error = tabs[id].error;
-		if(load === LOAD_STATE.UNLOADED && error === errorBlockedBySiteFilter) {
+		if (load === LOAD_STATE.UNLOADED && error === errorBlockedBySiteFilter) {
 			return {
 				hideDialog: true,
 				hideErrorPage: false,

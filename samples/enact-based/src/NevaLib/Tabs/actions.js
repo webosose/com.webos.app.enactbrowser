@@ -8,7 +8,7 @@
 
 /* actions */
 
-import {actionTypes as types} from './constants';
+import { actionTypes as types } from './constants';
 
 // Adds a tab
 const addTab = (tab, setSelected) => ({
@@ -25,11 +25,15 @@ const replaceTab = (index, tab) => ({
 });
 
 // Closes a tab of index
-const closeTab = (index, newSelectedIndex) => ({
-	type: types.CLOSE_TAB,
-	index,
-	newSelectedIndex
-});
+const closeTab = (index, newSelectedIndex) => {
+	console.log("closedTab action triggered ===> ", index)
+	// setRedIndicator({ value: false, index: index })
+	return ({
+		type: types.CLOSE_TAB,
+		index,
+		newSelectedIndex
+	})
+}
 
 // Moves tabs
 const moveTab = (fromIndex, toIndex) => ({
@@ -49,11 +53,19 @@ const updateTabState = (id, newState) => ({
 	newState
 });
 
+const setRedIndicator = (data) => {
+	return ({
+		type: types.SET_RED_INDICATOR,
+		payload: data
+	})
+};
+
 export {
 	addTab,
 	replaceTab,
 	closeTab,
 	moveTab,
 	selectTab,
-	updateTabState
+	updateTabState,
+	setRedIndicator
 };

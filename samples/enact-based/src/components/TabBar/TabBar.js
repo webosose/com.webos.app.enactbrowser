@@ -12,22 +12,23 @@
  */
 
 import $L from '@enact/i18n/$L';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import classNames from 'classnames';
 import Button from '@enact/agate/Button';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import TooltipDecorator from '@enact/agate/TooltipDecorator';
 
 import Tab from './Tab';
-import {TabTypes} from '../../NevaLib/BrowserModel';
+import { TabTypes } from '../../NevaLib/BrowserModel';
 import Sortable from '../Sortable';
 import Spotlight from '@enact/spotlight';
 
 import css from './TabBar.module.less';
+import { setRedIndicator } from '../../NevaLib/Tabs/actions';
 
-const TooltipButton = TooltipDecorator({tooltipDestinationProp: 'decoration'}, Button);
+const TooltipButton = TooltipDecorator({ tooltipDestinationProp: 'decoration' }, Button);
 
 const placeholder = (typeof document === 'object') ? document.createElement('li') : null;
 
@@ -45,7 +46,7 @@ const NewTabButton = kind({
 		css,
 		className: 'newTab'
 	},
-	render: ({onNew, ...rest}) => (
+	render: ({ onNew, ...rest }) => (
 		<li {...rest}>
 			<TooltipButton
 				backgroundOpacity="transparent"
@@ -59,6 +60,10 @@ const NewTabButton = kind({
 });
 
 class TabBarBase extends Component {
+	constructor(props) {
+		super(props)
+		this.state = { customEventSent: true }
+	}
 	static propTypes = {
 		browser: PropTypes.object,
 		component: PropTypes.any,
@@ -69,8 +74,48 @@ class TabBarBase extends Component {
 		tabStates: PropTypes.object
 	};
 
-	componentDidMount () {
+	componentDidMount() {
 		document.addEventListener('webOSLocaleChange', this.onLocaleChange);
+		if (window && window.navigator) {
+			console.log("Listening to media events...")
+			window.navigator.mediacapture.onaudiocapturestate = this.handleAudioCapture
+			window.navigator.mediacapture.onvideocapturestate = this.handleVideoCapture
+		}
+	}
+
+	triggerCustomCloseEvent = (media) => {
+		if (!this.state.customEventSent) {
+			media == "audio" && this.props.setRedIndicator({ index: this.props.closedTabId, audio: false })
+			media == "video" && this.props.setRedIndicator({ index: this.props.closedTabId, video: false })
+		}
+	}
+
+	handleAudioCapture = (eventStatus) => {
+		console.log("AudioEvent Status ==> ", eventStatus)
+		let selectedTabIndex = Object.keys(this.props.tabStates)[this.props.selectedIndex]  //which TabId
+		if (this.props.closedTabId != null) {
+
+			!this.state.customEventSent && this.triggerCustomCloseEvent("audio")
+
+		} else if (this.props.closedTabId == null) {
+			if (this.state.customEventSent) {
+				this.props && this.props.setRedIndicator({ index: selectedTabIndex, audio: eventStatus })
+			}
+		}
+	}
+
+	handleVideoCapture = (eventStatus) => {
+		console.log("VideoEvent Status ==> ", eventStatus)
+		let selectedTabIndex = Object.keys(this.props.tabStates)[this.props.selectedIndex]  //which TabId
+
+		if (this.props.closedTabId !== null) {
+
+			!this.state.customEventSent && this.triggerCustomCloseEvent("video")
+		} else if (this.props.closedTabId === null) {
+			if (this.state.customEventSent && this.props) {
+				this.props.setRedIndicator({ index: selectedTabIndex, video: eventStatus })
+			}
+		}
 	}
 
 	onLocaleChange = () => {
@@ -79,10 +124,25 @@ class TabBarBase extends Component {
 		}, 1000);
 	}
 
-	componentWillReceiveProps (nextProps) {
+	componentWillReceiveProps(nextProps) {
+
+		//when tab with red indicator is closed
+		if (this.props.closedTabId !== nextProps.closedTabId) {
+			console.log("this.props.closedTabId=>", this.props.closedTabId, "nextProps.closedTabId=>", nextProps.closedTabId)
+			nextProps.closedTabId != null && this.setState({
+				customEventSent: false
+			})
+
+
+			nextProps.closedTabId == null &&
+				this.setState({
+					customEventSent: true
+				}, () => console.log("CUSTOM events closed with value=========>", this.state.customEventSent))
+		}
+
 		if (this.props.selectedIndex !== nextProps.selectedIndex) {
 			const
-				{browser, ids} = this.props,
+				{ browser, ids } = this.props,
 				prevSelectedId = ids[this.props.selectedIndex],
 				webViewToBlur = browser.webViews[prevSelectedId];
 
@@ -92,15 +152,15 @@ class TabBarBase extends Component {
 					if (typeof document_style_transform_backup != "undefined")
 						document.body.style.transform = document_style_transform_backup;
 					`;
-				webViewToBlur.executeScript({ code: script});
+				webViewToBlur.executeScript({ code: script });
 				webViewToBlur.blur();
 			}
 		}
 	}
 
-	componentDidUpdate (prevProps) {
+	componentDidUpdate(prevProps) {
 		const
-			{browser, selectedIndex, tabStates, ids} = this.props,
+			{ browser, selectedIndex, tabStates, ids } = this.props,
 			prevSelectedId = ids[prevProps.selectedIndex],
 			selectedId = ids[selectedIndex],
 			selectedTab = tabStates[selectedId];
@@ -117,7 +177,7 @@ class TabBarBase extends Component {
 	}
 
 	tabs = () => {
-		const {browser, component: TabElem, numOfTabs, selectedIndex, tabStates, ids} = this.props;
+		const { browser, component: TabElem, numOfTabs, selectedIndex, tabStates, ids, displayRedIndicator } = this.props;
 		let
 			tabs = [],
 			closable = numOfTabs > 1;
@@ -145,6 +205,8 @@ class TabBarBase extends Component {
 				}
 			}
 
+			let showRedIndicator = displayRedIndicator && displayRedIndicator.length > 0 && displayRedIndicator.some(j => j["index"] == Object.keys(tabStates)[i] && (j["audio"] == true || j["video"] == true))
+
 			tabs.push(
 				<TabElem
 					browser={browser}
@@ -158,6 +220,7 @@ class TabBarBase extends Component {
 					selected={i === selectedIndex}
 					title={title}
 					type={type}
+					showRedIndicator={showRedIndicator}
 				/>
 			);
 		}
@@ -166,7 +229,7 @@ class TabBarBase extends Component {
 	};
 
 	onNew = () => {
-		const {browser, numOfTabs} = this.props;
+		const { browser, numOfTabs } = this.props;
 
 		if (numOfTabs < browser.tabs.maxTabs) {
 			browser.createNewTab();
@@ -179,7 +242,7 @@ class TabBarBase extends Component {
 
 	render = () => {
 		const
-			{className, numOfTabs, fullScreen, ...rest} = this.props,
+			{ className, numOfTabs, fullScreen, ...rest } = this.props,
 			classes = classNames(className, css.tabBar);
 
 		delete rest.tabStates;
@@ -202,20 +265,26 @@ class TabBarBase extends Component {
 	};
 }
 
-const SortableTabBar = Sortable({component: Tab, placeholder}, TabBarBase);
+const SortableTabBar = Sortable({ component: Tab, placeholder }, TabBarBase);
 
-const mapStateToProps = ({tabsState}) => {
+const mapStateToProps = ({ tabsState }) => {
 	const
-		{ids, selectedIndex, tabs} = tabsState;
+		{ ids, selectedIndex, tabs, displayRedIndicator, closedTabId } = tabsState;
 	return {
 		numOfTabs: ids.length,
 		ids,
 		selectedIndex,
-		tabStates: tabs
+		tabStates: tabs,
+		displayRedIndicator: displayRedIndicator,
+		closedTabId: closedTabId
 	};
 };
 
-const TabBar = connect(mapStateToProps, null)(SortableTabBar);
+const mapDispatchToProps = (dispatch) => ({
+	setRedIndicator: (data) => dispatch(setRedIndicator(data))
+});
+
+const TabBar = connect(mapStateToProps, mapDispatchToProps)(SortableTabBar);
 
 export default TabBar;
-export {TabBar, Tab};
+export { TabBar, Tab };

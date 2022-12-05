@@ -15,16 +15,18 @@ import classNames from 'classnames';
 import Button from '@enact/agate/Button';
 import Spinner from '@enact/agate/Spinner';
 import kind from '@enact/core/kind';
-import {MarqueeDecorator} from '@enact/ui/Marquee';
+import { MarqueeDecorator } from '@enact/ui/Marquee';
 import Spottable from '@enact/spotlight/Spottable';
 import Spotlight from '@enact/spotlight';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Skinnable from '@enact/agate/Skinnable';
 
-import {TabTypes} from '../../NevaLib/BrowserModel';
+import { TabTypes } from '../../NevaLib/BrowserModel';
 
 import css from './Tab.module.less';
+import redIndicator from '../../../assets/popup/Record_Icon.svg'
+import { connect } from 'react-redux';
 
 const
 	SpottableLi = Spottable('li'),
@@ -53,7 +55,7 @@ const TabBase = kind({
 		className: 'tab'
 	},
 	computed: {
-		iconClassName: ({error, type}) => {
+		iconClassName: ({ error, type }) => {
 			if (type === TabTypes.NEW_TAB_PAGE) {
 				return css.newtabFavicon;
 			} else if (type === TabTypes.HISTORY) {
@@ -70,14 +72,14 @@ const TabBase = kind({
 				return css.defaultFavicon;
 			}
 		},
-		className: ({className, selected, styler}) => selected ? styler.append(css.selected) : className
+		className: ({ className, selected, styler }) => selected ? styler.append(css.selected) : className
 	},
 	handlers: {
-		onClose: (ev, {browser, index}) => {
+		onClose: (ev, { browser, index }) => {
 			ev.stopPropagation();
 			browser.closeTab(index);
 		},
-		onSelect: (ev, {browser, index, selected}) => {
+		onSelect: (ev, { browser, index, selected }) => {
 			if (!selected) {
 				browser.selectTab(index);
 				Spotlight.pause();
@@ -85,12 +87,11 @@ const TabBase = kind({
 			}
 		}
 	},
-	render: ({closable, onClose, iconUrl, isLoading, onSelect, title, iconClassName, skinVariants, ...rest}) => {
+	render: ({ closable, onClose, iconUrl, isLoading, onSelect, title, iconClassName, skinVariants, showRedIndicator, selectedIndex, tabsState, ...rest }) => {
 		delete rest.browser;
 		delete rest.selected;
 		delete rest.index;
 		delete rest.type;
-
 		return (
 			<SpottableLi {...rest} onClick={onSelect}>
 				{
@@ -105,6 +106,7 @@ const TabBase = kind({
 						/>
 				}
 				<TitleDiv className={css.tabTitle} marqueeOn="hover">{title}</TitleDiv>
+				{showRedIndicator && <img src={redIndicator} width={25} />}
 				{
 					closable &&
 					<Button
@@ -119,6 +121,13 @@ const TabBase = kind({
 	}
 });
 
-const Tab = Skinnable({variantsProp: 'skinVariants'}, TabBase);
+const Tab = Skinnable({ variantsProp: 'skinVariants' }, TabBase);
 
-export default Tab;
+
+const mapStateToProps = ({ tabsState }) => ({
+	selectedIndex: tabsState.selectedIndex,
+	tabsState: tabsState.tabs
+});
+
+
+export default connect(mapStateToProps, null)(Tab);
