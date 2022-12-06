@@ -269,12 +269,10 @@ class BrowserBase {
         state.navState.history.views[state.navState.history.index] = state.id;
 
         webview.addEventListener('did-start-loading', (ev) => this._handleLoadStart(state.id, ev));
-        webview.addEventListener('load-progress-changed', (ev) => this._handleLoadCommit(state.id, ev));
         webview.addEventListener('contentload', () => this._handleContentLoad(state.id));
         webview.addEventListener('did-stop-loading', () => this._handleLoadStop(state.id));
         webview.addEventListener('did-finish-load', this._handleFinishLoading(state.id));
         webview.addEventListener('newwindow', this._handleNewWindow);
-        webview.addEventListener('did-start-navigation', this._handleStartNavigation(state.id));
         webview.addEventListener('did-update-favicon-url', this._handleUpdateFaviconUrl(state.id, webview));
 
         webview.addEventListener('did-fail-load', (url, error, code) => {
@@ -461,16 +459,6 @@ class BrowserBase {
         }
     }
 
-    _handleLoadCommit = (tabId, ev) => {
-        const
-            tab = this.tabs.getTab(tabId),
-            navState = Object.assign({}, tab.state.navState);
-        if (navState.url !== ev.url) {
-            navState.url = ev.url;
-            tab.setNavState(navState);
-        }
-    }
-
     _canGoBack = (tabId) => {
         const tab = this.tabs.getTab(tabId);
         console.log(tab);
@@ -517,17 +505,6 @@ class BrowserBase {
             });
             tab.setNavState(navState);
             this.webViews[tabId].emit('needToUpdateUI');
-        }
-    }
-
-    _handleStartNavigation = (tabId) => (url) => {
-        console.log(`BrowserBase::_handleStartNavigation ${url}`);
-        const tab = this.tabs.getTab(tabId);
-        if (tab.state) {
-            const navState = Object.assign({}, tab.state.navState, {
-                url: url
-            });
-            tab.setNavState(navState);
         }
     }
 
