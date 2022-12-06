@@ -109,7 +109,8 @@ class PageContentsWrapper {
          'unresponsive',
          'responsive',
          'newwindow',
-         'exit'
+         'exit',
+         'zoomchange'
         ].forEach(event => {
             this.tabView.pageContents.on(event, tabEventHandlerFactory(event));
         });

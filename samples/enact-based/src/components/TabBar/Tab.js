@@ -75,12 +75,14 @@ const Tab = kind({
 		onClose: (ev, {browser, index}) => {
 			ev.stopPropagation();
 			browser.closeTab(index);
+			browser.sendZoomFactorToZoomMenu();
 		},
 		onSelect: (ev, {browser, index, selected}) => {
 			if (!selected) {
 				browser.selectTab(index);
 				Spotlight.pause();
 				ev.stopPropagation();
+				browser.sendZoomFactorToZoomMenu();
 			}
 		}
 	},

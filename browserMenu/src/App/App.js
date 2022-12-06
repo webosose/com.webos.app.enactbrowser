@@ -14,6 +14,7 @@ import InputSuggestionList from './../Views/InputSuggestionList';
 import ExitFullscreenButton from './../Views/ExitFullscreenButton';
 import ChromeExtensions from './../Views/ChromeExtensions';
 import Dialog from './../Views/Dialog';
+import ZoomControlMenu from './../Views/ZoomControlMenu';
 
 function App({model}) {
     console.log(`App render`);
@@ -50,6 +51,10 @@ function App({model}) {
     switch(contentType) {
         case 'input_suggestion_list':
             content = (<InputSuggestionList model={model.inputSuggestionList} onUpdate={updateDocumentSize}/>);
+            break;
+
+        case 'zoom_control':
+            content = (<ZoomControlMenu model={model.zoomControl} onUpdate={updateDocumentSize}/>);
             break;
 
         case 'browser_menu':

@@ -12,6 +12,7 @@
 import {getUrlWithPrefix, fetchFaviconAsDataUrl} from './Utilities';
 import {BrowserConsts} from './BrowserConsts.js';
 import Ipc from './Ipc';
+import { isWindowReady } from '@enact/core/snapshot';
 import {TabTitles, TabTypes} from './TabsConsts';
 import WebView from './WebView.js';
 import {IdGenerator, TabsBase as TabsModel} from './TabsBase.js';
@@ -83,6 +84,14 @@ class BrowserBase {
             });
         }
 
+        if (isWindowReady()) {
+            this.zoomControlIpc = new ShellIpc('ipc_ZoomControl');
+            this.zoomControlIpc.on('change', ({zoomFactor}) => {
+                console.log(`got zoom factor change ${zoomFactor} from zoom menu`);
+                this.setZoom(zoomFactor);
+            });
+        }
+
         this.browserBaseIpc = new ShellIpc('ipc_browser_base');
         this.browserBaseIpc.on('closeCurrentTab', () => {
             console.log(`BrowserBase:: close current tab ${this.tabs.count()}`);
@@ -116,6 +125,12 @@ class BrowserBase {
 
     getSelectedTabState() {
         return this.tabs.getTab(this.tabs.getSelectedId()).state;
+    }
+
+    isWebViewTabSelected() {
+        const history = this.getSelectedTabState().navState.history;
+        const type = history.entries[history.index];
+        return (type === TabTypes.WEBVIEW);
     }
 
     navigate(userUrl) {
@@ -213,9 +228,18 @@ class BrowserBase {
     }
 
     setZoom(zoomFactor) {
-        this.zoomFactor = zoomFactor;
+        console.log(`BrowserBase::setZoom`);
         const {navState: {history}} = this.getSelectedTabState();
-        this.webViews[history.views[1]].setZoom(Number(zoomFactor));
+        this.webViews[history.views[1]].setZoom(zoomFactor);
+    }
+
+    sendZoomFactorToZoomMenu() {
+        console.log(`BrowserBase::sendZoomFactorToZoomMenu`);
+        if (this.isWebViewTabSelected()) {
+            const {navState: {history}} = this.getSelectedTabState();
+            const zoomFactor = this.webViews[history.views[1]].getZoom();
+            this.zoomControlIpc.post('zoomChange', {zoomFactor: zoomFactor});
+        }
     }
 
     shutdown() {
@@ -291,10 +315,10 @@ class BrowserBase {
             const tab = this.tabs.getTab(state.id);
             this._updateTitle(tab, title);
         });
-        // This code overrides webview's behavior of reseting zoom on navigation
         webview.addEventListener('zoomchange', (ev) => {
             if (ev.newZoomFactor !== this.zoomFactor) {
-                webview.setZoom(this.zoomFactor);
+                this.setZoom(zoomFactor);
+                this.sendZoomFactorToZoomMenu();
             }
         });
         webview.addEventListener('close', () => {

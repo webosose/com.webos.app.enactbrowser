@@ -14,6 +14,7 @@ import { Provider } from 'react-redux'
 import App from './App';
 import InputSuggestionListModel from './components/InputSuggestionListModel';
 import ExitFullscreenButtonModel from './components/ExitFullscreenButtonModel';
+import ZoomControlModel from './components/ZoomControlModel';
 import ChromeExtensionsModel from './components/ChromeExtensionsModel';
 import MenuModel from './components/MenuModel';
 import createDialogModel from './components/DialogModel';
@@ -50,7 +51,8 @@ const model = {
     genericIpc: genericIpc,
     exitFullscreenButton: new ExitFullscreenButtonModel(),
     chromeExtensions: new ChromeExtensionsModel(),
-    dialog: createDialogModel()
+    dialog: createDialogModel(),
+    zoomControl: new ZoomControlModel()
 };
 
 const PrerenderApp = MoonstoneDecorator(<div />);

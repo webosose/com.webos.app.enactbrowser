@@ -19,6 +19,7 @@ import {ChromeExtensionsBase} from 'js-browser-lib/ChromeExtensionsBase';
 import {DialogBase} from 'js-browser-lib/DialogBase';
 import {initLogging} from 'js-browser-lib/Logger';
 import {isWindowReady} from '@enact/core/snapshot';
+import {ZoomControl as ZoomControlBase} from 'js-browser-lib/ZoomBase'
 
 if (typeof window !== 'undefined') {
 	initLogging();
@@ -27,6 +28,7 @@ if (typeof window !== 'undefined') {
 const store = configureStore();
 const uioverlay = new UIOverlay();
 const menu = new MenuBase(uioverlay);
+const zoomControl = new ZoomControlBase(uioverlay);
 const exitFullscreenButton = new ExitFullscreenButtonBase(uioverlay);
 const chromeExtensionsMenu = (isWindowReady() && typeof window.neva !== 'undefined') ? new ChromeExtensionsBase(uioverlay) : null;
 const dialog = new DialogBase(new UIOverlay());
@@ -40,6 +42,7 @@ let appElement = (
 		<App store={store}
 			uioverlay={uioverlay}
 			menu={menu}
+			zoomControl={zoomControl}
 			exitFullscreenButton={exitFullscreenButton}
 			chromeExtensionsMenu={chromeExtensionsMenu}
 			dialog={dialog}

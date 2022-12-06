@@ -26,11 +26,12 @@ import Menu from '../../components/Menu';
 import ChromeExtensionsMenu from '../../components/ChromeExtensionsMenu';
 import NavigationBox from '../../components/NavigationBox';
 import Omnibox from '../../components/Omnibox';
+import ZoomControl from '../../components/ZoomControl';
 import PropTypes from 'prop-types';
 import {setFullScreen} from '../../actions';
 import {TabBar} from '../../components/TabBar';
-import ZoomControl from '../../components/ZoomControl';
 import {isWindowReady} from '@enact/core/snapshot';
+import { TabTypes } from '../../NevaLib/BrowserModel';
 
 import css from './Main.less';
 
@@ -194,6 +195,14 @@ class MainBase extends Component {
 			(<ChromeExtensionsMenu chromeExtensionsMenu={this.props.chromeExtensionsMenu}/>) :
 			(null)
 
+		const { tabs, ids, selectedIndex } = this.props;
+		const selectedId = ids[selectedIndex];
+		let zoomControlDisabled = false;
+
+		if (tabs[selectedId]) {
+			zoomControlDisabled = tabs[selectedId].type === TabTypes.NEW_TAB_PAGE;
+		}
+
 		return (
 			<div {...props}
 				style={{ '--cue-bg-color': privateBrowsingCueBgColor, '--cue-text-color': privateBrowsingCueTextColor }}
@@ -203,7 +212,7 @@ class MainBase extends Component {
 					{ fullScreen === false && <div className={css['flexbox-row']}>
 						<NavigationBox browser={browser} />
 						<Omnibox browser={browser} uioverlay={this.props.uioverlay}/>
-						<ZoomControl browser={browser} />
+						<ZoomControl browser={browser} zoomControl={this.props.zoomControl} disabled={zoomControlDisabled}/>
 						<Menu browser={browser} menu={this.props.menu}/>
 						{maybeChromeExtensionsMenu}
 
@@ -245,8 +254,12 @@ class MainBase extends Component {
 	}
 }
 
-const mapStateToProps = ({settingsState, browserState}) =>  {
+const mapStateToProps = ({ settingsState, browserState, tabsState }) =>  {
+	const { ids, selectedIndex, tabs } = tabsState;
 	return ({
+		ids,
+		tabs,
+		selectedIndex,
 		privateBrowsing: settingsState.privateBrowsing,
 		fullScreen: browserState.fullScreen
 	})
