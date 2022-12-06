@@ -51,12 +51,14 @@ class WebViewBase extends Component {
 
 		if (typeof shell !== "undefined") {
 			shell.shellWindow.on('vkb-overlap', ({height}) => {
+				console.log(`vkb-overlap ${height}`);
 				this.setState({vkbInset: height});
 				this.props.webView.tabView.pageContents.executeJavaScriptInMainFrame(
 					`window.scrollBy(0, ${height})`
 				);
 			});
 			shell.shellWindow.on('vkb-change-state', (isShown) => {
+				console.log(`'vkb-change-state ${isShown}`);
 				if (!isShown) {
 					this.props.webView.tabView.pageContents.executeJavaScriptInMainFrame(
 						`window.scrollBy(0, ${-this.state.vkbInset})`
@@ -264,7 +266,7 @@ class WebViewBase extends Component {
 					hidden={!show_webview}
 					{...rest}
 				/>
-				<div style={{height: `${this.state.vkbInset}px`}}/>
+				<div style={{minHeight: `${this.state.vkbInset}px`}}/>
 			</div>
 
 		const error_page =
