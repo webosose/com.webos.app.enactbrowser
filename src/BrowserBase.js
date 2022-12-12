@@ -360,10 +360,12 @@ class BrowserBase {
     };
 
     // handles new tab request from webView
-    _handleNewWindow = (ev) => {
+    _handleNewWindow = (childPage, info) => {
+        console.log(`newwindow event`);
+        console.log(info);
         if (this.tabs.maxTabs === this.tabs.count() &&
             this.tabs.maxTabs !== 0) {
-            ev.window.discard();
+            console.log(`cancel newwindow request (max tabs)`);
             return;
         }
 
@@ -378,23 +380,22 @@ class BrowserBase {
         }
 
         let selectNewTab = false;
-        switch (ev.windowOpenDisposition) {
+        switch (info.windowOpenDisposition) {
             case 'new_foreground_tab':
                 selectNewTab = true;
             case 'new_background_tab':
-                const state = this._createWebViewPage(ev.targetUrl, ev.window,
+                const state = this._createWebViewPage(info.targetUrl, childPage,
                                                       tab_family_id);
                 this.tabs.addTab(state, selectNewTab);
                 break;
             case 'new_popup': {
-                const state = this._createWebViewPage(ev.targetUrl, ev.window,
+                const state = this._createWebViewPage(info.targetUrl, childPage,
                                                       tab_family_id);
                 this.tabs.addTab(state, true);
                 break;
             }
             default:
-                console.warn('New window request ' + ev.windowOpenDisposition + ' is discarded');
-                ev.window.discard();
+                console.warn('New window request ' + info.windowOpenDisposition + ' is discarded');
         }
     }
 

@@ -46,7 +46,13 @@ class PageContentsWrapper {
         pageContentsParams["error-page-hidding"] = true;
         pageContentsParams["api"] = ["v8/browser_shell_ipc"];
 
-        return new PageView({"page-contents-params": pageContentsParams});
+        let pageView = new PageView({"page-contents-params": pageContentsParams});
+
+        if (params.newWindow) {
+            pageView.pageContents = params.newWindow;
+        }
+
+        return pageView;
     }
 
     _initWebView(params) {
@@ -62,13 +68,9 @@ class PageContentsWrapper {
         this.isLoading = false;
         // partition assignment should be before any assignment of src
 
-        if (!params.newWindow) {
-            this.src = this.url;
-            this.tabView.pageContents.loadURL(this.url);
-        }
-        else {
-            params.newWindow.attach(this);
-        }
+        this.src = this.url;
+        this.tabView.pageContents.loadURL(this.url);
+
 
         let tabEventHandlerFactory = (event) => (...evArguments) => {
             console.log(`event ${event} occured`);
@@ -105,6 +107,7 @@ class PageContentsWrapper {
          'login',
          'unresponsive',
          'responsive',
+         'newwindow',
          'exit'
         ].forEach(event => {
             this.tabView.pageContents.on(event, tabEventHandlerFactory(event));
