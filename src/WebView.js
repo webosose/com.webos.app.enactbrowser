@@ -59,6 +59,7 @@ class PageContentsWrapper {
         this.canGoBack = false;
         this.canGoForward = false;
         this.eventListeners = [];
+        this.webContentHasLoaded = false;
 
         this.tabView = this.createPageContents(params);
 
@@ -473,6 +474,23 @@ class PageContentsWrapper {
         this.isAborted = false;
         this.isAlertsAllowed = true;
         this.alertsCount = 0;
+        this.webContentHasLoaded = false;
+
+        if (!this.onLoadIpc) {
+            this.onLoadIpc = new ShellIpc(`onLoadComplete_${this.rootId}`);
+            this.onLoadIpc.on('onLoad', () => {
+                console.log(`web content has loaded`);
+                this.webContentHasLoaded = true;
+            });
+        }
+        console.log(`handleDidStartLoading::executeJavaScriptInAllFrames`);
+        this.tabView.pageContents.executeJavaScriptInAllFrames(
+            `window.onLoadIpc = new ShellIpc('onLoadComplete_${this.rootId}');
+            window.addEventListener('load', () => {
+                window.onLoadIpc.post('onLoad', {});
+            })
+            `
+        );
     }
 
     handleLoadProgressChanged(ev) {

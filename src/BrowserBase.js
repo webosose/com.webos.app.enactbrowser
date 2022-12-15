@@ -273,7 +273,8 @@ class BrowserBase {
         webview.addEventListener('contentload', () => this._handleContentLoad(state.id));
         webview.addEventListener('did-stop-loading', () => this._handleLoadStop(state.id));
         webview.addEventListener('did-finish-load', this._handleFinishLoading(state.id));
-        webview.addEventListener('newwindow', this._handleNewWindow);
+        webview.addEventListener('newwindow', this._handleNewWindow(state.id));
+        webview.addEventListener('did-start-navigation', this._handleStartNavigation(state.id));
         webview.addEventListener('did-update-favicon-url', this._handleUpdateFaviconUrl(state.id, webview));
 
         webview.addEventListener('did-fail-load', (url, error, code) => {
@@ -360,12 +361,19 @@ class BrowserBase {
     };
 
     // handles new tab request from webView
-    _handleNewWindow = (childPage, info) => {
-        console.log(`newwindow event`);
+    _handleNewWindow = (contentId) => (childPage, info) => {
+        const view = this.webViews[contentId];
+        console.log(`newwindow event (${view.webContentHasLoaded})`);
         console.log(info);
         if (this.tabs.maxTabs === this.tabs.count() &&
             this.tabs.maxTabs !== 0) {
             console.log(`cancel newwindow request (max tabs)`);
+            return;
+        }
+
+        if (!view.webContentHasLoaded) {
+            console.log(`cancel newwindow request (web content was not loaded yet)`);
+            childPage.closeNow();
             return;
         }
 
