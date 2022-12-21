@@ -130,8 +130,27 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
             browser.setStatisticsGathering(browser.settings.getPrivateBrowsing());
             browser.private_browsing_partition_id = "private";
             browser.initializeTabs();
-        });
+        })
+        .then(() => {
+            this.initializeExtenionAPI();
+        })
+    }
 
+    initializeExtenionAPI() {
+        if (typeof window !== 'undefined' && typeof window.neva !== 'undefined') {
+            console.log("Add create-extension-tab event");
+            window.neva.addEventListener("create-extension-tab", (request_id) => {
+                console.log("Called create-extension-tab event");
+                this.createTab(TabTypes.WEBVIEW, "");
+                let webView = this.webViews[this.tabs.getSelectedId()];
+                if (webView) {
+                    console.log("webview created");
+                    window.neva.extensionTabCreated(request_id, webView.getPageContentsId());
+                } else {
+                    console.error("No webview found");
+                }
+            });
+        }
     }
 
     initializeWithDefaults() {
