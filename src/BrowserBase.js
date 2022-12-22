@@ -299,10 +299,12 @@ class BrowserBase {
         webview.addEventListener('close', () => {
             this.closeTab(this.tabs.getIndexById(state.id));
         });
-        webview.addEventListener('exit', () => {
+        webview.addEventListener('exit', (reason) => {
+            console.log(`exit event ${reason}`);
             const tab = this.tabs.getTab(state.id);
-            // TODO: should reason 'normal' be considered?
-            tab.setError('RENDERER_CRASHED');
+            if (reason !== 'normal') {
+                tab.setError('RENDERER_CRASHED');
+            }
         });
         webview.addEventListener('responsive', () => {
             this.tabs.getTab(state.id).setError(null);

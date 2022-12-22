@@ -104,7 +104,8 @@ class PageContentsWrapper {
          'dialog',
          'login',
          'unresponsive',
-         'responsive'
+         'responsive',
+         'exit'
         ].forEach(event => {
             this.tabView.pageContents.on(event, tabEventHandlerFactory(event));
         });
