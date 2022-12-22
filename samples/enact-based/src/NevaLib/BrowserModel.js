@@ -84,7 +84,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
         browser.searchService = new SearchService();
         browser.tabPolicy = undefined;
         browser.devSettingsEnabled = false;
-        browser.siteFiltering = new SiteFiltering(this.webViews, tabsModel, db);
+        browser.siteFiltering = new SiteFiltering(browser.webViewFactory.getPartition(), db);
         browser.prevSessionTabs = new PreviousSessionTabs(
             browser, db, browser.settings.getRestorePrevSessionPolicy());
         browser.tabPolicy = createTabPolicy(

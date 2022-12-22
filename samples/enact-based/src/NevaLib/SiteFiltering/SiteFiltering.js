@@ -50,8 +50,8 @@ class SiteFiltering {
 		OFF: OFF
 	};
 
-	constructor(webviews, tabs, db) {
-		this.controller = new SiteFilteringBase(webviews, tabs);
+	constructor(partition_id, db) {
+		this.controller = new SiteFilteringBase(partition_id);
 		this.filterStorages = {
 			[WHITE_LIST_MODE] : new IdbSetStorage(WHITE_LIST_IDB_NAME, db),
 			[BLACK_LIST_MODE] : new IdbSetStorage(BLACK_LIST_IDB_NAME, db)

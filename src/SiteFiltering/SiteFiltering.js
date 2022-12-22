@@ -13,8 +13,9 @@ import {TabTypes} from '../TabsConsts';
     by filter
 */
 class SiteFiltering {
-    constructor(webviews, tabs) {
-        Object.assign(this, {filter: null, webviews, tabs});
+    constructor(partition_id) {
+        Object.assign(this, {filter: null});
+        this.partition_id = partition_id;
     }
 
     /**
@@ -24,47 +25,36 @@ class SiteFiltering {
         null if you want to disable site filterting
     */
     setFilter(filter) {
+        console.log(`SiteFiltering::setFilter`);
         if (filter && !this.filter) {
             // setting filter when no filter is set
-            this.tabs.addEventListener('add', this._handleNewTab);
-            this.tabs.addEventListener('replace', this._handleNewTab);
-            Object.keys(this.webviews).forEach((id) => {
-                this._addBeforeRrequestHandlerToWebview(id);
-            });
+            this._addBeforeRequestHandler();
         }
         else if (!filter && this.filter) {
             // removing filter
-            this.tabs.removeEventListener('add', this._handleNewTab);
-            this.tabs.removeEventListener('replace', this._handleNewTab);
-            Object.keys(this.webviews).forEach((id) => {
-                this._removeBeforeRequestHandlerFromWebview(id);
-            });
+            this._removeBeforeRequestHandler();
         }
         this.filter = filter;
     }
 
-    _addBeforeRrequestHandlerToWebview(id) {
-        console.log(`WVE Sitefiltering add listener (NEVA-6476)`)
+    _addBeforeRequestHandler() {
+        console.log(`SiteFiltering::_addBeforeRequestHandler`);
+        shell.session(this.partition_id).webrequest.onBeforeRequest(
+            { urls: ["*://*/*"] },
+            ({url, resourceType}) => {
+                console.log(`SiteFiltering:: check ${url} ${resourceType}`);
+                const shouldCancelRequest =
+                    (resourceType === 'mainFrame' || resourceType === 'subFrame') &&
+                    this.filter && !this.filter.isAllowed(url); // parse url string to check is it in a list
+                    console.log(`SiteFiltering:: check returns cancel: ${shouldCancelRequest}`);
+                return { cancel: shouldCancelRequest };
+            }
+        );
     }
 
-    _removeBeforeRequestHandlerFromWebview(id) {
-        console.log(`WVE Sitefiltering remove listener (NEVA-6476)`)
-    }
-
-    _handleBeforeRequest = ({url, type}) => {
-        // check for request type to block only request to web pages
-        // and not to block requests to resources such images, fonts, css, etc
-        const shouldCancelRequest =
-            (type === 'main_frame' || type === 'sub_frame') &&
-            this.filter &&
-            !this.filter.isAllowed(url);
-        return { cancel: shouldCancelRequest };
-    }
-
-    _handleNewTab = ({state: {id, type}}) => {
-        if (type === TabTypes.WEBVIEW) {
-            this._addBeforeRrequestHandlerToWebview(id);
-        }
+    _removeBeforeRequestHandler() {
+        console.log(`SiteFiltering::_removeBeforeRequestHandler`);
+        shell.session(this.partition_id).webrequest.onBeforeRequest(null);
     }
 }
 
