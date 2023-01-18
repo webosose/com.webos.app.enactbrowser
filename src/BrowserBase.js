@@ -298,7 +298,6 @@ class BrowserBase {
         webview.addEventListener('did-stop-loading', () => this._handleLoadStop(state.id));
         webview.addEventListener('did-finish-load', this._handleFinishLoading(state.id));
         webview.addEventListener('newwindow', this._handleNewWindow(state.id));
-        webview.addEventListener('did-start-navigation', this._handleStartNavigation(state.id));
         webview.addEventListener('did-update-favicon-url', this._handleUpdateFaviconUrl(state.id, webview));
 
         webview.addEventListener('did-fail-load', (url, error, code) => {
