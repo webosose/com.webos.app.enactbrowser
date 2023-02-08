@@ -150,6 +150,31 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
                     console.error("No webview found");
                 }
             });
+
+            window.neva.addEventListener("create-extension-popup", () => {
+                console.log("create-extension-popup event occured");
+                let popupView = new window.PageView({"page-contents-params": {"partition":""}});
+                window.shell.shellWindow.pageView.addChildView(popupView);
+                window.neva.extensionPopupViewCreated(popupView.id);
+                this.extensionPopupView = popupView;
+
+                window.document.addEventListener('click', () => {
+                    if (this.extensionPopupView) {
+                        window.shell.shellWindow.pageView.removeChildView(this.extensionPopupView);
+                    }
+                    this.extensionPopupView = undefined;
+                }, {once: true});
+
+                let button = document.getElementById('nevaBrowserChromeExtensionsButton');
+                const buttonHeight = button.offsetHeight + 20;
+                const leftBorderWidth =  Math.round((document.body.clientWidth / 100) * 70);
+                const width = document.body.clientWidth - leftBorderWidth;
+
+                popupView.setBounds(leftBorderWidth, buttonHeight, width, 200);
+
+                popupView.pageContents.setFocus()
+                popupView.setVisible(true);
+            });
         }
     }
 
