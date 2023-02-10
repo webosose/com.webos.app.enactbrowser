@@ -67,7 +67,6 @@ class BrowserBase {
         this.defaultWebviewState = defaultWebviewState;
         this.webViewFactory = webViewFactory || new WebViewFactoryBase(this);
         this.webViews = [];
-        this.zoomFactor = 1;
         this.useragentOverride = null;
         this.tabs = tabsModel;
         this.tabs.onContentDelete = this._handleContentDelete;
@@ -314,9 +313,9 @@ class BrowserBase {
             const tab = this.tabs.getTab(state.id);
             this._updateTitle(tab, title);
         });
-        webview.addEventListener('zoomchange', (ev) => {
-            if (ev.newZoomFactor !== this.zoomFactor) {
-                this.setZoom(zoomFactor);
+        webview.addEventListener('zoomchange', (newZoomFactor) => {
+            if (newZoomFactor !== this.getZoom()) {
+                this.setZoom(newZoomFactor);
                 this.sendZoomFactorToZoomMenu();
             }
         });
