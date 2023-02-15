@@ -285,7 +285,7 @@ class PageContentsWrapper {
     }
 
     handleFinishLoading() {
-        this.tabView.pageContents.executeJavaScriptInAllFrames(
+        this.tabView.pageContents.executeJavaScriptInMainFrame(
             `var style = document.createElement('style')
             style.innerHTML = 'a:-webkit-any-link { cursor: pointer; }'
             document.head.appendChild(style)`
@@ -300,7 +300,7 @@ class PageContentsWrapper {
             document.dispatchEvent(event);
         });
 
-        this.tabView.pageContents.executeJavaScriptInAllFrames(
+        this.tabView.pageContents.executeJavaScriptInMainFrame(
             `window.shellIpc = new ShellIpc('keydown_${this.rootId}');
             window.addEventListener('keydown', ({key}) => {
                 window.shellIpc.post('keydown', {key: key});
@@ -484,8 +484,8 @@ class PageContentsWrapper {
                 this.webContentHasLoaded = true;
             });
         }
-        console.log(`handleDidStartLoading::executeJavaScriptInAllFrames`);
-        this.tabView.pageContents.executeJavaScriptInAllFrames(
+        console.log(`handleDidStartLoading::executeJavaScriptInMainFrame`);
+        this.tabView.pageContents.executeJavaScriptInMainFrame(
             `window.onLoadIpc = new ShellIpc('onLoadComplete_${this.rootId}');
             window.addEventListener('load', () => {
                 window.onLoadIpc.post('onLoad', {});
