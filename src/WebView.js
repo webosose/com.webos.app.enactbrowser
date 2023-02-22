@@ -110,7 +110,8 @@ class PageContentsWrapper {
          'responsive',
          'newwindow',
          'exit',
-         'zoomchange'
+         'zoomchange',
+         'open-url-from-tab'
         ].forEach(event => {
             this.tabView.pageContents.on(event, tabEventHandlerFactory(event));
         });

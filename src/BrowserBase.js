@@ -298,6 +298,7 @@ class BrowserBase {
         webview.addEventListener('did-finish-load', this._handleFinishLoading(state.id));
         webview.addEventListener('newwindow', this._handleNewWindow(state.id));
         webview.addEventListener('did-update-favicon-url', this._handleUpdateFaviconUrl(state.id, webview));
+        webview.addEventListener('open-url-from-tab', this._handleOpenUrlFromTab(state.id));
 
         webview.addEventListener('did-fail-load', (url, error, code) => {
             const isError =
@@ -418,6 +419,7 @@ class BrowserBase {
                                                       tab_family_id);
                 this.tabs.addTab(state, selectNewTab);
                 break;
+            case 'new_window':
             case 'new_popup': {
                 const state = this._createWebViewPage(info.targetUrl, childPage,
                                                       tab_family_id);
@@ -428,6 +430,8 @@ class BrowserBase {
                 console.warn('New window request ' + info.windowOpenDisposition + ' is discarded');
         }
     }
+
+    _handleOpenUrlFromTab = (contentId) => (info) => this._handleNewWindow(contentId)(null, info);
 
     _updateTitle(tab, title) {
         tab.setTitle(title);
