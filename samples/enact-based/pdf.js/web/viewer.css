@@ -2229,17 +2229,35 @@ select {
           mask-image: var(--toolbarButton-editorInk-icon);
 }
 
+/* add css option(visibility) for Enact - start */
+#print {
+  visibility: hidden;
+}
+/* add css option(visibility) for Enact - end */
+
 #print::before,
 #secondaryPrint::before {
   -webkit-mask-image: var(--toolbarButton-print-icon);
           mask-image: var(--toolbarButton-print-icon);
 }
 
+/* add css option(visibility) for Enact - start */
+#openFile {
+  visibility: hidden;
+}
+/* add css option(visibility) for Enact - end */
+
 #openFile::before,
 #secondaryOpenFile::before {
   -webkit-mask-image: var(--toolbarButton-openFile-icon);
           mask-image: var(--toolbarButton-openFile-icon);
 }
+
+/* add css option(visibility) for Enact - start */
+#download {
+  visibility: hidden;
+}
+/* add css option(visibility) for Enact - end */
 
 #download::before,
 #secondaryDownload::before {
@@ -2434,6 +2452,9 @@ a.secondaryToolbarButton[href="#"] {
   width: 1px;
   height: 22px;
   background-color: var(--separator-color);
+/* add css option(visibility) for Enact - start */
+  visibility: hidden;
+/* add css option(visibility) for Enact - end */
 }
 .horizontalToolbarSeparator {
   display: block;

@@ -2219,6 +2219,10 @@ const PDFViewerApplication = {
 
     const parameters = Object.create(null);
 
+    let target_pdf_url = new URL(window.location.href).searchParams.get('pdf_url');
+    console.log("[Enact] Target pdf url : ", target_pdf_url);
+    file = target_pdf_url;
+
     if (typeof file === "string") {
       this.setTitleUsingUrl(file, file);
       parameters.url = file;
