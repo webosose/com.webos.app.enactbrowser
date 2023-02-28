@@ -20,6 +20,7 @@ import {DialogBase} from 'js-browser-lib/DialogBase';
 import {initLogging} from 'js-browser-lib/Logger';
 import {isWindowReady} from '@enact/core/snapshot';
 import {ZoomControl as ZoomControlBase} from 'js-browser-lib/ZoomBase'
+import {UrlSuggestionsBase} from 'js-browser-lib/UrlSuggestionsBase';
 
 if (typeof window !== 'undefined') {
 	initLogging();
@@ -32,8 +33,10 @@ const zoomControl = new ZoomControlBase(uioverlay);
 const exitFullscreenButton = new ExitFullscreenButtonBase(uioverlay);
 const chromeExtensionsMenu = (isWindowReady() && typeof window.neva !== 'undefined') ? new ChromeExtensionsBase(uioverlay) : null;
 const dialog = new DialogBase(new UIOverlay());
+const urlSuggestionsBar = new UrlSuggestionsBase(uioverlay);
 if (typeof window !== 'undefined') {
 	window.dialogOverlay = dialog;
+	window.urlSuggestionsBar = urlSuggestionsBar;
 }
 
 
