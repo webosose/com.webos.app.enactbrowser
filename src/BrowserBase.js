@@ -133,26 +133,24 @@ class BrowserBase {
     }
 
     navigate(userUrl) {
-        console.log(`BrowserBase::navigate`);
+        console.log(`[BrowserBase] navigate: ${userUrl}`);
         const url = userUrl ? getUrlWithPrefix(userUrl) : 'about:blank';
 
         const history = this.getSelectedTabState().navState.history;
         const type = history.entries[history.index];
 
-        const newState = this._createWebViewPage(url);
         if (type !== TabTypes.WEBVIEW) {
-
             const oldState = this.tabs.getTab(this.tabs.getSelectedId()).state;
             if (oldState.navState.history.views[1] !== undefined) {
-                //TBD: need to destruct this pageView: this.webViews[oldState.navState.history.views[1]]
+                const viewId = oldState.navState.history.views[1];
+                this.webViews[viewId].delete();
             }
-
+            const newState = this._createWebViewPage(url);
             this.tabs.replaceTab(this.tabs.store.getSelectedIndex(), newState);
         }
         else {
             const id = history.views[history.index];
             this.webViews[id].navigate(url);
-            this.webViews[id].tabFamilyId = newState;
         }
     }
 
