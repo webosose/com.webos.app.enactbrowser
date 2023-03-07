@@ -55,6 +55,50 @@ class WebviewMessageProxy {
 let msgProxy = null;
 
 const WebViewMixinBase = {
+
+    getInfo: function WebViewMixin_getInfo() {
+        return this.ipcToWebContentPromise.then(() => {
+            return new Promise((resolve, reject) => {
+                try {
+                    msgProxy.sendMessage(
+                        this.msgListenerId,
+                        this,
+                        { action: 'getInfo' },
+                        ({ installable, installed }) => {
+                            resolve({
+                                installable: installable,
+                                installed: installed
+                            });
+                        }
+                    );
+                } catch (e) {
+                    reject(e);
+                }
+            });
+        });
+    },
+
+    installApp: function WebViewMixin_installApp() {
+        return this.ipcToWebContentPromise.then(() => {
+            return new Promise((resolve, reject) => {
+                try {
+                    msgProxy.sendMessage(
+                        this.msgListenerId,
+                        this,
+                        { action: 'installApp' },
+                        ({ pSuccess }) => {
+                            resolve({
+                                pSuccess: pSuccess
+                            })
+                        }
+                    );
+                } catch (e) {
+                    reject(e);
+                }
+            });
+        });
+    },
+
     insertIntoDom: function WebViewMixin_insertIntoDom(rootId) { // TODO: remove unnecessary function
         this.rootId = rootId;
         if (this.activeState === 'activated') {
@@ -81,7 +125,7 @@ const WebViewMixinBase = {
 			    if (typeof document_style_transform_backup != "undefined")
 				    document.body.style.transform = document_style_transform_backup;
             `;
-            this.executeScript({ code: script});
+            this.executeScript({code: script});
             if (WebView.prototype.suspend) {
                 WebView.prototype.suspend.call(this);
             }
@@ -185,6 +229,10 @@ const WebViewMixinBase = {
             this.setUserAgentOverride(params.useragentOverride);
         }
 
+        this.ipcToWebContentPromise = new Promise((resolve) => {
+            this.ipcToWebContentPromiseResolver = resolve;
+        });
+
     },
 
     handleLoadStart: function WebViewMixin_handleLoadStart(ev) {
@@ -255,6 +303,7 @@ const WebViewMixinBase = {
                     this.dispatchEvent(event);
                 }
             );
+            this.ipcToWebContentPromiseResolver();
         }
     }
 }

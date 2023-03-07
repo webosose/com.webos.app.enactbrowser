@@ -11,6 +11,46 @@ let webviewHostInjectionComplete = false;
 	'use strict';
 	// Prevent multiple injection
 	if (!webviewHostInjectionComplete) {
+
+		const codeInjection = function () {
+			// simulate 'installablemanager' API
+			if (typeof (window.navigator.installablemanager) !== 'object') {
+				window.navigator.installablemanager = {
+					getInfo: (callback) => {
+						console.log(`getInfo`);
+						callback(true, false);
+					},
+					installApp: (callback) => {
+						console.log(`installApp`);
+						callback(true);
+					}
+				}
+			}
+
+			document.addEventListener('requestInstallableManager', ({ detail }) => {
+				if (detail.method === 'getInfo') {
+					window.navigator.installablemanager.getInfo((installable, installed) => {
+						document.dispatchEvent(new CustomEvent('replayInstallableManager', {
+							detail: { installable, installed }
+						}))
+					})
+
+				} else if (detail.method === 'installApp') {
+					window.navigator.installablemanager.installApp((pSuccess) => {
+						document.dispatchEvent(new CustomEvent('replayInstallableManager', {
+							detail: { pSuccess }
+						}))
+					})
+				}
+			});
+		}
+
+		// inject script for installablemanager
+		var script = document.createElement('script');
+		script.textContent = '(' + codeInjection + ')()';
+		(document.head || document.documentElement).appendChild(script);
+		script.remove();
+
 		let actions = {};
 		// getTitle variables
 		let listenerId = null;
@@ -50,6 +90,43 @@ let webviewHostInjectionComplete = false;
 
 			postTitle(embedder);
 		};
+
+		actions['getInfo'] = function (ev) {
+			try {
+				document.addEventListener('replayInstallableManager', ({ detail }) => {
+					ev.source.postMessage({
+						id: ev.data.id,
+						action: ev.data.action,
+						installable: detail.installable,
+						installed: detail.installed
+					}, '*');
+				})
+
+				document.dispatchEvent(new CustomEvent('requestInstallableManager', {
+					detail: { method: 'getInfo' }
+				}));
+			} catch (e) {
+				console.log(e);
+			}
+		}
+
+		actions['installApp'] = function (ev) {
+			try {
+				document.addEventListener('replayInstallableManager', ({ detail }) => {
+					ev.source.postMessage({
+						id: ev.data.id,
+						action: ev.data.action,
+						pSuccess: detail.pSuccess
+					}, '*');
+				})
+
+				document.dispatchEvent(new CustomEvent('requestInstallableManager', {
+					detail: { method: 'installApp' }
+				}));
+			} catch (e) {
+				console.log(e);
+			}
+		}
 
 		actions.getFavicons = function (ev) {
 			let links = document.querySelectorAll('link[rel*="icon"]');

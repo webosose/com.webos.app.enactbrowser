@@ -35,6 +35,7 @@ import { connect } from 'react-redux';
 import { set_allow_media_popup } from '../../NevaLib/Popup/actions';
 import PopupComponent from '../../components/Popup/Popup'
 import css from "./Main.module.less";
+import PWAButton from '../../components/PWAButton';
 
 const TooltipButton = TooltipDecorator(
   { tooltipDestinationProp: "decoration" },
@@ -253,6 +254,10 @@ class Main extends Component {
               <Omnibox browser={browser} domain={domain} detectedMedia={detectedMedia} />
               <ZoomControl browser={browser} />
               <Menu browser={browser} />
+              {browser.webViews ?
+                <PWAButton webViews={browser.webViews} />
+                : null
+              }
               <TooltipButton
                 className={css.fullscreen}
                 css={css}
