@@ -158,6 +158,10 @@ class BrowserBase {
         window.close();
     }
 
+    clearHistorybyURL(url) {
+        this.history.clearByURL(url);
+    }
+
     clearData() {
         const options = {
             since: 0
@@ -198,22 +202,7 @@ class BrowserBase {
         });
     }
 
-    checkAndModifyPDFUrl(url) {
-        var pdf_viewer = 'file:///usr/palm/applications/com.webos.app.enactbrowser/pdf.js/web/viewer.html?pdf_url=';
-        var pdf_found = url.endsWith(".pdf", url.length);
-        var pdfJs = url.includes('viewer.html?pdf_url');
-        var pdfUrl = '';
-        if (pdf_found && !pdfJs) {
-            pdfUrl = pdf_viewer + url;
-        }
-        return pdfUrl;
-    }
-
     _createWebViewPage(url, newWindow = null, tab_family_id = null) {
-        var pdfUrl = this.checkAndModifyPDFUrl(url);
-        if (pdfUrl) {
-            url = pdfUrl;
-        }
         let state = TabsModel.createTabState(
             IdGenerator.getNextId(),
             TabTypes.WEBVIEW
@@ -234,7 +223,6 @@ class BrowserBase {
         webview.addEventListener('contentload', () => this._handleContentLoad(state.id));
         webview.addEventListener('loadstop', () => this._handleLoadStop(state.id));
         webview.addEventListener('newwindow', this._handleNewWindow);
-        webview.addEventListener('loadredirect', (ev) => this._handleLoadRedirect(state.id, ev));
 
         webview.addEventListener('loadabort', (ev) => {
             if (ev.isTopLevel) {
@@ -401,13 +389,6 @@ class BrowserBase {
         });
     }
 
-    _handleLoadRedirect = (tabId, ev) => {
-        var pdfUrl = this.checkAndModifyPDFUrl(ev.newUrl);
-        if (pdfUrl) {
-            this.navigate(pdfUrl);
-        }
-    }
-
     _handleLoadStart = (tabId, ev) => {
         if (ev.isTopLevel) {
             const
@@ -419,13 +400,7 @@ class BrowserBase {
                 titleIconChange = true;
             }
 
-            // navState.url = ev.url;
             navState.isLoading = true;
-            var pdfUrl = this.checkAndModifyPDFUrl(ev.url);
-            if (pdfUrl) {
-                this.navigate(pdfUrl);
-            }
-
             tab.setNavState(navState);
 
             if (titleIconChange) {
@@ -440,6 +415,11 @@ class BrowserBase {
             const
                 tab = this.tabs.getTab(tabId),
                 navState = Object.assign({}, tab.state.navState);
+
+            if (ev.oldUrl !== undefined) {
+                this.clearHistorybyURL(ev.oldUrl);
+            }
+
             if (navState.url !== ev.url) {
                 navState.url = ev.url;
                 tab.setNavState(navState);

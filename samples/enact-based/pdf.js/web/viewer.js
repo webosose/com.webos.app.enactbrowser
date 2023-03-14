@@ -707,7 +707,7 @@ const defaultOptions = {
     kind: OptionKind.VIEWER + OptionKind.PREFERENCE
   },
   enableScripting: {
-    value: true,
+    value: false,
     kind: OptionKind.VIEWER + OptionKind.PREFERENCE
   },
   externalLinkRel: {
@@ -14774,7 +14774,7 @@ class BasePreferences {
     "disablePageLabels": false,
     "enablePermissions": false,
     "enablePrintAutoRotate": true,
-    "enableScripting": true,
+    "enableScripting": false,
     "externalLinkTarget": 0,
     "historyUpdateUrl": false,
     "ignoreDestinationZoom": false,

@@ -75,6 +75,23 @@ class HistoryIdbStorage {
             (store) => store.request('clear', []));
     }
 
+    clearByURL(url) {
+        var entry_id = undefined;
+        this.db.transaction('readonly', STORE_NAME, (store) => store.request('getAll', []))
+        .then((entries) => {
+            entries.forEach((entry) => {
+                if (url == entry.url) {
+                    entry_id = entry.id;
+                    return Promise.resolve([entry.id]);
+                }
+            });
+        }).then(() => {
+            if (entry_id !== undefined) {
+                return this.db.transaction('readwrite', STORE_NAME,
+                    (store) => store.request('delete', [entry_id]));
+            }
+        });
+    }
 }
 
 export default HistoryIdbStorage;

@@ -136,6 +136,11 @@ class MostVisitedSites {
     }
 
     handleTabUpdate = (ev) => {
+        if (ev.state.navState.url === "") {
+            // Do not add about:blank URLs to most visited
+            return;
+        }
+
         if (ev.diff.navState && ev.diff.navState.isLoading === false) {
             this.storage.add({
                     url:  ev.state.navState.url,

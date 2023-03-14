@@ -48,6 +48,12 @@ const HistoryMixin = (superclass) => (class extends superclass {
             BrowserConsts.HISTORY_URL), true);
     }
 
+    clearByURL(url) {
+        return Promise.all([
+            this.history.clearByURL(url)
+        ]);
+    }
+
     _updateTitle(tab, title) {
         super._updateTitle(tab, title);
         if (!this.settings.getPrivateBrowsing()) {

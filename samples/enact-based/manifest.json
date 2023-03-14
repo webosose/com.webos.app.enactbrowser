@@ -13,8 +13,18 @@
     "storage",
     "https://*/*",
     "http://*/*",
+    "*://*/*.pdf*",
     "fullscreen",
     "audioCapture",
     "videoCapture"
-  ]
+  ],
+  "webview": {
+    "partitions": [{
+      "name": "default",
+      "accessible_resources": [
+        "pdf.js/build/*",
+        "pdf.js/web/*"
+      ]
+    }]
+  }
 }

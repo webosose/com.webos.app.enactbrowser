@@ -72,6 +72,9 @@ class HistoryBase {
         this.store.update([]);
     }
 
+    clearByURL(url) {
+        this.storage.clearByURL(url);
+    }
 }
 
 export {HistoryBase};
