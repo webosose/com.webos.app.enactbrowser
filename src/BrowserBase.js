@@ -56,7 +56,8 @@ class WebViewFactoryBase {
             zoomFactor: this.getZoomFactor(props),
             activeState: this.getState(props),
             useragentOverride: this.getUserAgentOverride(props),
-            newWindow: props.newWindow
+            newWindow: props.newWindow,
+            id: props.id
         });
     }
 }
@@ -92,9 +93,9 @@ class BrowserBase {
         }
 
         this.browserBaseIpc = new ShellIpc('ipc_browser_base');
-        this.browserBaseIpc.on('closeCurrentTab', () => {
-            console.log(`BrowserBase:: close current tab ${this.tabs.count()}`);
-            this.closeTab(this.tabs.getIndexById(this.tabs.getSelectedId()));
+        this.browserBaseIpc.on('setTabErrorUnresponsive', ({id}) => {
+            console.log(`[BrowserBase] setTabErrorUnresponsive`);
+            this.tabs.getTab(id).setError('PAGE_UNRESPONSIVE');
         });
     }
 
@@ -114,6 +115,7 @@ class BrowserBase {
         if (this.tabs.count() !== 1) {
             this.tabs.deleteTab(index);
         } else {
+            console.log(`[BrowserBase] replace tab with new tab page`);
             this.tabs.replaceTab(index, this._createNewTabPage());
         }
     }
@@ -190,6 +192,7 @@ class BrowserBase {
             });
             this.tabs.getTab(this.tabs.getSelectedId()).setNavState(newNavState);
             webView.suspend();
+            webView.unresponsive = false;
         }
     }
 
@@ -197,10 +200,11 @@ class BrowserBase {
         console.log(`BrowserBase::forward`);
         const {navState: {history}, navState} = this.getSelectedTabState();
 
-        const webView = this.webViews[history.views[1]];
+        const type = history.entries[history.index];
 
-        if (history.index === 0) {
+        if (type !== 'webview') {
             // updated state
+            const webView = this.webViews[history.views[1]];
             const newNavState = Object.assign({}, navState, {
                 history: {
                     index: 1,
@@ -208,12 +212,13 @@ class BrowserBase {
                     views: navState.history.views
                 },
                 canGoBack: true,
-                canGoForward: webView.canGoForward,
-                url: webView.url
+                canGoForward: webView ? webView.canGoForward : false,
+                url: webView ? webView.url : null
             });
             this.tabs.getTab(this.tabs.getSelectedId()).setNavState(newNavState);
             webView.activate();
         } else {
+            const webView = this.webViews[history.views[history.index]];
             webView.forward();
         }
     }
@@ -282,7 +287,7 @@ class BrowserBase {
         state.title = url;
 
         const webview = this.webViews[state.id] = this.webViewFactory.create({
-            url, newWindow
+            url, newWindow, id: state.id
         });
 
         webview.tabFamilyId = tab_family_id !== null ? tab_family_id : state.id;
@@ -477,8 +482,8 @@ class BrowserBase {
     _handleLoadStart = (tabId) => {
         const
             url = this.webViews[tabId].url,
-            tab = this.tabs.getTab(tabId),
-            navState = Object.assign({}, tab.state.navState);
+            tab = this.tabs.getTab(tabId)
+        let navState = tab.state ? {...tab.state.navState} : {};
 
         let titleChange = false;
         if (navState.url !== url) {

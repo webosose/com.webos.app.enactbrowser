@@ -70,76 +70,85 @@ class WebViewBase extends Component {
 	}
 
 	static getDerivedStateFromProps = (nextProps, prevState) => {
-		let
-			{browser, id, tabs} = nextProps,
-			{state} = prevState,
-			error = tabs[id].error;
+		try {
+			let
+				{browser, id, tabs} = nextProps,
+				{state} = prevState,
+				error = tabs[id].error;
 
-		let state_set = Object.assign({}, prevState);
+			let state_set = Object.assign({}, prevState);
 
-		state_set.show_webview = false;
-		state_set.show_error_page = false;
-		state_set.show_blocked_page_notification = false;
-		state_set.show_error_dialog = false;
+			state_set.show_webview = false;
+			state_set.show_error_page = false;
+			state_set.show_blocked_page_notification = false;
+			state_set.show_error_dialog = false;
 
-		if (error !== null) {
-			state = "showing_error";
-		}
-
-		switch (state) {
-			case "navigating": {
-				break;
-			}
-
-			case "loading_site": {
-				state_set.show_webview = true;
-				break;
-			}
-
-			case "showing_error": {
-
-				switch (error) {
-					case 'PAGE_UNRESPONSIVE':
-						state_set.show_error_dialog = true;
-						state_set.show_webview = true;
-						state_set.show_error_page = true;
-						break;
-
-					case 'RENDERER_CRASHED':
-						state_set.show_error_page = true;
-						break;
-
-					case 'ERR_BLOCKED_BY_CLIENT':
-						state_set.show_blocked_page_notification = true;
-						break;
-
-					default:
-						if (browser.settings.getUseJSErrorPage()) {
-							state_set.show_error_page = true;
-						} else {
-							state_set.show_webview = true;
-						}
-						break;
+			if (error !== null) {
+				if (nextProps.webView.activeState === 'deactivated') {
+					state = "deactivated";
+				} else {
+					state = "showing_error";
 				}
-				break; // case: "showing_error"
 			}
 
-			case "deactivated":
-				state_set.show_webview = false; // when 'stop' pressed in 'unresponsive' dialog
-				state_set.show_error_page = true;
-				break;
+			switch (state) {
+				case "navigating": {
+					break;
+				}
 
-			case "showing_site": {
-				state_set.show_webview = true;
-				break;
+				case "loading_site": {
+					state_set.show_webview = true;
+					break;
+				}
+
+				case "showing_error": {
+
+					switch (error) {
+						case 'PAGE_UNRESPONSIVE':
+							state_set.show_error_dialog = true;
+							state_set.show_webview = true;
+							state_set.show_error_page = true;
+							break;
+
+						case 'RENDERER_CRASHED':
+							state_set.show_error_page = true;
+							break;
+
+						case 'ERR_BLOCKED_BY_CLIENT':
+							state_set.show_blocked_page_notification = true;
+							break;
+
+						default:
+							if (browser.settings.getUseJSErrorPage()) {
+								state_set.show_error_page = true;
+							} else {
+								state_set.show_webview = true;
+							}
+							break;
+					}
+					break; // case: "showing_error"
+				}
+
+				case "deactivated":
+					state_set.show_webview = false; // when 'stop' pressed in 'unresponsive' dialog
+					state_set.show_error_page = true;
+					break;
+
+				case "showing_site": {
+					state_set.show_webview = true;
+					break;
+				}
+			} // switch
+
+			if (JSON.stringify(state_set) !== JSON.stringify(prevState)) {
+				return state_set;
+			} else {
+				return null;
 			}
-		} // switch
-
-		if (JSON.stringify(state_set) !== JSON.stringify(prevState)) {
-			return state_set;
-		} else {
-			return null;
+		} catch (e) {
+			console.error(e);
 		}
+		return null;
 	}
 
 	isOnlyForBuiltInErrorPage = (err) => {
@@ -248,7 +257,7 @@ class WebViewBase extends Component {
 
 	render () {
 		let {id, tabs, style, ...rest} = this.props,
-			{show_error_page, show_webview, show_error_dialog, suppressDialog} = this.state,
+			{show_error_page, show_webview} = this.state,
 			{show_blocked_page_notification} = this.state,
 			err = tabs[id].error,
 			id_ = id + WebViewWrapperId;
@@ -274,7 +283,7 @@ class WebViewBase extends Component {
 				id={id_ + "errorPage"}
 				style={style}
 				errorMsg={err}
-				show_error_dialog={show_error_dialog && !suppressDialog}
+				show_error_dialog={false}
 				onWait={this.onWait}
 				onStop={this.onStop}
 				hidden={!show_error_page}

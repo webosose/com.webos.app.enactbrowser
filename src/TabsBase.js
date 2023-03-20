@@ -164,14 +164,19 @@ class TabsBase extends EventEmitter {
             // copy navigation history
             const oldHistory = oldState.navState.history;
             const newHistory = newState.navState.history;
+            const tabType = newHistory.entries[newHistory.index];
 
             // 'newState' is always a newly created webview tab
             // combine history from both tabs
-            newState.navState.history = {
-                index: oldHistory.index + 1,
-                // entries and views should have identical sizes.
-                entries: [oldHistory.entries[0], newHistory.entries[0]],
-                views: [oldHistory.views[0], newHistory.views[0]],
+
+            if (tabType !== 'webview') {
+                newState.navState.history.index = 0;
+                newState.navState.history.entries = [newHistory.entries[0], oldHistory.entries[0]];
+                newState.navState.history.views = [newHistory.views[0], oldHistory.views[0]];
+            } else {
+                newState.navState.history.index = 1;
+                newState.navState.history.entries = [oldHistory.entries[0], newHistory.entries[0]];
+                newState.navState.history.views = [oldHistory.views[0], newHistory.views[0]];
             }
 
             this.store.replace(index, newState);

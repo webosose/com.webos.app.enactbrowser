@@ -56,10 +56,12 @@ class PageContentsWrapper {
     }
 
     _initWebView(params) {
+        this.unresponsive = false;
         this.canGoBack = false;
         this.canGoForward = false;
         this.eventListeners = [];
         this.webContentHasLoaded = false;
+        this.id = params.id;
 
         this.tabView = this.createPageContents(params);
 
@@ -183,7 +185,10 @@ class PageContentsWrapper {
             cancel: () => {
                 console.log(`cancel pressed`);
                 let browserBaseIpc = new ShellIpc('ipc_browser_base');
-                browserBaseIpc.post('closeCurrentTab');
+                browserBaseIpc.post('setTabErrorUnresponsive', {id: this.id});
+                this.hideDialog();
+                this.unresponsive = true;
+                this.deactivate();
             }
         });
     }
@@ -349,6 +354,10 @@ class PageContentsWrapper {
 
     activate() {
         window.QALog('ACTIVATE ' + this.rootId);
+        if (this.unresponsive) {
+            console.log(`The web page is unresponsive, do not activate`);
+            return;
+        }
         this.tabView.setVisible(true);
         this.tabView.bringToFront();
 
@@ -407,16 +416,22 @@ class PageContentsWrapper {
 
     navigate(url) {
         console.log(`WebView::navigate`);
+        this.unresponsive = false;
+        if (this.activeState === 'deactivated') {
+            this.activate();
+        }
         this.tabView.pageContents.loadURL(url)
     }
 
     back() {
+        this.unresponsive = false;
         if (this.canGoBack) {
             this.tabView.pageContents.goBack()
         }
     }
 
     forward() {
+        this.unresponsive = false;
         if (this.canGoForward) {
             this.tabView.pageContents.goForward()
         }
@@ -435,6 +450,7 @@ class PageContentsWrapper {
 
     reload() {
         console.log(`reload`);
+        this.unresponsive = false;
         this.tabView.pageContents.reload();
     }
 
