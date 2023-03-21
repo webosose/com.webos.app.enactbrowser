@@ -248,6 +248,7 @@ class PageContentsWrapper {
     getButtonPressHandler() {
         switch (this.dialogData.messageType) {
             case 'alert':
+            case 'confirm':
             case 'prompt':
             case 'unresponsive':
                 return this.dialogData.buttonPressedDialogHandler;
