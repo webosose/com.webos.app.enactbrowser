@@ -172,6 +172,10 @@ class PageContentsWrapper {
 
     handleUnresponsive() {
         console.log(`WebView::handleUnresponsive`);
+        if (this.dialogData.responsive === false) {
+            console.log(`[WebView] ::handleUnresponsive ignore duplicate 'unresponsive' event`);
+            return;
+        }
         this.dialogData.responsive = false;
         this.handleDialog('unresponsive', 'Web page is unresponsive', {
             ok: () => {
