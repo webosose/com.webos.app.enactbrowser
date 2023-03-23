@@ -182,7 +182,11 @@ class TabsBase extends EventEmitter {
             this.store.replace(index, newState);
             this.emitEvent('replace', {index, state: newState, oldState});
             this.emitEvent('delete', {state: oldState});
-            this._callOnContentDelete(oldId);
+            // check which pageViews (pageView Ids) should be closed
+            const oldIds = oldState.navState.history.views;
+            const newIds = newState.navState.history.views;
+            const droppedIds = oldIds.filter(e => !newIds.includes(e));
+            droppedIds.map(this.onContentDelete);
 
             console.log(`replaceTab. selected index: ${this.store.getSelectedIndex()}, index: ${index}`);
             console.log(newState);

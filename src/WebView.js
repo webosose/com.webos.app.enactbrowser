@@ -113,7 +113,8 @@ class PageContentsWrapper {
          'newwindow',
          'exit',
          'zoomchange',
-         'open-url-from-tab'
+         'open-url-from-tab',
+         'close'
         ].forEach(event => {
             this.tabView.pageContents.on(event, tabEventHandlerFactory(event));
         });
@@ -287,7 +288,7 @@ class PageContentsWrapper {
     }
 
     delete() {
-        console.log(`WebView::delete`);
+        console.log(`WebView::delete ${this.rootId}`);
         this.tabView.pageContents.closeNow();
     }
 

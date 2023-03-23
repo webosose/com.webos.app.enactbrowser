@@ -443,6 +443,7 @@ class BrowserBase {
     _handleContentDelete = (contentId) => {
         if (this.webViews[contentId]) {
             this.webViews[contentId].beforeWebviewDelete();
+            this.webViews[contentId].delete();
             delete this.webViews[contentId];
         }
     }
