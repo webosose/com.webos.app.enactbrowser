@@ -207,7 +207,7 @@ class MainBase extends Component {
 		}
 
 		return (
-			<div {...props}
+			<div id="main_view" {...props}
 				style={{ '--cue-bg-color': privateBrowsingCueBgColor, '--cue-text-color': privateBrowsingCueTextColor }}
 			>
 				<div onClick={this.onClick} onMouseLeave={this.onMouseLeave}

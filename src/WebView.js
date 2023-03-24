@@ -329,13 +329,13 @@ class PageContentsWrapper {
         this.tabView.pageContents.executeJavaScriptInMainFrame("document.webkitExitFullscreen();");
     }
 
-    adjustBounds() {
-        if (!this.rootId)
+    adjustBounds(rootId = this.rootId) {
+        console.log(`WebVIew::adjustBounds`, rootId);
+
+        if (!rootId)
             return;
 
-        console.log(`WebVIew::adjustBounds`);
-
-        let container_div = document.getElementById(this.rootId);
+        let container_div = document.getElementById(rootId);
         let r = container_div.getBoundingClientRect()
         if (r.y < 1) {
             r.y = 1; // pageView should not overlap 'exit fullscreen' button div

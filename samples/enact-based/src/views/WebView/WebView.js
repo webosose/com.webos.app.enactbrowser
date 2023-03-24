@@ -47,6 +47,7 @@ class WebViewBase extends Component {
 			state: "navigating",
 			post_render_task: null,
 			vkbHeight: 0,
+			webContentFullscreen: false,
 		};
 
 		if (typeof shell !== "undefined") {
@@ -218,7 +219,7 @@ class WebViewBase extends Component {
 
 	componentDidUpdate () {
 		console.log(`views::WebView::componentDidUpdate`);
-		this.props.webView.adjustBounds(this.props.id + WebViewWrapperId);
+		this.props.webView.adjustBounds(this.state.webContentFullscreen ? "main_view" : this.props.id + WebViewWrapperId);
 	}
 
 	onWait = () => {
@@ -247,12 +248,12 @@ class WebViewBase extends Component {
 
 	enableFullScreen() {
 		console.log(`WebView::enableFullScreen`);
-		this.props.setFullScreen(true);
+		this.setState({webContentFullscreen: true});
 	}
 
 	disableFullScreen() {
 		console.log(`WebView::disableFullScreen`);
-		this.props.setFullScreen(false);
+		this.setState({webContentFullscreen: false});
 	}
 
 	render () {
