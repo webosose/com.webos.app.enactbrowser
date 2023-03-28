@@ -57,7 +57,6 @@ class ExitFullScreenButton extends Component {
 
 	show = () => {
 		this.props.exitFullscreenButton.show();
-		this.props.exitFullscreenButton.uioverlay.setFocus();
 	}
 
 	hide = () => {

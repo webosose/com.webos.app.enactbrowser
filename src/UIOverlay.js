@@ -44,7 +44,7 @@ class UIOverlay {
         this.ipcChannelName = defaultChannelName;
 
         this.callChain = UIOverlay.callChain = UIOverlay.callChain.then((genericIpc) => {
-            return new Promise((resolve) => {
+            return new Promise((resolve, reject) => {
                 genericIpc.on("created", (ipcChannelName) => {
                     if (!UIOverlay.ids.includes(ipcChannelName) && this.ipcChannelName === defaultChannelName) {
                         console.log(`UIOverlay received new IPC channel name ${ipcChannelName}`);
@@ -76,12 +76,6 @@ class UIOverlay {
             console.log(`catch error: ${e}`);
         });
 
-        if (typeof window !== 'undefined') {
-            window.document.addEventListener('mouseover', () => {
-                window.shell.shellWindow.pageView.pageContents.setFocus();
-            })
-        }
-
         this.contentName = "default";
         this.sizes = [];
         this.sizes["default"] = {x: 10, y: 10, w: 10, h: 10};
@@ -105,10 +99,6 @@ class UIOverlay {
                 this.view.bringToFront();
             } else {
                 this.view.sendToBack();
-                if (typeof window !== 'undefined') {
-                    console.log(`UIOerlay::setVisible setFocus to main window`);
-                    window.shell.shellWindow.pageView.pageContents.setFocus();
-                }
             }
             this.view.setVisible(visible);
         })

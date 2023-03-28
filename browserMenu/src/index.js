@@ -38,10 +38,6 @@ if (typeof window !== 'undefined') {
         resolve(new Ipc(ipcChannelName));
     });
     console.log(`Created IPC channel named ${ipcChannelName}`);
-
-    window.document.addEventListener('mouseover', () => {
-        ipc.then((channel) => { channel.post('setFocusToUIOverlay', {}) });
-    })
 }
 
 const model = {

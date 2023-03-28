@@ -382,6 +382,7 @@ class PageContentsWrapper {
         }
         this.tabView.setVisible(true);
         this.tabView.bringToFront();
+        this.tabView.pageContents.setFocus();
         this.activeState = 'activated';
     }
 

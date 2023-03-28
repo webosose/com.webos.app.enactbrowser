@@ -91,10 +91,11 @@ function AddressBarBase({url, browser, onUrlChanged, urlSuggestions, searchEngin
 		}
 	});
 
-	const onClick = useCallback(() => {
+	const onClick = useCallback((ev) => {
 		console.log(`[AddressBar] AddressBar::onClick`);
 		getSuggestions(value);
 		setIsEditing(value !== "");
+		ev.stopPropagation();
 	}, [value]);
 
 	const onChange = useCallback((ev) => {
@@ -142,6 +143,14 @@ function AddressBarBase({url, browser, onUrlChanged, urlSuggestions, searchEngin
 		console.log(`[AddressBar] AddressBar::onDeactivate`);
 		setIsActive(false);
 	}, []);
+
+	useEffect(() => {
+		if (isActive) {
+			Spotlight.pause();
+		} else {
+			Spotlight.resume();
+		}
+	}, [isActive]);
 
 	return(
 		<Input
