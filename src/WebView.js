@@ -359,7 +359,7 @@ class PageContentsWrapper {
     }
 
     activate() {
-        window.QALog('ACTIVATE ' + this.rootId);
+        window.QALog(`ACTIVATE ` + this.url);
         if (this.unresponsive) {
             console.log(`The web page is unresponsive, do not activate`);
             return;
@@ -387,7 +387,7 @@ class PageContentsWrapper {
     }
 
     suspend() {
-        window.QALog('SUSPEND ' + this.rootId);
+        window.QALog(`SUSPEND ` + this.url);
         this.tabView.setVisible(false);
         this.tabView.sendToBack();
         if (this.activeState === 'activated') {
@@ -414,7 +414,7 @@ class PageContentsWrapper {
     }
 
     deactivate() {
-        window.QALog('DEACTIVATE ' + this.rootId);
+        window.QALog(`DEACTIVATE ` + this.url);
         if (this.activeState !== 'deactivated') {
             this.tabView.pageContents.deactivate();
             this.activeState = 'deactivated';
