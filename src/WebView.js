@@ -427,6 +427,7 @@ class PageContentsWrapper {
         if (this.activeState === 'deactivated') {
             this.activate();
         }
+        this.url = url;
         this.tabView.pageContents.loadURL(url)
     }
 
