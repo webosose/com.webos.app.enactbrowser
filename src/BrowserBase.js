@@ -269,13 +269,19 @@ class BrowserBase {
         shell.shellWindow.pageView.addChildView(dummyView);
         dummyView.setBounds(0, 0, 10, 10);
         dummyView.setVisible(false);
-        dummyView.pageContents.on('did-start-loading', () => {
-            dummyView.pageContents.clearData(options, types);
-            shell.shellWindow.pageView.removeChildView(dummyView);
-            console.log(`clearData ${partitionId}`);
-            dummyView.pageContents.closeNow();
-        })
+
+        const p = new Promise(resolve => {
+            dummyView.pageContents.on('did-start-loading', () => {
+                dummyView.pageContents.clearData(options, types);
+                shell.shellWindow.pageView.removeChildView(dummyView);
+                console.log(`clearData ${partitionId}`);
+                dummyView.pageContents.closeNow();
+                resolve();
+            });
+        });
+
         dummyView.pageContents.loadURL('about:blank');
+        return p;
     }
 
     _createWebViewPage(url, newWindow = null, tab_family_id = null) {

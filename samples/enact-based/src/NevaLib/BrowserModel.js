@@ -189,36 +189,38 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
 
     initializeTabs() {
         let hasTargetInLaunchParams = false;
-        if (isWindowReady()) {
-            const launchArgs = window.shell.launchArgs;
-            if (launchArgs.override_user_agent_string) {
-                console.log(`UA string: ${launchArgs.override_user_agent_string}`);
-                this.useragentOverride = launchArgs.override_user_agent_string;
-            }
-            if (launchArgs.target) {
-                hasTargetInLaunchParams = true;
-                this.tabs.addTab(this._createWebViewPage(launchArgs.target));
-            }
-            if (launchArgs.newtab) {
-                hasTargetInLaunchParams = true;
-                this.createTab(TabTypes.NEW_TAB_PAGE);
-            }
-        }
-
-        if (!hasTargetInLaunchParams) {
-            if (this.settings.getPrivateBrowsing()) {
-                this.createTab(TabTypes.NEW_TAB_PAGE);
-            } else {
-                const startupPage = this.settings.getStartupPage();
-                if (startupPage === SettingsConsts.NEW_TAB_PAGE) {
+        this.clearData("private").then(() => {
+            if (isWindowReady()) {
+                const launchArgs = window.shell.launchArgs;
+                if (launchArgs.override_user_agent_string) {
+                    console.log(`UA string: ${launchArgs.override_user_agent_string}`);
+                    this.useragentOverride = launchArgs.override_user_agent_string;
+                }
+                if (launchArgs.target) {
+                    hasTargetInLaunchParams = true;
+                    this.tabs.addTab(this._createWebViewPage(launchArgs.target));
+                }
+                if (launchArgs.newtab) {
+                    hasTargetInLaunchParams = true;
                     this.createTab(TabTypes.NEW_TAB_PAGE);
-                } else if (startupPage === SettingsConsts.CONTINUE) {
-                    this.prevSessionTabs.restore();
-                } else if (startupPage === SettingsConsts.HOME_PAGE) {
-                    this.createTab(TabTypes.WEBVIEW, this.settings.getHomePageUrl());
                 }
             }
-        }
+
+            if (!hasTargetInLaunchParams) {
+                if (this.settings.getPrivateBrowsing()) {
+                    this.createTab(TabTypes.NEW_TAB_PAGE);
+                } else {
+                    const startupPage = this.settings.getStartupPage();
+                    if (startupPage === SettingsConsts.NEW_TAB_PAGE) {
+                        this.createTab(TabTypes.NEW_TAB_PAGE);
+                    } else if (startupPage === SettingsConsts.CONTINUE) {
+                        this.prevSessionTabs.restore();
+                    } else if (startupPage === SettingsConsts.HOME_PAGE) {
+                        this.createTab(TabTypes.WEBVIEW, this.settings.getHomePageUrl());
+                    }
+                }
+            }
+        });
     }
 
     createTab(type = TabTypes.NEW_TAB_PAGE, url) {
