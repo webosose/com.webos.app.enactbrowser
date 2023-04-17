@@ -17,6 +17,7 @@ import css from './Popup.module.less';
 import Icon from '@enact/agate/Icon';
 import camera from '../../../assets/popup/camera.webp';
 import microphone from '../../../assets/popup/microphone.png';
+import geolocation from '../../../assets/popup/geolocation.png';
 import { connect } from 'react-redux';
 import { set_allow_media_popup } from '../../NevaLib/Popup/actions';
 
@@ -58,6 +59,7 @@ class Popup extends Component {
                         </div>
                         {(detectedMedia === 'camera' || detectedMedia == 'camera-mic') && <div><span className={css.alignText}><img src={camera} width={25} height={25} /></span>Use your camera</div>}
                         {(detectedMedia === 'mic' || detectedMedia == 'camera-mic') && <div><span className={css.alignText}><img src={microphone} width={25} height={25} /></span>Use your microphone</div>}
+                        {(detectedMedia === 'geolocation' || detectedMedia == 'camera-mic-geolocation') && <div><span className={css.alignText}><img src={geolocation} width={25} height={25} /></span>Know your location</div>}
 
                         <div className={css.buttonGrp}>
                             <Button size="small" className={css.button} onClick={() => this.handlePermissions(1)}>{$L("Allow")}</Button>

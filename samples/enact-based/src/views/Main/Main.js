@@ -93,6 +93,14 @@ class Main extends Component {
   detectMedia = (ev, ev1) => {
     console.log("detected media details are...==>", ev, ev1)
     let detectedMedia = ev1.includes(3) ? (ev1.includes(10) ? 'camera-mic' : 'camera') : ev1.includes(10) ? 'mic' : null
+    if (ev1.includes(8)) {
+      if (detectedMedia === null) {
+        detectedMedia = "geolocation";
+      }
+      else {
+        detectedMedia += "-geolocation";
+      }
+    }
     console.log("detectedMedia is ===> ", detectedMedia)
     this.setState({
       domain: ev,
