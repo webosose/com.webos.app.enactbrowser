@@ -378,12 +378,12 @@ class BrowserBase {
         // favicons => [{url, type, sizes}, ...]
         console.log(`did-update-favicon-url event occured`);
 
-        const origin_regexp = /.*?:\/\/.*?\//;
+        const origin_regexp = /(\D+?:\/{2}[^\/]+?)(\/.*|$)/;
         const result = origin_regexp.exec(webview.url);
         const rootUrl = result && result[0] ? result[0] : '';
         const tab = this.tabs.getTab(tabId);
 
-        fetchFaviconAsDataUrl(favicons, rootUrl)
+        fetchFaviconAsDataUrl(favicons, `${rootUrl}/`)
         .then((dataUrl) => {
             tab.setIcon(dataUrl);
             const navState = Object.assign({}, tab.state.navState, {
