@@ -69,6 +69,13 @@ const Tab = kind({
 				return css.defaultFavicon;
 			}
 		},
+		isActive: ({browser, index}) => {
+			try {
+				return browser.getWebviewByTabIndex({tabIndex: index}).activeState === 'activated';
+			} catch (e) {
+				return false;
+			}
+		},
 		className: ({className, selected, styler}) => selected ? styler.append(css.selected) : className
 	},
 	handlers: {
@@ -86,7 +93,7 @@ const Tab = kind({
 			}
 		}
 	},
-	render: ({closable, onClose, iconUrl, isLoading, onSelect, title, iconClassName, index, ...rest}) => {
+	render: ({closable, onClose, iconUrl, isLoading, onSelect, title, iconClassName, index, isActive, ...rest}) => {
 		delete rest.browser;
 		delete rest.selected;
 		delete rest.index;
@@ -103,7 +110,7 @@ const Tab = kind({
 			>
 				<SpottableDiv onClick={onSelect}>
 					{
-					isLoading ?
+					(isLoading && isActive) ?
 					<Spinner className={css.spinner} size="small" transparent />
 					:<div
 						style={iconUrl ? {

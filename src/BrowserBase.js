@@ -157,6 +157,17 @@ class BrowserBase {
         }
     }
 
+    getWebviewByTabIndex({tabIndex}) {
+        const history = this.getSelectedTabState().navState.history;
+        const type = history.entries[history.index];
+
+        if (type === TabTypes.WEBVIEW) {
+            return this.webViews[this.tabs.getIdByIndex(tabIndex)];
+        } else {
+            throw "not a webview tab";
+        }
+    }
+
     reloadStop() {
         const
             {id, navState: {isLoading}} = this.getSelectedTabState(),
