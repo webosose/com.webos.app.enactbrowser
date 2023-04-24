@@ -226,21 +226,21 @@ class BrowserBase {
 
     getZoom() {
         const {navState: {history}} = this.getSelectedTabState();
-        const webView = this.webViews[history.views[1]];
+        const webView = this.webViews[history.views[history.index]];
         return webView.getZoom();
     }
 
     setZoom(zoomFactor) {
         console.log(`BrowserBase::setZoom`);
         const {navState: {history}} = this.getSelectedTabState();
-        this.webViews[history.views[1]].setZoom(zoomFactor);
+        this.webViews[history.views[history.index]].setZoom(zoomFactor);
     }
 
     sendZoomFactorToZoomMenu() {
         console.log(`BrowserBase::sendZoomFactorToZoomMenu`);
         if (this.isWebViewTabSelected()) {
             const {navState: {history}} = this.getSelectedTabState();
-            const zoomFactor = this.webViews[history.views[1]].getZoom();
+            const zoomFactor = this.webViews[history.views[history.index]].getZoom();
             this.zoomControlIpc.post('zoomChange', {zoomFactor: zoomFactor});
         }
     }
