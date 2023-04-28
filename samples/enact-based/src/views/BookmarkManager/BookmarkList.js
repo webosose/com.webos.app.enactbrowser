@@ -57,12 +57,12 @@ class BookmarkListBase extends Component {
 
 	bookmarks = () => {
 		const
-			{component: Item, data} = this.props,
+			{data} = this.props,
 			items = [];
 
 		for (let i = 0; i < data.length; i++) {
 			items.push(
-				<Item
+				<BookmarkItem
 					data-id={i}
 					index={i}
 					key={i}
