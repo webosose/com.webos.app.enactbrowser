@@ -207,6 +207,7 @@ class WebViewBase extends Component {
 	}
 
 	componentDidMount () {
+		setTimeout(() => { this.setState({ state: "showing_site" }); });
 		this.props.webView.insertIntoDom(this.props.id + WebViewWrapperId);
 		this.props.webView.addEventListener('load-progress-changed', this.onLoadCommit);
 		this.props.webView.addEventListener('did-start-loading', this.onLoadStart);
