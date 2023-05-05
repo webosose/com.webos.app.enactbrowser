@@ -18,6 +18,12 @@ import WebView from './WebView.js';
 import {IdGenerator, TabsBase as TabsModel} from './TabsBase.js';
 import initLogging from './Logger';
 
+function isValidURLSchema(url) {
+    const result = url.match(/^(http|https|file)+?:\/\/\S+/);
+    console.log(`isInternetProtocolSchema`, result);
+    return !!result;
+}
+
 class WebViewFactoryBase {
     constructor(browser) {
         this.browser = browser;
@@ -561,8 +567,10 @@ class BrowserBase {
             const navState = Object.assign({}, tab.state.navState, {
                 canGoBack: this._canGoBack(tabId),
                 canGoForward: this.webViews[tabId].canGoForward,
-                url: url
             });
+            if (isValidURLSchema(url)) {
+                navState.url = url;
+            }
             tab.setNavState(navState);
             this.webViews[tabId].emit('needToUpdateUI');
         }
