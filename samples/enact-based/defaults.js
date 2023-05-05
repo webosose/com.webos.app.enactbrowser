@@ -9,9 +9,9 @@
 function getBrowserDefaults() {
 	return {
 		bookmarks: [
-			{ url: 'https://google.com/', icon: null, title: 'Google' },
+			{ url: 'https://www.google.com/', icon: null, title: 'Google' },
 			{ url: 'https://www.w3.org/', icon: null, title: 'W3C' },
-			{ url: 'http://www.bbc.com/news/', icon: null, title: 'BBC' },
+			{ url: 'https://www.bbc.com/news', icon: null, title: 'BBC' },
 			{ url: 'https://stackoverflow.com/', icon: null, title: 'Stackoverflow' }
 		],
 		config: {

@@ -407,7 +407,7 @@ class OmniboxBase extends Component {
 
 const mapStateToProps = ({ tabsState, bookmarksState, browserState, settingsState, popupState }) => {
 	const { selectedIndex, ids, tabs } = tabsState;
-
+	
 	if (ids.length > 0) {
 		const { navState, title, type } = tabs[ids[selectedIndex]];
 		if (navState) {
