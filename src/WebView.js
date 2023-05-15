@@ -313,10 +313,12 @@ class PageContentsWrapper {
         });
 
         this.tabView.pageContents.executeJavaScriptInMainFrame(
-            `window.shellIpc = new ShellIpc('keydown_${this.rootId}');
-            window.addEventListener('keydown', ({key}) => {
-                window.shellIpc.post('keydown', {key: key});
-            })`
+            `if (typeof(ShellIpc) !== 'undefined') {
+                window.shellIpc = new ShellIpc('keydown_${this.rootId}');
+                window.addEventListener('keydown', ({key}) => {
+                    window.shellIpc.post('keydown', {key: key});
+                })
+            }`
         );
     }
 
@@ -511,11 +513,12 @@ class PageContentsWrapper {
         }
         console.log(`handleDidStartLoading::executeJavaScriptInMainFrame`);
         this.tabView.pageContents.executeJavaScriptInMainFrame(
-            `window.onLoadIpc = new ShellIpc('onLoadComplete_${this.rootId}');
-            window.addEventListener('load', () => {
-                window.onLoadIpc.post('onLoad', {});
-            })
-            `
+            `if (typeof(ShellIpc) !== 'undefined') {
+                window.onLoadIpc = new ShellIpc('onLoadComplete_${this.rootId}');
+                window.addEventListener('load', () => {
+                    window.onLoadIpc.post('onLoad', {});
+                })
+            }`
         );
     }
 
