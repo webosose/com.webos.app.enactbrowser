@@ -394,7 +394,10 @@ class PageContentsWrapper {
         window.QALog(`SUSPEND ` + this.url);
         this.tabView.setVisible(false);
         this.tabView.sendToBack();
-        if (this.activeState === 'activated') {
+        // If suspend error page's DOM it will imposible to show
+        // that in other tab
+        if ((this.activeState === 'activated')
+            && (!this.isAborted)) {
             let script = `
                 var elements = document.body.getElementsByClassName('vkbInset');
                 if (elements.length !== 0) {
