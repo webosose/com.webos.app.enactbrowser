@@ -320,6 +320,8 @@ class PageContentsWrapper {
                 })
             }`
         );
+        console.log(`[WebView] handleFinishLoading: focus webview ${this.url}`);
+        this.tabView.pageContents.setFocus();
     }
 
     handleZoomChange(zoom) {
