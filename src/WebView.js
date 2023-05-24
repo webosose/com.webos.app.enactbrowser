@@ -46,6 +46,10 @@ class PageContentsWrapper {
         pageContentsParams["error-page-hidding"] = true;
         pageContentsParams["api"] = ["v8/browser_shell_ipc"];
 
+        if (params.zoomFactor) {
+            pageContentsParams["zoom-factor"] = params.zoomFactor;
+        }
+
         let pageView = new PageView({"page-contents-params": pageContentsParams});
 
         if (params.newWindow) {

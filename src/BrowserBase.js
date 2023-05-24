@@ -78,6 +78,7 @@ class BrowserBase {
         this.tabs = tabsModel;
         this.tabs.onContentDelete = this._handleContentDelete;
         this.tabs.addEventListener('update', this._handleTabsStateUpdate);
+        this.zoomFactor = 1;
 
         if (typeof window !== 'undefined' && typeof window.neva !== 'undefined') {
             this.ipc = new Ipc("ipc_chrome_extensions");
@@ -249,8 +250,11 @@ class BrowserBase {
 
     setZoom(zoomFactor) {
         console.log(`BrowserBase::setZoom`);
-        const {navState: {history}} = this.getSelectedTabState();
-        this.webViews[history.views[history.index]].setZoom(zoomFactor);
+        this.zoomFactor = zoomFactor;
+        this.webViews.forEach(webview => {
+            webview.setZoom(this.zoomFactor);
+        });
+        this.sendZoomFactorToZoomMenu();
     }
 
     sendZoomFactorToZoomMenu() {
@@ -342,10 +346,7 @@ class BrowserBase {
             this._updateTitle(tab, title);
         });
         webview.addEventListener('zoomchange', (newZoomFactor) => {
-            if (newZoomFactor !== this.getZoom()) {
-                this.setZoom(newZoomFactor);
-                this.sendZoomFactorToZoomMenu();
-            }
+            console.log('Tab', this.tabs.getIndexById(state.id), 'zoom changed', newZoomFactor);
         });
         webview.addEventListener('close', () => {
             this.closeTab(this.tabs.getIndexById(state.id));
