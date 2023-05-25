@@ -169,6 +169,11 @@ class PageContentsWrapper {
             this.dialogData.showDialog = false;
         };
 
+        this.dialogData.resetAlertState = () => {
+            this.dialogData.alertsAllowed = true;
+            this.dialogData.alertsCount = 0;
+        }
+
         this.dialogData.blockDialogsHandler = () => {
             this.dialogData.alertsAllowed = false;
         };
@@ -301,6 +306,8 @@ class PageContentsWrapper {
     }
 
     handleFinishLoading(url) {
+        this.dialogData.resetAlertState();
+
         // Update tab url only if it not error page
         if (!this.isAborted) {
             this.url = url;
