@@ -40,7 +40,19 @@ const ContentViewBase = kind({
 		css,
 		className: 'contentView'
 	},
-	render: ({alwaysShowBookmarks, browser, fullScreen, selectedIndex, ids, tabs, innerRef, onExitFullScreen, exitFullscreenButton, ...rest}) => {
+	computed: {
+		showBookmarksBar: ({tabs, fullScreen, alwaysShowBookmarks, ids, selectedIndex}) => {
+			try {
+				const selectedId = ids[selectedIndex]
+				const tabHistory = tabs[selectedId].navState.history;
+				const tabType = tabHistory.entries[tabHistory.index];
+				return (!fullScreen && selectedId && tabType === TabTypes.NEW_TAB_PAGE) || (alwaysShowBookmarks && !fullScreen);
+			} catch (e) {
+				return false;
+			}
+		},
+	},
+	render: ({alwaysShowBookmarks, browser, fullScreen, selectedIndex, ids, tabs, innerRef, onExitFullScreen, exitFullscreenButton, showBookmarksBar, ...rest}) => {
 		const
 			sortedIds = ids.slice(),
 			selectedId = ids[selectedIndex];
@@ -49,7 +61,7 @@ const ContentViewBase = kind({
 
 		return (
 			<div {...rest} className={fullScreen ? css.contentViewFullScreen : css.contentView}>
-				<BookmarkBar browser={browser} showingBookmark={(!fullScreen && selectedId && tabs[selectedId].type === TabTypes.NEW_TAB_PAGE) || (alwaysShowBookmarks && !fullScreen)} />
+				<BookmarkBar browser={browser} showingBookmark={showBookmarksBar} />
 				{sortedIds.map((id) => {
 					const
 						isSelectedTab = id === selectedId,
