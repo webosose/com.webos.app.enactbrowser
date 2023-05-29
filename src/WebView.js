@@ -507,6 +507,7 @@ class PageContentsWrapper {
         this.canGoBack = this.tabView.pageContents.canGoBack;
         this.canGoForward = this.tabView.pageContents.canGoForward;
         console.log(`canGoBack: ${this.canGoBack}, canGoForward: ${this.canGoForward}`);
+        this.webContentHasLoaded = true;
     }
 
     handleDidStartLoading () {
@@ -517,23 +518,6 @@ class PageContentsWrapper {
         this.isAlertsAllowed = true;
         this.alertsCount = 0;
         this.webContentHasLoaded = false;
-
-        if (!this.onLoadIpc) {
-            this.onLoadIpc = new ShellIpc(`onLoadComplete_${this.rootId}`);
-            this.onLoadIpc.on('onLoad', () => {
-                console.log(`web content has loaded`);
-                this.webContentHasLoaded = true;
-            });
-        }
-        console.log(`handleDidStartLoading::executeJavaScriptInMainFrame`);
-        this.tabView.pageContents.executeJavaScriptInMainFrame(
-            `if (typeof(ShellIpc) !== 'undefined') {
-                window.onLoadIpc = new ShellIpc('onLoadComplete_${this.rootId}');
-                window.addEventListener('load', () => {
-                    window.onLoadIpc.post('onLoad', {});
-                })
-            }`
-        );
     }
 
     handleLoadProgressChanged(ev) {
