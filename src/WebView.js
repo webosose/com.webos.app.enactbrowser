@@ -300,7 +300,12 @@ class PageContentsWrapper {
         this.tabView.pageContents.closeNow();
     }
 
-    handleFinishLoading() {
+    handleFinishLoading(url) {
+        // Update tab url only if it not error page
+        if (!this.isAborted) {
+            this.url = url;
+        }
+
         this.tabView.pageContents.executeJavaScriptInMainFrame(
             `var style = document.createElement('style')
             style.innerHTML = 'a:-webkit-any-link { cursor: pointer; }'
@@ -546,6 +551,7 @@ class PageContentsWrapper {
 
     handleDidFailLoad(ev) {
         this.isAborted = true;
+        this.url = url;
         console.warn("The load has aborted with error " + ev.code + " : " + ev.reason + ' url = ' + ev.url);
     }
 };

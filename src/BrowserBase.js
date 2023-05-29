@@ -330,16 +330,8 @@ class BrowserBase {
         webview.addEventListener('newwindow', this._handleNewWindow(state.id));
         webview.addEventListener('did-update-favicon-url', this._handleUpdateFaviconUrl(state.id, webview));
         webview.addEventListener('open-url-from-tab', this._handleOpenUrlFromTab(state.id));
+        webview.addEventListener('did-fail-load', this._handleFailLoad(state.id));
 
-        webview.addEventListener('did-fail-load', (url, error, code) => {
-            const isError =
-                error !== 'ERR_ABORTED' &&
-                webview.activeState !== 'deactivated';
-            if (isError) {
-                const tab = this.tabs.getTab(state.id);
-                tab.setError(error);
-            }
-        });
         webview.addEventListener('page-title-updated', (title) => {
             console.log(`page title updated event: ${title}`);
             const tab = this.tabs.getTab(state.id);
@@ -560,8 +552,7 @@ class BrowserBase {
         tab.setNavState(navState);
     }
 
-    _handleFinishLoading = (tabId) => (url) => {
-        console.log(`BrowserBase::_handleFinishLoading ${url}`);
+    updateNavigation(tabId, url) {
         const tab = this.tabs.getTab(tabId);
 
         if (tab.state) {
@@ -575,6 +566,19 @@ class BrowserBase {
             tab.setNavState(navState);
             this.webViews[tabId].emit('needToUpdateUI');
         }
+    }
+
+    _handleFinishLoading = (tabId) => (url) => {
+        console.log(`BrowserBase::_handleFinishLoading ${url}`);
+        this.updateNavigation(tabId, url);
+    }
+
+    _handleFailLoad = (tabId) => (url, error, code) => {
+        console.log(`BrowserBase::_handleFailLoad ${url}, error ${error}, code ${code}`);
+        const tab = this.tabs.getTab(tabId);
+        tab.setError(error);
+
+        this.updateNavigation(tabId, url);
     }
 
     _handleLoadStop = (tabId) => {
