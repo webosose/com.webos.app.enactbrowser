@@ -100,6 +100,7 @@ class PageContentsWrapper {
         ['did-start-loading',
          'did-fail-load',
          'did-finish-load',
+         'did-push-history-navigation',
          'did-start-navigation',
          'did-stop-loading',
          'did-update-favicon-url',
@@ -128,6 +129,7 @@ class PageContentsWrapper {
         this.addEventListener('dom-ready', this.handleDomReady.bind(this));
         this.addEventListener('leave-html-fullscreen', this.handleLeaveHtmlFullscreen.bind(this));
         this.addEventListener('did-finish-load', this.handleFinishLoading.bind(this));
+        this.addEventListener('did-push-history-navigation',this.handlePushHistoryNavigation.bind(this));
         this.addEventListener('dialog', this.handleDialog.bind(this));
         this.addEventListener('zoomchange', this.handleZoomChange.bind(this));
         this.addEventListener('login', this.handleLogin.bind(this));
@@ -337,6 +339,15 @@ class PageContentsWrapper {
         );
         console.log(`[WebView] handleFinishLoading: focus webview ${this.url}`);
         this.tabView.pageContents.setFocus();
+    }
+
+    handlePushHistoryNavigation(url) {
+        console.log(`[WebView] handlePushHistoryNavigation ${url}`);
+        this.url = url;
+
+        this.canGoBack = this.tabView.pageContents.canGoBack;
+        this.canGoForward = this.tabView.pageContents.canGoForward;
+        console.log(`canGoBack: ${this.canGoBack}, canGoForward: ${this.canGoForward}`);
     }
 
     handleZoomChange(zoom) {

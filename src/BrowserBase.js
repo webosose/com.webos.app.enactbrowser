@@ -331,6 +331,7 @@ class BrowserBase {
         webview.addEventListener('did-update-favicon-url', this._handleUpdateFaviconUrl(state.id, webview));
         webview.addEventListener('open-url-from-tab', this._handleOpenUrlFromTab());
         webview.addEventListener('did-fail-load', this._handleFailLoad(state.id));
+        webview.addEventListener('did-push-history-navigation', this._handlePushHistoryNavigation(state.id));
 
         webview.addEventListener('page-title-updated', (title) => {
             console.log(`page title updated event: ${title}`);
@@ -576,6 +577,11 @@ class BrowserBase {
         const tab = this.tabs.getTab(tabId);
         tab.setError(error);
 
+        this.updateNavigation(tabId, url);
+    }
+
+    _handlePushHistoryNavigation = (tabId) => (url) => {
+        console.log(`BrowserBase::_handlePushHistoryNavigation ${url}`);
         this.updateNavigation(tabId, url);
     }
 
