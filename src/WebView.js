@@ -32,7 +32,7 @@ class WebviewMessageProxy {
     }
 
     handleWebviewMessage = (ev) => {
-        if(ev.data && new URL(this.requests[ev.data.id][ev.data.action].webview.src).origin === ev.origin){
+        if(ev.data && ev.data.action && new URL(this.requests[ev.data.id][ev.data.action].webview.src).origin === ev.origin){
             const data = ev.data;
             if (data) {
                 this.requests[data.id][data.action].callback(data);

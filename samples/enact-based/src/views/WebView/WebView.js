@@ -129,6 +129,7 @@ class WebView extends Component {
 	onLoadContent = () => {
 		if (this.state.load === LOAD_STATE.READY) {
 			this.setState({ load: LOAD_STATE.LOADED });
+			this.onContentClick();
 		}
 	};
 
@@ -150,6 +151,25 @@ class WebView extends Component {
 			load: LOAD_STATE.UNLOADED
 		});
 	};
+
+	onContentClick = () => {
+		const selectedWebview = this.props.webView;
+		// Send the source event to the child iframe
+		selectedWebview.contentWindow.postMessage('sendSource', selectedWebview.src);
+		const origin = 'chrome-extension://aghbafhkpnlmgikmhdeeneldnbljdkgo';
+		const script = `
+			var source;
+			window.addEventListener("message", function(ev) {
+				if (!source && ev.data === 'sendSource' && ev.origin === '${origin}')
+					source = ev.source;
+			});
+			document.body.addEventListener('click', function(ev) {
+				if (source)
+					source.postMessage({ event: 'click', rootUrl: window.location.origin }, '${origin}');
+			});
+		`;
+		selectedWebview.executeScript({ code: script });
+	}
 
 	render() {
 		const

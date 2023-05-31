@@ -94,8 +94,14 @@ class OmniboxBase extends Component {
 	}
 
 	componentDidMount() {
-		if (typeof window !== 'undefined' && window.WebOSServiceBridge) {
-			this.webOSBridge = new window.WebOSServiceBridge();
+		if (typeof window !== 'undefined') {
+			if (window.WebOSServiceBridge)
+				this.webOSBridge = new window.WebOSServiceBridge();
+
+			window.addEventListener("message", (ev) => {
+				if (ev.data && ev.data.event === 'click' && ev.data.rootUrl === ev.origin && this.state.open)
+					this.setState({ open: false })
+			});
 		}
 	}
 
