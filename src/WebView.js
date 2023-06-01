@@ -64,7 +64,6 @@ class PageContentsWrapper {
         this.canGoBack = false;
         this.canGoForward = false;
         this.eventListeners = [];
-        this.webContentHasLoaded = false;
         this.id = params.id;
 
         this.tabView = this.createPageContents(params);
@@ -514,7 +513,6 @@ class PageContentsWrapper {
         this.canGoBack = this.tabView.pageContents.canGoBack;
         this.canGoForward = this.tabView.pageContents.canGoForward;
         console.log(`canGoBack: ${this.canGoBack}, canGoForward: ${this.canGoForward}`);
-        this.webContentHasLoaded = true;
     }
 
     handleDidStartLoading () {
@@ -524,7 +522,6 @@ class PageContentsWrapper {
         this.isAborted = false;
         this.isAlertsAllowed = true;
         this.alertsCount = 0;
-        this.webContentHasLoaded = false;
     }
 
     handleLoadProgressChanged(ev) {

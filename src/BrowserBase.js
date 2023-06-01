@@ -327,9 +327,9 @@ class BrowserBase {
         webview.addEventListener('contentload', () => this._handleContentLoad(state.id));
         webview.addEventListener('did-stop-loading', () => this._handleLoadStop(state.id));
         webview.addEventListener('did-finish-load', this._handleFinishLoading(state.id));
-        webview.addEventListener('newwindow', this._handleNewWindow(state.id));
+        webview.addEventListener('newwindow', this._handleNewWindow());
         webview.addEventListener('did-update-favicon-url', this._handleUpdateFaviconUrl(state.id, webview));
-        webview.addEventListener('open-url-from-tab', this._handleOpenUrlFromTab(state.id));
+        webview.addEventListener('open-url-from-tab', this._handleOpenUrlFromTab());
         webview.addEventListener('did-fail-load', this._handleFailLoad(state.id));
 
         webview.addEventListener('page-title-updated', (title) => {
@@ -404,19 +404,17 @@ class BrowserBase {
     };
 
     // handles new tab request from webView
-    _handleNewWindow = (contentId) => (childPage, info) => {
-        const view = this.webViews[contentId];
-        console.log(`newwindow event (${view.webContentHasLoaded})`);
-        console.log(info);
-        if (this.tabs.maxTabs === this.tabs.count() &&
-            this.tabs.maxTabs !== 0) {
-            console.log(`cancel newwindow request (max tabs)`);
+    _handleNewWindow = () => (childPage, info) => {
+        console.log(`newwindow event`, info);
+
+        if (info.userGesture !== true) {
+            console.log(`cancel newwindow request (automatic pop-up)`);
             return;
         }
 
-        if (!view.webContentHasLoaded) {
-            console.log(`cancel newwindow request (web content was not loaded yet)`);
-            childPage.closeNow();
+        if (this.tabs.maxTabs === this.tabs.count() &&
+            this.tabs.maxTabs !== 0) {
+            console.log(`cancel newwindow request (max tabs)`);
             return;
         }
 
@@ -451,7 +449,7 @@ class BrowserBase {
         }
     }
 
-    _handleOpenUrlFromTab = (contentId) => (info) => this._handleNewWindow(contentId)(null, info);
+    _handleOpenUrlFromTab = () => (info) => this._handleNewWindow()(null, info);
 
     _updateTitle(tab, title) {
         tab.setTitle(title);
