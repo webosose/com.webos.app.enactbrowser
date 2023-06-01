@@ -48,7 +48,7 @@ class RecentlyClosedSites {
     }
 
     handleTabDelete = (ev) => {
-        if (ev.state.type === TabTypes.WEBVIEW) {
+        if (ev.state.type === TabTypes.WEBVIEW && ev.state.error === null) {
             let p = this._addEntry({
                 url: ev.state.navState.url,
                 title: ev.state.title

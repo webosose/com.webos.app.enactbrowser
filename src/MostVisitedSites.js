@@ -136,7 +136,7 @@ class MostVisitedSites {
     }
 
     handleTabUpdate = (ev) => {
-        if (ev.diff.navState && ev.diff.navState.isLoading === false) {
+        if (ev.diff.navState && ev.diff.navState.isLoading === false && ev.state.error === null) {
             this.storage.add({
                     url:  ev.state.navState.url,
                     title:  ev.state.title
