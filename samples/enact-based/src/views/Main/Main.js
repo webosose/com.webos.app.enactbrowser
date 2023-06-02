@@ -86,7 +86,6 @@ class MainBase extends Component {
 		document.addEventListener('keydown', ({key, keyCode}) => {
 			console.log(`Key pressed. keyCode: ${keyCode}`);
 			const rcuBackKeyCode = 461;
-
 			if (keyCode === rcuBackKeyCode) {
 				browser.back();
 			} else if (key === 'Escape') {
@@ -128,6 +127,7 @@ class MainBase extends Component {
 
 	onExitFullScreen = () => {
 		console.log(`Main::onExitFullScreen`);
+		this.getSelectedWebview().exitFullscreen();
 		this.props.setFullScreen(false);
 	}
 

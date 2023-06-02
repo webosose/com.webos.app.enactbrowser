@@ -356,7 +356,6 @@ class PageContentsWrapper {
 
     handleLeaveHtmlFullscreen(ev) {
         console.log(`Leave HTML fullscreen`);
-        this.tabView.pageContents.executeJavaScriptInMainFrame("document.webkitExitFullscreen();");
     }
 
     adjustBounds(rootId = this.rootId) {
@@ -452,6 +451,10 @@ class PageContentsWrapper {
             this.tabView.pageContents.deactivate();
             this.activeState = 'deactivated';
         }
+    }
+
+    exitFullscreen() {
+        this.tabView.pageContents.exitFullscreen();
     }
 
     navigate(url) {
