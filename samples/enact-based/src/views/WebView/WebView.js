@@ -94,6 +94,9 @@ class WebViewBase extends Component {
 
 			switch (state) {
 				case "navigating": {
+					if (!browser.settings.getUseJSErrorPage()) {
+						state_set.show_webview = true;
+					}
 					break;
 				}
 
