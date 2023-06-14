@@ -127,7 +127,10 @@ class MainBase extends Component {
 
 	onExitFullScreen = () => {
 		console.log(`Main::onExitFullScreen`);
-		this.getSelectedWebview().exitFullscreen();
+		const view = this.getSelectedWebview();
+		if (view !== null) {
+			view.exitFullscreen();
+		}
 		this.props.setFullScreen(false);
 	}
 
