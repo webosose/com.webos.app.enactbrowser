@@ -7,11 +7,13 @@
 }
 
 .zoomPopupButton {
-  background-color: darkgrey;
-
+  background-color: white;
   .applySkins({
 		.icon {
 			color: black
+		}
+		&[disabled] {
+			background-color: darkgrey;
 		}
 	});
 }
