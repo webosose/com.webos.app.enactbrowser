@@ -178,15 +178,14 @@ class TabBarBase extends Component {
 
 	tabs = () => {
 		const { browser, component: TabElem, numOfTabs, selectedIndex, tabStates, ids, displayRedIndicator } = this.props;
-		let
-			tabs = [],
-			closable = numOfTabs > 1;
+		let tabs = [];
 
 		for (let i = 0; i < numOfTabs; i++) {
 			const
 				tabState = tabStates[ids[i]],
 				error = tabState ? tabState.error : null,
-				type = tabState ? tabState.type : null;
+				type = tabState ? tabState.type : null,
+				closable = numOfTabs > 1 || type !== 'newTabPage';
 			let title = '';
 
 			if (tabState) {
