@@ -109,7 +109,7 @@ class OmniboxBase extends Component {
 	componentWillReceiveProps(nextProps) {
 		if (this.props.selectedIndex !== nextProps.selectedIndex ||
 			(!this.isEditing && !this.state.open) ||
-			(this.props.url === '' && nextProps.url !== '')) {
+			(this.props.url !== nextProps.url && nextProps.url !== '')) {
 			this.isEditing = false;
 			this.setState({ value: nextProps.url });
 		}
