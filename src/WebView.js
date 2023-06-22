@@ -362,7 +362,7 @@ class PageContentsWrapper {
         console.log(`WebVIew::adjustBounds`, rootId);
 
         if (!rootId)
-            return;
+            return Promise.resolve();
 
         let container_div = document.getElementById(rootId);
         let r = container_div.getBoundingClientRect()
@@ -374,7 +374,7 @@ class PageContentsWrapper {
         console.log(`WVE set size(width:${r.width}, height:${r.height}) (NEVA-6229)`);
         this.tabView.setBounds(Math.round(r.x), Math.round(r.y), Math.round(r.width), Math.round(r.height));
 
-        window.dialogOverlay.uioverlay.setBounds({
+        return window.dialogOverlay.uioverlay.setBounds({
             x: Math.round(r.x),
             y: Math.round(r.y),
             w: Math.round(r.width),
@@ -490,7 +490,7 @@ class PageContentsWrapper {
         this.tabView.pageContents.zoomFactor = this.zoomFactor;
     }
 
-    focus() {console.log(`focus`);}
+    focus() {console.log(`focus `, this.url);}
 
     reload() {
         console.log(`reload`);
