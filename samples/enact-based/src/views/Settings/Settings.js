@@ -110,7 +110,7 @@ class SettingsBase extends Component {
 
 		this.setState({clearing: true});
 		Promise.race([
-			browser.clearData(''),
+			browser.clearData(browser.webViewFactory.getPartition()),
 			new Promise((resolve) => {
 				setTimeout(resolve, 3000);
 			})

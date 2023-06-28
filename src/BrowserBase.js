@@ -35,7 +35,7 @@ class WebViewFactoryBase {
         // I.e. you have entered login/pass for some website, if you want
         // open this website on another tab, you shoud enter your credentials
         // again.
-        return '';
+        return 'persist:webcontent';
     }
 
     getState({newWindow}) {
