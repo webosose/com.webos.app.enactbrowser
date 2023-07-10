@@ -44,7 +44,7 @@ function getBest(a, b, evaluateFns) {
     return a;
 }
 
-const typeIsOk = (icon, pref) => icon.type === pref;
+const typeIsOk = (icon, pref) => icon.url.match(/\.(\w+)$|$/)[1] === pref;
 const sizeIsOk = (icon, pref) =>
     icon.sizes && (icon.sizes.includes(pref) || icon.sizes === 'any');
 
@@ -92,7 +92,7 @@ function fetchFaviconAsDataUrl(
     favicons,
     rootUrl,
     sizePref='32x32',
-    typePref='image/png') {
+    typePref='png') {
 
     let urls = [];
     const bestIcon = chooseBestSuitableIcon(favicons, sizePref, typePref);
@@ -103,7 +103,6 @@ function fetchFaviconAsDataUrl(
     if (bestIcon)
         urls.push(bestIcon.url);
     urls = urls.concat(favicons.map(icon => icon.url)).concat([rootUrl + 'favicon.ico']);
-
 
     urls = urls.filter((value, index, self) => { // remove duplicates
         return self.indexOf(value) === index;
