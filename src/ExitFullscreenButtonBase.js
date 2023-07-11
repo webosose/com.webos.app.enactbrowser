@@ -17,7 +17,7 @@ class ExitFullscreenButtonBase {
     }
 
     show() {
-        console.log(`BrowserBase::showExitFullscreenButton`);
+        console.log(`ExitFullscreenButtonBase::showExitFullscreenButton`);
 
         const button_width = 260;
 
@@ -32,7 +32,7 @@ class ExitFullscreenButtonBase {
     }
 
     hide() {
-        console.log(`BrowserBase::hideExitFullscreenButton`);
+        console.log(`ExitFullscreenButtonBase::hideExitFullscreenButton`);
         this.uioverlay.setVisible(false, 'exit_fullscreen_button');
     }
 };
