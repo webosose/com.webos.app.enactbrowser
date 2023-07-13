@@ -258,7 +258,7 @@ class PageContentsWrapper {
             messageText: this.dialogData.messageText,
             alertsCount: this.dialogData.alertsCount,
             alertsCountBeforePreventionRequest: 3
-        }, this.tabView.getBounds());
+        }, {});
     }
 
     getButtonPressHandler() {
@@ -380,6 +380,9 @@ class PageContentsWrapper {
         console.log(`WVE set position(x:${r.x}, y:${r.y}) (NEVA-6229)`);
         console.log(`WVE set size(width:${r.width}, height:${r.height}) (NEVA-6229)`);
         this.tabView.setBounds(Math.round(r.x), Math.round(r.y), Math.round(r.width), Math.round(r.height));
+
+        if (this.activeState !== 'activated')
+            return Promise.resolve();
 
         return window.dialogOverlay.uioverlay.setBounds({
             x: Math.round(r.x),
