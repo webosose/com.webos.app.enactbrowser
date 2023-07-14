@@ -38,8 +38,12 @@ class WebViewFactoryBase {
         return !newWindow ? getUrlWithPrefix(url) : null;
     }
 
-    getUserAgentOverride() {
-        return this.browser.useragentOverride;
+    getUserAgentOverride({ url }) {
+        const currentUserAgent = this.browser.useragentOverride;
+        if ((new URL(url)).host.includes('webex.com')) {
+            return currentUserAgent.replace("Web0S; Linux", "X11; Linux");
+        }
+        return currentUserAgent;
     }
 
     getZoomFactor() {
@@ -112,6 +116,7 @@ class BrowserBase {
             this.tabs.replaceTab(this.tabs.store.getSelectedIndex(), newState);
         }
         else {
+            this.webViews[id].setUserAgentOverride(this.webViewFactory.getUserAgentOverride({ url }));
             this.webViews[id].navigate(url);
             this.webViews[id].tabFamilyId = newState;
         }
