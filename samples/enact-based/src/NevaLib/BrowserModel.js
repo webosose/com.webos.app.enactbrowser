@@ -176,6 +176,14 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
                 popupView.pageContents.setFocus()
                 popupView.setVisible(true);
             });
+
+            window.neva.addEventListener("close-extension-popup", (popup_view_id) => {
+                console.log("close-extension-popup event occured");
+                if (this.extensionPopupView && this.extensionPopupView.id === popup_view_id) {
+                    window.shell.shellWindow.pageView.removeChildView(this.extensionPopupView);
+                }
+                this.extensionPopupView = undefined;
+            });
         }
     }
 
