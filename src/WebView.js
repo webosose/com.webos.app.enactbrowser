@@ -18,6 +18,7 @@ class PageContentsWrapper {
         this.isAlertsAllowed = true;
         this.alertsCount = 0;
         this.tabFamilyId = null;
+        this.htmlPageInFullscreen = false;
         this._initWebView(params);
     }
 
