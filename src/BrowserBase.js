@@ -40,8 +40,20 @@ class WebViewFactoryBase {
 
     getUserAgentOverride({ url }) {
         const currentUserAgent = this.browser.useragentOverride;
-        if ((new URL(url)).host.includes('webex.com')) {
-            return currentUserAgent.replace("Web0S; Linux", "X11; Linux");
+
+        // We need to override the user agent for WebEx site because
+        // WebEx web server is not allowed to open the meeting room with our enact
+        // browser's user agent. Temporarily hard code to change UA to Linux Google Chrome.
+        try {
+            // |url| maybe does not have a scheme (protocol) due to unexpected case
+            // so that we have to handle this exception to avoid any crash to be happened.
+            let hostname = new URL(url).hostname;
+            if (hostname && hostname.includes('webex.com')) {
+                return currentUserAgent.replace("Web0S; Linux", "X11; Linux");
+            }
+        } catch (error) {
+            // Records the log here as we can view it to identify the issue.
+            console.error(error);
         }
         return currentUserAgent;
     }
@@ -51,12 +63,13 @@ class WebViewFactoryBase {
     }
 
     create(props) {
+        const url = this.getUrl(props);
         return new WebView({
             partition: this.getPartition(props),
-            url: this.getUrl(props),
+            url: url,
             zoomFactor: this.getZoomFactor(props),
             activeState: this.getState(props),
-            useragentOverride: this.getUserAgentOverride(props),
+            useragentOverride: this.getUserAgentOverride({ url }),
             newWindow: props.newWindow
         });
     }
@@ -116,7 +129,10 @@ class BrowserBase {
             this.tabs.replaceTab(this.tabs.store.getSelectedIndex(), newState);
         }
         else {
+            // We need to re-override UA before loading any url because we are adding
+            // the logic of overridinng UA for special sites.
             this.webViews[id].setUserAgentOverride(this.webViewFactory.getUserAgentOverride({ url }));
+
             this.webViews[id].navigate(url);
             this.webViews[id].tabFamilyId = newState;
         }
