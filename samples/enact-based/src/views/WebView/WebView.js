@@ -17,7 +17,7 @@ import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ErrorPage from '../ErrorPage';
 import BlockedPageNotification from '../BlockedPageNotification';
-import {setFullScreen} from '../../actions';
+import {setFullScreen, setWebContentFullscreen} from '../../actions';
 
 import css from './WebView.less';
 
@@ -256,11 +256,13 @@ class WebViewBase extends Component {
 	enableFullScreen() {
 		console.log(`WebView::enableFullScreen`);
 		this.setState({webContentFullscreen: true});
+		this.props.setWebContentFullscreen(true);
 	}
 
 	disableFullScreen() {
 		console.log(`WebView::disableFullScreen`);
 		this.setState({webContentFullscreen: false});
+		this.props.setWebContentFullscreen(false);
 	}
 
 	render () {
@@ -318,7 +320,8 @@ class WebViewBase extends Component {
 
 const mapDispatchToProps = (dispatch) => {
 	return ({
-		setFullScreen: (enable) => dispatch(setFullScreen(enable))
+		setFullScreen: (enable) => dispatch(setFullScreen(enable)),
+		setWebContentFullscreen: (enable) => dispatch(setWebContentFullscreen(enable))
 })};
 
 const WebView = connect(null, mapDispatchToProps)(WebViewBase);

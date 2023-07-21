@@ -18,7 +18,6 @@ class PageContentsWrapper {
         this.isAlertsAllowed = true;
         this.alertsCount = 0;
         this.tabFamilyId = null;
-        this.htmlPageInFullscreen = false;
         this._initWebView(params);
     }
 
@@ -128,8 +127,6 @@ class PageContentsWrapper {
         this.addEventListener('laod-progress-changed', this.handleLoadProgressChanged.bind(this));
         this.addEventListener('did-fail-load', this.handleDidFailLoad.bind(this));
         this.addEventListener('dom-ready', this.handleDomReady.bind(this));
-        this.addEventListener('enter-html-fullscreen', this.handleEnterHtmlFullscreen.bind(this));
-        this.addEventListener('leave-html-fullscreen', this.handleLeaveHtmlFullscreen.bind(this));
         this.addEventListener('did-finish-load', this.handleFinishLoading.bind(this));
         this.addEventListener('did-push-history-navigation',this.handlePushHistoryNavigation.bind(this));
         this.addEventListener('dialog', this.handleDialog.bind(this));
@@ -354,16 +351,6 @@ class PageContentsWrapper {
 
     handleZoomChange(zoom) {
         this.zoomFactor = zoom;
-    }
-
-    handleEnterHtmlFullscreen() {
-        console.log('WebVIew::handleEnterHtmlFullscreen');
-        this.htmlPageInFullscreen = true;
-    }
-
-    handleLeaveHtmlFullscreen() {
-        console.log(`WebVIew::handleLeaveHtmlFullscreen`);
-        this.htmlPageInFullscreen = false;
     }
 
     adjustBounds(rootId = this.rootId) {

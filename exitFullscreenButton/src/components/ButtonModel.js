@@ -17,7 +17,7 @@ class ExitButton {
         }
         console.log(`ExitButton created`);
         if (typeof ShellIpc !== 'undefined') {
-            this.ipc = new ShellIpc("ipc_exit_fullscreen_button");
+            this.ipc = new ShellIpc("ipc_FullScreenControl");
         }
     }
 

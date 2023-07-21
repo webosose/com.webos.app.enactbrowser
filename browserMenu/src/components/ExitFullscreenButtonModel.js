@@ -6,11 +6,13 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
-import Ipc from '../../../src/Ipc';
+/* global ShellIpc */
 
 class ExitFullscreenButtonModel {
     constructor() {
-        this.ipc = new Ipc("ipc_exit_fullscreen_button");
+        if (typeof ShellIpc !== 'undefined') {
+            this.ipc = new ShellIpc("ipc_FullScreenControl");
+        }
     }
 
     onClick() {

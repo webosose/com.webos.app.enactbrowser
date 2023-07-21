@@ -19,6 +19,7 @@ import css from './ExitFullScreenButton.less';
 class ExitFullScreenButton extends Component {
 	static props = {
 		fullScreen: PropTypes.bool,
+		webContentFullScreen: PropTypes.bool,
 		onExitFullScreen: PropTypes.func,
 		browser: PropTypes.object,
 		exitFullscreenButton: PropTypes.object
@@ -48,7 +49,7 @@ class ExitFullScreenButton extends Component {
 	}
 
 	componentWillReceiveProps (nextProps) {
-		if (nextProps.fullScreen) {
+		if (nextProps.fullScreen || nextProps.webContentFullScreen) {
 			this.show();
 		} else {
 			this.hide();
@@ -65,7 +66,7 @@ class ExitFullScreenButton extends Component {
 
 	onMouseEnter = () => {
 		clearTimeout(this.state.timeoutId);
-		if (this.props.fullScreen) {
+		if (this.props.webContentFullScreen || this.props.fullScreen) {
 			this.show();
 		}
 	}

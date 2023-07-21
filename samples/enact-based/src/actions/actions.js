@@ -11,6 +11,11 @@ const setFullScreen = (enable) => ({
 	enable
 });
 
+const setWebContentFullscreen = (enable) => ({
+	type: 'SET_WEB_CONTENT_FULLSCREEN',
+	enable
+});
+
 const selectHistory = (id, selected) => ({
 	type: 'SELECT_HISTORY',
 	id,
@@ -79,6 +84,7 @@ const deselectAllBlockedSites = () => ({
 
 export {
 	setFullScreen,
+	setWebContentFullscreen,
 	selectHistory,
 	selectAllHistory,
 	deselectAllHistory,

@@ -42,7 +42,8 @@ class MainBase extends Component {
 	static propTypes = {
 		privateBrowsing: PropTypes.bool,
 		fullScreen: PropTypes.bool,
-		exitFullscreenButton: PropTypes.object
+		exitFullscreenButton: PropTypes.object,
+		webContentFullScreen: PropTypes.bool
 	}
 
 	constructor (props) {
@@ -94,7 +95,7 @@ class MainBase extends Component {
 		});
 
 		document.addEventListener('setInsetY', this.onSetInsetY);
-		this.props.exitFullscreenButton.ipc.subscribe('exit-fullscreen', this.onExitFullScreen.bind(this));
+		this.props.exitFullscreenButton.ipc.on('exit-fullscreen', this.onExitFullScreen.bind(this));
 	}
 
 	componentDidUpdate () {
@@ -130,7 +131,7 @@ class MainBase extends Component {
 		const view = this.getSelectedWebview();
 		if (view !== null) {
 			view.exitFullscreen();
-			if (view.htmlPageInFullscreen === false) {
+			if (this.props.webContentFullScreen === false) {
 				this.props.setFullScreen(false);
 			}
 		} else {
@@ -271,7 +272,8 @@ const mapStateToProps = ({ settingsState, browserState, tabsState }) =>  {
 		tabs,
 		selectedIndex,
 		privateBrowsing: settingsState.privateBrowsing,
-		fullScreen: browserState.fullScreen
+		fullScreen: browserState.fullScreen,
+		webContentFullScreen: browserState.webContentFullScreen
 	})
 };
 

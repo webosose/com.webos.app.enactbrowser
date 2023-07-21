@@ -29,6 +29,7 @@ const ContentViewBase = kind({
 		alwaysShowBookmarks: PropTypes.bool,
 		browser: PropTypes.object,
 		fullScreen: PropTypes.bool,
+		webContentFullScreen: PropTypes.bool,
 		ids: PropTypes.array,
 		tabs: PropTypes.object,
 		selectedIndex: PropTypes.number,
@@ -52,7 +53,7 @@ const ContentViewBase = kind({
 			}
 		},
 	},
-	render: ({alwaysShowBookmarks, browser, fullScreen, selectedIndex, ids, tabs, innerRef, onExitFullScreen, exitFullscreenButton, showBookmarksBar, ...rest}) => {
+	render: ({alwaysShowBookmarks, browser, fullScreen, webContentFullScreen, selectedIndex, ids, tabs, innerRef, onExitFullScreen, exitFullscreenButton, showBookmarksBar, ...rest}) => {
 		const
 			sortedIds = ids.slice(),
 			selectedId = ids[selectedIndex];
@@ -72,9 +73,10 @@ const ContentViewBase = kind({
 					return (
 						<div {...wrapperAttrs} style={ id === selectedId ? {height: '100%'} : {height: '0px'}}>
 							<ContentItem {...itemAttrs} style={ id === selectedId ? {height: '100%'} : {height: '0px'}} />
-							{ fullScreen &&
+							{
 								<ExitFullScreenButton
 									fullScreen={fullScreen}
+									webContentFullScreen={webContentFullScreen}
 									onExitFullScreen={onExitFullScreen}
 									browser={browser}
 									exitFullscreenButton={exitFullscreenButton}
@@ -88,13 +90,14 @@ const ContentViewBase = kind({
 	}
 });
 
-const mapStateToProps = ({tabsState, settingsState}) => {
+const mapStateToProps = ({tabsState, settingsState, browserState}) => {
 	const {ids, selectedIndex, tabs} = tabsState;
 	return {
 		ids,
 		tabs,
 		selectedIndex,
-		alwaysShowBookmarks: settingsState.alwaysShowBookmarks
+		alwaysShowBookmarks: settingsState.alwaysShowBookmarks,
+		webContentFullScreen: browserState.webContentFullScreen
 	};
 };
 
