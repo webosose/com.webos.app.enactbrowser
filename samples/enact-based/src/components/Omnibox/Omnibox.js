@@ -11,6 +11,7 @@
  *
  */
 
+import { is } from '@enact/core/keymap';
 import classNames from 'classnames';
 import Button from '@enact/agate/Button';
 import ContextualPopupDecorator from '@enact/agate/ContextualPopupDecorator';
@@ -145,6 +146,7 @@ class OmniboxBase extends Component {
 		// Trick to prevent focus on popup content after opening the popup
 		if (!this.prevOpen) {
 			Spotlight.setPointerMode(true);
+			Spotlight.pause();
 		}
 
 		this.setState({
@@ -153,6 +155,24 @@ class OmniboxBase extends Component {
 		});
 
 		this.props.browser.mostVisited.getSuggestions(ev.value, 5);
+	};
+
+	onKeyDown = (ev) => {
+		const
+			{ keyCode, target } = ev,
+			{ value, selectionStart, tagName } = target;
+
+		if (tagName.toUpperCase() === 'INPUT') {
+			const
+				isLeft = is('left', keyCode),
+				isRight = is('right', keyCode),
+				xSpotlightMove = (isLeft && selectionStart === 0) || (isRight && selectionStart === value.length);
+
+			if (xSpotlightMove && Spotlight.isPaused()) {
+				Spotlight.resume();
+				this.setState({ open: false });
+			}
+		}
 	};
 
 	onClose = () => {
@@ -341,6 +361,7 @@ class OmniboxBase extends Component {
 						onClick={this.onClick}
 						onChange={this.onChange}
 						onClose={this.onClose}
+						onKeyDown={this.onKeyDown}
 						onSpotlightDown={this.spotSuggested}
 						open={open}
 						popupClassName={popupClassName}
