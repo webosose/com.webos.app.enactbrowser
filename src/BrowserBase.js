@@ -150,6 +150,7 @@ class BrowserBase {
         const type = history.entries[history.index];
 
         if (type !== TabTypes.WEBVIEW) {
+            console.log(`[BrowserBase] navigate: type !== TabTypes.WEBVIEW ${history.index}`);
             const oldState = this.tabs.getTab(this.tabs.getSelectedId()).state;
             if (oldState.navState.history.views[1] !== undefined) {
                 const viewId = oldState.navState.history.views[1];
@@ -159,6 +160,7 @@ class BrowserBase {
             this.tabs.replaceTab(this.tabs.store.getSelectedIndex(), newState);
         }
         else {
+            console.log(`[BrowserBase] navigate: type === TabTypes.WEBVIEW ${history.index}`);
             const id = history.views[history.index];
             this.webViews[id].navigate(url);
         }
@@ -518,10 +520,7 @@ class BrowserBase {
     }
 
     _canGoBack = (tabId) => {
-        const tab = this.tabs.getTab(tabId);
-        console.log(tab);
-        return (this.webViews[tabId].canGoBack
-                || tab.state.navState.history.index !== 0);
+        return this.webViews[tabId].canGoBack;
     }
 
     _canGoForward = (tabId) => {
