@@ -151,6 +151,18 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
                 }
             });
 
+            window.neva.addEventListener("close-extension-tab", (tab_id) => {
+                console.log("Called close-extension-tab event");
+                const {tabs} = this;
+                for (let i = tabs.count() - 1; i >= 0; i--) {
+                    let webView = this.webViews[tabs.getIdByIndex(i)];
+                    if (webView.getPageContentsId() === tab_id) {
+                      this.closeTab(i);
+                      return;
+                    }
+                }
+            });
+
             window.neva.addEventListener("create-extension-popup", () => {
                 console.log("create-extension-popup event occured");
                 let popupView = new window.PageView({"page-contents-params": {"partition":""}});
