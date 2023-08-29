@@ -140,7 +140,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
         if (typeof window !== 'undefined' && typeof window.neva !== 'undefined') {
             console.log("Add create-extension-tab event");
             window.neva.addEventListener("create-extension-tab", (request_id) => {
-                console.log("Called create-extension-tab event");
+                console.log("create-extension-tab event occured");
                 this.createTab(TabTypes.WEBVIEW, "");
                 let webView = this.webViews[this.tabs.getSelectedId()];
                 if (webView) {
@@ -152,13 +152,25 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
             });
 
             window.neva.addEventListener("close-extension-tab", (tab_id) => {
-                console.log("Called close-extension-tab event");
+                console.log("close-extension-tab event occured");
                 const {tabs} = this;
                 for (let i = tabs.count() - 1; i >= 0; i--) {
                     let webView = this.webViews[tabs.getIdByIndex(i)];
                     if (webView.getPageContentsId() === tab_id) {
-                      this.closeTab(i);
-                      return;
+                        this.closeTab(i);
+                        return;
+                    }
+                }
+            });
+
+            window.neva.addEventListener("focus-extension-tab", (tab_id) => {
+                console.log("focus-extension-tab event occured");
+                const {tabs} = this;
+                for (let i = tabs.count() - 1; i >= 0; i--) {
+                    let webView = this.webViews[tabs.getIdByIndex(i)];
+                    if (webView.getPageContentsId() === tab_id) {
+                        this.selectTab(i);
+                        return;
                     }
                 }
             });
