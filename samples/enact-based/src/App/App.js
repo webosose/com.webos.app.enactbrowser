@@ -27,4 +27,4 @@ const App = kind({
 	)
 });
 
-export default MoonstoneDecorator({overlay: true}, App);
+export default MoonstoneDecorator({overlay: true, i18n: false}, App);

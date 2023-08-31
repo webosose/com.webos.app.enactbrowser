@@ -51,7 +51,7 @@ const model = {
     zoomControl: new ZoomControlModel()
 };
 
-const PrerenderApp = MoonstoneDecorator(<div />);
+const PrerenderApp = MoonstoneDecorator({i18n: false}, <div />);
 
 const appElement = (typeof window !== 'undefined') ? (
     <Provider store={store}>

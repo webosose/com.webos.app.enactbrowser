@@ -85,4 +85,4 @@ function App({model}) {
     )
 }
 
-export default MoonstoneDecorator(App);
+export default MoonstoneDecorator({i18n: false}, App);
