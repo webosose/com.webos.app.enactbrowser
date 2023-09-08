@@ -29,6 +29,7 @@ class UIOverlay {
 
         const createPageView = () => {
             this.view = new PageView({"page-contents-params": {
+              "allow-file-access": true,
               "allow-universal-access": true,
               "api": ["v8/browser_shell_ipc"],
               "partition": "",
