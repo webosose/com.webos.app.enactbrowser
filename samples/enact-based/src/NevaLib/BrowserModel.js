@@ -177,7 +177,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
 
             window.neva.addEventListener("create-extension-popup", () => {
                 console.log("create-extension-popup event occured");
-                let popupView = new window.PageView({"page-contents-params": {"partition":""}});
+                let popupView = new window.PageView({"page-contents-params": {"partition": this.webViewFactory.getPartition()}});
                 window.shell.shellWindow.pageView.addChildView(popupView);
                 let webView = this.webViews[this.tabs.getSelectedId()];
                 window.neva.extensionPopupViewCreated(popupView.id, webView.getPageContentsId());
