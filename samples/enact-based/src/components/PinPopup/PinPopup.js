@@ -12,11 +12,11 @@
  */
 
 import $L from '@enact/i18n/$L';
-import Button from '@enact/moonstone/Button';
-import Dialog from '@enact/moonstone/Dialog';
-import Input from '@enact/moonstone/Input';
+import Button from '@enact/agate/Button';
+import Popup from '@enact/agate/Popup';
+import Input from '@enact/agate/Input';
 import PropTypes from 'prop-types';
-import React, {Component} from 'react';
+import {Component} from 'react';
 
 import css from './PinPopup.module.less';
 
@@ -40,7 +40,7 @@ class PinPopup extends Component {
 		}
 	}
 
-	componentWillReceiveProps (nextProps) {
+	UNSAFE_componentWillReceiveProps (nextProps) {
 		if ((this.props.matched !== nextProps.matched) && (nextProps.matched === 'correct')) {
 			this.onClose();
 		}
@@ -80,17 +80,17 @@ class PinPopup extends Component {
 			disabledButtons = this.state.pinValue.length === 4;
 
 		return (
-			<Dialog
+			<Popup
 				open={open}
-				showCloseButton
 				onClose={this.onClose}
 				title={matched === 'incorrect' ? $L('Check Password') : $L('Enter PIN')}
-				titleBelow={
-					matched === 'incorrect' ?
-					$L('Incorrect password. Please enter correct password.') :
-					$L('Please enter the parental control PIN.')
-				}
 			>
+				<div className={css.titleBelow}>{
+					matched === 'incorrect' ?
+						$L('Incorrect password. Please enter correct password.') :
+						$L('Please enter the parental control PIN.')
+				}
+				</div>
 				<form className={css.form} onSubmit={this.onSubmitPinCode}>
 					<Input
 						className={css.input}
@@ -108,18 +108,18 @@ class PinPopup extends Component {
 				</div>
 				<br />
 				<br />
-				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed} small>0</Button>
-				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed} small>1</Button>
-				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed} small>2</Button>
-				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed} small>3</Button>
-				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed} small>4</Button>
-				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed} small>5</Button>
-				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed} small>6</Button>
-				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed} small>7</Button>
-				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed} small>8</Button>
-				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed} small>9</Button>
-				<Button onClick={this.onNumberKeyPressed} small>Back</Button>
-			</Dialog>
+				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed}>0</Button>
+				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed}>1</Button>
+				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed}>2</Button>
+				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed}>3</Button>
+				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed}>4</Button>
+				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed}>5</Button>
+				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed}>6</Button>
+				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed}>7</Button>
+				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed}>8</Button>
+				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed}>9</Button>
+				<Button onClick={this.onNumberKeyPressed}>Back</Button>
+			</Popup>
 		);
 	}
 }

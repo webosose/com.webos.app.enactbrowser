@@ -12,8 +12,8 @@
  */
 
 import $L from '@enact/i18n/$L';
-import Button from '@enact/moonstone/Button';
-import React, {Component} from 'react';
+import Button from '@enact/agate/Button';
+import {Component} from 'react';
 
 import css from './RecentlyClosed.module.less';
 
@@ -37,7 +37,7 @@ class RecentlyClosed extends Component {
 	render () {
 		return (
 			<div className={css.recentlyClosed}>
-				<Button css={css} onClick={this.onClick} small>{$L('RECENTLY CLOSED') + ' >'}</Button>
+				<Button css={css} onClick={this.onClick} size={"small"}>{$L('RECENTLY CLOSED') + ' >'}</Button>
 				{this.state.showing ? this.props.children : null}
 			</div>
 		);

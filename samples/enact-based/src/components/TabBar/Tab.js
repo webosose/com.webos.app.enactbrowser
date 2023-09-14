@@ -13,15 +13,14 @@
 
 import classNames from 'classnames';
 import kind from '@enact/core/kind';
-import {MarqueeDecorator} from '@enact/moonstone/Marquee';
+import {MarqueeDecorator} from '@enact/ui/Marquee';
 import PropTypes from 'prop-types';
-import React from 'react';
-import Spinner from '@enact/moonstone/Spinner';
+import Spinner from '@enact/agate/Spinner';
 import Spottable from '@enact/spotlight/Spottable';
 import Spotlight from '@enact/spotlight';
 import {Draggable} from 'react-beautiful-dnd';
 
-import {BrowserIconButton as IconButton} from '../BrowserIconButton';
+import Button from '@enact/agate/Button';
 import {TabTypes} from '../../NevaLib/BrowserModel';
 
 import css from './Tab.module.less';
@@ -123,12 +122,12 @@ const Tab = kind({
 					<TitleDiv className={css.tabTitle} marqueeOn="hover">{title}</TitleDiv>
 					{
 						closable &&
-						<IconButton
+						<Button
 							backgroundOpacity="transparent"
 							className={css.tabCloseButton}
 							onClick={onClose}
-							type="tabCloseButton"
-							small
+							icon="closex"
+							size="small"
 						/>
 					}
 				</SpottableDiv>

@@ -1,10 +1,19 @@
 /* SiteFiltering.module.less */
 
-@import '~@enact/moonstone/styles/skin.less';
+@import '~@enact/agate/styles/skin.less';
 
 .scroller {
-	padding: 24px 170px 20px 100px;
 	height: ~"calc(100vh - " 236px ~")";
+	&.shrinkHeight {
+		// shrink as much as bookmarkbar height (84px)
+		height: ~"calc(100vh - " 238px + 84px ~")";
+	}
+}
+
+.siteFiltering {
+	padding: 24px 170px 20px 100px;
+	flex: 1;
+	box-sizing: border-box;
 }
 
 .inputContainer {
@@ -14,6 +23,7 @@
 
 .input {
 	width: 75%;
+	margin-right: 20px;
 }
 
 .add {
@@ -27,8 +37,9 @@
 }
 
 .button {
+	width: 160px;
+	bottom: 4px;
 	display: inline-block;
-	margin: 16px;
 	.applySkins({
 		font-size: 24px;
 		font-weight: 700;
@@ -40,5 +51,11 @@
 }
 
 .list {
+	height: 390px;
 	padding: 10px;
+}
+.inlineGroupItem {
+	.applySkins({
+		border-bottom-color: transparent;
+	})
 }

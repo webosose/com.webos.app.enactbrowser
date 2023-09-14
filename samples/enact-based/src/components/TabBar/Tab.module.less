@@ -1,7 +1,8 @@
 /* Tab.module.less */
 
-@import '~@enact/moonstone/styles/mixins.less';
-@import '~@enact/moonstone/styles/skin.less';
+@import '~@enact/agate/styles/mixins.less';
+@import '~@enact/agate/styles/colors-base.less';
+@import '~@enact/agate/styles/skin.less';
 
 .icon-common {
 	width: 25px;
@@ -30,7 +31,7 @@
 }
 
 .selected {
-	border-top: solid #cf0652 4px;
+	border-top: solid @agate-accent 4px;
 	background-image: none;
 }
 
@@ -40,6 +41,8 @@
 	display: inline-block;
 	background: center center / contain no-repeat;
 	flex-grow: 1;
+	min-width: 0.8rem;
+	min-height: 0.8rem;
 }
 
 .tabTitle {

@@ -11,14 +11,12 @@
  *
  */
 
-import Item from '@enact/moonstone/Item';
+import Item from '@enact/agate/Item';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
-import React from 'react';
-
-import {BrowserIconButton as IconButton} from '../BrowserIconButton';
 
 import css from './SuggestedItem.module.less';
+import Icon from '@enact/agate/Icon';
 
 const SuggestedItem = kind({
 	name: 'SuggestedItem',
@@ -33,14 +31,20 @@ const SuggestedItem = kind({
 	},
 	render: ({url, title, icon, ...rest}) => {
 		return (
-			<div>
-				<IconButton
+			<div className={css.container}>
+				<Icon
 					backgroundOpacity="transparent"
 					className={css.icon}
+					css={css}
 					spotlightDisabled
-					type={icon}
-				/>
-				<Item className={css.item} {...rest}>{`${url} - ${title}`}</Item>
+					size={"large"}
+				>
+					{icon}
+				</Icon>
+				<Item
+					className={css.Item}
+					{...rest}
+				>{`${url} - ${title}`}</Item>
 			</div>
 		);
 	}

@@ -7,8 +7,8 @@
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
 import kind from '@enact/core/kind';
-import MoonstoneDecorator from '@enact/moonstone/MoonstoneDecorator';
-import React from 'react';
+import AppDecorator from '../components/AppDecorator';
+import ThemeDecorator from '@enact/agate/ThemeDecorator';
 
 import Main from '../views/Main';
 
@@ -27,4 +27,4 @@ const App = kind({
 	)
 });
 
-export default MoonstoneDecorator({overlay: true, i18n: false}, App);
+export default AppDecorator(ThemeDecorator({i18n: false}, App));

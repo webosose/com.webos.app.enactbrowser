@@ -12,19 +12,19 @@
  */
 
 import $L from '@enact/i18n/$L';
-import BodyText from '@enact/moonstone/BodyText';
+import BodyText from '@enact/agate/BodyText';
 import classNames from 'classnames';
 import Group from '@enact/ui/Group';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
-import RadioItem from '@enact/moonstone/RadioItem';
+import RadioItem from '@enact/agate/RadioItem';
 import React, {Component} from 'react';
-import Scroller from '@enact/moonstone/Scroller';
-import ToggleButton from '@enact/moonstone/ToggleButton';
-import RangePicker from '@enact/moonstone/RangePicker';
-import Input from '@enact/moonstone/Input';
-import ExpandableList from '@enact/moonstone/ExpandableList';
-import {Panel} from '@enact/moonstone/Panels';
+import Scroller from '@enact/agate/Scroller';
+import ToggleButton from '@enact/agate/ToggleButton';
+import RangePicker from '@enact/agate/RangePicker';
+import Input from '@enact/agate/Input';
+import Dropdown from '@enact/agate/Dropdown';
+import {Panel} from '@enact/agate/Panels';
 import css from './DevSettings.module.less';
 
 const OnOffButton = kind({
@@ -34,7 +34,8 @@ const OnOffButton = kind({
 			<ToggleButton
 				toggleOffLabel={$L('Off')}
 				toggleOnLabel={$L('On')}
-				small
+				size="small"
+				underline
 				{...props}
 			/>
 		);
@@ -99,7 +100,7 @@ class UAInput extends Component {
 					onChange={this.on_change}
 					type="text"
 				/>
-				<ExpandableList className={css.ua_list}
+				<Dropdown className={css.ua_list}
 					title={"Predefined UA strings"}
 					noneText={"nothing selected"}
 					select={"radio"}
@@ -107,7 +108,7 @@ class UAInput extends Component {
 					selected={window.dev_settings_ua_selected}
 					onSelect={this.on_select}>
 					{this.ua_list}
-				</ExpandableList>
+				</Dropdown>
 			</div>
 		);
 	}
@@ -151,17 +152,22 @@ class SimplePolicySettings extends Component {
 			<React.Fragment>
 				<BodyText>Simple policy constraints</BodyText>
 				<div className={css.indent}>
-					<RangePicker min={1} max={100}
-						value={this.state.maxActiveTabFamilies}
-						onChange={this.onChangeMaxActiveTabFamilies}
-					/>
-					<BodyText className={css.menu}>Number of active tab families</BodyText>
-					<br />
-					<RangePicker min={0} max={100}
-						value={this.state.maxSuspendedTabFamilies}
-						onChange={this.onChangeMaxSuspendedTabFamilies}
-					/>
-					<BodyText className={css.menu}>Number of suspended tab families</BodyText>
+					<div className={css.pickerParent}>
+						<RangePicker min={1} max={100}
+							value={this.state.maxActiveTabFamilies}
+							onChange={this.onChangeMaxActiveTabFamilies}
+							orientation="horizontal"
+						/>
+						<BodyText className={css.menu}>Number of active tab families</BodyText>
+					</div>
+					<div className={css.pickerParent}>
+						<RangePicker min={0} max={100}
+							value={this.state.maxSuspendedTabFamilies}
+							onChange={this.onChangeMaxSuspendedTabFamilies}
+							orientation="horizontal"
+						/>
+						<BodyText className={css.menu}>Number of suspended tab families</BodyText>
+					</div>
 				</div>
 			</React.Fragment>
 		);
@@ -240,18 +246,21 @@ class MemoryManagerSettings extends Component {
 					<RangePicker min={0} max={100}
 						value={this.state.maxNormal}
 						onChange={this.onChangeMaxSuspendedTabsNormal}
+						orientation="horizontal"
 					/>
 					<BodyText className={css.menu}>Max suspended tab when memory level is normal</BodyText>
 					<br />
 					<RangePicker min={0} max={100}
 						value={this.state.maxLow}
 						onChange={this.onChangeMaxSuspendedTabsLow}
+						orientation="horizontal"
 					/>
 					<BodyText className={css.menu}>Max suspended tab when memory level is low</BodyText>
 					<br />
 					<RangePicker min={0} max={100}
 						value={this.state.maxCritical}
 						onChange={this.onChangeMaxSuspendedTabsCritical}
+						orientation="horizontal"
 					/>
 					<BodyText className={css.menu}>Max suspended tab when memory level is critical</BodyText>
 				</div>
@@ -322,7 +331,7 @@ class DevSettingsBase extends Component {
 						<div className={css.indent}>
 							<Group
 								childComponent={RadioItem}
-								itemProps={{inline: true}}
+								itemProps={{inline: true, className: css.inlineGroupItem}}
 								select="radio"
 								selectedProp="selected"
 								defaultSelected={restoreSessionOptions.indexOf(this.state.restorePrevSessionPolicy)}

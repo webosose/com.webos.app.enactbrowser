@@ -12,11 +12,11 @@
  */
 
 import $L from '@enact/i18n/$L';
-import Button from '@enact/moonstone/Button';
-import Input from '@enact/moonstone/Input';
-import Notification from '@enact/moonstone/Notification';
+import Button from '@enact/agate/Button';
+import Input from '@enact/agate/Input';
+import Popup from '@enact/agate/Popup';
 import PropTypes from 'prop-types';
-import React, {Component} from 'react';
+import {Component} from 'react';
 
 import css from './AuthDialog.module.less';
 
@@ -58,11 +58,12 @@ class AuthDialog extends Component {
 			{username, password} = this.state;
 
 		return (
-			<Notification
+			<Popup
 				noAutoDismiss
 				open
 				onClose={this.onDialogCancel(controller)}
-				showCloseButton
+				centered
+				closeButton
 			>
 				<p>Username</p>
 				<Input
@@ -78,10 +79,10 @@ class AuthDialog extends Component {
 					type='password'
 				/>
 				<buttons>
-					<Button onClick={this.onSignIn(controller)}>{$L('OK')}</Button>
-					<Button onClick={this.onDialogCancel(controller)}>{$L('CANCEL')}</Button>
+					<Button size="small" onClick={this.onSignIn(controller)}>{$L('OK')}</Button>
+					<Button size="small" onClick={this.onDialogCancel(controller)}>{$L('CANCEL')}</Button>
 				</buttons>
-			</Notification>
+			</Popup>
 		);
 	}
 }

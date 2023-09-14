@@ -12,12 +12,12 @@
  */
 
 import $L from '@enact/i18n/$L';
-import Button from '@enact/moonstone/Button';
-import Input from '@enact/moonstone/Input';
-import Checkbox from '@enact/moonstone/Checkbox';
-import Notification from '@enact/moonstone/Notification';
+import Button from '@enact/agate/Button';
+import Input from '@enact/agate/Input';
+import Checkbox from '@enact/agate/Checkbox';
+import Popup from '@enact/agate/Popup';
 import PropTypes from 'prop-types';
-import React, {Component} from 'react';
+import {Component} from 'react';
 
 import css from './Dialog.module.less';
 
@@ -92,11 +92,12 @@ class Dialog extends Component {
 		}
 
 		return (
-			<Notification
+			<Popup
 				noAutoDismiss
 				open
 				onClose={this.onCancel}
-				showCloseButton
+				centered
+				closeButton
 			>
 				<p>{messageText}</p>
 				{
@@ -146,7 +147,7 @@ class Dialog extends Component {
 						: <Button onClick={this.onCancel}>{rightButtonText}</Button>
 					}
 				</buttons>
-			</Notification>
+			</Popup>
 		);
 	}
 }

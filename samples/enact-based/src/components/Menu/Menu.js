@@ -11,11 +11,11 @@
  *
  */
 
-import React, {Component} from 'react';
+import {Component} from 'react';
 import PropTypes from 'prop-types';
 import { isWindowReady } from '@enact/core/snapshot';
 
-import {BrowserIconButton as IconButton} from '../BrowserIconButton';
+import Button from '@enact/agate/Button';
 import Ipc from 'js-browser-lib/Ipc';
 import css from './Menu.module.less';
 
@@ -67,13 +67,14 @@ class Menu extends Component {
 		delete props.browser;
 
 		return (
-			<IconButton
+			<Button
 				id="nevaBrowserMenuButton"
 				backgroundOpacity="transparent"
 				className={css.menuButton}
 				onClick={this.toggleMenu}
 				open={this.state.isOpened}
-				type="menuButton"
+				icon="menu"
+				size="large"
 				{...props}
 			/>
 		);

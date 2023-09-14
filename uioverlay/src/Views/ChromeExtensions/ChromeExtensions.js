@@ -6,9 +6,9 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
-import Item from '@enact/moonstone/Item';
+import Item from '@enact/agate/Item';
 import $L from '@enact/i18n/$L';
 
 import css from './ChromeExtensions.module.less'
@@ -20,24 +20,27 @@ function ChromeExtensions({model, onUpdate}) {
         name: "there are no extensions"
     }]);
 
-    useEffect(onUpdate, [extensions]);
+    useEffect(onUpdate, [extensions, onUpdate]);
     useEffect(() => {
         console.log(`subscribe to extenstionListUpdated`);
         model.ipc.on('extenstionsListUpdated', (extensionsList) => {
             console.log(`arrived extensions: ${extensionsList}`);
             setExtensions(extensionsList);
         })
-    }, []);
+    }, [setExtensions, model.ipc]);
 
     const onclick = useCallback((extension_id) => () => {
         model.ipc.post('click', {id: extension_id})
         // subscribe to this message to handle clicks in main browser pageContents
-    }, [])
+    }, [model.ipc])
 
     for (let i = 0; i < extensions.length; i ++) {
         items.push(
-            <Item key={i} onClick={onclick(extensions[i].id)}>{`${$L(extensions[i].name)}`}</Item>
-        )
+            <Item className={css.Item} key={i} onClick={onclick(extensions[i].id)}
+            >
+                {`${$L(extensions[i].name)}`}
+            </Item>
+        );
     }
     console.log(`render chromeExtensionsMenu`);
     return (<div className={css.itemsContainer}>{items}</div>);

@@ -13,7 +13,7 @@
 
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import React, {Component} from 'react';
+import {Component} from 'react';
 import Spotlight from '@enact/spotlight';
 
 import BookmarkItem from './BookmarkItem';

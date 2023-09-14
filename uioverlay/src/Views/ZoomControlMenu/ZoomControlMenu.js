@@ -6,8 +6,8 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
-import React, { useState, useEffect, useCallback } from 'react';
-import Picker from '@enact/moonstone/Picker'
+import { useState, useEffect, useCallback } from 'react';
+import {Picker} from '@enact/agate/Picker'
 
 import css from './ZoomControlMenu.module.less';
 
@@ -31,7 +31,7 @@ const
         0.75
     ];
 
-function ZoomControlMenu({model, onUpdate}) {
+function ZoomControlMenu({model, onUpdate, ...rest}) {
     const [zoomValueIndex, setZoomValueIndex] = useState(zoomFactors.indexOf(model.zoomFactor));
 
     useEffect(onUpdate, [model, onUpdate, zoomValueIndex]);
@@ -51,15 +51,14 @@ function ZoomControlMenu({model, onUpdate}) {
     }, [setZoomValueIndex, model]);
 
     return (
-        <div className={css.zoomMenu}>
+        <div className={css.zoomMenu} {...rest}>
             <Picker
-                incrementIcon="plus"
-                decrementIcon="minus"
+                className={css.picker}
                 orientation="vertical"
                 onChange={onChange}
-                joined // use arrow keys to change value
                 value={zoomValueIndex}
-                width="medium"
+                skinVariants={{'night': false}}
+                css={css}
             >
                 {zoomLabels}
             </Picker>

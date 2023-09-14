@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect } from 'react';
-import Button from '@enact/moonstone/Button';
+import { useCallback, useEffect } from 'react';
+import Button from '@enact/agate/Button';
 import $L from '@enact/i18n/$L';
 
 import css from './ExitFullscreenButton.module.less';
@@ -9,7 +9,8 @@ function ExitFullscreenButton(props) {
         if (key === 'Escape') {
             props.model.onClick()();
         }
-    }, [props.model.onClick]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props.model, props.model.onClick]);
 
     useEffect(() => {
         document.addEventListener('keydown', escKeyHandler);
@@ -24,6 +25,7 @@ function ExitFullscreenButton(props) {
                 minWidth={false}
                 className={css.exitButton}
                 onClick={props.model.onClick()}
+                size={"large"}
             >
                 {$L('Exit Full Screen')}
             </Button>

@@ -16,10 +16,10 @@ import {connect} from 'react-redux';
 import classNames from 'classnames';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
-import React, {Component} from 'react';
+import {Component} from 'react';
 import {DragDropContext, Droppable} from 'react-beautiful-dnd';
 
-import {BrowserIconButton as IconButton} from '../BrowserIconButton';
+import Button from '@enact/agate/Button';
 import Tab from './Tab';
 import {TabTypes} from '../../NevaLib/BrowserModel';
 import Sortable from '../Sortable';
@@ -45,11 +45,11 @@ const NewTabButton = kind({
 	},
 	render: ({onNew, ...rest}) => (
 		<li {...rest}>
-			<IconButton
+			<Button
 				backgroundOpacity="transparent"
 				onClick={onNew}
-				type="newTabButton"
-				withBg
+				icon="plus"
+				size="small"
 			/>
 		</li>
 	)
@@ -66,7 +66,7 @@ class TabBarBase extends Component {
 		fullScreen: PropTypes.bool
 	}
 
-	componentWillReceiveProps (nextProps) {
+	UNSAFE_componentWillReceiveProps (nextProps) {
 		if (this.props.selectedIndex !== nextProps.selectedIndex) {
 			console.log(`WVE remove vkb inset when hide vkb. (NEVA-6205)`);
 		}

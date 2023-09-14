@@ -12,19 +12,19 @@
  */
 
 import $L from '@enact/i18n/$L';
-import BodyText from '@enact/moonstone/BodyText';
-import Button from '@enact/moonstone/Button';
+import BodyText from '@enact/agate/BodyText';
+import Button from '@enact/agate/Button';
 import {connect} from 'react-redux';
 import classNames from 'classnames';
-import ExpandableInput from '@enact/moonstone/ExpandableInput';
+import Input from '@enact/agate/Input';
 import Group from '@enact/ui/Group';
 import kind from '@enact/core/kind';
-import Notification from '@enact/moonstone/Notification';
+import Popup from '@enact/agate/Popup';
 import PropTypes from 'prop-types';
-import RadioItem from '@enact/moonstone/RadioItem';
-import React, {Component} from 'react';
-import Scroller from '@enact/moonstone/Scroller';
-import ToggleButton from '@enact/moonstone/ToggleButton';
+import RadioItem from '@enact/agate/RadioItem';
+import {Component} from 'react';
+import Scroller from '@enact/agate/Scroller';
+import ToggleButton from '@enact/agate/ToggleButton';
 
 import PinPopup from '../../components/PinPopup';
 import css from './Settings.module.less';
@@ -36,7 +36,7 @@ const OnOffButton = kind({
 			<ToggleButton
 				toggleOffLabel={$L('Off')}
 				toggleOnLabel={$L('On')}
-				small
+				underline
 				{...props}
 			/>
 		);
@@ -189,9 +189,9 @@ class SettingsBase extends Component {
 								$L('Home page:')
 							]}
 						</Group>
-						<ExpandableInput
+						<Input
 							disabled={(startupOption !== 2)}
-							title={$L('Enter URL')}
+							placeholder={$L('Enter URL')}
 							value={this.state.value}
 							onChange={this.onChange}
 							onClose={this.onClose}
@@ -202,7 +202,7 @@ class SettingsBase extends Component {
 					<div className={css.indent}>
 						<Group
 							childComponent={RadioItem}
-							itemProps={{inline: true}}
+							itemProps={{inline: true, className: css.inlineGroupItem}}
 							select="radio"
 							selectedProp="selected"
 							defaultSelected={searchEngines.indexOf(searchEngine)}
@@ -223,7 +223,7 @@ class SettingsBase extends Component {
 					<OnOffButton onClick={this.startSiteFiltering} selected={(siteFiltering !== 'off')} />
 					<br />
 
-					<Notification
+					<Popup
 						open={this.state.clearPopupOpen}
 						noAutoDismiss
 					>
@@ -239,15 +239,15 @@ class SettingsBase extends Component {
 								<Button onClick={this.onClearYes}>{$L('YES')}</Button>
 							</buttons>
 						}
-					</Notification>
-					<Notification
+					</Popup>
+					<Popup
 						open={this.state.completePopupOpen}
 						noAutoDismiss
 					>
 						<span>{$L('All browsing data has been deleted.')}</span>
-					</Notification>
+					</Popup>
 
-					<Button onClick={this.onClearBrowsingData} css={css} small>{$L('CLEAR BROWSING DATA')}</Button>
+					<Button onClick={this.onClearBrowsingData} css={css}>{$L('CLEAR BROWSING DATA')}</Button>
 
 					<PinPopup
 						open={this.state.siteFilteringOpen}

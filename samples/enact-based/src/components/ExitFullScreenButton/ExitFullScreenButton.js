@@ -12,7 +12,7 @@
  */
 
 import PropTypes from 'prop-types';
-import React, {Component} from 'react';
+import {Component} from 'react';
 
 import css from './ExitFullScreenButton.module.less';
 
@@ -48,7 +48,7 @@ class ExitFullScreenButton extends Component {
 		this.hide();
 	}
 
-	componentWillReceiveProps (nextProps) {
+	UNSAFE_componentWillReceiveProps (nextProps) {
 		if (nextProps.fullScreen || nextProps.webContentFullScreen) {
 			this.show();
 		} else {

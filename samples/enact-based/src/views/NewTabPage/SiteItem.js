@@ -11,16 +11,21 @@
  *
  */
 
-import GridListImageItem from '@enact/moonstone/GridListImageItem';
-import IconButton from '@enact/moonstone/IconButton';
+import GridListImageItem from '@enact/agate/ImageItem';
+import Button from '@enact/agate/Button';
 import PropTypes from 'prop-types';
-import React, {Component} from 'react';
+import {Component} from 'react';
 
 import css from './SiteItem.module.less';
 
 const
 	CloseButton = (props) => (
-		<IconButton {...props} className={css.xbutton} small>closex</IconButton>
+		<Button
+			{...props}
+			className={css.xbutton}
+			size={"small"}
+			icon="closex"
+		/>
 	),
 	EmptyItem = (props) => (
 		<div className={css.emptyContainer} {...props} />
@@ -65,7 +70,7 @@ class SiteItem extends Component {
 	}
 
 	render () {
-		const {title, ...rest} = this.props;
+		const {title, source, ...rest} = this.props;
 
 		delete rest.browser;
 		delete rest.url;
@@ -80,6 +85,7 @@ class SiteItem extends Component {
 					onMouseEnter={this.onMouseEnter}
 					onMouseLeave={this.onMouseLeave}
 					placeholder={placeholder}
+					src={source}
 				/>
 				{
 					this.state.showingCloseButton && title ?

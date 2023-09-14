@@ -15,30 +15,15 @@ The browser is composed of two parts, 1) platform agnostic browser UI written on
 * Search engine selection
 * Some customized layout options
 
+# Required tools:
+* npm v6.14.13
+* node v12.22.2
+* enact/cli v4.1.6
+
 # Installation
 ## How to build
-Before building the app, the following tools and libraries are required:
 
-```
-* Node
-* NPM
-```
-
-Also, the Enact command line tool must be installed globally. Use the following command to install it:
-
-```sh
-npm install -g @enact/cli
-```
-
-After you get all the tools and libraries, go to below path.
-```
-com.webos.app.enactbrowser/samples/enact-based/
-```
-
-Build the app with below command.
-```
-npm run build
-```
+Build instruction can be found here: http://collab.lge.com/main/display/NEVA/How+to+build+Enact-based+Browser
 
 ## How to set up development environment on PC
 This app is a chrome extension, you can load it to Chrome as a extension and run it on Chrome browser as well as inspect it.

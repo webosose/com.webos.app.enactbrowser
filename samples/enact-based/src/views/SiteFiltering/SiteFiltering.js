@@ -12,19 +12,19 @@
  */
 
 import $L from '@enact/i18n/$L';
-import BodyText from '@enact/moonstone/BodyText';
-import Button from '@enact/moonstone/Button';
+import BodyText from '@enact/agate/BodyText';
+import Button from '@enact/agate/Button';
 import {connect} from 'react-redux';
 import Group from '@enact/ui/Group';
-import Icon from '@enact/moonstone/Icon';
-import Input from '@enact/moonstone/Input';
-import Notification from '@enact/moonstone/Notification';
+import Icon from '@enact/agate/Icon';
+import Input from '@enact/agate/Input';
+import Popup from '@enact/agate/Popup';
 import PropTypes from 'prop-types';
-import RadioItem from '@enact/moonstone/RadioItem';
-import React, {Component} from 'react';
-import Scroller from '@enact/moonstone/Scroller';
+import RadioItem from '@enact/agate/RadioItem';
+import {Component} from 'react';
+import Scroller from '@enact/agate/Scroller';
 import ri from '@enact/ui/resolution';
-import VirtualList from '@enact/moonstone/VirtualList';
+import VirtualList from '@enact/agate/VirtualList';
 
 import {
 	selectAllApprovedSites,
@@ -241,7 +241,7 @@ class SiteFilteringBase extends Component {
 				{(optionIndex === 2) && <BodyText>{$L('Blocked Sites List')}</BodyText>}
 				{(optionIndex === 1 || optionIndex === 2) &&
 					<div>
-						<Notification
+						<Popup
 							open={this.state.deletePopupOpen}
 							noAutoDismiss
 						>
@@ -252,7 +252,7 @@ class SiteFilteringBase extends Component {
 								<Button onClick={this.onDeleteNo}>No</Button>
 								<Button onClick={this.onDeleteYes}>Yes</Button>
 							</buttons>
-						</Notification>
+						</Popup>
 						<form onSubmit={this.onAdd}>
 							<div className={css.inputContainer}>
 								<Input
@@ -267,14 +267,14 @@ class SiteFilteringBase extends Component {
 								css={css}
 								onClick={this.onSelectAll}
 								disabled={!data || !data.length}
-								small
+								size={"small"}
 							>
 								{(data && selected && data.length && data.length === selected.length) ? 'Deselect All' : 'Select All'}
 							</Button>
 							<Button
 								css={css}
 								onClick={this.onDelete}
-								small
+								size={"small"}
 								disabled={!data || !data.length || !selected.length}
 							>
 								Delete
@@ -296,7 +296,7 @@ class SiteFilteringBase extends Component {
 				<Button
 					css={css}
 					onClick={this.onOpenResetPinPopup}
-					small
+					size={"small"}
 				>
 					{$L('Reset pin')}
 				</Button>

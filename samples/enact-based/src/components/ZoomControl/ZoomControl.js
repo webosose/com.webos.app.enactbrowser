@@ -12,10 +12,10 @@
  */
 
 import $L from '@enact/i18n/$L';
-import React, {Component} from 'react';
+import {Component} from 'react';
 import { isWindowReady } from '@enact/core/snapshot';
 
-import { BrowserIconButton as IconButton } from '../BrowserIconButton';
+import Button from '@enact/agate/Button';
 import Ipc from 'js-browser-lib/Ipc';
 import css from './ZoomControl.module.less';
 
@@ -33,11 +33,12 @@ class ZoomControl extends Component {
 		}
 	}
 
-	toggleMenu = () => {
+	toggleMenu = (event) => {
 		if (!this.props.browser.isWebViewTabSelected()) {
 			console.log(`Zoom menu will not be shown because no webview tab selected.`);
 			return;
 		}
+		event.stopPropagation();
 		const isOpened = this.state.isOpened;
 		if (this.state.isOpened) {
 			this.props.zoomControl.hide();
@@ -56,15 +57,17 @@ class ZoomControl extends Component {
 		const props = Object.assign({}, this.props);
 		delete props.browser;
 		delete props.dispatch;
+		delete props.zoomControl;
 		return (
-			<IconButton
+			<Button
 				id="nevaBrowserZoomControlButton"
 				backgroundOpacity="transparent"
 				className={css.zoomButton}
 				onClick={this.toggleMenu}
 				tooltipText={$L('Zoom')}
 				open={this.state.isOpened}
-				type="zoomButton"
+				icon="plus"
+				size="large"
 				{...props}
 			/>
 		);

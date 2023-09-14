@@ -14,7 +14,7 @@
 
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import React, {Component} from 'react';
+import {Component} from 'react';
 import ErrorPage from '../ErrorPage';
 import BlockedPageNotification from '../BlockedPageNotification';
 import {setFullScreen, setWebContentFullscreen} from '../../actions';

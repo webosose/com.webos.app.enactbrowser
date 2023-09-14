@@ -12,9 +12,8 @@
  */
 
 import kind from '@enact/core/kind';
-import {MarqueeDecorator} from '@enact/moonstone/Marquee';
+import {MarqueeDecorator} from '@enact/ui/Marquee';
 import PropTypes from 'prop-types';
-import React from 'react';
 import Spottable from '@enact/spotlight/Spottable';
 
 import css from './Bookmark.module.less';

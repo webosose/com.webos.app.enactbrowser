@@ -1,7 +1,8 @@
 /* History.module.less */
 
-@import '~@enact/moonstone/styles/skin.less';
-@import '~@enact/moonstone/styles/variables.less';
+@import '~@enact/agate/styles/skin.less';
+@import '~@enact/agate/styles/variables.less';
+@import "~@enact/agate/styles/variables-base.less";
 
 .history {
 	height: 75vh;
@@ -24,7 +25,11 @@
 }
 
 .list {
-	height: ~"calc(100vh - " 200px + @moon-button-height + 36px ~")";
+	height: ~"calc(100vh - " 200px + @agate-button-height + 36px ~")";
 	padding: 10px;
 	margin-top: 20px;
+	&.shrinkHeight {
+		// shrink as much as bookmarkbar height (84px)
+		height: ~"calc(100vh - " 200px + @agate-button-height + 36px + 84px ~")";
+	}
 }

@@ -6,19 +6,31 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
-import React, { useState, useEffect, useCallback } from "react";
+import React from "react";
+import { useState, useEffect, useCallback } from "react";
 import $L from '@enact/i18n/$L';
-import Input from '@enact/moonstone/Input';
-import {connect} from 'react-redux';
-import css from './Omnibox.module.less';
+import {Input as InputBase} from '@enact/agate/Input';
 import Spotlight from '@enact/spotlight';
+import {connect} from 'react-redux';
+
+import css from './Omnibox.module.less';
+
+class Input extends React.Component {
+	constructor(props) {
+		super(props);
+	}
+
+	render() {
+		return <InputBase style={{maxWidth: "100%"}} {...this.props} />
+	}
+};
 
 function createSuggestionsList ({urlSuggestions, searchEngine, bookmarksData, value}) {
 	let items = [];
 
 	items.push({
 		dataIndex: 0,
-		icon: "searchButton",
+		icon: "search2",
 		title: `${searchEngine} ${$L('Search')}`,
 		url: value,
 		key: 0
@@ -30,7 +42,7 @@ function createSuggestionsList ({urlSuggestions, searchEngine, bookmarksData, va
 				dataIndex: i + 1,
 				icon: bookmarksData.some(
 					(bookmark) => bookmark.url === urlSuggestions[i].url
-				) ? "bookmarksButton" : "historyButton",
+				) ? "bookmark" : "history",
 				key: i + 1,
 				title: urlSuggestions[i].title,
 				url: urlSuggestions[i].url
@@ -56,7 +68,7 @@ function AddressBarBase({url, browser, onUrlChanged, urlSuggestions, searchEngin
 		if (isLoading && isEditing) {
 			setIsEditing(false);
 		}
-	}, [isLoading]);
+	}, [isLoading, isEditing]);
 
 	useEffect(() => {
 		const onSuggestionClick = ({clickedIndex}) => {
@@ -83,6 +95,7 @@ function AddressBarBase({url, browser, onUrlChanged, urlSuggestions, searchEngin
 		window.urlSuggestionsBar.sendSuggestion(items);
 	}, [urlSuggestions, searchEngine, bookmarksData, value]);
 
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const getSuggestions = useCallback((pattern) => {
 		if (browser && browser.mostVisited && browser.mostVisited.getSuggestions) {
 			browser.mostVisited.getSuggestions(pattern, 5);
@@ -91,13 +104,14 @@ function AddressBarBase({url, browser, onUrlChanged, urlSuggestions, searchEngin
 		}
 	});
 
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const onClick = useCallback((ev) => {
 		console.log(`[AddressBar] AddressBar::onClick`);
 		getSuggestions(value);
 		setIsEditing(value !== "");
 		ev.stopPropagation();
-	}, [value]);
-
+	}, [value, getSuggestions]);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const onChange = useCallback((ev) => {
 		getSuggestions(ev.value);
 		setValue(ev.value);
@@ -154,6 +168,7 @@ function AddressBarBase({url, browser, onUrlChanged, urlSuggestions, searchEngin
 
 	return(
 		<Input
+			css={css}
 			id="omniboxInput"
 			autoFocus={isEditing}
 			className={css.inputBox}

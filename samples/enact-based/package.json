@@ -1,6 +1,6 @@
 {
   "name": "com.webos.app.browser",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "A enact based web browser",
   "author": "",
   "main": "src/index.js",
@@ -34,22 +34,22 @@
   },
   "dependencies": {
     "js-browser-lib": "file:../../lib",
-    "@enact/core": "^2.0.0-rc.1",
-    "@enact/i18n": "^2.0.0-rc.1",
-    "@enact/moonstone": "^2.0.0-rc.1",
-    "@enact/spotlight": "^2.0.0-rc.1",
-    "@enact/ui": "^2.0.0-rc.1",
-    "@enact/webos": "^2.0.0-rc.1",
-    "prop-types": "^15.6.0",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
-    "react-beautiful-dnd": "^12.2.0",
-    "redux": "^4.1.1",
-    "react-redux": "^7.2.7",
-    "ilib": "^14.15.1 || ^14.15.1-webos1"
+    "@enact/core": "^4.5.0",
+    "@enact/i18n": "^4.5.0",
+    "@enact/agate": "2.0.2",
+    "@enact/spotlight": "^4.5.0",
+    "@enact/ui": "^4.5.0",
+    "@enact/webos": "^4.5.0",
+    "prop-types": "^15.7.2",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-beautiful-dnd": "^13.1.1",
+    "redux": "^4.0.5",
+    "react-redux": "^7.2.0",
+    "ilib": "^14.14.0"
   },
   "devDependencies": {
-    "@enact/cli": "^1.0.2",
+    "@enact/cli": "4.1.6",
     "minimist": "^1.2.0"
   }
 }

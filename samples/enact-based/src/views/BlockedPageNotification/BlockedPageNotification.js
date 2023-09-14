@@ -13,8 +13,7 @@
 
 import $L from '@enact/i18n/$L';
 import kind from '@enact/core/kind';
-import React from 'react';
-import Button from '@enact/moonstone/Button';
+import Button from '@enact/agate/Button';
 import PropTypes from 'prop-types';
 
 import css from './BlockedPageNotification.module.less';
@@ -37,7 +36,7 @@ const BlockedPageNotification = kind({
 				<div className={css.notificationIcon} />
 				<div className={css.notificationTitle}>{$L('This webpage is blocked by Site Filtering')}</div>
 				<br />
-				<Button onClick={onOpenSiteFiltering} css={css} small>{$L('Settings')}</Button>
+				<Button onClick={onOpenSiteFiltering} css={css} size={"large"}>{$L('Settings')}</Button>
 			</div>
 		)
 	}

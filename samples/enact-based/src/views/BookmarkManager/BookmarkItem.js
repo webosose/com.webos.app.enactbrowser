@@ -12,10 +12,10 @@
  */
 
 import {connect} from 'react-redux';
-import Checkbox from '@enact/moonstone/Checkbox';
-import Item from '@enact/moonstone/Item';
+import Checkbox from '@enact/agate/Checkbox';
+import Item from '@enact/agate/Item';
 import PropTypes from 'prop-types';
-import React, {Component} from 'react';
+import {Component} from 'react';
 
 import {selectBookmark} from '../../actions';
 

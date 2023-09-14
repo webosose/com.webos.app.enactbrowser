@@ -11,13 +11,11 @@
  *
  */
 
-import $L from '@enact/i18n/$L';
 import {connect} from 'react-redux';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
-import React from 'react';
 
-import {BrowserIconButton as IconButton} from '../BrowserIconButton';
+import Button from '@enact/agate/Button';
 
 import css from './NavigationBox.module.less';
 
@@ -61,20 +59,20 @@ const NavigationBoxBase = kind({
 
 		return (
 			<div {...rest}>
-				<IconButton
+				<Button
 					backgroundOpacity="transparent"
 					disabled={!canGoBack}
 					onClick={onBack}
-					tooltipText={$L('Previous')}
-					type="backButton"
+					icon="arrowlargeleft"
+					size="large"
 				/>
-				<IconButton
+				<Button
 					backgroundOpacity="transparent"
 					className={css.button}
 					disabled={!canGoForward}
 					onClick={onForward}
-					tooltipText={$L('Next')}
-					type="forwardButton"
+					icon="arrowlargeright"
+					size="large"
 				/>
 			</div>
 		);

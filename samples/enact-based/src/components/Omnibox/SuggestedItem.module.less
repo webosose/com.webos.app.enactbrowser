@@ -1,11 +1,41 @@
 /* SuggestedItem.module.less */
 
-.icon {
-	pointer-events: none;
+@import '~@enact/agate/styles/mixins.less';
+@import '~@enact/agate/styles/skin.less';
+@import '~@enact/agate/styles/variables.less';
+
+
+div {
+	color: black;
 }
 
-.item {
-	display: inline-block;
-	width: 85%;
-	vertical-align: top;
+.icon {
+	pointer-events: none;
+	scale: 1.5;
+}
+
+.Item {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+
+	.applySkins({
+		border-bottom-color: transparent;
+
+		.focus({
+			border-bottom-color: transparent;
+		});
+	});
+
+	div {
+        color: black;
+        width: 100%;
+        font-size: 45px;
+    }
+}
+
+.container {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
 }

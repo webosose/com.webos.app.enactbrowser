@@ -1,4 +1,3 @@
-import React from 'react';
 import { useCallback, useState, useEffect } from 'react';
 
 import {Dialog as DialogBase} from '../../../../samples/enact-based/src/components/Dialog/Dialog';
@@ -14,7 +13,7 @@ function Dialog({model}) {
             button: 'ok',
             text: text
         });
-    }, [model.ipc]);
+    }, [model.ipc, alertsCount]);
 
     const onAuthOk = useCallback((login, password) => {
         model.ipc.post('button_pressed', {
@@ -32,7 +31,7 @@ function Dialog({model}) {
         model.ipc.post('block_dialogs', {});
     }, [model.ipc]);
 
-    useEffect(() => { setAlertsCount(model.alertsCount) }, []);
+    useEffect(() => { setAlertsCount(model.alertsCount) }, [model.alertsCount]);
     useEffect(() => {
         const callback = (dialogProps) => {
             setMessageType(dialogProps.messageType);

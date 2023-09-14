@@ -6,15 +6,16 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
-import React, { useState, useEffect, useCallback } from 'react';
-import MoonstoneDecorator from '@enact/moonstone/MoonstoneDecorator';
+import { useState, useEffect, useCallback } from 'react';
 
-import Menu from './../Views/Menu';
-import InputSuggestionList from './../Views/InputSuggestionList';
-import ExitFullscreenButton from './../Views/ExitFullscreenButton';
-import ChromeExtensions from './../Views/ChromeExtensions';
-import Dialog from './../Views/Dialog';
-import ZoomControlMenu from './../Views/ZoomControlMenu';
+import Menu from '../Views/Menu';
+import InputSuggestionList from '../Views/InputSuggestionList';
+import ExitFullscreenButton from '../Views/ExitFullscreenButton';
+import ChromeExtensions from '../Views/ChromeExtensions';
+import Dialog from '../Views/Dialog';
+import ZoomControlMenu from '../Views/ZoomControlMenu';
+import AppDecorator from '../../../samples/enact-based/src/components/AppDecorator'
+import ThemeDecorator from '@enact/agate/ThemeDecorator';
 
 function App({model}) {
     console.log(`App render`);
@@ -29,7 +30,7 @@ function App({model}) {
                 ipc.post('documentSize', {contentType: contentType, size: {h: element.offsetHeight}});
             });
         }
-    }, [contentType]);
+    }, [contentType, model.ipc]);
 
     useEffect(() => {
         if (contentType !== "dialog") {
@@ -45,7 +46,7 @@ function App({model}) {
             })
             model.genericIpc.post('created', ipc.ipcObject.channel);
         });
-    }, []);
+    }, [model.genericIpc, model]);
 
     let content;
     switch(contentType) {
@@ -85,4 +86,4 @@ function App({model}) {
     )
 }
 
-export default MoonstoneDecorator({i18n: false}, App);
+export default AppDecorator(ThemeDecorator({i18n: false}, App));

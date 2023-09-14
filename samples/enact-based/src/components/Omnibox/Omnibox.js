@@ -13,12 +13,14 @@
 
 import $L from '@enact/i18n/$L';
 import {connect} from 'react-redux';
-import Notification from '@enact/moonstone/Notification';
+import Popup from '@enact/agate/Popup';
 import PropTypes from 'prop-types';
-import React, {Component} from 'react';
+import {Component} from 'react';
 import Spotlight from '@enact/spotlight';
+import classNames from 'classnames';
 
-import {BrowserIconButton as IconButton} from '../BrowserIconButton';
+import Icon from '@enact/agate/Icon';
+import Button from '@enact/agate/Button';
 import {TabTypes} from '../../NevaLib/BrowserModel';
 import AddressBar from './AddressBar';
 
@@ -96,18 +98,18 @@ class OmniboxBase extends Component {
 	getOmniboxIcon = () => {
 		const {url} = this.props;
 
-		if (this.state.isEditing) {
-			return "searchButton";
+		if (this.isEditing) {
+			return "search2";
 		} else if (url === 'chrome://bookmarks') {
-			return "bookmarksButton";
+			return "bookmark";
 		} else if (url === 'chrome://history') {
-			return "historyButton";
+			return "history";
 		} else if (url.startsWith('https')) {
-			return "secureButton";
+			return "lock";
 		} else if (url === '') {
-			return "searchButton";
+			return "search2";
 		} else {
-			return "wwwButton";
+			return "browser";
 		}
 	}
 
@@ -131,42 +133,45 @@ class OmniboxBase extends Component {
 			<div {...rest} className={css.div}>
 				<form className={css.form} onSubmit={this.onNavigate}>
 					<AddressBar browser={browser} onUrlChanged={this.onUrlChanged}/>
-					<IconButton
+					<Icon
 						backgroundOpacity="transparent"
-						className={css.headButton}
-						type={this.getOmniboxIcon()}
-					/>
+						className={classNames(css.searchIcon)}
+						size={"large"}>
+						{this.getOmniboxIcon()}
+					</Icon>
 					{reloadDisabled ?
 						null :
-						<IconButton
+						<Button
+							css={css}
 							backgroundOpacity="transparent"
-							className={css.bookmarkButton}
-							tooltipText={isBookmarked ? $L('Delete from bookmarks') : $L('Add to bookmarks')}
+							className={classNames(css.iconButton, css, css.small, css.bookmarkButton)}
 							onClick={isBookmarked ? this.onBookmarkRemove : this.onBookmarkAdd}
-							type={isBookmarked ? "removeBookmarkButton" : "addBookmarkButton"}
+							icon={isBookmarked ? 'star' : 'starhollow'}
+							size={"large"}
 						/>
 					}
-					<IconButton
+					<Button
+						css={css}
 						backgroundOpacity="transparent"
-						className={css.reloadStopButton}
-						tooltipText={$L('Refresh')}
+						className={classNames(css.iconButton, css.small, css.reloadStopButton)}
 						onClick={this.onReloadStop}
 						disabled={reloadDisabled}
-						type={isLoading ? "closeButton" : "reloadButton"}
+						icon={isLoading ? 'closex' : 'refresh'}
+						size={"large"}
 					/>
 				</form>
-				<Notification
+				<Popup
 					open={addBookmarkCompleted}
 					noAutoDismiss
 				>
 					<span>{$L('Bookmark has been added.')}</span>
-				</Notification>
-				<Notification
+				</Popup>
+				<Popup
 					open={removeBookmarkCompleted}
 					noAutoDismiss
 				>
 					<span>{$L('Bookmark has been deleted.')}</span>
-				</Notification>
+				</Popup>
 			</div>
 		);
 	}

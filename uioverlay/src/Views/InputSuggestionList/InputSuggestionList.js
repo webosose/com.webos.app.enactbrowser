@@ -8,7 +8,7 @@
 
 /*global CustomEvent*/
 
-import React, {Component} from 'react';
+import {Component} from 'react';
 
 import SuggestedItem from '../../../../samples/enact-based/src/components/Omnibox/SuggestedItem';
 

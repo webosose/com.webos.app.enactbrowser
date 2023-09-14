@@ -11,14 +11,13 @@
  *
  */
 
-import $L from '@enact/i18n/$L';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import React, {Component} from 'react';
 import Spotlight from '@enact/spotlight';
 
 import {Browser} from '../../NevaLib/BrowserModel';
 
-import {BrowserIconButton as IconButton} from '../../components/BrowserIconButton';
+import Button from '@enact/agate/Button';
 import {connect} from 'react-redux';
 import ContentView from '../ContentView';
 import DialogView from '../DialogView';
@@ -227,21 +226,21 @@ class MainBase extends Component {
 						<Menu browser={browser} menu={this.props.menu}/>
 						{maybeChromeExtensionsMenu}
 
-						<IconButton
+						<Button
 							backgroundOpacity="transparent"
 							className={css.button}
 							onClick={this.onFullScreen}
-							tooltipText={$L('Full screen')}
-							type="fullscreenButton"
+							icon="fullscreen"
+							size={"large"}
 						/>
 						{
 							this.showExitButton ?
-							<IconButton
-								backgroundOpacity="transparent"
+							<Button
 								className={css.button}
+								backgroundOpacity="transparent"
 								onClick={this.onClose}
-								tooltipText={$L('Exit app')}
-								type="xButton"
+								icon="closex"
+								size={"large"}
 							/> :
 							null
 						}

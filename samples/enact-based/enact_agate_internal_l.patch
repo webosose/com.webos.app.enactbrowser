@@ -1,0 +1,11 @@
+--- a/node_modules/@enact/agate/internal/$L/$L.js
++++ b/node_modules/@enact/agate/internal/$L/$L.js
+@@ -86,7 +86,7 @@ function toIString(str) {
+ 
+   if (!rb) {
+     createResBundle({
+-      sync: true,
++      sync: false,
+       onLoad: setResBundle
+     });
+     rb = getResBundle();

@@ -6,11 +6,8 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
-import React from 'react';
 import {render} from 'react-dom';
-import MoonstoneDecorator from '@enact/moonstone/MoonstoneDecorator';
-import store from './store'
-import { Provider } from 'react-redux'
+import ThemeDecorator from '@enact/agate/ThemeDecorator';
 import App from './App';
 import InputSuggestionListModel from './components/InputSuggestionListModel';
 import ExitFullscreenButtonModel from './components/ExitFullscreenButtonModel';
@@ -19,7 +16,8 @@ import ChromeExtensionsModel from './components/ChromeExtensionsModel';
 import MenuModel from './components/MenuModel';
 import createDialogModel from './components/DialogModel';
 import Ipc from '../../src/Ipc';
-import initLogging from '../../src/Logger';
+import {initLogging} from 'js-browser-lib/Logger';
+import AppDecorator from '../../samples/enact-based/src/components/AppDecorator'
 
 if (typeof window !== 'undefined') {
     initLogging();
@@ -51,12 +49,10 @@ const model = {
     zoomControl: new ZoomControlModel()
 };
 
-const PrerenderApp = MoonstoneDecorator({i18n: false}, <div />);
+const PrerenderApp = AppDecorator(ThemeDecorator({i18n: false}, <div />));
 
 const appElement = (typeof window !== 'undefined') ? (
-    <Provider store={store}>
-        <App model={model} />
-    </Provider>
+    <App model={model} />
 ) : (<PrerenderApp />);
 
 // In a browser environment, render instead of exporting

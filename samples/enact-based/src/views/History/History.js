@@ -12,14 +12,14 @@
  */
 
 import $L from '@enact/i18n/$L';
-import Button from '@enact/moonstone/Button';
+import Button from '@enact/agate/Button';
 import {connect} from 'react-redux';
-import Notification from '@enact/moonstone/Notification';
+import Popup from '@enact/agate/Popup';
 import PropTypes from 'prop-types';
-import React, {Component} from 'react';
+import {Component} from 'react';
 import ri from '@enact/ui/resolution';
 import Spotlight from '@enact/spotlight';
-import VirtualList from '@enact/moonstone/VirtualList';
+import VirtualList from '@enact/agate/VirtualList';
 
 import HistoryItem from './HistoryItem';
 import {selectAllHistory, deselectAllHistory} from '../../actions';
@@ -47,7 +47,7 @@ class HistoryBase extends Component {
 		this.retrieveHistory();
 	}
 
-	componentWillReceiveProps (nextProps) {
+	UNSAFE_componentWillReceiveProps (nextProps) {
 		if (!this.props.isSelectedTab && nextProps.isSelectedTab) {
 			this.retrieveHistory();
 		}
@@ -171,9 +171,9 @@ class HistoryBase extends Component {
 
 		return (
 			<div className={css.history} {...rest}>
-				<Button css={css} onClick={this.onSelectAll} disabled={!data.length} small>{(data.length && data.length === hasSelection) ? $L('DESELECT ALL') : $L('SELECT ALL')}</Button>
-				<Button css={css} onClick={this.onDelete} disabled={!data.length || !hasSelection} small>{$L('Delete')}</Button>
-				<Notification
+				<Button css={css} onClick={this.onSelectAll} disabled={!data.length} size={"small"}>{(data.length && data.length === hasSelection) ? $L('DESELECT ALL') : $L('SELECT ALL')}</Button>
+				<Button css={css} onClick={this.onDelete} disabled={!data.length || !hasSelection} size={"small"}>{$L('Delete')}</Button>
+				<Popup
 					open={this.state.deletePopupOpen}
 					noAutoDismiss
 				>
@@ -184,13 +184,13 @@ class HistoryBase extends Component {
 						<Button onClick={this.onDeleteNo}>{$L('NO')}</Button>
 						<Button onClick={this.onDeleteYes}>{$L('YES')}</Button>
 					</buttons>
-				</Notification>
-				<Notification
+				</Popup>
+				<Popup
 					open={this.state.completePopupOpen}
 					noAutoDismiss
 				>
 					<span>{$L('Selected history has been deleted.')}</span>
-				</Notification>
+				</Popup>
 				{
 					(this.viewData && this.viewData.length > 0) ?
 						<VirtualList

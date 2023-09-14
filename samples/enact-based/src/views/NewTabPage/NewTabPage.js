@@ -14,7 +14,7 @@
 import $L from '@enact/i18n/$L';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import React, {Component} from 'react';
+import {Component} from 'react';
 import Spotlight from '@enact/spotlight';
 
 import {Bookmark} from '../../components/BookmarkBar';
@@ -39,7 +39,7 @@ class NewTabPageBase extends Component {
 		props.browser.mostVisited.retrieveWithThumbnails(numOfMostVisited);
 	}
 
-	componentWillReceiveProps (nextProps) {
+	UNSAFE_componentWillReceiveProps (nextProps) {
 		if (!this.props.isSelectedTab && nextProps.isSelectedTab) {
 			this.retrieveRecentlyClosed();
 			this.retrieveMostVisited();

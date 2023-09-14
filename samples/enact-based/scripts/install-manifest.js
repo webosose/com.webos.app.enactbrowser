@@ -11,7 +11,7 @@
 'use strict';
 try {
     const {
-            from = 'manifest.json',
+            from = '../manifest.json',
             to = 'dist/manifest.json',
             version_suffix = ''
         } = require('minimist')(process.argv.slice(2));

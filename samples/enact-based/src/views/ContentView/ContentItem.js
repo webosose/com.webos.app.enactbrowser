@@ -8,7 +8,6 @@
 
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
-import React from 'react';
 import ri from '@enact/ui/resolution';
 
 import BookmarkManager from '../BookmarkManager';

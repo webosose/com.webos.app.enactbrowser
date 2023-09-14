@@ -6,40 +6,35 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
-import Item from '@enact/moonstone/Item';
-import React from 'react';
+import Item from '@enact/agate/Item';
 import $L from '@enact/i18n/$L';
-import { useSelector, useDispatch } from 'react-redux'
 import { useEffect, useState } from 'react';
-import { selectDevSettings, set } from '../../store/slice/menu/devSettingsSlice'
 
 import css from './Menu.module.less';
 
 function Menu({model, onUpdate}) {
-    const dispatch = useDispatch();
-    const showDevSettings = useSelector(selectDevSettings);
+    const [showDevSettings, setShowDevSettings] = useState(false);
 
     useEffect(() => {
-        model.ipc.on('showDevSettings', ({showDevSettingsItem}) => {
+        const handler = ({showDevSettingsItem}) => {
             console.log(`showDevSettings message arrived ${showDevSettingsItem}`);
-            dispatch(set(showDevSettingsItem));
-        });
-    }, []);
+            setShowDevSettings(showDevSettingsItem);
+        };
+        model.ipc.on('showDevSettings', handler);
+        return () => model.ipc.removeEventListener('showDevSettings', handler);
+    }, [model.ipc]);
 
-    const [items, setItems] = useState([
+    let items = [
         {message: 'history', text: 'History'},
         {message: 'bookmarks', text: 'Bookmarks'},
-        {message: 'settings', text: 'Settings'}]);
+        {message: 'settings', text: 'Settings'}
+    ];
 
-    useEffect(() => {
-        if (showDevSettings === true) {
-            if (!items.find((item) => item.message === 'devSettings')) {
-                setItems([...items, {message: 'devSettings', text: 'Dev Settings'}]);
-            }
-        } else {
-            setItems(items.filter(item => item.message !== 'devSettings'));
-        }
-    }, [showDevSettings])
+    if (showDevSettings === true) {
+        items = [...items, {message: 'devSettings', text: 'Dev Settings'}];
+    } else {
+        items = items.filter(item => item.message !== 'devSettings');
+    }
 
     console.log(items)
 
@@ -54,7 +49,7 @@ function Menu({model, onUpdate}) {
         </Item>
     ));
 
-    useEffect(onUpdate, [renderItems, items, showDevSettings])
+    useEffect(onUpdate, [renderItems, items, showDevSettings, onUpdate])
 
     return (
         <div id="app" className={css.topArea}>

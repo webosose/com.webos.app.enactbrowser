@@ -8,12 +8,24 @@
 
 /* Menu.module.less */
 
+@import '~@enact/agate/styles/mixins.less';
+@import '~@enact/agate/styles/skin.less';
+@import '~@enact/agate/styles/variables.less';
+
 .topArea {
-	width: 230;
 	height: 500;
-	background-color: rgba(75, 75, 75, 0.95);
+	background-color: rgba(236, 236, 236, 0.95);
+	border-radius: 20px;
 }
 
 body {
-	width: max-content;
+	width: min-content;
+}
+
+.menuItem {
+	border-radius: 20px;
+	div {
+		font-size: 50px;
+		border-radius: 20px;
+	}
 }

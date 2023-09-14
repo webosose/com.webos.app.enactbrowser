@@ -14,7 +14,6 @@
 import {connect} from 'react-redux';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
-import React from 'react';
 
 import AuthDialog from '../../components/AuthDialog';
 

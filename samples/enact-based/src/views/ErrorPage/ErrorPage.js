@@ -13,11 +13,10 @@
 
 import $L from '@enact/i18n/$L';
 import classNames from 'classnames';
-import Button from '@enact/moonstone/Button';
+import Button from '@enact/agate/Button';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
-import Notification from '@enact/moonstone/Notification';
-import React from 'react';
+import Popup from '@enact/agate/Popup';
 
 import css from './ErrorPage.module.less';
 
@@ -45,18 +44,18 @@ const ErrorPage = kind({
 
 		const buttons =
 					<buttons>
-						<Button onClick={onWait}>{$L('Wait')}</Button>
-						<Button onClick={onStop}>{$L('Stop')}</Button>
+						<Button onClick={onWait} size={"large"}>{$L('Wait')}</Button>
+						<Button onClick={onStop} size={"large"}>{$L('Stop')}</Button>
 					</buttons>;
 
 		const dialog =
-					<Notification
+					<Popup
 						noAutoDismiss
 						open={show_error_dialog}
 					>
 						<p>{$L('The current page has become unresponsive. You can wait for it to become responsive.')}</p>
 					{buttons}
-					</Notification>;
+					</Popup>;
 
 		const error_page =
 					<div {...rest}>
