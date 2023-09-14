@@ -47,8 +47,8 @@ class WebViewFactoryBase {
         try {
             // |url| maybe does not have a scheme (protocol) due to unexpected case
             // so that we have to handle this exception to avoid any crash to be happened.
-            let hostname = new URL(url).hostname;
-            if (hostname && hostname.includes('webex.com')) {
+            const hostname = new URL(url).hostname;
+            if (hostname && hostname.endsWith('webex.com')) {
                 return currentUserAgent.replace("Web0S; Linux", "X11; Linux");
             }
         } catch (error) {
