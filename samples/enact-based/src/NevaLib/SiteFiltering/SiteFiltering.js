@@ -45,8 +45,8 @@ class SiteFiltering {
 	updateURL(oldURL, newURL) {
 		this.controller.updateURL(oldURL, newURL, this.updateUrlList);
 	}
-	deletURLs(urls) {
-		this.controller.deletURLs(urls, this.updateUrlList)
+	deletURLs(urls, isDeleteAll) {
+		this.controller.deletURLs(urls, isDeleteAll, this.updateUrlList);
 	}
 	setMode(mode) {
 		this.controller.setState(filteringOptions.indexOf(mode), this.updateUrlList);

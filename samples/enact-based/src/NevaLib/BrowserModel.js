@@ -22,10 +22,11 @@ import MostVisited from './MostVisited';
 import PreviousSessionTabs from './PreviousSessionTabs';
 import RecentlyClosed from './RecentlyClosed';
 import SearchService from './SearchService';
-import {Settings, SettingsConsts} from './Settings';
+import {Settings, SettingsConsts, SettingsKeys} from './Settings';
 import SiteFiltering from './SiteFiltering';
 import {ReduxTabs as TabsModel} from './Tabs';
 import createTabPolicy from './TabPolicyFactory';
+import CookieManager from './CookieManager';
 
 Object.assign(TabTitles, {
 	SITE_FILTERING_TITLE: 'Site Filtering',
@@ -83,6 +84,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
 		browser.recentlyClosed = new RecentlyClosed(store, db, tabsModel);
 		browser.mostVisited = new MostVisited(store, db, tabsModel, browser.webViews);
 		browser.searchService = new SearchService();
+		browser.cookieManager = new CookieManager();
 		browser.tabPolicy = undefined; // eslint-disable-line no-undefined
 		browser.devSettingsEnabled = false;
 		browser.config.initialize(getDefaults().config)
@@ -187,6 +189,16 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
 			super.clearData(),
 			this.mostVisited.removeAll(),
 			this.recentlyClosed.removeAll()
+		]);
+	}
+
+	restoreSettings () {
+		const settingsDefault = getDefaults().settings;
+		return Promise.all([
+			this.setPrivateBrowsing(settingsDefault[SettingsKeys.PRIVATE_BROWSING_KEY]),
+			this.settings.setAllSettings(settingsDefault),
+			this.siteFiltering.deletURLs([], true),
+			this.cookieManager.clearCookies(),
 		]);
 	}
 

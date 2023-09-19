@@ -68,11 +68,18 @@ class SettingsBase extends Component {
       clearing: false,
       completePopupOpen: false,
       matchedPin: "yet",
+      resetState: "",
     };
   }
 
   componentDidMount() {
     document.addEventListener("webOSLocaleChange", this.onLocaleChange);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.homePageUrl !== this.props.homePageUrl) {
+      this.setState({ value: nextProps.homePageUrl })
+    }
   }
 
   onLocaleChange = () => {
@@ -164,16 +171,40 @@ class SettingsBase extends Component {
     this.setState({ siteFilteringOpen: false, matchedPin: "yet" });
   };
 
+  onResetDeaults = () => {
+    this.setState({ resetState: "open" });
+  };
+
+  onResetNo = () => {
+    this.setState({ resetState: "" });
+  }
+
+  _resetDone = () => {
+    this.setState({ resetState: "completed" });
+    setTimeout(() => {
+      this.setState({ resetState: "" });
+    }, 1500);
+  }
+
+  onResetYes = () => {
+    this.setState({ resetState: "resetting" });
+    Promise.race([
+      this.props.browser.restoreSettings(),
+      new Promise((resolve) => setTimeout(resolve, 3000)),
+    ])
+      .then(this._resetDone, this._resetDone);
+  }
+
   render() {
     const {
-        className,
-        startupPage,
-        searchEngine,
-        alwaysShowBookmarks,
-        siteFiltering,
-        privateBrowsing,
-        ...rest
-      } = this.props,
+      className,
+      startupPage,
+      searchEngine,
+      alwaysShowBookmarks,
+      siteFiltering,
+      privateBrowsing,
+      ...rest
+    } = this.props,
       scrollerClass = classNames(css.scroller, {
         [css.shrinkHeight]: alwaysShowBookmarks,
       }),
@@ -194,7 +225,7 @@ class SettingsBase extends Component {
               itemProps={{ inline: false }}
               select="radio"
               selectedProp="selected"
-              defaultSelected={startupOption}
+              selected={startupOption}
               onSelect={this.onSelectStartupOption}
             >
               {[
@@ -220,7 +251,7 @@ class SettingsBase extends Component {
               itemProps={{ inline: true, className: css.inlineGroupItem }}
               select="radio"
               selectedProp="selected"
-              defaultSelected={searchEngines.indexOf(searchEngine)}
+              selected={searchEngines.indexOf(searchEngine)}
               onSelect={this.onSelectSearchEngine}
             >
               {searchEngines}
@@ -273,6 +304,46 @@ class SettingsBase extends Component {
           </Popup>
           <Button onClick={this.onClearBrowsingData} css={css} size="small">
             {$L("CLEAR BROWSING DATA")}
+          </Button>
+          <br />
+
+          <Popup
+            open={this.state.resetState === "open"}
+            noAutoDismiss
+            title={$L("Reset settings to default?")}
+          >
+            <p>{$L("This action will:")}</p>
+            <p>
+              • {$L("Reset some settings")}<br />
+              • {$L("Delete cookies and other temporary site data")}<br />
+              {privateBrowsing && (
+                <>• {$L("Close all current web pages")}</>
+              )}
+            </p>
+            <p>{$L("Bookmarks, history won't be affected.")}</p>
+            <buttons>
+              <Button onClick={this.onResetNo} size="small">
+                {$L("NO")}
+              </Button>
+              <Button onClick={this.onResetYes} size="small">
+                {$L("YES")}
+              </Button>
+            </buttons>
+          </Popup>
+          <Popup
+            centered
+            open={["resetting", "completed"].includes(this.state.resetState)}
+            noAutoDismiss
+          >
+            <span>
+              {$L(this.state.resetState === "resetting"
+                ? "Resetting settings..."
+                : "All settings data has been restored.")}
+            </span>
+          </Popup>
+          <br />
+          <Button onClick={this.onResetDeaults} css={css} size="small">
+            {$L("RESET SETTINGS")}
           </Button>
 
           <PinPopup

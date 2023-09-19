@@ -61,15 +61,16 @@ class SiteFiltering {
     /*
      * Delete urls
      * Allowed or blocked sites decide based on the site filter state
+     * Param isDeleteAll: if true, allow deleting all urls in both Approved
+     * and Blocked modes
      */
-    deletURLs(urls, callback) {
+    deletURLs(urls, isDeleteAll = false, callback) {
         if (urls) {
-            this.navigatorSiteFilter.deleteURLs(urls, false, (status) => {
-                if (status) {
+            this.navigatorSiteFilter.deleteURLs(urls, isDeleteAll, (status) => {
+                if (status && callback) {
                     this.getURLS(callback);
                 }
             });
-
         }
     }
 }
