@@ -23,6 +23,8 @@ import {
     setMaxSuspendedNormal,
     setMaxSuspendedLow,
     setMaxSuspendedCritical,
+    setApprovedSites,
+    setBlockedSites,
 } from  './actions.js';
 
 const STORE_NAME = 'settings';
@@ -259,6 +261,24 @@ class Settings extends SettingsBase {
 
     matchPinCode = (pinCode) => {
         return this.store.getState().settingsState.pinNumber === pinCode;
+    }
+
+    setFilterEmptySites = () => {
+        this.store.dispatch(setApprovedSites([]));
+        this.store.dispatch(setBlockedSites([]));
+        return Promise.resolve();
+    }
+
+    setAllSettings = (values) => {
+        return Promise.all([
+            this.setStartupPage(values[SettingsKeys.STARTUP_PAGE_KEY]),
+            this.setHomePageUrl(values[SettingsKeys.HOME_PAGE_URL_KEY]),
+            this.setSearchEngine(values[SettingsKeys.SEARCH_ENGINE_KEY]),
+            this.setAlwaysShowBookmarks(values[SettingsKeys.ALWAYS_SHOW_BOOKMARKS_KEY]),
+            this.setSiteFiltering(values[SettingsKeys.SITE_FILTERING_KEY]),
+            this.setPinCode(values[SettingsKeys.PIN_NUMBER_KEY]),
+            this.setFilterEmptySites(),
+        ]);
     }
 }
 

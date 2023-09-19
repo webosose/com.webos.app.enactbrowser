@@ -89,6 +89,14 @@ class SiteFiltering {
 		this.controller.setFilter(null);
 		return Promise.resolve();
 	}
+
+	resetFilter() {
+		return Promise.all(
+			this.filterStorages[WHITE_LIST_MODE].removeAll(),
+			this.filterStorages[BLACK_LIST_MODE].removeAll(),
+			this.controller.setFilter(null),
+		);
+	}
 }
 
 export default SiteFiltering;
