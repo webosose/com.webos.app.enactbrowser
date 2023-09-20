@@ -186,6 +186,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
                 window.document.addEventListener('click', () => {
                     if (this.extensionPopupView) {
                         window.shell.shellWindow.pageView.removeChildView(this.extensionPopupView);
+                        this.extensionPopupView.setVisible(false);
                     }
                     this.extensionPopupView = undefined;
                 }, {once: true});
@@ -205,6 +206,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
                 console.log("close-extension-popup event occured");
                 if (this.extensionPopupView && this.extensionPopupView.id === popup_view_id) {
                     window.shell.shellWindow.pageView.removeChildView(this.extensionPopupView);
+                    this.extensionPopupView.setVisible(false);
                 }
                 this.extensionPopupView = undefined;
             });
