@@ -54,7 +54,7 @@ class IndexedDb {
         nevaIdbLogOn &&
             console.log('--- DBConnection::open::%s', name);
         const thisDBConnection = this;
-        const dbVersion = 3;
+        const dbVersion = 4;
         return new Promise((resolve, reject) => {
             if (typeof window === 'object') {
                 let dbHasUpgraded = false;

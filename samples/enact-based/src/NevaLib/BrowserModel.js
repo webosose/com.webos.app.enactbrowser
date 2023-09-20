@@ -27,6 +27,7 @@ import {ReduxTabs as TabsModel} from './Tabs';
 import createTabPolicy from './TabPolicyFactory';
 import {isWindowReady} from '@enact/core/snapshot';
 import CookieManager from './CookieManager';
+import CustomUserAgent from './CustomUserAgent';
 
 Object.assign(TabTitles, {
     SITE_FILTERING_TITLE: 'Site Filtering',
@@ -84,6 +85,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
         browser.mostVisited = new MostVisited(store, db, tabsModel, browser.webViews);
         browser.searchService = new SearchService();
         browser.cookieManager = new CookieManager();
+        browser.customUserAgent = new CustomUserAgent(db, this.getNavigatorCustomUserAgent());
         browser.tabPolicy = undefined;
         browser.devSettingsEnabled = false;
         browser.siteFiltering = new SiteFiltering(browser.webViewFactory.getPartition(), db);
@@ -129,6 +131,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
         .then(() => {
             browser.siteFiltering.setMode(browser.settings.getSiteFiltering());
             browser.searchService.engine = browser.settings.getSearchEngine();
+            browser.customUserAgent.fetchUserAgents();
             browser.setStatisticsGathering(browser.settings.getPrivateBrowsing());
             browser.private_browsing_partition_id = "private";
             browser.initializeTabs();
@@ -246,9 +249,9 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
         this.clearData("private").then(() => {
             if (isWindowReady()) {
                 const launchArgs = window.shell.launchArgs;
-                if (launchArgs.override_user_agent_string) {
-                    console.log(`UA string: ${launchArgs.override_user_agent_string}`);
-                    this.useragentOverride = launchArgs.override_user_agent_string;
+                if (launchArgs['user-agent']) {
+                    console.log(`UA string: ${launchArgs['user-agent']}`);
+                    this.useragentOverride = launchArgs['user-agent'];
                 }
                 if (launchArgs.target) {
                     hasTargetInLaunchParams = true;
