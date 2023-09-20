@@ -27,6 +27,7 @@ import SiteFiltering from './SiteFiltering';
 import {ReduxTabs as TabsModel} from './Tabs';
 import createTabPolicy from './TabPolicyFactory';
 import CookieManager from './CookieManager';
+import CustomUserAgent from './CustomUserAgent';
 
 Object.assign(TabTitles, {
 	SITE_FILTERING_TITLE: 'Site Filtering',
@@ -85,6 +86,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
 		browser.mostVisited = new MostVisited(store, db, tabsModel, browser.webViews);
 		browser.searchService = new SearchService();
 		browser.cookieManager = new CookieManager();
+		browser.customUserAgent = new CustomUserAgent(db, this.getNavigatorCustomUserAgent());
 		browser.tabPolicy = undefined; // eslint-disable-line no-undefined
 		browser.devSettingsEnabled = false;
 		browser.config.initialize(getDefaults().config)
@@ -103,9 +105,10 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
 				}
 			})
 			.then(() => {
-				browser.siteFiltering = new SiteFiltering(store,this.getNavigatorSiteFilter(),db);
+				browser.siteFiltering = new SiteFiltering(store, this.getNavigatorSiteFilter(), db);
 				browser.siteFiltering.setMode(browser.settings.getSiteFiltering());
 				browser.searchService.engine = browser.settings.getSearchEngine();
+				browser.customUserAgent.fetchUserAgents();
 				browser.setStatisticsGathering(browser.settings.getPrivateBrowsing());
 				browser.initializeTabs();
 			});
