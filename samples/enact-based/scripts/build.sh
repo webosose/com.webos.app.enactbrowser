@@ -17,11 +17,6 @@ cp label.js background.js webos-locale.js defaults.js dist
 ./scripts/install-manifest.js --from=manifest.json --to=dist/manifest.json --version_suffix=`git rev-parse HEAD`
 
 (
-    cd ../../exitFullscreenButton
-    scripts/build.sh $1
-)
-
-(
-    cd ../../browserMenu
+    cd ../../uioverlay
     scripts/build.sh $1
 )

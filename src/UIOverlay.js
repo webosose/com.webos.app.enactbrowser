@@ -36,7 +36,7 @@ class UIOverlay {
               "page-contents-type": "ui"
             }});
             window.shell.shellWindow.pageView.addChildView(this.view);
-            this.view.pageContents.loadFile("menu/index.html");
+            this.view.pageContents.loadFile("uioverlay/index.html");
             this.view.pageContents.setPageBaseBackgroundColor('#FFFFFF00');
         }
 

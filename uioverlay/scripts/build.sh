@@ -12,5 +12,5 @@ $ENACT_NPM install
 
 $ENACT_DEV pack --isomorphic $1
 
-mkdir $BROWSER_DIST/menu/
-cp -r dist/* $BROWSER_DIST/menu/
+mkdir $BROWSER_DIST/uioverlay/
+cp -r dist/* $BROWSER_DIST/uioverlay/
