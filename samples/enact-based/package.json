@@ -49,6 +49,7 @@
     "ilib": "^14.15.1 || ^14.15.1-webos1"
   },
   "devDependencies": {
+    "@enact/cli": "^1.0.2",
     "minimist": "^1.2.0"
   }
 }

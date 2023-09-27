@@ -10,7 +10,11 @@ ENACT_DEV=${ENACT_DEV:-enact}
     $ENACT_NPM run transpile
 )
 
+echo build main browser
+
 $ENACT_NPM install
+ENACT_DEV=$(readlink -f node_modules/@enact/cli/bin/enact.js)
+$ENACT_DEV -v
 $ENACT_DEV pack $1
 
 cp label.js background.js webos-locale.js defaults.js dist

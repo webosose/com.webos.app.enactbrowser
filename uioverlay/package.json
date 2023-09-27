@@ -43,6 +43,7 @@
 		"react-redux": "^8.0.2"
 	},
 	"devDependencies": {
+		"@enact/cli": "^1.0.2",
 		"@types/react-dom": "^16.9.16"
 	}
 }
