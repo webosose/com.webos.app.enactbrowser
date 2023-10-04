@@ -12,7 +12,7 @@ import React from 'react';
 
 import Main from '../views/Main';
 
-import css from './App.less';
+import css from './App.module.less';
 
 const App = kind({
 	name: 'App',

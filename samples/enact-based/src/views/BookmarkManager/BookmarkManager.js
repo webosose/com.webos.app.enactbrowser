@@ -22,7 +22,7 @@ import Scroller from '@enact/moonstone/Scroller';
 import BookmarkList from './BookmarkList';
 import {selectAllBookmarks, deselectAllBookmarks} from '../../actions';
 
-import css from './BookmarkManager.less';
+import css from './BookmarkManager.module.less';
 
 class BookmarkManagerBase extends Component {
 

@@ -17,7 +17,7 @@ import React from 'react';
 import Button from '@enact/moonstone/Button';
 import PropTypes from 'prop-types';
 
-import css from './BlockedPageNotification.less';
+import css from './BlockedPageNotification.module.less';
 
 const BlockedPageNotification = kind({
 	name: 'BlockedPageNotification',

@@ -19,7 +19,7 @@ import React, {Component} from 'react';
 
 import {selectApprovedSite, selectBlockedSite} from '../../actions';
 
-import css from './SiteFilteringItem.less';
+import css from './SiteFilteringItem.module.less';
 
 class SiteFilteringItemBase extends Component {
 	static propTypes = {

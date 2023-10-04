@@ -10,7 +10,7 @@ import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import componentCss from './BrowserIcon.less';
+import componentCss from './BrowserIcon.module.less';
 
 const BrowserIcon = kind({
 	name: 'BrowserIcon',

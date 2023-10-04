@@ -41,7 +41,7 @@ import {
 import PinPopup from '../../components/PinPopup';
 import SiteFilteringItem from './SiteFilteringItem';
 
-import css from './SiteFiltering.less';
+import css from './SiteFiltering.module.less';
 
 const filteringOptions = ['off', 'whitelist', 'blacklist'];
 const filteringOptionsText = [$L('Off'), $L('Approved Sites'), $L('Blocked Sites')];

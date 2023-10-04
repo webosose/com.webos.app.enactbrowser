@@ -19,7 +19,7 @@ import Notification from '@enact/moonstone/Notification';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
-import css from './Dialog.less';
+import css from './Dialog.module.less';
 
 class Dialog extends Component {
 	static props = {

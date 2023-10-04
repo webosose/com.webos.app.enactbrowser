@@ -15,7 +15,7 @@ import React from 'react';
 import {BrowserButtonBase as ButtonBase} from '../BrowserButtonBase';
 import BrowserIcon from '../BrowserIcon';
 
-import componentCss from './BrowserIconButton.less';
+import componentCss from './BrowserIconButton.module.less';
 
 const BrowserIconButtonBase = kind({
 	name: 'BrowserIconButton',

@@ -24,7 +24,7 @@ import VirtualList from '@enact/moonstone/VirtualList';
 import HistoryItem from './HistoryItem';
 import {selectAllHistory, deselectAllHistory} from '../../actions';
 
-import css from './History.less';
+import css from './History.module.less';
 
 class HistoryBase extends Component {
 

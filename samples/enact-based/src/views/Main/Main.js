@@ -33,7 +33,7 @@ import {TabBar} from '../../components/TabBar';
 import {isWindowReady} from '@enact/core/snapshot';
 import { TabTypes } from '../../NevaLib/BrowserModel';
 
-import css from './Main.less';
+import css from './Main.module.less';
 
 const maxTab = 7;
 

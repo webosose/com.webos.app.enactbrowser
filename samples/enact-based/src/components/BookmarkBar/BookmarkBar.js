@@ -21,7 +21,7 @@ import Bookmark from './Bookmark';
 import Sortable from '../Sortable';
 import {moveBookmarkSelected} from '../../actions';
 
-import css from './BookmarkBar.less';
+import css from './BookmarkBar.module.less';
 
 const placeholder = (typeof document === 'object') ? document.createElement('li') : null;
 

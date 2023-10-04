@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from 'react';
 import Button from '@enact/moonstone/Button';
 import $L from '@enact/i18n/$L';
 
-import css from './ExitFullscreenButton.less';
+import css from './ExitFullscreenButton.module.less';
 
 function ExitFullscreenButton(props) {
     const escKeyHandler = useCallback(({key}) => {

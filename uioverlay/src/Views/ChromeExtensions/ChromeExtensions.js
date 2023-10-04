@@ -11,7 +11,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Item from '@enact/moonstone/Item';
 import $L from '@enact/i18n/$L';
 
-import css from './ChromeExtensions.less'
+import css from './ChromeExtensions.module.less'
 
 function ChromeExtensions({model, onUpdate}) {
     let items = [];

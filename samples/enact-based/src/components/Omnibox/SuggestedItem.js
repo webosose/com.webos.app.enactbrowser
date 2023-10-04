@@ -18,7 +18,7 @@ import React from 'react';
 
 import {BrowserIconButton as IconButton} from '../BrowserIconButton';
 
-import css from './SuggestedItem.less';
+import css from './SuggestedItem.module.less';
 
 const SuggestedItem = kind({
 	name: 'SuggestedItem',

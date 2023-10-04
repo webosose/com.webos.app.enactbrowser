@@ -17,7 +17,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Spottable from '@enact/spotlight/Spottable';
 
-import css from './Bookmark.less';
+import css from './Bookmark.module.less';
 
 const
 	SpottableDiv = Spottable('div'),

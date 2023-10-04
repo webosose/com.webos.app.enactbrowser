@@ -14,7 +14,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 
 import {BrowserIconButton as IconButton} from '../BrowserIconButton';
-import css from './ChromeExtensionsMenu.less';
+import css from './ChromeExtensionsMenu.module.less';
 
 function ChromeExtensionsMenu({chromeExtensionsMenu}) {
 

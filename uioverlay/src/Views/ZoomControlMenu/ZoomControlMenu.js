@@ -9,7 +9,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Picker from '@enact/moonstone/Picker'
 
-import css from './ZoomControlMenu.less';
+import css from './ZoomControlMenu.module.less';
 
 const
     zoomLabels = [

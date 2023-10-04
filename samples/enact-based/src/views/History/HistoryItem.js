@@ -19,7 +19,7 @@ import React, {Component} from 'react';
 
 import {selectHistory} from '../../actions';
 
-import css from './HistoryItem.less';
+import css from './HistoryItem.module.less';
 
 class HistoryItemBase extends Component {
 	static propTypes = {

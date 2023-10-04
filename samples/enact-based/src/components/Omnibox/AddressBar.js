@@ -10,7 +10,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import $L from '@enact/i18n/$L';
 import Input from '@enact/moonstone/Input';
 import {connect} from 'react-redux';
-import css from './Omnibox.less';
+import css from './Omnibox.module.less';
 import Spotlight from '@enact/spotlight';
 
 function createSuggestionsList ({urlSuggestions, searchEngine, bookmarksData, value}) {

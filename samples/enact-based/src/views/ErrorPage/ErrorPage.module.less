@@ -1,0 +1,33 @@
+/* ErrorPage.module.less */
+
+.errorPage {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background-color: black;
+	padding-top: 10%;
+	padding-left: 30%;
+}
+
+.errorIcon {
+	background-size: cover;
+	background-repeat: no-repeat;
+	width: 100px;
+	height: 100px;
+	margin-bottom: 21px;
+	&.normal {
+		background-image: url('../../../assets/default/error_generic_big.png');
+	}
+	&.crash {
+		background-image: url('../../../assets/default/sadtab.png');
+	}
+}
+
+.errorTitle {
+	color: white;
+	font-size: 39px;
+}
+
+.errorCode {
+	font-size: 28px;
+}

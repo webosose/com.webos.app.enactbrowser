@@ -19,7 +19,7 @@ import React from 'react';
 
 import {BrowserIconButton as IconButton} from '../BrowserIconButton';
 
-import css from './NavigationBox.less';
+import css from './NavigationBox.module.less';
 
 const nop = () => {};
 

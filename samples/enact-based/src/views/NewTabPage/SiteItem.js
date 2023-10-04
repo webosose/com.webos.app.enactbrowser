@@ -16,7 +16,7 @@ import IconButton from '@enact/moonstone/IconButton';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
-import css from './SiteItem.less';
+import css from './SiteItem.module.less';
 
 const
 	CloseButton = (props) => (

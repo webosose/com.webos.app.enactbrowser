@@ -12,7 +12,7 @@ import React, {Component} from 'react';
 
 import SuggestedItem from '../../../../samples/enact-based/src/components/Omnibox/SuggestedItem';
 
-import css from './InputSuggestionList.less'
+import css from './InputSuggestionList.module.less'
 
 class InputSuggestionList extends Component {
     constructor (props) {

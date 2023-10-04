@@ -18,7 +18,7 @@ import Input from '@enact/moonstone/Input';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
-import css from './PinPopup.less';
+import css from './PinPopup.module.less';
 
 class PinPopup extends Component {
 	static propTypes = {

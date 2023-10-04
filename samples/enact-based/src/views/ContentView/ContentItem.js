@@ -20,7 +20,7 @@ import SiteFiltering from '../SiteFiltering';
 import {TabTypes} from '../../NevaLib/BrowserModel';
 import WebView from '../WebView';
 
-import css from './ContentView.less';
+import css from './ContentView.module.less';
 
 const
     hideStyle = {

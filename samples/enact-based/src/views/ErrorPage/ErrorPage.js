@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import Notification from '@enact/moonstone/Notification';
 import React from 'react';
 
-import css from './ErrorPage.less';
+import css from './ErrorPage.module.less';
 
 const ErrorPage = kind({
 	name: 'ErrorPage',

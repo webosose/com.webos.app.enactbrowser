@@ -14,7 +14,7 @@
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
-import css from './ExitFullScreenButton.less';
+import css from './ExitFullScreenButton.module.less';
 
 class ExitFullScreenButton extends Component {
 	static props = {

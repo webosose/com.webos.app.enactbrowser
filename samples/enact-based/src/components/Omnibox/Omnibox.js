@@ -22,7 +22,7 @@ import {BrowserIconButton as IconButton} from '../BrowserIconButton';
 import {TabTypes} from '../../NevaLib/BrowserModel';
 import AddressBar from './AddressBar';
 
-import css from './Omnibox.less';
+import css from './Omnibox.module.less';
 
 class OmniboxBase extends Component {
 

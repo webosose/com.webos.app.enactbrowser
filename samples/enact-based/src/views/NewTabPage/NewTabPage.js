@@ -21,7 +21,7 @@ import {Bookmark} from '../../components/BookmarkBar';
 import RecentlyClosed from './RecentlyClosed';
 import {SiteItem, EmptyItem} from './SiteItem';
 
-import css from './NewTabPage.less';
+import css from './NewTabPage.module.less';
 
 const numOfMostVisited = 10;
 

@@ -17,7 +17,7 @@ import { isWindowReady } from '@enact/core/snapshot';
 
 import {BrowserIconButton as IconButton} from '../BrowserIconButton';
 import Ipc from 'js-browser-lib/Ipc';
-import css from './Menu.less';
+import css from './Menu.module.less';
 
 class Menu extends Component {
 	static propTypes = {

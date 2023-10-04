@@ -25,7 +25,7 @@ import RangePicker from '@enact/moonstone/RangePicker';
 import Input from '@enact/moonstone/Input';
 import ExpandableList from '@enact/moonstone/ExpandableList';
 import {Panel} from '@enact/moonstone/Panels';
-import css from './DevSettings.less';
+import css from './DevSettings.module.less';
 
 const OnOffButton = kind({
 	name: 'OnOffButton',

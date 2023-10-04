@@ -20,7 +20,7 @@ import BookmarkItem from './BookmarkItem';
 import Sortable from '../../components/Sortable';
 import {moveBookmarkSelected, deselectAllBookmarks} from '../../actions';
 
-import css from './BookmarkList.less';
+import css from './BookmarkList.module.less';
 
 const placeholder = (typeof document === 'object') ? document.createElement('li') : null;
 

@@ -19,7 +19,7 @@ import ErrorPage from '../ErrorPage';
 import BlockedPageNotification from '../BlockedPageNotification';
 import {setFullScreen, setWebContentFullscreen} from '../../actions';
 
-import css from './WebView.less';
+import css from './WebView.module.less';
 
 const
 	WebViewWrapperId = '_webview',

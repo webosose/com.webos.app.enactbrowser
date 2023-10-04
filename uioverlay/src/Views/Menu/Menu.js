@@ -13,7 +13,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useEffect, useState } from 'react';
 import { selectDevSettings, set } from '../../store/slice/menu/devSettingsSlice'
 
-import css from './Menu.less';
+import css from './Menu.module.less';
 
 function Menu({model, onUpdate}) {
     const dispatch = useDispatch();

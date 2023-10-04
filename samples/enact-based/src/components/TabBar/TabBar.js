@@ -25,7 +25,7 @@ import {TabTypes} from '../../NevaLib/BrowserModel';
 import Sortable from '../Sortable';
 import Spotlight from '@enact/spotlight';
 
-import css from './TabBar.less';
+import css from './TabBar.module.less';
 
 const placeholder = (typeof document === 'object') ? document.createElement('li') : null;
 

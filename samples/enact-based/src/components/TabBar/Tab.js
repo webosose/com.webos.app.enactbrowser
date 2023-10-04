@@ -24,7 +24,7 @@ import {Draggable} from 'react-beautiful-dnd';
 import {BrowserIconButton as IconButton} from '../BrowserIconButton';
 import {TabTypes} from '../../NevaLib/BrowserModel';
 
-import css from './Tab.less';
+import css from './Tab.module.less';
 
 const
 	SpottableDiv = Spottable('div'),

@@ -17,7 +17,7 @@ import { isWindowReady } from '@enact/core/snapshot';
 
 import { BrowserIconButton as IconButton } from '../BrowserIconButton';
 import Ipc from 'js-browser-lib/Ipc';
-import css from './ZoomControl.less';
+import css from './ZoomControl.module.less';
 
 class ZoomControl extends Component {
 	constructor (props) {

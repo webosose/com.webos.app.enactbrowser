@@ -15,7 +15,7 @@ import $L from '@enact/i18n/$L';
 import Button from '@enact/moonstone/Button';
 import React, {Component} from 'react';
 
-import css from './RecentlyClosed.less';
+import css from './RecentlyClosed.module.less';
 
 class RecentlyClosed extends Component {
 	constructor (props) {
