@@ -1,10 +1,10 @@
 {
-	"id": "browsermenu",
+	"id": "uioverlay",
 	"version": "1.0.0",
 	"vendor": "LGE-NEVA",
 	"type": "web",
 	"main": "index.html",
-	"title": "Neva browser menu",
+	"title": "Neva browser uioverlay",
 	"icon": "icon.png",
 	"miniicon": "icon-mini.png",
 	"largeIcon": "icon-large.png",
