@@ -100,6 +100,7 @@ class PageContentsWrapper {
         ['did-start-loading',
          'did-fail-load',
          'did-finish-load',
+         'did-finish-navigation',
          'did-push-history-navigation',
          'did-start-navigation',
          'did-stop-loading',
@@ -128,6 +129,7 @@ class PageContentsWrapper {
         this.addEventListener('did-fail-load', this.handleDidFailLoad.bind(this));
         this.addEventListener('dom-ready', this.handleDomReady.bind(this));
         this.addEventListener('did-finish-load', this.handleFinishLoading.bind(this));
+        this.addEventListener('did-finish-navigation', this.handleFinishNavigation.bind(this));
         this.addEventListener('did-push-history-navigation',this.handlePushHistoryNavigation.bind(this));
         this.addEventListener('dialog', this.handleDialog.bind(this));
         this.addEventListener('zoomchange', this.handleZoomChange.bind(this));
@@ -305,38 +307,45 @@ class PageContentsWrapper {
         this.tabView.pageContents.closeNow();
     }
 
-    handleFinishLoading(url) {
-        this.dialogData.resetAlertState();
+    handleFinishLoading(url, is_main_frame) {
+        if (is_main_frame) {
+            this.dialogData.resetAlertState();
 
-        // Update tab url only if it not error page
-        if (!this.isAborted) {
-            this.url = url;
-        }
+            this.tabView.pageContents.executeJavaScriptInMainFrame(
+                `var style = document.createElement('style')
+                style.innerHTML = 'a:-webkit-any-link { cursor: pointer; }'
+                document.head.appendChild(style)`
+            );
 
-        this.tabView.pageContents.executeJavaScriptInMainFrame(
-            `var style = document.createElement('style')
-            style.innerHTML = 'a:-webkit-any-link { cursor: pointer; }'
-            document.head.appendChild(style)`
-        );
-
-        this.keyDownIpc = new ShellIpc(`keydown_${this.rootId}`);
-        this.keyDownIpc.on('keydown', ({key}) => {
-            console.log(`keydown event ${key}`);
-            const event = new KeyboardEvent('keydown', {
-                key : key
+            this.keyDownIpc = new ShellIpc(`keydown_${this.rootId}`);
+            this.keyDownIpc.on('keydown', ({ key }) => {
+                console.log(`keydown event ${key}`);
+                const event = new KeyboardEvent('keydown', {
+                    key: key
+                });
+                document.dispatchEvent(event);
             });
-            document.dispatchEvent(event);
-        });
 
-        this.tabView.pageContents.executeJavaScriptInMainFrame(
-            `if (typeof(ShellIpc) !== 'undefined') {
-                window.shellIpc = new ShellIpc('keydown_${this.rootId}');
-                window.addEventListener('keydown', ({key}) => {
-                    window.shellIpc.post('keydown', {key: key});
-                })
-            }`
-        );
-        console.log(`[WebView] handleFinishLoading: focus webview ${this.url}`);
+            this.tabView.pageContents.executeJavaScriptInMainFrame(
+                `if (typeof(ShellIpc) !== 'undefined') {
+                    window.shellIpc = new ShellIpc('keydown_${this.rootId}');
+                    window.addEventListener('keydown', ({key}) => {
+                        window.shellIpc.post('keydown', {key: key});
+                    })
+                }`
+            );
+        }
+    }
+
+    handleFinishNavigation(url) {
+        console.log(`[WebView] handleFinishNavigation ${url}`);
+        this.url = url;
+
+        this.canGoBack = this.tabView.pageContents.canGoBack;
+        this.canGoForward = this.tabView.pageContents.canGoForward;
+        console.log(`canGoBack: ${this.canGoBack}, canGoForward: ${this.canGoForward}`);
+
+        console.log(`[WebView] handleFinishNavigation: focus webview ${this.url}`);
         this.tabView.pageContents.setFocus();
     }
 
@@ -549,10 +558,12 @@ class PageContentsWrapper {
         }
     }
 
-    handleDidFailLoad(ev) {
-        this.isAborted = true;
-        this.url = url;
-        console.warn("The load has aborted with error " + ev.code + " : " + ev.reason + ' url = ' + ev.url);
+    handleDidFailLoad(url, is_main_frame, error, error_code) {
+        if (is_main_frame) {
+            this.isAborted = true;
+            this.url = url;
+        }
+        console.warn("The load has aborted with error " + error + " : " + error_code + ' url = ' + url + ' is main frame ' + is_main_frame);
     }
 };
 

@@ -329,6 +329,7 @@ class BrowserBase {
         webview.addEventListener('contentload', () => this._handleContentLoad(state.id));
         webview.addEventListener('did-stop-loading', () => this._handleLoadStop(state.id));
         webview.addEventListener('did-finish-load', this._handleFinishLoading(state.id));
+        webview.addEventListener('did-finish-navigation', this._handleFinishNavigation(state.id));
         webview.addEventListener('newwindow', this._handleNewWindow());
         webview.addEventListener('did-update-favicon-url', this._handleUpdateFaviconUrl(state.id, webview));
         webview.addEventListener('open-url-from-tab', this._handleOpenUrlFromTab());
@@ -568,15 +569,21 @@ class BrowserBase {
 
     _handleFinishLoading = (tabId) => (url) => {
         console.log(`BrowserBase::_handleFinishLoading ${url}`);
+    }
+
+    _handleFinishNavigation = (tabId) => (url) => {
+        console.log(`BrowserBase::_handleFinishNavigation ${url}`);
         this.updateNavigation(tabId, url);
     }
 
-    _handleFailLoad = (tabId) => (url, error, code) => {
+    _handleFailLoad = (tabId) => (url, is_main_frame, error, code) => {
         console.log(`BrowserBase::_handleFailLoad ${url}, error ${error}, code ${code}`);
-        const tab = this.tabs.getTab(tabId);
-        tab.setError(error);
+        if (is_main_frame) {
+            const tab = this.tabs.getTab(tabId);
+            tab.setError(error);
 
-        this.updateNavigation(tabId, url);
+            this.updateNavigation(tabId, url);
+        }
     }
 
     _handlePushHistoryNavigation = (tabId) => (url) => {
