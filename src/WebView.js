@@ -317,23 +317,16 @@ class PageContentsWrapper {
                 document.head.appendChild(style)`
             );
 
-            this.keyDownIpc = new ShellIpc(`keydown_${this.rootId}`);
-            this.keyDownIpc.on('keydown', ({ key }) => {
+            const rcuBackKeyCode = 461;
+            this.tabView.pageContents.enableKeyCodeEvent(['Escape', rcuBackKeyCode]);
+
+            this.tabView.pageContents.on('key-event', ({key}) => {
                 console.log(`keydown event ${key}`);
                 const event = new KeyboardEvent('keydown', {
                     key: key
                 });
                 document.dispatchEvent(event);
             });
-
-            this.tabView.pageContents.executeJavaScriptInMainFrame(
-                `if (typeof(ShellIpc) !== 'undefined') {
-                    window.shellIpc = new ShellIpc('keydown_${this.rootId}');
-                    window.addEventListener('keydown', ({key}) => {
-                        window.shellIpc.post('keydown', {key: key});
-                    })
-                }`
-            );
         }
     }
 
