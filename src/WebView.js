@@ -536,6 +536,13 @@ class PageContentsWrapper {
         this.isAborted = false;
         this.isAlertsAllowed = true;
         this.alertsCount = 0;
+
+        this.tabView.pageContents.on('mouse-click-event', (e) => {
+            const event = new KeyboardEvent('click', {
+                button : e.buttoncode
+            });
+            document.dispatchEvent(event);
+        })
     }
 
     handleLoadProgressChanged(ev) {

@@ -13,10 +13,8 @@
 
 import {Component} from 'react';
 import PropTypes from 'prop-types';
-import { isWindowReady } from '@enact/core/snapshot';
 
 import Button from '@enact/agate/Button';
-import Ipc from 'js-browser-lib/Ipc';
 import css from './Menu.module.less';
 
 class Menu extends Component {
@@ -30,13 +28,6 @@ class Menu extends Component {
 			isOpened: false
 		}
 		this.menu = props.menu;
-
-		if (isWindowReady()) {
-			this.menuIpc = new Ipc("ipc_menu");
-			this.menuIpc.subscribe('click', () => {
-				this.setState({isOpened: false});
-			});
-		}
 	}
 
 	toggleMenu = () => {
