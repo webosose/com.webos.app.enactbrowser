@@ -54,16 +54,12 @@ class WebViewBase extends Component {
 			shell.shellWindow.on('vkb-overlap', ({height}) => {
 				console.log(`vkb-overlap ${height}`);
 				this.setState({vkbInset: height});
-				this.props.webView.tabView.pageContents.executeJavaScriptInMainFrame(
-					`window.scrollBy(0, ${height})`
-				);
+				this.props.webView.tabView.pageContents.scrollByY(height);
 			});
 			shell.shellWindow.on('vkb-change-state', (isShown) => {
 				console.log(`'vkb-change-state ${isShown}`);
 				if (!isShown) {
-					this.props.webView.tabView.pageContents.executeJavaScriptInMainFrame(
-						`window.scrollBy(0, ${-this.state.vkbInset})`
-					);
+					this.props.webView.tabView.pageContents.scrollByY(-this.state.vkbInset);
 					this.setState({vkbInset: 0});
 				}
 			});
