@@ -61,15 +61,19 @@ class UAInput extends Component {
 		}
 
 		let chrome_version_re = /(Chrome\/\d+\.\d+\.\d+\.\d+)/;
-		let chrome_version = chrome_version_re.exec(window.navigator.userAgent)[1];
 
-		this.ua_list =
-		[
+		this.ua_list = [
 			"Default UA",
 			"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.0 Safari/537.36",
 			"Mozilla/5.0 (Linux; Android 10; Pixel 5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.0 Mobile Safari/537.36"
-		].map(e => {
-			return e.replace(chrome_version_re, chrome_version);
+		]
+
+		const regexp_result = chrome_version_re.exec(window.navigator.userAgent);
+		const version_string = regexp_result && regexp_result.length > 0
+			? regexp_result[1] : "Chrome/___._.____._";
+
+		this.ua_list = this.ua_list.map(e => {
+			return e.replace(chrome_version_re, version_string);
 		});
 	}
 
