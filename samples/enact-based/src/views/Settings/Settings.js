@@ -74,7 +74,7 @@ class SettingsBase extends Component {
 		this.setState({value: ev.value});
 	}
 
-	onClose = () => {
+	saveHomePage = () => {
 		const {browser} = this.props;
 		browser.settings.setHomePageUrl(this.state.value);
 	}
@@ -194,7 +194,7 @@ class SettingsBase extends Component {
 							placeholder={$L('Enter URL')}
 							value={this.state.value}
 							onChange={this.onChange}
-							onClose={this.onClose}
+							onBlur={this.saveHomePage}
 						/>
 					</div>
 
