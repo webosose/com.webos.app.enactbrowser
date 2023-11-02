@@ -64,7 +64,7 @@ class SiteFiltering {
      */
     deletURLs(urls, callback) {
         if (urls) {
-            this.navigatorSiteFilter.deleteURLs(urls, (status) => {
+            this.navigatorSiteFilter.deleteURLs(urls, false, (status) => {
                 if (status) {
                     this.getURLS(callback);
                 }
