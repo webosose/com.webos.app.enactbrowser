@@ -123,8 +123,9 @@ function AddressBarBase({url, browser, onUrlChanged, urlSuggestions, searchEngin
 		console.log(`[AddressBar] show/hide suggestions bar (${isEditing ? "editing" : "not editing"})`);
 		const hide = (ev) => {
 			if (isEditing) {
-				if (ev.target.offsetParent.id !== 'omniboxInput') {
+				if (!(ev.target && ev.target.offsetParent && ev.target.offsetParent.id === 'omniboxInput')) {
 					setIsEditing(false);
+					window.urlSuggestionsBar.hide();
 				}
 			}
 		}
