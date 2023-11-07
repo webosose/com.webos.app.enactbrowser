@@ -11,13 +11,13 @@
  *
  */
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 
 import Button from '@enact/agate/Button';
 import css from './ChromeExtensionsMenu.module.less';
 
-function ChromeExtensionsMenu({chromeExtensionsMenu}) {
-
+function ChromeExtensionsMenu({chromeExtensionsMenu, browser}) {
+	const extBtnRef = useRef(null);
 	const [isOpened, setIsOpened] = useState(false);
 
 	// eslint-disable-line react-hooks/exhaustive-deps
@@ -26,10 +26,10 @@ function ChromeExtensionsMenu({chromeExtensionsMenu}) {
 		if (isOpened) {
 			chromeExtensionsMenu.hide();
 		} else {
-			chromeExtensionsMenu.showAbove("nevaBrowserChromeExtensionsButton");
+			chromeExtensionsMenu.showAbove(extBtnRef.current);
 		}
 		setIsOpened(!isOpened);
-	}, [isOpened, chromeExtensionsMenu])
+	}, [isOpened, chromeExtensionsMenu, extBtnRef]);
 
 	useEffect(() => {
 		if (isOpened) {
@@ -47,16 +47,23 @@ function ChromeExtensionsMenu({chromeExtensionsMenu}) {
 		}
 	}, [isOpened, chromeExtensionsMenu]);
 
+	useEffect(() => {
+		if (browser.setExtensionButtonRef) {
+			browser.setExtensionButtonRef(extBtnRef);
+		}
+	}, [extBtnRef, browser]);
+
 	return (
-		<Button
-			id="nevaBrowserChromeExtensionsButton"
-			backgroundOpacity="transparent"
-			className={css.chromeExtensionsMenuButton}
-			onClick={onClick}
-			open={isOpened}
-			size={"large"}
-			icon={"install"}
-		/>
+		<div ref={extBtnRef}>
+			<Button
+				backgroundOpacity="transparent"
+				className={css.chromeExtensionsMenuButton}
+				onClick={onClick}
+				open={isOpened}
+				size={"large"}
+				icon={"install"}
+			/>
+		</div>
 	);
 }
 

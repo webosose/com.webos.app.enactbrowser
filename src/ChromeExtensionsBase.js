@@ -26,10 +26,8 @@ class ChromeExtensionsBase {
         }
     }
 
-    showAbove(buttonId) {
+    showAbove(button) {
         console.log(`show chrome extensions menu`);
-
-        let button = document.getElementById(buttonId);
         const buttonHeight = button.offsetHeight + 20;
         const leftBorderWidth = (document.body.clientWidth / 100) * 70;  // 10% of the document width
         const width = document.body.clientWidth - leftBorderWidth;

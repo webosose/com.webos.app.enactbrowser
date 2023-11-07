@@ -136,6 +136,10 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
         })
     }
 
+    setExtensionButtonRef(ref) {
+        this.extensionButtonRef = ref;
+    }
+
     initializeExtenionAPI() {
         if (typeof window !== 'undefined' && typeof window.neva !== 'undefined') {
             console.log("Add create-extension-tab event");
@@ -194,7 +198,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
                     this.extensionPopupView = undefined;
                 }, {once: true});
 
-                let button = document.getElementById('nevaBrowserChromeExtensionsButton');
+                const button = this.extensionButtonRef.current;
                 const buttonHeight = button.offsetHeight + 20;
                 const leftBorderWidth =  Math.round((document.body.clientWidth / 100) * 70);
                 const width = document.body.clientWidth - leftBorderWidth;
@@ -218,7 +222,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
                 console.log("update-extension-popup event occured");
                 if (this.extensionPopupView && this.extensionPopupView.id === popup_view_id) {
                   const left =  document.body.clientWidth - width;
-                  let button = document.getElementById('nevaBrowserChromeExtensionsButton');
+                  const button = this.extensionButtonRef.current;
                   const buttonHeight = button.offsetHeight + 20;
                   this.extensionPopupView.setBounds(left, buttonHeight, width, height);
                 }

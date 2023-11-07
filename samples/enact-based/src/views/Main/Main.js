@@ -202,7 +202,7 @@ class MainBase extends Component {
 		}
 
 		const maybeChromeExtensionsMenu = (isWindowReady() && typeof window.neva !== 'undefined') ?
-			(<ChromeExtensionsMenu chromeExtensionsMenu={this.props.chromeExtensionsMenu}/>) :
+			(<ChromeExtensionsMenu chromeExtensionsMenu={this.props.chromeExtensionsMenu} browser={browser}/>) :
 			(null)
 
 		const { tabs, ids, selectedIndex } = this.props;
