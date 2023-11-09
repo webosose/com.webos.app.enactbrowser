@@ -62,6 +62,13 @@ class ZoomControlBase extends Component {
     };
   }
 
+  componentDidMount() {
+    window.addEventListener("message", (ev) => {
+      if (ev.data && ev.data.event === 'click' && ev.data.rootUrl === ev.origin && this.state.isOpened)
+        this.setState({ isOpened: false })
+    });
+  }
+
   renderPopup = () => (
     <div>
       <Picker
