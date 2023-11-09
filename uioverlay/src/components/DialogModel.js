@@ -12,11 +12,20 @@ function createIpcChannel() {
     return new ShellIpc("ipc_dialog");
 }
 
-let context = {};
+let context = {
+    dialogProps: {
+        messageType: "",
+        messageText: "",
+        alertsCount: 0
+    }
+};
 
 function createDialogModel() {
     if (typeof ShellIpc !== 'undefined') {
         context.ipc = createIpcChannel();
+        context.ipc.on('ipc_dialog', (dialogProps) => {
+            context.dialogProps = dialogProps;
+        });
     }
     context.alertsCount = 0;
     return context;

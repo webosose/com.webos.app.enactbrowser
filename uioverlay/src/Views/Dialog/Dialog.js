@@ -33,16 +33,10 @@ function Dialog({model}) {
 
     useEffect(() => { setAlertsCount(model.alertsCount) }, [model.alertsCount]);
     useEffect(() => {
-        const callback = (dialogProps) => {
-            setMessageType(dialogProps.messageType);
-            setMessageText(dialogProps.messageText);
-            setAlertsCount(dialogProps.alertsCount);
-        };
-        model.ipc.on('ipc_dialog', callback);
-        return () => {
-            model.ipc.removeEventListener(callback);
-        }
-    }, [model.ipc])
+        setMessageType(model.dialogProps.messageType);
+        setMessageText(model.dialogProps.messageText);
+        setAlertsCount(model.dialogProps.alertsCount);
+    }, [model.dialogProps]);
 
     const dialog = {
         defaultPromptText: "",
