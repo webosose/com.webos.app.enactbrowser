@@ -151,11 +151,15 @@ class BrowserBase {
 
     closeTab(index) {
         window.QALog(`Close tab ${index}`);
+        let tabId = this.getWebviewByTabIndex({tabIndex: index}).getPageContentsId();
         if (this.tabs.count() !== 1) {
             this.tabs.deleteTab(index);
         } else {
             console.log(`[BrowserBase] replace tab with new tab page`);
             this.tabs.replaceTab(index, this._createNewTabPage());
+        }
+        if (typeof window !== 'undefined' && typeof window.neva !== 'undefined') {
+            window.neva.extensionTabClosed(tabId);
         }
     }
 

@@ -180,6 +180,10 @@ class PageContentsWrapper {
         this.dialogData.blockDialogsHandler = () => {
             this.dialogData.alertsAllowed = false;
         };
+
+        if (typeof window !== 'undefined' && typeof window.neva !== 'undefined') {
+            window.neva.extensionTabCreated(this.getPageContentsId())
+        }
     }
 
     handleUnresponsive() {
