@@ -80,7 +80,7 @@ class MemoryManagerTabPolicy {
         }
     */
     _handleLevelChanged = (ev) => {
-        console.log('Handle memory level change ' + ev);
+        window.QALog('Handle memory level change ' + ev);
         const policy = this.simplePolicy;
         policy.maxSuspendedTabFamilies = this.statusToMaxSuspended(ev);
         while (policy.queue.length > policy.maxSuspendedTabFamilies + policy.maxActiveTabFamilies) {
