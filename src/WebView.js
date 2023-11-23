@@ -318,11 +318,7 @@ class PageContentsWrapper {
         if (is_main_frame) {
             this.dialogData.resetAlertState();
 
-            this.tabView.pageContents.executeJavaScriptInMainFrame(
-                `var style = document.createElement('style')
-                style.innerHTML = 'a:-webkit-any-link { cursor: pointer; }'
-                document.head.appendChild(style)`
-            );
+            this.tabView.pageContents.enableHandShapedCursorForLinks();
 
             const rcuBackKeyCode = 461;
             this.tabView.pageContents.enableKeyCodeEvent(['Escape', rcuBackKeyCode]);
