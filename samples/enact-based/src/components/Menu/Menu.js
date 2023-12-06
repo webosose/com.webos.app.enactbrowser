@@ -48,6 +48,10 @@ class Menu extends Component {
 
   componentDidMount() {
     document.addEventListener("webOSLocaleChange", this.onLocaleChange);
+    window.addEventListener("message", (ev) => {
+      if (ev.data && ev.data.event === 'click' && ev.data.rootUrl === ev.origin && this.state.isOpened)
+        this.setState({ isOpened: false });
+    });
   }
 
   onLocaleChange = () => {
