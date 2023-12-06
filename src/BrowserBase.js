@@ -39,17 +39,22 @@ class WebViewFactoryBase {
     }
 
     getUserAgentOverride({ url }) {
-        const hostname = new URL(url).hostname;
-        const userAgent = this.browser.customUserAgent.getUserAgent(hostname);
-        if (userAgent) {
-            return userAgent;
-        }
-        // We need to override the user agent for WebEx site because
-        // WebEx web server is not allowed to open the meeting room with our enact
-        // browser's user agent. Temporarily hard code to change UA to Linux Google Chrome.
         const currentUserAgent = this.browser.useragentOverride;
-        if (currentUserAgent && hostname && hostname.endsWith('webex.com')) {
-            return currentUserAgent.replace("Web0S; Linux", "X11; Linux");
+        try {
+            const hostname = new URL(url).hostname;
+            const userAgent = this.browser.customUserAgent.getUserAgent(hostname);
+            if (userAgent) {
+                return userAgent;
+            }
+            // We need to override the user agent for WebEx site because
+            // WebEx web server is not allowed to open the meeting room with our enact
+            // browser's user agent. Therefore, we need to change the UA to Linux Google Chrome
+            // in case the database does not have any data.
+            if (currentUserAgent && hostname && hostname.endsWith('webex.com')) {
+                return currentUserAgent.replace("Web0S; Linux", "X11; Linux");
+            }
+        } catch (error) {
+            console.error(error);
         }
         return currentUserAgent;
     }
