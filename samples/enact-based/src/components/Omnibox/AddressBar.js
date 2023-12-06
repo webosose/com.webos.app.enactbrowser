@@ -96,7 +96,7 @@ function AddressBarBase({url, browser, onUrlChanged, urlSuggestions, searchEngin
 
 	useEffect(() => {
 		const items = createSuggestionsList({urlSuggestions, searchEngine, bookmarksData, value});
-		window.urlSuggestionsBar.sendSuggestion(items);
+		window.urlSuggestionsBar.provideSuggestions(items);
 	}, [urlSuggestions, searchEngine, bookmarksData, value]);
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -126,6 +126,7 @@ function AddressBarBase({url, browser, onUrlChanged, urlSuggestions, searchEngin
 	useEffect(() => {
 		console.log(`[AddressBar] show/hide suggestions bar (${isEditing ? "editing" : "not editing"})`);
 		const hide = (ev) => {
+			console.log("[AddressBar] click event");
 			if (isEditing) {
 				if (!(ev.target && ev.target.offsetParent && ev.target.offsetParent.id === 'omniboxInput')) {
 					setIsEditing(false);

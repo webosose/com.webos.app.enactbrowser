@@ -375,11 +375,12 @@ class PageContentsWrapper {
             return Promise.resolve();
 
         return window.dialogOverlay.uioverlay.setBounds({
-            x: Math.round(r.x),
-            y: Math.round(r.y),
-            w: Math.round(r.width),
-            h: Math.round(r.height)
-        }, 'dialog');
+            bounds: {
+                x: Math.round(r.x),
+                y: Math.round(r.y),
+                w: Math.round(r.width),
+                h: Math.round(r.height)
+            }, target: 'dialog'});
     }
 
     insertIntoDom(rootId) {

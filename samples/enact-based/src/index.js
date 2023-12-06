@@ -11,7 +11,7 @@ import {render} from 'react-dom';
 
 import App from './App';
 import configureStore from './store';
-import {UIOverlay} from 'js-browser-lib/UIOverlay';
+import {UIOverlay} from 'js-browser-lib/UIOverlay/UIOverlay';
 import {ExitFullscreenButtonBase} from 'js-browser-lib/ExitFullscreenButtonBase';
 import {Menu as MenuBase} from 'js-browser-lib/MenuBase';
 import {ChromeExtensionsBase} from 'js-browser-lib/ChromeExtensionsBase';
@@ -33,7 +33,7 @@ const menu = new MenuBase(uioverlay);
 const zoomControl = new ZoomControlBase(uioverlay);
 const exitFullscreenButton = new ExitFullscreenButtonBase(uioverlay);
 const chromeExtensionsMenu = (isWindowReady() && typeof window.neva !== 'undefined') ? new ChromeExtensionsBase(uioverlay) : null;
-const dialog = new DialogBase(new UIOverlay());
+const dialog = new DialogBase(uioverlay);
 const urlSuggestionsBar = new UrlSuggestionsBase(uioverlay);
 const userPermission = new UserPermissionBase(uioverlay);
 const bookmarkDialog = new BookmarkDialogBase(uioverlay);

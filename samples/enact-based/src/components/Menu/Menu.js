@@ -11,6 +11,8 @@
  *
  */
 
+/*global ShellIpc*/
+
 import {Component} from 'react';
 import PropTypes from 'prop-types';
 
@@ -28,38 +30,49 @@ class Menu extends Component {
 			isOpened: false
 		}
 		this.menu = props.menu;
+		if (typeof ShellIpc !== 'undefined') {
+			this.menuIpc = new ShellIpc("ipc_menu");
+		}
+	}
+
+	addClickListeners() {
+		console.log(`[Menu] addClickListeners`);
+		if (this.menuIpc) {
+			this.menuIpc.once("click", this.onClickListener);
+		}
+		window.document.addEventListener('click', this.onClickListener);
+	}
+
+	removeClickListeners() {
+		console.log(`[Menu] removeClickListeners`);
+		if (this.menuIpc) {
+			this.menuIpc.removeEventListener("click", this.onClickListener);
+		}
+		window.document.removeEventListener('click', this.onClickListener);
 	}
 
 	toggleMenu = () => {
-		const isOpened = !this.state.isOpened;
-		setTimeout(()=> {this.setState({isOpened});}, 100);
-	}
+		console.log(`[Menu] toggleMenu isOpened = `, this.state.isOpened);
 
-	componentDidMount() {
-		this.menu.menuIpc.ipcObject.on('click', () => {
-			if (this.state.isOpened) {
-				this.setState({isOpened: false});
-			}
-		})
-	}
-
-	componentDidUpdate () {
-		if (this.state.isOpened) {
-			this.menu.showAbove("nevaBrowserMenuButton");
-
-			if (typeof window !== 'undefined') {
-				['click', 'tab-select'].forEach(ev => {
-					window.document.addEventListener(ev, () => {
-						console.log(`Menu::on document ${ev} event`);
-						if (this.state.isOpened) {
-							this.setState({isOpened: false});
-						}
-					}, {once: true});
-				})
-			}
+		if (!this.state.isOpened) {
+			this.menu.showAbove("nevaBrowserMenuButton").then(() => {
+				this.addClickListeners();
+				this.setState({isOpened: true});
+			});
 		} else {
 			this.menu.hide();
+			this.setState({isOpened: false});
+			this.removeClickListeners();
 		}
+	}
+
+	onClickListener = (event) => {
+		console.log(`[Menu] onClickListener`, event);
+		if (event && event.stopPropagation) {
+			event.stopPropagation();
+		}
+		this.setState({isOpened: false});
+		this.menu.hide();
 	}
 
     render () {
@@ -73,7 +86,6 @@ class Menu extends Component {
 				backgroundOpacity="transparent"
 				className={css.menuButton}
 				onClick={this.toggleMenu}
-				open={this.state.isOpened}
 				icon="menu"
 				size="large"
 				{...props}

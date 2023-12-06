@@ -46,7 +46,6 @@ function App({model}) {
                 console.log(`switch content to ${type}`);
                 setContentType(type);
             })
-            model.genericIpc.post('created', ipc.ipcObject.channel);
         });
     }, [model.genericIpc, model]);
 

@@ -35,7 +35,13 @@ let ipc;
 
 if (typeof window !== 'undefined') {
     ipc = new Promise((resolve) => {
-        resolve(new Ipc(ipcChannelName));
+        const channel = new Ipc(ipcChannelName);
+        channel.ipcObject.on("ready", () => {
+            console.log("ready message");
+            resolve(channel);
+        });
+
+        genericIpc.post('created', ipcChannelName);
     });
     console.log(`Created IPC channel named ${ipcChannelName}`);
 }

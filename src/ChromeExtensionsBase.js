@@ -32,30 +32,29 @@ class ChromeExtensionsBase {
         const leftBorderWidth = (document.body.clientWidth / 100) * 70;  // 10% of the document width
         const width = document.body.clientWidth - leftBorderWidth;
 
-        this.uioverlay.switchContent('chrome_extensions')
-            .then(() => this.uioverlay.setBounds({
+        return this.uioverlay.show({
+            target: 'chrome_extensions', bounds: {
                 x: leftBorderWidth,
                 y: buttonHeight,
                 w: width
-            }, 'chrome_extensions'))
-            .then(() => this.uioverlay.setVisible(true))
-            .then(() => {
-                return new Promise((resolve) => {
-                    window.neva.getExtensionsInfo((infos) => {
-                        console.log(JSON.stringify(infos));
-                        this.ipc.post('extenstionsListUpdated', infos);
-                        resolve();
-                    });
-                })
-            })
-        this.uioverlay.view.pageContents.setFocus();
+            }
+        }).then((layer) => {
+            layer.view.pageContents.setFocus();
+            return new Promise((resolve) => {
+                window.neva.getExtensionsInfo((infos) => {
+                    console.log(JSON.stringify(infos));
+                    this.ipc.post('extenstionsListUpdated', infos);
+                    resolve();
+                });
+            });
+        })
     }
 
     destroy() {}
 
     hide() {
         console.log(`hide chrome extensions menu`);
-        this.uioverlay.setVisible(false, 'chrome_extensions');
+        return this.uioverlay.hide({target: 'chrome_extensions'});
     }
 
 };

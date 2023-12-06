@@ -31,23 +31,20 @@ class ZoomControl {
         const leftBorderWidth = (document.body.clientWidth / 100) * 70;
         const width = 170;
 
-        return this.uioverlay.switchContent('zoom_control')
-            .then(() => this.uioverlay.setBounds({
+        return this.uioverlay.show({
+            target: 'zoom_control', bounds: {
                 x: leftBorderWidth,
                 y: buttonHeight,
                 w: width
-            }, 'zoom_control'))
-            .then(() => this.uioverlay.setVisible(true))
-            .then(() => {
-                this.uioverlay.view.pageContents.setFocus();
-            })
+            }
+        }).then((layer) => layer.view.pageContents.setFocus());
     }
 
     destroy() {}
 
     hide() {
         console.log(`hide zoom control`);
-        this.uioverlay.setVisible(false, 'zoom_control');
+        this.uioverlay.hide({target: 'zoom_control'});
     }
 };
 

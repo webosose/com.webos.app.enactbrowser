@@ -22,19 +22,19 @@ class ExitFullscreenButtonBase {
 
         const button_width = 260;
 
-        this.uioverlay.switchContent('exit_fullscreen_button')
-            .then(() => this.uioverlay.setBounds({
+        return this.uioverlay.show({
+            target: 'exit_fullscreen_button', bounds: {
                 x: (window.innerWidth / 2) - (button_width / 2),
                 y: 20,
                 w: button_width,
                 h: 130
-            }, 'exit_fullscreen_button'))
-            .then(() => this.uioverlay.setVisible(true));
+            }
+        });
     }
 
     hide() {
         console.log(`ExitFullscreenButtonBase::hideExitFullscreenButton`);
-        this.uioverlay.setVisible(false, 'exit_fullscreen_button');
+        this.uioverlay.hide({target: 'exit_fullscreen_button'});
     }
 };
 

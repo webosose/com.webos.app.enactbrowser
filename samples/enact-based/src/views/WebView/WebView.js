@@ -220,9 +220,7 @@ class WebViewBase extends Component {
 	componentDidUpdate () {
 		console.log(`views::WebView::componentDidUpdate`);
 		this.props.webView.adjustBounds(this.state.webContentFullscreen ? "main_view" : this.props.id + WebViewWrapperId)
-			.then(() => {
-				this.props.webView.focus();
-			});
+		this.props.webView.focus();
 	}
 
 	onWait = () => {

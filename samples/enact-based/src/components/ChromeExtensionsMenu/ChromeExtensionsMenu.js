@@ -22,30 +22,42 @@ function ChromeExtensionsMenu({chromeExtensionsMenu, browser}) {
 
 	// eslint-disable-line react-hooks/exhaustive-deps
 	const onClick = useCallback((event) => {
+
+		const clickEventListener = () => {
+			console.log(`ChromeExtensionsMenu::on document click event`);
+			chromeExtensionsMenu.hide()
+				.then(() => {
+					setIsOpened(false);
+				});
+		}
+
+		const addClickEventListener = () => {
+			if (typeof window !== 'undefined') {
+				window.document.addEventListener('click', clickEventListener);
+			}
+		}
+
+		const removeClickEventListener = () => {
+			if (typeof window !== 'undefined') {
+				window.document.removeEventListener('click', clickEventListener);
+			}
+		}
+
 		event.stopPropagation();
 		if (isOpened) {
-			chromeExtensionsMenu.hide();
+			chromeExtensionsMenu.hide()
+				.then(() => {
+					removeClickEventListener();
+					setIsOpened(false);
+				})
 		} else {
-			chromeExtensionsMenu.showAbove(extBtnRef.current);
+			chromeExtensionsMenu.showAbove(extBtnRef.current)
+				.then(() => {
+					addClickEventListener();
+					setIsOpened(true);
+				})
 		}
-		setIsOpened(!isOpened);
 	}, [isOpened, chromeExtensionsMenu, extBtnRef]);
-
-	useEffect(() => {
-		if (isOpened) {
-			if (typeof window !== 'undefined') {
-				// eslint-disable-next-line no-unused-vars
-				window.document.addEventListener('click', (event) => {
-					console.log(`ChromeExtensionsMenu::on document click event`);
-					if (isOpened) {
-						setIsOpened(false);
-					}
-				}, {once: true});
-			}
-		} else {
-			chromeExtensionsMenu.hide();
-		}
-	}, [isOpened, chromeExtensionsMenu]);
 
 	useEffect(() => {
 		if (browser.setExtensionButtonRef) {

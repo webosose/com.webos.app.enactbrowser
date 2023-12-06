@@ -11,6 +11,7 @@ class InputSuggectionListModel {
         if (typeof CustomEvent !== 'undefined') { // it is for prerenderer.
             this.ipcPromise = ipcPromise;
             this.ipcPromise.then((ipc) => {
+                console.log(`subscribed to suggestionList`);
                 ipc.subscribe('suggestionList', (suggestions) => {
                     console.log(`suggestionList arrived ${suggestions}`);
                     this.suggestions = suggestions;
@@ -18,9 +19,8 @@ class InputSuggectionListModel {
                     const event = new CustomEvent("suggestionListUpdated", { detail: this.suggestions });
                     document.dispatchEvent(event);
                 });
+                ipc.post('switchContentReady');
             })
-
-            console.log(`subscribed to suggestionList`);
         }
 
         if (typeof window !== 'undefined') { // it is for prerenderer.

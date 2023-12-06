@@ -15,20 +15,21 @@ class DialogBase {
     }
 
     show(dialogProps, bounds) {
-        return this.uioverlay.switchContent('dialog')
-            .then(() => this.uioverlay.setBounds({
+        return this.uioverlay.show({
+            target: 'dialog',
+            bounds: {
                 x: bounds.x,
                 y: bounds.y,
                 w: bounds.width,
                 h: bounds.height
-            }, 'dialog'))
-            .then(() => this.ipc.post('ipc_dialog', dialogProps))
-            .then(() => this.uioverlay.setVisible(true, 'dialog'));
+            }
+        })
+            .then(() => this.ipc.post('ipc_dialog', dialogProps));
     }
 
     hide() {
         console.log(`DialogBase::dialog`);
-        this.uioverlay.setVisible(false, 'dialog');
+        this.uioverlay.hide({target: 'dialog'});
     }
 };
 
