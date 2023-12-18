@@ -163,13 +163,14 @@ class TabBarBase extends Component {
 			{ browser, selectedIndex, tabStates, ids } = this.props,
 			prevSelectedId = ids[prevProps.selectedIndex],
 			prevSelectedTab = prevProps.tabStates[prevSelectedId],
-			prevLoading = prevSelectedTab && prevSelectedTab.navState.isLoading,
+			prevUrl = prevSelectedTab ? prevSelectedTab.navState.url : '',
 			selectedId = ids[selectedIndex],
 			selectedTab = tabStates[selectedId];
 
 		// Focusing the current webview started loading / when selected a tab
 		if (selectedTab && selectedTab.type === TabTypes.WEBVIEW) {
-			if (prevSelectedId !== selectedId || (!prevLoading && selectedTab.navState.isLoading)) {
+			const { isLoading, url } = selectedTab.navState;
+			if (prevSelectedId !== selectedId || (isLoading && url !== prevUrl)) {
 				browser.webViews[selectedId].focus();
 				Spotlight.pause();
 			}
