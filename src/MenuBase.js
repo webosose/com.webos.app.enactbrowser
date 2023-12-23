@@ -23,8 +23,6 @@ class Menu {
             const launchArgs = window.shell.launchArgs;
             this.devSettings = launchArgs.devSettings ? launchArgs.devSettings : false;    
         }
-
-        this.doneOnce = false;
     }
 
     showAbove(buttonId) {
@@ -42,11 +40,8 @@ class Menu {
                 w: width
             }
         }).then((layer) => {
-            if (!this.doneOnce) {
-                console.log(`browser.devSettingsEnabled = ${this.devSettings}`);
-                this.menuIpc.post('showDevSettings', {showDevSettingsItem: this.devSettings});
-                this.doneOnce = true;
-            }
+            console.log(`browser.devSettingsEnabled = ${this.devSettings}`);
+            this.menuIpc.post('showDevSettings', {showDevSettingsItem: this.devSettings});
             layer.view.pageContents.setFocus();
             return layer;
         });
