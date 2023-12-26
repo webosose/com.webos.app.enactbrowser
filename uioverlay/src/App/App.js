@@ -28,8 +28,12 @@ function App({model}) {
         const element = document.getElementById('app');
         if (element) {
             model.ipc.then((ipc) => {
-                console.log(`send document size (${element.offsetHeight})`);
-                ipc.post('documentSize', {contentType: contentType, size: {h: element.offsetHeight}});
+                let windowHeight = element.getBoundingClientRect().height + element.getBoundingClientRect().y;
+                if (contentType === 'exit_fullscreen_button') {
+                    windowHeight *= 2;
+                }
+                console.log(`send document height (${windowHeight})`);
+                ipc.post('documentSize', {contentType: contentType, size: {h: windowHeight}});
             });
         }
     }, [contentType, model.ipc]);
