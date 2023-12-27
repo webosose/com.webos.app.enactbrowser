@@ -28,7 +28,7 @@ import Omnibox from '../../components/Omnibox';
 import ZoomControl from '../../components/ZoomControl';
 import UserPermission from '../../components/UserPermission';
 import PropTypes from 'prop-types';
-import {setFullScreen} from '../../actions';
+import {setFullScreen, setBrowserLoadingCompleted} from '../../actions';
 import {TabBar} from '../../components/TabBar';
 import {isWindowReady} from '@enact/core/snapshot';
 import { TabTypes } from '../../NevaLib/BrowserModel';
@@ -98,6 +98,10 @@ class MainBase extends Component {
 
 		document.addEventListener('setInsetY', this.onSetInsetY);
 		this.props.exitFullscreenButton.ipc.on('exit-fullscreen', this.onExitFullScreen.bind(this));
+
+		browser.browserLoadingPromise.then(() => {
+			this.props.setBrowserLoadingCompleted(true);
+		});
 	}
 
 	componentDidUpdate () {
@@ -306,7 +310,8 @@ const mapStateToProps = ({ settingsState, browserState, tabsState }) =>  {
 
 const mapDispatchToProps = (dispatch) => {
 	return ({
-		setFullScreen: (enable) => dispatch(setFullScreen(enable))
+		setFullScreen: (enable) => dispatch(setFullScreen(enable)),
+		setBrowserLoadingCompleted: (completed) => dispatch(setBrowserLoadingCompleted(completed))
 	})
 };
 

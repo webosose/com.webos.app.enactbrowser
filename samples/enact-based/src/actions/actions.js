@@ -11,6 +11,11 @@ const setFullScreen = (enable) => ({
 	enable
 });
 
+const setBrowserLoadingCompleted = (completed) => ({
+	type: 'SET_BROWSER_LOADING_COMPLETED',
+	completed
+});
+
 const setWebContentFullscreen = (enable) => ({
 	type: 'SET_WEB_CONTENT_FULLSCREEN',
 	enable
@@ -62,4 +67,5 @@ export {
 	selectAllBookmarks,
 	deselectAllBookmarks,
 	moveBookmarkSelected,
+	setBrowserLoadingCompleted,
 };

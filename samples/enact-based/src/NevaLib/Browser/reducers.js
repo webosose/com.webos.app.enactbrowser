@@ -22,7 +22,8 @@ const
 		zoomFactor: 1,
 		recentlyClosed: [],
 		urlSuggestions: [],
-		mostVisitedSites: []
+		mostVisitedSites: [],
+		browserLoadingCompleted: false
 	};
 
 function browserState (state = initialBrowserState, action = {}) {
@@ -31,6 +32,12 @@ function browserState (state = initialBrowserState, action = {}) {
 			console.log(`Browser::reducer::SET_FULLSCREEN`);
 			return Object.assign({}, state, {
 				fullScreen: action.enable
+			});
+		}
+		case types.SET_BROWSER_LOADING_COMPLETED: {
+			console.log(`Browser::reducer::SET_BROWSER_LOADING_COMPLETED`);
+			return Object.assign({}, state, {
+				browserLoadingCompleted: action.completed
 			});
 		}
 		case types.SET_WEB_CONTENT_FULLSCREEN: {

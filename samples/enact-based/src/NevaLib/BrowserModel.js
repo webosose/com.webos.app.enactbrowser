@@ -122,7 +122,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
             }
         });
 
-        db.open(DB_NAME)
+        this.browserLoadingPromise = db.open(DB_NAME)
         .then((dbHasCreated) => {
             if (dbHasCreated) {
                 return browser.initializeWithDefaults();

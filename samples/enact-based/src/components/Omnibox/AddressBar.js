@@ -53,12 +53,18 @@ function createSuggestionsList ({urlSuggestions, searchEngine, bookmarksData, va
 	return items;
 }
 
-function AddressBarBase({url, browser, onUrlChanged, urlSuggestions, searchEngine, bookmarksData, isLoading}) {
+function AddressBarBase({
+	url, browser, onUrlChanged, urlSuggestions, searchEngine, bookmarksData, isLoading, browserLoadingCompleted
+}) {
 	const [value, setValue] = useState("");
 	const [isEditing, setIsEditing] = useState(false);
 	const [isActive, setIsActive] = useState(false);
 
-	console.log(`[AddressBar] isActive: ${isActive}, isEditing: ${isEditing}, value: ${value}, isLoading: ${isLoading}`);
+	console.log(`[AddressBar] isActive: ${isActive}, \
+isEditing: ${isEditing}, \
+value: ${value}, \
+isLoading: ${isLoading}, \
+browserLoadingCompleted: ${browserLoadingCompleted}`);
 
 	useEffect(() => {
 		if (/^chrome-extension:\/\/[a-z]{32}\/http(s?):\/\/.+\.pdf$/i.test(url)) {
@@ -185,6 +191,7 @@ function AddressBarBase({url, browser, onUrlChanged, urlSuggestions, searchEngin
 			value={value}
 			onActivate={onActivate}
 			onDeactivate={onDeactivate}
+			disabled={!browserLoadingCompleted}
 		/>
 	);
 }
@@ -200,12 +207,14 @@ const mapStateToProps = ({tabsState, bookmarksState, browserState, settingsState
 				bookmarksData: bookmarksState.data,
 				searchEngine: settingsState.searchEngine,
 				url: navState.url,
-				urlSuggestions: browserState.urlSuggestions
+				urlSuggestions: browserState.urlSuggestions,
+				browserLoadingCompleted: browserState.browserLoadingCompleted
 			}
 		}
 	} else {
 		return {
 			url: '',
+			browserLoadingCompleted: browserState.browserLoadingCompleted
 		};
 	}
 };
