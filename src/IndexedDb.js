@@ -23,13 +23,13 @@ class Store {
                     requestFn(request);
                 }
                 resolve([requestSource, request.result]);
-            }
+            };
             request.onerror = () => {
                 console.warn(
                     '--- Store::%s::request::%s::error : %s',
                     request.source.name, name, request.error);
                 reject(request.error);
-            }
+            };
         });
     }
 }
@@ -78,9 +78,9 @@ class IndexedDb {
                                 initFn(store);
                             }
                         }
-                    };
+                    }
                     dbHasUpgraded = true;
-                }
+                };
 
                 idbOpenDBRequest.onsuccess = (ev) => {
                     nevaIdbLogOn &&
@@ -96,12 +96,12 @@ class IndexedDb {
                     .then(() => {
                         resolve(dbHasUpgraded);
                     });
-                }
+                };
 
                 idbOpenDBRequest.onerror = (ev) => {
                     console.error('--- DBConnection::open::%s::onerror : %s', dbName, ev.target.errorCode);
                     reject(ev.target.errorCode);
-                }
+                };
             }
         });
     }
@@ -125,13 +125,13 @@ class IndexedDb {
                 nevaIdbLogOn &&
                     console.log('--- IdexedDb::transaction::%s::%s::oncomplete', dbName, storeName);
                 resolve(result);
-            }
+            };
             tr.onerror = (ev) => {
                 const error = ev.target.error;
                 console.warn('--- IdexedDb::transaction::%s::%s::onerror %s', dbName, storeName, error);
                 console.log(ev.target);
                 reject(error);
-            }
+            };
             requestFn(new Store(tr.objectStore(storeName)))
             .then((params) => {
                 result = params[1];

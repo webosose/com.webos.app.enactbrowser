@@ -24,7 +24,7 @@ const luna = (
 		service,
 		method,
 		{subscribe = false, timeout = 0, ...params} = {},
-		map
+		map = fwd
 ) => (
 	({onSuccess, onFailure, onTimeout, onComplete, ...additionalParams} = {}) => {
 		const req = new LS2Request();

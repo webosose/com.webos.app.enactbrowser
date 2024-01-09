@@ -15,7 +15,7 @@ const
 		retrievedData: []
 	};
 
-function historyState (state = initialHistoryState, action) {
+function historyState (state = initialHistoryState, action = '') {
 	switch (action.type) {
 		case types.SET_RETRIEVED_HISTORY_DATA: {
 			return Object.assign({}, state, {

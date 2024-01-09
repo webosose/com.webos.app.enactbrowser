@@ -40,7 +40,7 @@ class SiteFiltering {
 		this.reduxStore.dispatch(setSiteFilterList(urlList));
 	}
 	addUrl(url) {
-		this.controller.addURL(url, this.updateUrlList)
+		this.controller.addURL(url, this.updateUrlList);
 	}
 	updateURL(oldURL, newURL) {
 		this.controller.updateURL(oldURL, newURL, this.updateUrlList);

@@ -89,8 +89,8 @@ class BrowserBase {
         this.tabs.addEventListener('update', this._handleTabsStateUpdate);
         this.dummyWebView = null;
     }
-    getNavigatorSiteFilter (){
-        console.log('getNavigatorSiteFilter...')
+    getNavigatorSiteFilter() {
+        console.log('getNavigatorSiteFilter...');
        return navigator.sitefilter;
     }
 

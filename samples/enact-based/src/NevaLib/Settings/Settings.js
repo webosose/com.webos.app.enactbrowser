@@ -72,22 +72,22 @@ class Settings extends SettingsBase {
 			.then(() => {
 				this.store.dispatch(setStartupPage(opt));
 			});
-	};
+	}
 
 	getStartupPage = () => {
 		return this.store.getState().settingsState.startupPage;
-	};
+	}
 
 	setHomePageUrl = (url) => {
 		return this.storage.set(SettingsKeys.HOME_PAGE_URL_KEY, url)
 			.then(() => {
 				this.store.dispatch(setHomePageUrl(url));
 			});
-	};
+	}
 
 	getHomePageUrl = () => {
 		return this.store.getState().settingsState.homePageUrl;
-	};
+	}
 
 	setSearchEngine = (searchEngine) => {
 		return this.storage.set(SettingsKeys.SEARCH_ENGINE_KEY, searchEngine)
@@ -95,51 +95,51 @@ class Settings extends SettingsBase {
 				this.store.dispatch(setSearchEngine(searchEngine));
 				this.browser.searchService.engine = searchEngine;
 			});
-	};
+	}
 
 	getSearchEngine = () => {
 		return this.store.getState().settingsState.searchEngine;
-	};
+	}
 
 	setAlwaysShowBookmarks = (bool) => {
 		return this.storage.set(SettingsKeys.ALWAYS_SHOW_BOOKMARKS_KEY, bool)
 			.then(() => {
 				this.store.dispatch(setAlwaysShowBookmarks(bool));
 			});
-	};
+	}
 
 	setPrivateBrowsing = (bool) => {
 		return this.storage.set(SettingsKeys.PRIVATE_BROWSING_KEY, bool)
 			.then(() => {
 				this.store.dispatch(setPrivateBrowsing(bool));
 			});
-	};
+	}
 
 	getPrivateBrowsing = () => {
 		return this.store.getState().settingsState.privateBrowsing;
-	};
+	}
 
 	setSiteFiltering = (opt) => {
 		return this.storage.set(SettingsKeys.SITE_FILTERING_KEY, opt)
 			.then(() => {
 				this.store.dispatch(setSiteFiltering(opt));
 			});
-	};
+	}
 
 	getSiteFiltering = () => {
 		return this.store.getState().settingsState.siteFiltering;
-	};
+	}
 
 	setPinCode = (code) => {
 		return this.storage.set(SettingsKeys.PIN_NUMBER_KEY, code)
 			.then(() => {
 				this.store.dispatch(setPinNumber(code));
 			});
-	};
+	}
 
 	matchPinCode = (pinCode) => {
 		return this.store.getState().settingsState.pinNumber === pinCode;
-	};
+	}
 
 	setAllSettings = (values) => {
 		return Promise.all([

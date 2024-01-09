@@ -15,7 +15,7 @@ const
 		data: []
 	};
 
-function bookmarksState (state = initialBookmarksState, action) {
+function bookmarksState (state = initialBookmarksState, action = '') {
 	switch (action.type) {
 		case types.SET_BOOKMARK_DATA: {
 			return Object.assign({}, state, {

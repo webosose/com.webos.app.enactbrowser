@@ -81,7 +81,7 @@ class RecentlyClosedSites {
                 title: ev.oldState.title
             });
         }
-    }
+    };
 }
 
 export default RecentlyClosedSites;

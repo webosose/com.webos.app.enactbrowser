@@ -125,8 +125,8 @@ class MemoryManager {
 		}
 		if (normal < low || low < critical) {
 			return Promise.reject(
-				'maxSuspendedNormal shouldn\'t be less than maxSuspendedLow and\
-                maxSuspendedLow shouldn\'t be less than maxSuspendedCritical'
+				`maxSuspendedNormal shouldn\'t be less than maxSuspendedLow and
+                maxSuspendedLow shouldn\'t be less than maxSuspendedCritical`
 			);
 		}
 		return this._storage.set({

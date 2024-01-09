@@ -24,7 +24,7 @@ const
 		mostVisitedSites: []
 	};
 
-function browserState (state = initialBrowserState, action) {
+function browserState (state = initialBrowserState, action = '') {
 	switch (action.type) {
 		case types.SET_ZOOM_FACTOR: {
 			return Object.assign({}, state, {

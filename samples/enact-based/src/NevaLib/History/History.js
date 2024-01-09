@@ -20,7 +20,7 @@ class HistoryReduxStore {
 
 	update = (data) => {
 		this.store.dispatch(setRetrievedHistoryData(data));
-	};
+	}
 }
 
 class History extends HistoryBase {

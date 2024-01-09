@@ -25,7 +25,7 @@ class SiteFiltering {
     */
     setState(value, callback) {
         //notifySiteFilterState
-        const response = this.navigatorSiteFilter.setType(value)
+        const response = this.navigatorSiteFilter.setType(value);
         if (response) {
             this.getURLS(callback);
         }
@@ -64,7 +64,7 @@ class SiteFiltering {
      * Param isDeleteAll: if true, allow deleting all urls in both Approved
      * and Blocked modes
      */
-    deletURLs(urls, isDeleteAll = false, callback) {
+    deletURLs(urls, isDeleteAll = false, callback = null) {
         if (urls) {
             this.navigatorSiteFilter.deleteURLs(urls, isDeleteAll, (status) => {
                 if (status && callback) {

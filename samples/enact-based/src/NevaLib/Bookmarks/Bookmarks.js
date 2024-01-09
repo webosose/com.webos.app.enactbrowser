@@ -25,16 +25,16 @@ class ReduxBookmarksStore {
 		return this.store.getState().bookmarksState.data.some(
 			(bookmark) => bookmark.url === url
 		);
-	};
+	}
 
 	count = () => {
 		return this.store.getState().bookmarksState.data.length;
-	};
+	}
 
 	// Needed to initialize store after loading from storage
 	set = (data) => {
 		this.store.dispatch(setBookmarkData(data));
-	};
+	}
 
 	add = (url, title, icon) => {
 		const bookmark = {
@@ -44,24 +44,24 @@ class ReduxBookmarksStore {
 		};
 		this.store.dispatch(addBookmark(bookmark));
 		return this.store.getState().bookmarksState.data;
-	};
+	}
 
 	move = (from, to) => {
 		this.store.dispatch(moveBookmark(from, to));
 		return this.store.getState().bookmarksState.data;
-	};
+	}
 
 	remove = (urls) => {
 		if (urls) {
 			this.store.dispatch(removeBookmarksByUrl(urls));
 		}
 		return this.store.getState().bookmarksState.data;
-	};
+	}
 
 	removeAll = () => {
 		this.store.dispatch(removeAllBookmarks());
 		return [];
-	};
+	}
 
 }
 

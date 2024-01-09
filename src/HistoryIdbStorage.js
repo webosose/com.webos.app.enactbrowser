@@ -35,7 +35,7 @@ class HistoryIdbStorage {
                         cursor.continue();
                     }
                 }
-            }
+            };
             return Promise.resolve([store, true]);
         });
     }
@@ -76,7 +76,7 @@ class HistoryIdbStorage {
     }
 
     clearByURL(url) {
-        var entry_id = undefined;
+        var entry_id;
         this.db.transaction('readonly', STORE_NAME, (store) => store.request('getAll', []))
         .then((entries) => {
             entries.forEach((entry) => {

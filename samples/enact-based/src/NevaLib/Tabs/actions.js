@@ -26,14 +26,14 @@ const replaceTab = (index, tab) => ({
 
 // Closes a tab of index
 const closeTab = (index, newSelectedIndex) => {
-	console.log("closedTab action triggered ===> ", index)
+	console.log("closedTab action triggered ===> ", index);
 	// setRedIndicator({ value: false, index: index })
 	return ({
 		type: types.CLOSE_TAB,
 		index,
 		newSelectedIndex
-	})
-}
+	});
+};
 
 // Moves tabs
 const moveTab = (fromIndex, toIndex) => ({
@@ -57,7 +57,7 @@ const setRedIndicator = (data) => {
 	return ({
 		type: types.SET_RED_INDICATOR,
 		payload: data
-	})
+	});
 };
 
 export {

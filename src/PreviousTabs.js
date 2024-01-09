@@ -38,7 +38,7 @@ class PreviousTabs {
     }
 
     handleTabAdd = (ev) => {
-        this.storage.add(this._createTabInfo(ev.tab));
+        this.storage.add(this._createTabInfo(ev.tab)); // jshint ignore:line
     }
 
     handleTabUpdate = (ev) => {
@@ -48,27 +48,27 @@ class PreviousTabs {
                 id: state.id,
                 type: state.type,
                 url: state.navState.url
-            })
+            });
         }
-    }
+    };
 
     handleTabDelete = (ev) => {
         this.storage.remove(ev.tab.id);
-    }
+    };
 
     handleTabMove = (ev) => {
         this.storage.move(ev.from, ev.to);
-    }
+    };
 
     handleTabReplace = (ev) => {
         this.storage.replace(ev.index, this._createTabInfo(ev.state));
-    }
+    };
 
     _createTabInfo = (tab) => ({
         id: tab.id,
         type: tab.type,
         url: tab.navState.url
-    })
+    });
 }
 
 export default PreviousTabs;

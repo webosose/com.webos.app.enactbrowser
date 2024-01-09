@@ -2,7 +2,7 @@ function blobToDataUrl(data, onready) {
     const reader = new FileReader();
     reader.onload = (ev) => {
         onready(ev.target.result);
-    }
+    };
     reader.readAsDataURL(data);
 }
 

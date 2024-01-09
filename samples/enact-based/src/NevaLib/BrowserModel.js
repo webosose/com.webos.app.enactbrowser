@@ -128,8 +128,8 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
 		let hasTargetInLaunchParams = false;
 		if (chrome.app.launchArgs) {
 			const launchArgs = JSON.parse(chrome.app.launchArgs);
-			if (launchArgs['override_user_agent_string']) {
-				this.useragentOverride = launchArgs['override_user_agent_string'];
+			if (launchArgs.override_user_agent_string) {
+				this.useragentOverride = launchArgs.override_user_agent_string;
 			}
 			if (launchArgs.target) {
 				hasTargetInLaunchParams = true;
@@ -159,7 +159,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
 		}
 	}
 
-	createTab (type = TabTypes.NEW_TAB_PAGE, url) {
+	createTab (type = TabTypes.NEW_TAB_PAGE, url = null) {
 		switch (type) {
 			case TabTypes.WEBVIEW:
 				this.tabs.addTab(this._createWebViewPage(url));

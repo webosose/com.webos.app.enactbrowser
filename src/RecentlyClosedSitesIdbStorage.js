@@ -51,18 +51,18 @@ class RecentlyClosedSitesIdbStorage {
                         const delRequest = cursor.delete();
                         delRequest.onsuccess = () => {
                             resolve([store, true]);
-                        }
+                        };
                         delRequest.onerror = () => {
                             reject(delRequest.error);
-                        }
+                        };
                     }
                     else {
                         resolve([store, true]);
                     }
-                }
+                };
                 request.onerror = () => {
                     reject(request.error);
-                }
+                };
             });
         });
     }

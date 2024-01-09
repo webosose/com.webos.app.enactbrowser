@@ -14,14 +14,14 @@ const initialPopupState = {
 	allow_media_popup: false,
 };
 
-function popupState(state = initialPopupState, action) {
+function popupState(state = initialPopupState, action = '') {
 	switch (action.type) {
 		case types.SET_ALLOW_MEDIA_POPUP: {
-			console.log("REDUCER reached ====>SET_ALLOW_MEDIA_POPUP")
+			console.log("REDUCER reached ====>SET_ALLOW_MEDIA_POPUP");
 			return {
 				...state,
 				allow_media_popup: action.payload
-			}
+			};
 		}
 		default:
 			return state;

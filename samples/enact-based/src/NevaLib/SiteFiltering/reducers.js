@@ -16,13 +16,13 @@ const
 		success:true
 	};
 
-function siteFilterState (state = initialSiteFilterState, action) {
+function siteFilterState (state = initialSiteFilterState, action = '') {
 	switch (action.type) {
 		case types.SET_SITE_FILTER_LIST: {
-			return {...state,urlList:action.urlList}
+			return {...state,urlList:action.urlList};
 		}
 		case types.SITE_FILTER_RESPONSE: {
-			return {...state,success:action.status}
+			return {...state,success:action.status};
 		}
 		default:
 			return state;

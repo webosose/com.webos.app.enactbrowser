@@ -23,10 +23,10 @@ class RendererPerTabPolicy {
 
     _handleCriticalMemory = () => {
         if (this.criticalReached) {
-            console.log("reached CRITICAL_HANDLER function")
+            console.log("reached CRITICAL_HANDLER function");
             this.webViews.map((i, index) => {
                 //Apart from current/active tab, all other tabs are de-activated.
-                Number(this.queue[0]) !== index && this.webViews[index].deactivate()
+                Number(this.queue[0]) !== index && this.webViews[index].deactivate();
             });
         }
     }
@@ -68,7 +68,7 @@ class RendererPerTabPolicy {
         );
 
         console.log(`tab family id: ${tab_family_id}. this.queue: ${this.queue.toString()}`);
-        console.log("criticalReached is ==> ", this.criticalReached)
+        console.log("criticalReached is ==> ", this.criticalReached);
 
         activate_tab_family(tab_family_id);
 
@@ -82,7 +82,7 @@ class RendererPerTabPolicy {
 
         if (this.criticalReached) {
             this.webViews.map((i, index) => {
-                return Number(this.queue[0]) !== index && this.webViews[index].deactivate()
+                return Number(this.queue[0]) !== index && this.webViews[index].deactivate();
             });
         }
 

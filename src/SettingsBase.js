@@ -32,7 +32,7 @@ class SettingsBase {
                         valuesToInit[key] = defaults[key];
                     }
                 }
-                this.storage.setValues(valuesToInit)
+                this.storage.setValues(valuesToInit);
                 Object.assign(storedValues, valuesToInit);
                 return storedValues;
             });

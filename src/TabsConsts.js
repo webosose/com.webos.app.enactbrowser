@@ -10,7 +10,7 @@ const TabTitles = {
     SETTINGS_TITLE: 'Settings',
     NEW_TAB_PAGE_TITLE: 'New Tab',
     INITIAL_WEBVIEW_TITLE: 'Loading...'
-}
+};
 
 // default tab types
 const TabTypes = {
@@ -20,6 +20,6 @@ const TabTypes = {
     SITE_FILTERING: 'siteFiltering',
     HISTORY: 'history',
     BOOKMARKS: 'bookmarks'
-}
+};
 
 export {TabTitles, TabTypes};

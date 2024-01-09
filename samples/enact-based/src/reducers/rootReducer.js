@@ -22,7 +22,7 @@ const
 		selected: []
 	};
 
-function historyUIState (state = initialHistory, action) {
+function historyUIState (state = initialHistory, action = '') {
 	switch (action.type) {
 		case 'SELECT_HISTORY': {
 			const newSelected = state.selected.slice();
@@ -50,7 +50,7 @@ function historyUIState (state = initialHistory, action) {
 	}
 }
 
-function bookmarkUIState (state = initialBookmark, action) {
+function bookmarkUIState (state = initialBookmark, action = '') {
 	switch (action.type) {
 		case 'SELECT_BOOKMARK': {
 			const newSelected = state.selected.slice();
@@ -105,7 +105,7 @@ function bookmarkUIState (state = initialBookmark, action) {
 	}
 }
 
-function approvedSitesUIState (state = initialApprovedSites, action) {
+function approvedSitesUIState (state = initialApprovedSites, action = '') {
 	switch (action.type) {
 		case 'SELECT_APPROVED_SITE': {
 			const newSelected = state.selected.slice();
@@ -133,7 +133,7 @@ function approvedSitesUIState (state = initialApprovedSites, action) {
 	}
 }
 
-function blockedSitesUIState (state = initialBlockedSites, action) {
+function blockedSitesUIState (state = initialBlockedSites, action = '') {
 	switch (action.type) {
 		case 'SELECT_BLOCKED_SITE': {
 			const newSelected = state.selected.slice();

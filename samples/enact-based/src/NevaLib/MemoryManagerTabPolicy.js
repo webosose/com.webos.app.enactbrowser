@@ -33,7 +33,7 @@ class MemoryManagerTabPolicy {
 			Promise.race([
 				new Promise((resolve) => {
 					window.navigator.memorymanager.getMemoryStatus((ev) => {
-						resolve(ev)
+						resolve(ev);
 					});
 				}),
 				new Promise((resolve) => {
@@ -78,8 +78,8 @@ class MemoryManagerTabPolicy {
 		console.log('Memory level changed to ==>' + ev); // eslint-disable-line no-console
 		const policy = this.simplePolicy;
 		if (ev == "critical") {
-			policy.criticalReached = true
-			policy._handleCriticalMemory()
+			policy.criticalReached = true;
+			policy._handleCriticalMemory();
 		} else {
 			policy.criticalReached = false
 		}

@@ -19,7 +19,7 @@ const
 		closedTabId: null
 	};
 
-function tabsState(state = initialTabsState, action) {
+function tabsState(state = initialTabsState, action = '') {
 	switch (action.type) {
 		case types.ADD_TAB: {
 			const newTabs = Object.assign({}, state.tabs, {
@@ -50,11 +50,11 @@ function tabsState(state = initialTabsState, action) {
 		case types.CLOSE_TAB: {
 			let newTabs;
 
-			let deletedTabId = Number(state.tabs[state.ids[action.index]].id)
+			let deletedTabId = Number(state.tabs[state.ids[action.index]].id);
 			delete state.tabs[state.ids[action.index]];
 			newTabs = Object.assign({}, state.tabs);
 			state.ids.splice(action.index, 1);
-			let tempDisplayRedIndicator = [...state.displayRedIndicator]
+			let tempDisplayRedIndicator = [...state.displayRedIndicator];
 			/* Below if condition is for automatically removing the red-indicator on the tab if a tab with running red-indicator is closed.
 			"closedTabId" is assigned with the tabId of the deletedTab if the closed tab had red-indicator running.
 			In all pther cases, "closedTabId" shall be null */
@@ -66,7 +66,7 @@ function tabsState(state = initialTabsState, action) {
 					displayRedIndicator: tempDisplayRedIndicator,
 					closedTabId: deletedTabId
 				});
-				return finalState
+				return finalState;
 			}
 
 			return Object.assign({}, state, {
@@ -105,21 +105,21 @@ function tabsState(state = initialTabsState, action) {
 
 		//It is for showing red indicator on the tab whenever user clicks on "allow" button on the media-permission popup.
 		case types.SET_RED_INDICATOR: {
-			let tempDisplayRedIndicator = JSON.parse(JSON.stringify(state.displayRedIndicator))
+			let tempDisplayRedIndicator = JSON.parse(JSON.stringify(state.displayRedIndicator));
 
 			if ((action.payload.audio == true) || (action.payload.video == true)) {
-				tempDisplayRedIndicator.push(action.payload)
+				tempDisplayRedIndicator.push(action.payload);
 			} else if (((action.payload.audio == false) || (action.payload.video == false)) && tempDisplayRedIndicator.findIndex(i => i.index == action.payload.index) != -1) {
 				if (tempDisplayRedIndicator.findIndex(i => i.index == action.payload.index) !== -1) {
 
 					let removeIndex;
 					if (action.payload.audio == false) {
-						removeIndex = tempDisplayRedIndicator.findIndex(i => (i.index == action.payload.index) && i.audio == true)
+						removeIndex = tempDisplayRedIndicator.findIndex(i => (i.index == action.payload.index) && i.audio == true);
 					}
 					if (action.payload.video == false) {
-						removeIndex = tempDisplayRedIndicator.findIndex(i => (i.index == action.payload.index) && i.video == true)
+						removeIndex = tempDisplayRedIndicator.findIndex(i => (i.index == action.payload.index) && i.video == true);
 					}
-					tempDisplayRedIndicator.splice(removeIndex, 1)
+					tempDisplayRedIndicator.splice(removeIndex, 1);
 				}
 			}
 
@@ -127,13 +127,13 @@ function tabsState(state = initialTabsState, action) {
 			//When all entries corresponding to particular tabId is deleted,resetClosedTabId variable is used to reset the closedTabId to null.
 			let resetClosedTabId;
 
-			resetClosedTabId = tempDisplayRedIndicator.findIndex(i => i.index == action.payload.index) == -1 ? null : state.closedTabId
+			resetClosedTabId = tempDisplayRedIndicator.findIndex(i => i.index == action.payload.index) == -1 ? null : state.closedTabId;
 			let finalState = Object.assign({}, state, {
 				displayRedIndicator: tempDisplayRedIndicator,
 				closedTabId: resetClosedTabId
 			});
 
-			return finalState
+			return finalState;
 		}
 		default:
 			return state;
