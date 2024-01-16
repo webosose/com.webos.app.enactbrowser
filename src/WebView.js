@@ -522,6 +522,9 @@ class PageContentsWrapper {
 
     beforeWebviewDelete() {
         console.log(`beforeWebviewDelete`);
+        if (typeof window !== 'undefined' && typeof window.neva !== 'undefined') {
+            window.neva.extensionTabClosed(this.getPageContentsId());
+        }
         // TBD !! remove event listeners
     }
 
