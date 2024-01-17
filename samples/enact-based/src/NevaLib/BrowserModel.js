@@ -196,14 +196,14 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
                 window.shell.shellWindow.pageView.addChildView(popupView);
                 let webView = this.webViews[this.tabs.getSelectedId()];
                 window.neva.extensionPopupViewCreated(popupView.id, webView.getPageContentsId());
-                this.extensionPopupView = popupView;
+                window.extensionPopupView = popupView;
 
                 window.document.addEventListener('click', () => {
-                    if (this.extensionPopupView) {
-                        window.shell.shellWindow.pageView.removeChildView(this.extensionPopupView);
-                        this.extensionPopupView.setVisible(false);
+                    if (window.extensionPopupView) {
+                        window.shell.shellWindow.pageView.removeChildView(window.extensionPopupView);
+                        window.extensionPopupView.setVisible(false);
                     }
-                    this.extensionPopupView = undefined;
+                    window.extensionPopupView = undefined;
                 }, {once: true});
 
                 const button = this.extensionButtonRef.current;
@@ -219,20 +219,20 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
 
             window.neva.addEventListener("close-extension-popup", (popup_view_id) => {
                 console.log("close-extension-popup event occured");
-                if (this.extensionPopupView && this.extensionPopupView.id === popup_view_id) {
-                    window.shell.shellWindow.pageView.removeChildView(this.extensionPopupView);
-                    this.extensionPopupView.setVisible(false);
+                if (window.extensionPopupView && window.extensionPopupView.id === popup_view_id) {
+                    window.shell.shellWindow.pageView.removeChildView(window.extensionPopupView);
+                    window.extensionPopupView.setVisible(false);
                 }
-                this.extensionPopupView = undefined;
+                window.extensionPopupView = undefined;
             });
 
             window.neva.addEventListener("update-extension-popup", (popup_view_id, width, height) => {
                 console.log("update-extension-popup event occured");
-                if (this.extensionPopupView && this.extensionPopupView.id === popup_view_id) {
+                if (window.extensionPopupView && window.extensionPopupView.id === popup_view_id) {
                   const left =  document.body.clientWidth - width;
                   const button = this.extensionButtonRef.current;
                   const buttonHeight = button.offsetHeight + 20;
-                  this.extensionPopupView.setBounds(left, buttonHeight, width, height);
+                  window.extensionPopupView.setBounds(left, buttonHeight, width, height);
                 }
             });
         }

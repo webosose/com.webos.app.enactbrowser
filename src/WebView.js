@@ -397,8 +397,6 @@ class PageContentsWrapper {
             console.log(`The web page is unresponsive, do not activate`);
             return;
         }
-        this.tabView.setVisible(true);
-        this.tabView.bringToFront();
 
         if (this.dialogData.showDialog === true) {
             this.showDialog();
@@ -414,9 +412,13 @@ class PageContentsWrapper {
             this.tabView.pageContents.resumeMedia();
         }
         this.tabView.setVisible(true);
-        this.tabView.bringToFront();
+        window.shell.shellWindow.pageView.bringToFront(this.tabView);
         this.tabView.pageContents.setFocus();
         this.activeState = 'activated';
+
+        if (typeof window.extensionPopupView === 'object') {
+            window.shell.shellWindow.pageView.bringToFront(window.extensionPopupView);
+        }
     }
 
     suspend() {

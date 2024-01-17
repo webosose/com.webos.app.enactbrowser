@@ -57,7 +57,7 @@ class UIOverlay {
 
             layer.applyBounds();
             layer.setVisible({ target: target });
-            layer.view.bringToFront();
+            window.shell.shellWindow.pageView.bringToFront(layer.view);
             return layer;
         };
 
