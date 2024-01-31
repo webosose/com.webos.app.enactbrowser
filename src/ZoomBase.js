@@ -23,7 +23,7 @@ class ZoomControl {
         }
     }
 
-    showAbove(buttonId) {
+    showAbove(buttonId, {zoomFactor}) {
         console.log(`show zoom control`);
 
         let button = document.getElementById(buttonId);
@@ -37,7 +37,8 @@ class ZoomControl {
                 y: buttonHeight,
                 w: width
             }
-        }).then((layer) => layer.view.pageContents.setFocus());
+        }).then((layer) => layer.view.pageContents.setFocus())
+        .then(() => this.menuIpc.post('zoom_value', {zoomFactor}));
     }
 
     destroy() {}

@@ -41,13 +41,19 @@ function ZoomControlMenu({model, onUpdate, ...rest}) {
             console.log(`zoom factor changed from browser side ${ev.detail}`);
             setZoomValueIndex(zoomFactors.indexOf(ev.detail));
         });
-    },[]);
+        const onZoomValue = ({zoomFactor}) => {
+            setZoomValueIndex(zoomFactors.indexOf(zoomFactor));
+        }
+        model.ipc.on("zoom_value", onZoomValue);
+
+        return () => model.ipc.removeEventListener('zoom_value', onZoomValue);
+    },[model.ipc]);
 
     const onChange = useCallback(({value}) => {
         console.log(`Zoom changed (${value})`);
-            setZoomValueIndex(value);
-            model.zoomIndex = value;
-            model.ipc.post('change', { zoomFactor: zoomFactors[value] });
+        setZoomValueIndex(value);
+        model.zoomIndex = value;
+        model.ipc.post('change', {zoomFactor: zoomFactors[value]});
     }, [setZoomValueIndex, model]);
 
     return (

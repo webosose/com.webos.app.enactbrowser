@@ -35,6 +35,21 @@ class ZoomControlBase extends Component {
 		}
 	}
 
+	getZoomFactor = () => {
+		let zoomFactor = 1;
+		try {
+			const tabs = this.props.browser.tabs;
+			const selectedTabId = tabs.getSelectedId();
+			const webView = this.props.browser.webViews[selectedTabId];
+
+			zoomFactor = webView.zoomFactor;
+		} catch(e) {
+			console.error(e);
+		}
+		console.log('[ZoomControl] selected tab zoomFactor: ', zoomFactor);
+		return zoomFactor;
+	}
+
 	toggleMenu = (event) => {
 		if (!this.props.browser.isWebViewTabSelected()) {
 			console.log(`Zoom menu will not be shown because no webview tab selected.`);
@@ -50,7 +65,10 @@ class ZoomControlBase extends Component {
 				this.props.zoomControl.hide();
 				this.setState({isOpened: false});
 			}, {once: true});
-			this.props.zoomControl.showAbove("nevaBrowserZoomControlButton");
+
+			this.props.zoomControl.showAbove("nevaBrowserZoomControlButton", {
+				zoomFactor: this.getZoomFactor()
+			});
 		}
 		this.setState({isOpened: !isOpened});
 	}
