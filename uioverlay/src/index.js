@@ -15,6 +15,7 @@ import ZoomControlModel from './components/ZoomControlModel';
 import ChromeExtensionsModel from './components/ChromeExtensionsModel';
 import MenuModel from './components/MenuModel';
 import createDialogModel from './components/DialogModel';
+import UserPermissionModel from './components/UserPermissionModel';
 import Ipc from '../../src/Ipc';
 import {initLogging} from 'js-browser-lib/Logger';
 import AppDecorator from '../../samples/enact-based/src/components/AppDecorator'
@@ -46,7 +47,8 @@ const model = {
     exitFullscreenButton: new ExitFullscreenButtonModel(),
     chromeExtensions: new ChromeExtensionsModel(),
     dialog: createDialogModel(),
-    zoomControl: new ZoomControlModel()
+    zoomControl: new ZoomControlModel(),
+    userPermission: new UserPermissionModel(),
 };
 
 const PrerenderApp = AppDecorator(ThemeDecorator({i18n: false}, <div />));

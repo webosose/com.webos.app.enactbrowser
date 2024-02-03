@@ -26,6 +26,7 @@ import ChromeExtensionsMenu from '../../components/ChromeExtensionsMenu';
 import NavigationBox from '../../components/NavigationBox';
 import Omnibox from '../../components/Omnibox';
 import ZoomControl from '../../components/ZoomControl';
+import UserPermission from '../../components/UserPermission';
 import PropTypes from 'prop-types';
 import {setFullScreen} from '../../actions';
 import {TabBar} from '../../components/TabBar';
@@ -217,6 +218,7 @@ class MainBase extends Component {
 			<div id="main_view" {...props}
 				style={{ '--cue-bg-color': privateBrowsingCueBgColor, '--cue-text-color': privateBrowsingCueTextColor }}
 			>
+				<UserPermission userPermission={this.props.userPermission} />
 				<div onClick={this.onClick} onMouseLeave={this.onMouseLeave}
 					className={private_mode ? css['main-bar'] : null}>
 					{ fullScreen === false && <div className={css['flexbox-row']}>

@@ -20,6 +20,7 @@ import {initLogging} from 'js-browser-lib/Logger';
 import {isWindowReady} from '@enact/core/snapshot';
 import {ZoomControl as ZoomControlBase} from 'js-browser-lib/ZoomBase'
 import {UrlSuggestionsBase} from 'js-browser-lib/UrlSuggestionsBase';
+import {UserPermissionBase} from 'js-browser-lib/UserPermissionBase';
 
 if (typeof window !== 'undefined') {
 	initLogging();
@@ -33,6 +34,7 @@ const exitFullscreenButton = new ExitFullscreenButtonBase(uioverlay);
 const chromeExtensionsMenu = (isWindowReady() && typeof window.neva !== 'undefined') ? new ChromeExtensionsBase(uioverlay) : null;
 const dialog = new DialogBase(new UIOverlay());
 const urlSuggestionsBar = new UrlSuggestionsBase(uioverlay);
+const userPermission = new UserPermissionBase(uioverlay);
 if (typeof window !== 'undefined') {
 	window.dialogOverlay = dialog;
 	window.urlSuggestionsBar = urlSuggestionsBar;
@@ -48,6 +50,7 @@ let appElement = (
 			exitFullscreenButton={exitFullscreenButton}
 			chromeExtensionsMenu={chromeExtensionsMenu}
 			dialog={dialog}
+			userPermission={userPermission}
 		/>
 	</Provider>
 );
