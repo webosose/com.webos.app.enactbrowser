@@ -6,27 +6,26 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
-import {BookmarksMixin} from 'js-browser-lib/BookmarksMixin';
-import {BrowserBase, WebViewFactoryBase} from 'js-browser-lib/BrowserBase';
-import {BrowserConsts} from 'js-browser-lib/BrowserConsts';
-import {IndexedDb} from 'js-browser-lib/IndexedDb';
-import {HistoryMixin} from 'js-browser-lib/HistoryMixin';
-import Ipc from 'js-browser-lib/Ipc';
-import {TabTitles, TabTypes} from 'js-browser-lib/TabsConsts';
+import {BookmarksMixin} from './BookmarksMixin';
+import {BrowserBase, WebViewFactoryBase} from './BrowserBase';
+import {BrowserConsts} from './BrowserConsts';
+import {IndexedDb} from './IndexedDb';
+import {HistoryMixin} from './HistoryMixin';
+import Ipc from './Ipc';
+import {TabTitles, TabTypes} from './TabsConsts';
+import {createTabPolicy} from './MemoryManager/TabPolicyFactory';
 
-import {isWindowReady} from '@enact/core/snapshot';
-
-import Bookmarks from './Bookmarks';
-import {getDefaults} from './BrowserDefaults';
-import History from './History';
+import Bookmarks from './ReduxComponents/Bookmarks/Bookmarks';
+import {getDefaults} from './BrowserDefaults'
+import History from './ReduxComponents/History/History';
 import MostVisited from './MostVisited';
 import PreviousSessionTabs from './PreviousSessionTabs';
 import RecentlyClosed from './RecentlyClosed';
 import SearchService from './SearchService';
-import {Settings, SettingsConsts, SettingsKeys} from './Settings';
-import SiteFiltering from './SiteFiltering';
-import {ReduxTabs as TabsModel} from './Tabs';
-import createTabPolicy from './TabPolicyFactory';
+import {Settings, SettingsConsts, SettingsKeys} from './ReduxComponents/Settings/Settings';
+import SiteFiltering from './SiteFilteringBase';
+import {ReduxTabs as TabsModel} from './ReduxComponents/Tabs/Tabs';
+import {isWindowReady} from '@enact/core/snapshot';
 import CookieManager from './CookieManager';
 import CustomUserAgent from './CustomUserAgent';
 import PopupBlocker from './PopupBlocker';

@@ -6,8 +6,8 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
-import SettingsBase from 'js-browser-lib/SettingsBase';
-import {IdbKeyValueStorage} from 'js-browser-lib/IdbKeyValueStorage';
+import SettingsBase from '../../SettingsBase';
+import {IdbKeyValueStorage} from '../../IdbKeyValueStorage';
 import {
     setStartupPage,
     setHomePageUrl,

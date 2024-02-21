@@ -7,11 +7,11 @@
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
 import {RecentlyClosedSites}
-    from 'js-browser-lib/RecentlyClosedSites';
+    from './RecentlyClosedSites';
 import {RecentlyClosedSitesIdbStorage}
-    from 'js-browser-lib/RecentlyClosedSitesIdbStorage';
+    from './RecentlyClosedSitesIdbStorage';
 
-import {setRecentlyClosed} from './Browser/actions';
+import {setRecentlyClosed} from './ReduxComponents/Browser/actions';
 
 class RecentlyClosed extends RecentlyClosedSites {
     constructor(reduxStore, db, tabs) {

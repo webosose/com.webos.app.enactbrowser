@@ -6,8 +6,8 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
-import BookmarksBase from 'js-browser-lib/BookmarksBase.js';
-import BookmarksIdbStorage from 'js-browser-lib/BookmarksIdbStorage.js';
+import BookmarksBase from '../../BookmarksBase.js';
+import BookmarksIdbStorage from '../../BookmarksIdbStorage.js';
 import {
     addBookmark,
     removeAllBookmarks,

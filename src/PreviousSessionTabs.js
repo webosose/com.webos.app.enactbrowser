@@ -6,9 +6,9 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
-import PreviousTabs from 'js-browser-lib/PreviousTabs';
-import PreviousTabsIdbStorage from 'js-browser-lib/PreviousTabsIdbStorage';
-import LastSelectedTab from 'js-browser-lib/LastSelectedTab';
+import PreviousTabs from './PreviousTabs';
+import PreviousTabsIdbStorage from './PreviousTabsIdbStorage';
+import LastSelectedTab from './LastSelectedTab';
 
 class PreviousSessionTabs {
     constructor(browser, db, policy) {

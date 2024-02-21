@@ -15,7 +15,7 @@ import {contextTypes} from '@enact/i18n/I18nDecorator';
 import React, {Component} from 'react';
 import Spotlight from '@enact/spotlight';
 
-import {Browser} from '../../NevaLib/BrowserModel';
+import {Browser} from 'js-browser-lib/BrowserModel';
 
 import Button from '@enact/agate/Button';
 import {connect} from 'react-redux';
@@ -28,10 +28,10 @@ import Omnibox from '../../components/Omnibox';
 import ZoomControl from '../../components/ZoomControl';
 import UserPermission from '../../components/UserPermission';
 import PropTypes from 'prop-types';
-import {setFullScreen, setBrowserLoadingCompleted} from '../../actions';
+import {setFullScreen, setBrowserLoadingCompleted} from 'js-browser-lib/ReduxComponents/actions';
 import {TabBar} from '../../components/TabBar';
 import {isWindowReady} from '@enact/core/snapshot';
-import { TabTypes } from '../../NevaLib/BrowserModel';
+import {TabTypes} from 'js-browser-lib/BrowserModel';
 import PWAButton from '../../components/PWAButton';
 
 import css from './Main.module.less';

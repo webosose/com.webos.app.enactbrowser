@@ -19,7 +19,7 @@ import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 
 import Bookmark from './Bookmark';
 import Sortable from '../Sortable';
-import {moveBookmarkSelected} from '../../actions';
+import {moveBookmarkSelected} from 'js-browser-lib/ReduxComponents/actions';
 
 import css from './BookmarkBar.module.less';
 

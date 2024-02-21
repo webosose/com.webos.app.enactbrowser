@@ -6,7 +6,7 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
-import {IdGenerator, Tab, TabsBase} from 'js-browser-lib/TabsBase';
+import {IdGenerator, Tab, TabsBase} from '../../TabsBase';
 import {
     addTab,
     replaceTab,

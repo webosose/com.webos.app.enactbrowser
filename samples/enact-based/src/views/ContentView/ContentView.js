@@ -18,7 +18,7 @@ import React from 'react';
 
 import BookmarkBar from '../../components/BookmarkBar';
 import ExitFullScreenButton from '../../components/ExitFullScreenButton';
-import {TabTypes} from '../../NevaLib/BrowserModel';
+import {TabTypes} from 'js-browser-lib/BrowserModel';
 import ContentItem from './ContentItem';
 
 import css from './ContentView.module.less';

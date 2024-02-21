@@ -6,8 +6,8 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
-import {HistoryBase} from 'js-browser-lib/HistoryBase';
-import {HistoryIdbStorage} from 'js-browser-lib/HistoryIdbStorage';
+import {HistoryBase} from '../../HistoryBase';
+import {HistoryIdbStorage} from '../../HistoryIdbStorage';
 
 import {
     setRetrievedHistoryData,

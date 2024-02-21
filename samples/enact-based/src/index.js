@@ -10,7 +10,7 @@ import {Provider} from 'react-redux';
 import {render} from 'react-dom';
 
 import App from './App';
-import configureStore from './store';
+import configureStore from 'js-browser-lib/ReduxComponents/store';
 import {UIOverlay} from 'js-browser-lib/UIOverlay/UIOverlay';
 import {ExitFullscreenButtonBase} from 'js-browser-lib/ExitFullscreenButtonBase';
 import {Menu as MenuBase} from 'js-browser-lib/MenuBase';

@@ -21,7 +21,7 @@ import {Component} from 'react';
 import Scroller from '@enact/agate/Scroller';
 
 import BookmarkList from './BookmarkList';
-import {selectAllBookmarks, deselectAllBookmarks} from '../../actions';
+import {selectAllBookmarks, deselectAllBookmarks} from 'js-browser-lib/ReduxComponents/actions';
 
 import css from './BookmarkManager.module.less';
 

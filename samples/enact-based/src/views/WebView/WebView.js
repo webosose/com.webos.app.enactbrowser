@@ -17,7 +17,7 @@ import PropTypes from 'prop-types';
 import {Component} from 'react';
 import ErrorPage from '../ErrorPage';
 import BlockedPageNotification from '../BlockedPageNotification';
-import {setFullScreen, setWebContentFullscreen} from '../../actions';
+import {setFullScreen, setWebContentFullscreen} from 'js-browser-lib/ReduxComponents/actions';
 
 import css from './WebView.module.less';
 

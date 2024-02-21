@@ -17,7 +17,7 @@ import Item from '@enact/agate/Item';
 import PropTypes from 'prop-types';
 import {Component} from 'react';
 
-import {selectHistory} from '../../actions';
+import {selectHistory} from 'js-browser-lib/ReduxComponents/actions';
 
 import css from './HistoryItem.module.less';
 

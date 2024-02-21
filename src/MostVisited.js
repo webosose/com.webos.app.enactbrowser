@@ -7,12 +7,12 @@
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
 import {MostVisitedSites}
-    from 'js-browser-lib/MostVisitedSites';
+    from './MostVisitedSites';
 import {MostVisitedSitesIdbStorage}
-    from 'js-browser-lib/MostVisitedSitesIdbStorage';
+    from './MostVisitedSitesIdbStorage';
 import {ThumbnailsIdbStorage}
-    from 'js-browser-lib/ThumbnailsIdbStorage';
-import {removeMostVisitedSite, setMostVisitedSites, setUrlSuggestions} from './Browser/actions';
+    from './ThumbnailsIdbStorage';
+import {removeMostVisitedSite, setMostVisitedSites, setUrlSuggestions} from './ReduxComponents/Browser/actions';
 
 class MostVisited extends MostVisitedSites {
     constructor(reduxStore, db, tabs, webviews) {

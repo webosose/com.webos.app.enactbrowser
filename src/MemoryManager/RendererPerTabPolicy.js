@@ -6,7 +6,7 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
-import {TabTypes} from 'js-browser-lib/TabsConsts';
+import {TabTypes} from '../TabsConsts';
 
 class RendererPerTabPolicy {
     constructor(tabs, webViews, maxActiveTabFamilies, maxSuspendedTabFamilies) {
