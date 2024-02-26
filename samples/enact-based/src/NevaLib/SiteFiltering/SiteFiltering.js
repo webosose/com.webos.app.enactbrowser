@@ -13,21 +13,6 @@ import {
 	BlackList
 } from 'js-browser-lib/SiteFiltering';
 
-// asterisk is removed from list of characters to escape
-// TODO: optimize for one regexp
-const regExpForEscaping = /[-\/\\^$+?.()|[\]{}]/g;
-const regExpForReplacingAsterisks = /[*]/g;
-/**
-	Converts string with asterisk wildcards to RegExp object
-	Example:
-		'*lenta.ru*' => /^.*lenta\.ru.*$/
-*/
-function asteriskStringToRegExp(str) {
-	str = str.replace(regExpForEscaping, '\\$&');
-	str = str.replace(regExpForReplacingAsterisks, '.*');
-	return new RegExp('^' + str + '$');
-}
-
 const
 	WHITE_LIST_IDB_NAME = 'white-list',
 	BLACK_LIST_IDB_NAME = 'black-list',
@@ -79,7 +64,7 @@ class SiteFiltering {
 				.then((values) => {
 					this.controller.setFilter(new FILTER_CTORS[mode]());
 					this.controller.filter.patterns =
-						values.map(asteriskStringToRegExp);
+						values.map(domain => new RegExp('^' + domain + '$'));
 				});
 		}
 
@@ -88,6 +73,26 @@ class SiteFiltering {
 		}
 		this.controller.setFilter(null);
 		return Promise.resolve();
+	}
+
+	addURL(mode, url) {
+		if (this.filterStorages[mode]) {
+			const domain = this.controller.getDomain(url);
+			return this.filterStorages[mode].set(domain);
+		}
+	}
+
+	removeURL(mode, url) {
+		if (this.filterStorages[mode]) {
+			return this.filterStorages[mode].remove(url);
+		}
+	}
+
+	getURLs(mode) {
+		if (this.filterStorages[mode]) {
+			return this.filterStorages[mode].getAll();
+		}
+		return [];
 	}
 
 	resetFilter() {

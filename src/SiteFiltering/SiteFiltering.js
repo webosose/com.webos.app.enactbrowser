@@ -37,6 +37,20 @@ class SiteFiltering {
         this.filter = filter;
     }
 
+    getDomain(url) {
+        let domain = url;
+        try {
+            domain = (new URL(url)).hostname;
+        } catch (error) {
+            console.warn('Error getDomain: ' + error.message);
+        }
+        const wwwPrefix = 'www.';
+        if (domain && domain.startsWith(wwwPrefix)) {
+            domain = domain.replace(wwwPrefix, '');
+        }
+        return domain;
+    }
+
     _addBeforeRequestHandler() {
         console.log(`SiteFiltering::_addBeforeRequestHandler`);
         shell.session(this.partition_id).webrequest.onBeforeRequest(
@@ -45,7 +59,7 @@ class SiteFiltering {
                 console.log(`SiteFiltering:: check ${url} ${resourceType}`);
                 const shouldCancelRequest =
                     (resourceType === 'mainFrame' || resourceType === 'subFrame') &&
-                    this.filter && !this.filter.isAllowed(url); // parse url string to check is it in a list
+                    this.filter && !this.filter.isAllowed(this.getDomain(url)); // parse url string to check is it in a list
                     console.log(`SiteFiltering:: check returns cancel: ${shouldCancelRequest}`);
                 return { cancel: shouldCancelRequest };
             }

@@ -65,28 +65,29 @@ class SiteFilteringBase extends Component {
 		this.state = {
 			deletePopupOpen: false,
 			resetPinCodePopupOpen: false,
-			urlToAdd: ''
+			urlToAdd: '',
+			urlValidation: '',
 		};
 		this.loadSiteList();
 	}
 
 	loadSiteList () {
 		const {
-				siteFiltering: filteringMode,
-				browser: {siteFiltering: {filterStorages}}
-			} = this.props;
+			siteFiltering: filteringMode,
+			browser: {siteFiltering}
+		} = this.props;
 
 		if (filteringMode === filteringOptions[1]) {
-			filterStorages[filteringMode].getAll()
-			.then((values) => {
-				this.props.setApprovedSites(values);
-			})
+			siteFiltering.getURLs(filteringMode)
+				.then((values) => {
+					this.props.setApprovedSites(values);
+				});
 		}
 		else if (filteringMode === filteringOptions[2]) {
-			filterStorages[filteringMode].getAll()
-			.then((values) => {
-				this.props.setBlockedSites(values);
-			})
+			siteFiltering.getURLs(filteringMode)
+				.then((values) => {
+					this.props.setBlockedSites(values);
+				});
 		}
 	}
 
@@ -121,17 +122,23 @@ class SiteFilteringBase extends Component {
 	}
 
 	onChange = (ev) => {
-		this.setState({urlToAdd: ev.value});
+		this.setState({urlToAdd: ev.value, urlValidation: ''});
 	}
 
 	onAdd = (ev) => {
-		const {urlToAdd} = this.state;
-		if (urlToAdd !== '') {
-			this.addFilterPattern(urlToAdd);
-			this.setState({urlToAdd: ev.value});
+		if (this.validateURL()) {
+			this.addFilterPattern(this.state.urlToAdd);
+			this.setState({urlToAdd: ''});
+		} else {
+			this.setState({urlValidation: 'Please enter valid URL.'})
 		}
 		ev.preventDefault();
 		ev.stopPropagation();
+	}
+
+	validateURL = () => {
+		const regexp = /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-zA-Z0-9]-*)*[a-zA-Z0-9]+)(?:\.(?:[a-zA-Z0-9]-*)*[a-zA-Z0-9]+)*(?:\.(?:[a-zA-Z]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
+		return regexp.test(this.state.urlToAdd);
 	}
 
 	onSelectAll = () => {
@@ -155,10 +162,10 @@ class SiteFilteringBase extends Component {
 	addFilterPattern = (value) => {
 		const {
 			siteFiltering: filteringMode,
-			browser: {siteFiltering, siteFiltering: {filterStorages}}
+			browser: {siteFiltering}
 		} = this.props;
 
-		filterStorages[filteringMode].set(value)
+		siteFiltering.addURL(filteringMode, value)
 			.then(() => this.loadSiteList())
 			.then(() => siteFiltering.setMode(filteringMode));
 	}
@@ -166,10 +173,10 @@ class SiteFilteringBase extends Component {
 	removeFilterPattern = (value) => {
 		const {
 			siteFiltering: filteringMode,
-			browser: {siteFiltering, siteFiltering: {filterStorages}}
+			browser: {siteFiltering}
 		} = this.props;
 
-		filterStorages[filteringMode].remove(value)
+		siteFiltering.removeURL(filteringMode, value)
 			.then(() => this.loadSiteList())
 			.then(() => siteFiltering.setMode(filteringMode));
 	}
@@ -260,8 +267,9 @@ class SiteFilteringBase extends Component {
 									onChange={this.onChange}
 									value={this.state.urlToAdd}
 								/>
-								<Icon className={css.add} onClick={this.onAdd}>plus</Icon>
+								<Icon className={css.add} disabled={!this.validateURL()} onClick={this.onAdd}>plus</Icon>
 							</div>
+							<p className={css.error}>{this.state.urlValidation}</p>
 							<br/>
 							<Button
 								css={css}

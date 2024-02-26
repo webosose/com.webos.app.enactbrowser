@@ -34,8 +34,8 @@ function getBrowserDefaults() {
             privateBrowsingCueTextColor: '#ce2e6b'
         },
         sitefiltering: {
-            whitelist: ['*google*', '*://*yandex*'],
-            blacklist: ['*://www.youtube.*', '*://youtube.*', '*lenta.ru*']
+            whitelist: [],
+            blacklist: []
         }
     };
 }
