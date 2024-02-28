@@ -3,5 +3,8 @@
         "media",
         "application.operation",
         "settings.query"
+    ],
+    "com.webos.chromium.memory.*": [
+        "memorymanager.query"
     ]
 }
