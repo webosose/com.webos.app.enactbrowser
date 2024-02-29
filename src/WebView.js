@@ -408,7 +408,7 @@ class PageContentsWrapper {
     }
 
     activate() {
-        window.QALog(`ACTIVATE ` + this.url);
+        window.QALog(`ACTIVATE ${this.id} ` + this.url);
         if (this.unresponsive) {
             console.log(`The web page is unresponsive, do not activate`);
             return;
@@ -443,7 +443,7 @@ class PageContentsWrapper {
     }
 
     suspend() {
-        window.QALog(`SUSPEND ` + this.url);
+        window.QALog(`SUSPEND ${this.id} ` + this.url);
         this.tabView.setVisible(false);
         this.tabView.sendToBack();
         // If suspend error page's DOM it will imposible to show
@@ -472,7 +472,7 @@ class PageContentsWrapper {
     }
 
     deactivate() {
-        window.QALog(`DEACTIVATE ` + this.url);
+        window.QALog(`DEACTIVATE ${this.id} ` + this.url);
         if (this.activeState !== 'deactivated') {
             this.tabView.pageContents.deactivate();
             this.activeState = 'deactivated';
