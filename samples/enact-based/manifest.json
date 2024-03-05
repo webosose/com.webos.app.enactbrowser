@@ -13,6 +13,7 @@
     "storage",
     "https://*/*",
     "http://*/*",
+    "*://*/*.pdf*",
     "fullscreen",
     "audioCapture",
     "videoCapture"

@@ -61,7 +61,11 @@ function AddressBarBase({url, browser, onUrlChanged, urlSuggestions, searchEngin
 	console.log(`[AddressBar] isActive: ${isActive}, isEditing: ${isEditing}, value: ${value}, isLoading: ${isLoading}`);
 
 	useEffect(() => {
-		setValue(url)
+		if (/^chrome-extension:\/\/[a-z]{32}\/http(s?):\/\/.+\.pdf$/i.test(url)) {
+			setValue(url.split(/^chrome-extension:\/\/[a-z]{32}\//)[1]);
+		} else {
+			setValue(url);
+		}
 	}, [url]);
 
 	useEffect(() => {

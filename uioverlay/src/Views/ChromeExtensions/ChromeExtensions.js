@@ -34,7 +34,8 @@ function ChromeExtensions({model, onUpdate}) {
         // subscribe to this message to handle clicks in main browser pageContents
     }, [model.ipc])
 
-    for (let i = 0; i < extensions.length; i ++) {
+    for (let i = 0; i < extensions.length; i++) {
+        if (extensions[i].name === 'PDF Viewer') continue; // Hide PDF extension
         items.push(
             <Item className={css.Item} key={i} onClick={onclick(extensions[i].id)}
             >
