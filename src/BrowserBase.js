@@ -387,6 +387,8 @@ class BrowserBase {
             const tab = this.tabs.getTab(state.id);
             if (reason !== 'normal') {
                 tab.setError('RENDERER_CRASHED');
+            } else {
+                tab.setError('LOADING_FAILED');
             }
         });
         webview.addEventListener('responsive', () => {

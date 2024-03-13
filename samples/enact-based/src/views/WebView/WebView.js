@@ -110,6 +110,7 @@ class WebViewBase extends Component {
 							state_set.show_error_page = true;
 							break;
 
+						case 'LOADING_FAILED':
 						case 'RENDERER_CRASHED':
 							state_set.show_error_page = true;
 							break;
@@ -153,7 +154,7 @@ class WebViewBase extends Component {
 	}
 
 	isOnlyForBuiltInErrorPage = (err) => {
-		return ['PAGE_UNRESPONSIVE','RENDERER_CRASHED'].includes(err);
+		return ['PAGE_UNRESPONSIVE','RENDERER_CRASHED','LOADING_FAILED'].includes(err);
 	};
 
 	MaybeLoadingStarted = () => {
