@@ -6,13 +6,15 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
+/* global navigator */
+
 (function() {
-	var localeBundles = [
+	const localeBundles = [
 		'ilibdata/' + navigator.language + '.js',
 		'localedata/' + navigator.language + '.js'
 	];
-	for(var i=0; i<localeBundles.length; i++) {
-		var script= document.createElement('script');
+	for(let i = 0; i < localeBundles.length; i++) {
+		const script = document.createElement('script');
 		script.type = 'text/javascript';
 		script.src = localeBundles[i];
 		script.async = false;

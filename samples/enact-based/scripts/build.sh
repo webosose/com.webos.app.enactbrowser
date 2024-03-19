@@ -16,7 +16,7 @@ ENACT_DEV=$(readlink -f node_modules/@enact/cli/bin/enact.js)
 $ENACT_DEV -v
 $ENACT_DEV pack --isomorphic --production $1
 
-cp label.js background.js webos-locale.js defaults.js dist
+cp webos-locale.js dist
 ./scripts/install-manifest.js --from=manifest.json --to=dist/manifest.json --version_suffix=`git rev-parse HEAD`
 
 (
