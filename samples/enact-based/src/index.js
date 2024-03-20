@@ -33,7 +33,7 @@ const uioverlay = new UIOverlay();
 const menu = new MenuBase(uioverlay);
 const zoomControl = new ZoomControlBase(uioverlay);
 const exitFullscreenButton = new ExitFullscreenButtonBase(uioverlay);
-const chromeExtensionsMenu = (isWindowReady() && typeof window.neva !== 'undefined') ? new ChromeExtensionsBase(uioverlay) : null;
+const chromeExtensionsMenu = (isWindowReady() && typeof window.nevaExtensionsManager !== 'undefined') ? new ChromeExtensionsBase(uioverlay) : null;
 const dialog = new DialogBase(uioverlay);
 const urlSuggestionsBar = new UrlSuggestionsBase(uioverlay);
 const userPermission = new UserPermissionBase(uioverlay);

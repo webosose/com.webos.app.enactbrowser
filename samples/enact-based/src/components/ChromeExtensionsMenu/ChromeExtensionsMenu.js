@@ -27,12 +27,12 @@ function ChromeExtensionsMenu({chromeExtensionsMenu, browser}) {
 					setIsOpened(false);
 				})
 		} else {
-			chromeExtensionsMenu.showAbove(extBtnRef.current)
+			chromeExtensionsMenu.showAbove(extBtnRef.current, browser.contentSession.name)
 				.then(() => {
 					setIsOpened(true);
 				})
 		}
-	}, [isOpened, chromeExtensionsMenu, extBtnRef]);
+	}, [isOpened, chromeExtensionsMenu, browser, extBtnRef]);
 
 	const onDocumentClick = useCallback((ev) => {
 		const extensionMenuElement = window.document.getElementById('chromeExtensionsMenu');

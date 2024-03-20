@@ -26,11 +26,12 @@ class ChromeExtensionsBase {
         }
     }
 
-    showAbove(button) {
+    showAbove(button, partition) {
         console.log(`show chrome extensions menu`);
         const buttonHeight = button.offsetHeight + 20;
         const leftBorderWidth = (document.body.clientWidth / 100) * 70;  // 10% of the document width
         const width = document.body.clientWidth - leftBorderWidth;
+        const extensionsService = window.nevaExtensionsManager.getExtensionsServiceFor(partition);
 
         return this.uioverlay.show({
             target: 'chrome_extensions', bounds: {
@@ -41,11 +42,13 @@ class ChromeExtensionsBase {
         }).then((layer) => {
             layer.view.pageContents.setFocus();
             return new Promise((resolve) => {
-                window.neva.getExtensionsInfo((infos) => {
-                    console.log(JSON.stringify(infos));
-                    this.ipc.post('extenstionsListUpdated', infos);
-                    resolve();
-                });
+                if (typeof extensionsService !== 'undefined'){
+                    extensionsService.getExtensionsInfo((infos) => {
+                        console.log(JSON.stringify(infos));
+                        this.ipc.post('extenstionsListUpdated', infos);
+                        resolve();
+                    });
+                }
             });
         });
     }

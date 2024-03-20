@@ -104,16 +104,17 @@ class BrowserBase {
         this.contentSession = shell.session('persist:webcontent');
         this.contentSession.touch();
 
-        if (typeof window !== 'undefined' && typeof window.neva !== 'undefined') {
+        if (typeof window !== 'undefined' && typeof window.nevaExtensionsManager !== 'undefined') {
             this.ipc = new Ipc("ipc_chrome_extensions");
             this.ipc.subscribe('click', (extensionInfo) => {
                 let webView = this.webViews[this.tabs.getSelectedId()];
-                if (webView) {
-                    console.log(`window.neva.selectExtension(${webView.getPageContentsId()}, ${extensionInfo.id})`);
-                    window.neva.selectExtension(webView.getPageContentsId(), extensionInfo.id);
+                let extensionsService = window.nevaExtensionsManager.getExtensionsServiceFor(this.contentSession.name);
+                if (webView && typeof extensionsService !== 'undefined') {
+                    console.log(`extensionsService.selectExtension(${webView.getPageContentsId()}, ${extensionInfo.id})`);
+                    extensionsService.selectExtension(webView.getPageContentsId(), extensionInfo.id);
                 }
             });
-        }
+        };
 
         if (isWindowReady()) {
             this.zoomControlIpc = new ShellIpc('ipc_ZoomControl');

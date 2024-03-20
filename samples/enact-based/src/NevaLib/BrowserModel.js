@@ -149,21 +149,22 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
     }
 
     initializeExtenionAPI() {
-        if (typeof window !== 'undefined' && typeof window.neva !== 'undefined') {
+        if (typeof window !== 'undefined' && typeof window.nevaExtensionsManager !== 'undefined'){
+            let extensionsService = window.nevaExtensionsManager.getExtensionsServiceFor(this.webViewFactory.getPartition());
             console.log("Add create-extension-tab event");
-            window.neva.addEventListener("create-extension-tab", (request_id) => {
+            extensionsService.addEventListener("create-extension-tab", (request_id) => {
                 console.log("create-extension-tab event occured");
                 this.createTab(TabTypes.WEBVIEW, "");
                 let webView = this.webViews[this.tabs.getSelectedId()];
                 if (webView) {
                     console.log("webview created");
-                    window.neva.extensionTabCreated(request_id, webView.getPageContentsId());
+                    extensionsService.extensionTabCreated(request_id, webView.getPageContentsId());
                 } else {
                     console.error("No webview found");
                 }
             });
 
-            window.neva.addEventListener("close-extension-tab", (tab_id) => {
+            extensionsService.addEventListener("close-extension-tab", (tab_id) => {
                 console.log("close-extension-tab event occured");
                 const {tabs} = this;
                 for (let i = tabs.count() - 1; i >= 0; i--) {
@@ -175,7 +176,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
                 }
             });
 
-            window.neva.addEventListener("focus-extension-tab", (tab_id) => {
+            extensionsService.addEventListener("focus-extension-tab", (tab_id) => {
                 console.log("focus-extension-tab event occured");
                 const {tabs} = this;
                 for (let i = tabs.count() - 1; i >= 0; i--) {
@@ -187,7 +188,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
                 }
             });
 
-            window.neva.addEventListener("create-extension-popup", () => {
+            extensionsService.addEventListener("create-extension-popup", () => {
                 console.log("create-extension-popup event occured");
                 let popupView = new window.PageView({"page-contents-params": {
                   "partition": this.webViewFactory.getPartition(),
@@ -195,7 +196,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
                 }});
                 window.shell.shellWindow.pageView.addChildView(popupView);
                 let webView = this.webViews[this.tabs.getSelectedId()];
-                window.neva.extensionPopupViewCreated(popupView.id, webView.getPageContentsId());
+                extensionsService.extensionPopupViewCreated(popupView.id, webView.getPageContentsId());
                 window.extensionPopupView = popupView;
 
                 window.document.addEventListener('click', () => {
@@ -204,7 +205,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
                         window.extensionPopupView.setVisible(false);
                     }
                     window.extensionPopupView = undefined;
-                }, {once: true});
+                }, { once: true });
 
                 const button = this.extensionButtonRef.current;
                 const buttonHeight = button.offsetHeight + 20;
@@ -217,7 +218,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
                 popupView.setVisible(true);
             });
 
-            window.neva.addEventListener("close-extension-popup", (popup_view_id) => {
+            extensionsService.addEventListener("close-extension-popup", (popup_view_id) => {
                 console.log("close-extension-popup event occured");
                 if (window.extensionPopupView && window.extensionPopupView.id === popup_view_id) {
                     window.shell.shellWindow.pageView.removeChildView(window.extensionPopupView);
@@ -226,13 +227,13 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
                 window.extensionPopupView = undefined;
             });
 
-            window.neva.addEventListener("update-extension-popup", (popup_view_id, width, height) => {
+            extensionsService.addEventListener("update-extension-popup", (popup_view_id, width, height) => {
                 console.log("update-extension-popup event occured");
                 if (window.extensionPopupView && window.extensionPopupView.id === popup_view_id) {
-                  const left =  document.body.clientWidth - width;
-                  const button = this.extensionButtonRef.current;
-                  const buttonHeight = button.offsetHeight + 20;
-                  window.extensionPopupView.setBounds(left, buttonHeight, width, height);
+                    const left =  document.body.clientWidth - width;
+                    const button = this.extensionButtonRef.current;
+                    const buttonHeight = button.offsetHeight + 20;
+                    window.extensionPopupView.setBounds(left, buttonHeight, width, height);
                 }
             });
         }

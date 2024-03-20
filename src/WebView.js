@@ -181,8 +181,11 @@ class PageContentsWrapper {
             this.dialogData.alertsAllowed = false;
         };
 
-        if (typeof window !== 'undefined' && typeof window.neva !== 'undefined') {
-            window.neva.extensionTabCreated(this.getPageContentsId())
+        if (typeof window !== 'undefined' && typeof window.nevaExtensionsManager !== 'undefined') {
+            let extensionsService = window.nevaExtensionsManager.getExtensionsServiceFor(params.partition);
+            if (typeof extensionsService !== 'undefined') {
+                extensionsService.extensionTabCreated(this.getPageContentsId())
+            }
         }
     }
 
@@ -419,6 +422,11 @@ class PageContentsWrapper {
         if (typeof window.extensionPopupView === 'object') {
             window.shell.shellWindow.pageView.bringToFront(window.extensionPopupView);
         }
+
+        if (typeof window !== 'undefined' && typeof window.nevaExtensionsManager !== 'undefined') {
+            let extensionsService = window.nevaExtensionsManager.getExtensionsServiceFor(params.partition);
+            extensionsService.extensionTabActivated(this.getPageContentsId());
+        }
     }
 
     suspend() {
@@ -524,10 +532,12 @@ class PageContentsWrapper {
 
     beforeWebviewDelete() {
         console.log(`beforeWebviewDelete`);
-        if (typeof window !== 'undefined' && typeof window.neva !== 'undefined') {
-            window.neva.extensionTabClosed(this.getPageContentsId());
+        if (typeof window !== 'undefined' && typeof window.nevaExtensionsManager !== 'undefined') {
+            let extensionsService = window.nevaExtensionsManager.getExtensionsServiceFor(params.partition);
+            if (typeof extensionsService !== 'undefined') {
+                extensionsService.extensionTabClosed(this.getPageContentsId());
+            }
         }
-        // TBD !! remove event listeners
     }
 
     handleDomReady() {

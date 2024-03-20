@@ -224,7 +224,7 @@ class MainBase extends Component {
 			private_mode = browser.getPrivateBrowsing();
 		}
 
-		const maybeChromeExtensionsMenu = (isWindowReady() && typeof window.neva !== 'undefined') ?
+		const maybeChromeExtensionsMenu = (isWindowReady() && typeof window.nevaExtensionsManager !== 'undefined') ?
 			(<ChromeExtensionsMenu chromeExtensionsMenu={this.props.chromeExtensionsMenu} browser={browser}/>) :
 			(null)
 
