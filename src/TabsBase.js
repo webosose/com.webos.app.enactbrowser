@@ -217,7 +217,6 @@ class TabsBase extends EventEmitter {
     }
 
     getTab(id) {
-        // TODO: create dictionary for this wrappers and hadle it's lifecycle
         return new Tab(id, this);
     }
 

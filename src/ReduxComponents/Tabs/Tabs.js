@@ -50,7 +50,6 @@ class TabsReduxStore {
         return this.store.getState().tabsState.ids;
     }
 
-    // TODO: rename to getStates?
     getTabs = () => {
         return this.store.getState().tabsState.tabs;
     }

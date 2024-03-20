@@ -29,7 +29,6 @@ class PreviousTabsIdbStorage {
     }
 
     reset() {
-        //TODO: reset with array of new infos
         return this.storage.removeAll();
     }
 

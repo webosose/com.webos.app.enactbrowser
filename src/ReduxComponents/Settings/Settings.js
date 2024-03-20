@@ -253,9 +253,7 @@ class Settings extends SettingsBase {
     }
 
     getVersionString = () => {
-        return "version TBD";
-        // chrome.runtime.getManifest().version_name;
-        // TBD: reimplement in NEVA-6979
+        return navigator.userAgent;
     }
 
 

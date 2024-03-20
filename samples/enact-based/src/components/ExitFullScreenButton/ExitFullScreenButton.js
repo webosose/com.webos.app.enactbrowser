@@ -72,7 +72,6 @@ class ExitFullScreenButton extends Component {
 	}
 
 	onMouseLeave = () => {
-		// TBD: implement input focus management
 		this.setState({timeoutId: setTimeout(() => {this.hide()}, 3000)});
 	}
 

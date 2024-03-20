@@ -155,7 +155,6 @@ class MostVisitedSitesIdbStorage {
         });
     }
 
-    // TODO: may be reversed array needed
     getAll() {
         return this.db.transaction('readonly', STORE_NAME, (store) =>
             store.request('getAll', [], 'hitCount'));
