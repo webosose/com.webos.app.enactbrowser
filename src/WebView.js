@@ -318,6 +318,16 @@ class PageContentsWrapper {
         this.tabView.pageContents.closeNow();
     }
 
+    notifyExtensionOnTabUpdated(tabStatus) {
+        if (typeof window !== 'undefined' && typeof window.nevaExtensionsManager !== 'undefined') {
+            let extensionsService = window.nevaExtensionsManager.getExtensionsServiceFor(this.sessionName);
+            // TODO(neva): Please consider to support other useful fields
+            // such as title and url.
+            const changeInfo = { status: tabStatus };
+            extensionsService.extensionTabUpdated(this.getPageContentsId(), JSON.stringify(changeInfo));
+        }
+    }
+
     handleFinishLoading(url, is_main_frame) {
         if (is_main_frame) {
             this.dialogData.resetAlertState();
@@ -347,6 +357,8 @@ class PageContentsWrapper {
 
         console.log(`[WebView] handleFinishNavigation: focus webview ${this.url}`);
         this.tabView.pageContents.setFocus();
+
+        this.notifyExtensionOnTabUpdated('complete');
     }
 
     handlePushHistoryNavigation(url) {
@@ -561,7 +573,9 @@ class PageContentsWrapper {
                 button : e.buttoncode
             });
             document.dispatchEvent(event);
-        });
+        })
+
+        this.notifyExtensionOnTabUpdated('loading');
     }
 
     handleLoadProgressChanged(ev) {
