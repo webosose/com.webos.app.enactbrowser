@@ -25,7 +25,7 @@ import History from '../History';
 import NewTabPage from '../NewTabPage';
 import Settings from '../Settings';
 import SiteFiltering from '../SiteFiltering';
-import {TabTypes} from 'js-browser-lib/BrowserModel';
+import {TabTypes} from 'js-browser-lib/browser-model';
 import WebView from '../WebView';
 
 import css from './ContentView.module.less';

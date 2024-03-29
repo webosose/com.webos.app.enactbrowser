@@ -17,17 +17,17 @@
 import {render} from 'react-dom';
 import ThemeDecorator from '@enact/agate/ThemeDecorator';
 import App from './App';
-import InputSuggestionListModel from './components/InputSuggestionListModel';
-import ExitFullscreenButtonModel from './components/ExitFullscreenButtonModel';
-import ZoomControlModel from './components/ZoomControlModel';
-import ChromeExtensionsModel from './components/ChromeExtensionsModel';
-import MenuModel from './components/MenuModel';
-import createDialogModel from './components/DialogModel';
+import InputSuggestionListModel from './components/input-suggestion-list-model';
+import ExitFullscreenButtonModel from './components/exit-fullscreen-button-model';
+import ZoomControlModel from './components/zoom-control-model';
+import ChromeExtensionsModel from './components/chrome-extensions-model';
+import MenuModel from './components/menu-model';
+import createDialogModel from './components/dialog-model';
 import UserPermissionModel from './components/UserPermissionModel';
 import BookmarkDialogModel from './components/BookmarkDialogModel';
 import BlockedPopup from './components/BlockedPopupModel';
-import Ipc from '../../src/Ipc';
-import {initLogging} from 'js-browser-lib/Logger';
+import Ipc from '../../src/ipc';
+import {initLogging} from 'js-browser-lib/logger';
 import AppDecorator from '../../samples/enact-based/src/components/AppDecorator'
 
 if (typeof window !== 'undefined') {

@@ -27,7 +27,7 @@ import classNames from 'classnames';
 
 import Icon from '@enact/agate/Icon';
 import Button from '@enact/agate/Button';
-import {TabTypes} from 'js-browser-lib/BrowserModel';
+import {TabTypes} from 'js-browser-lib/browser-model';
 import AddressBar from './AddressBar';
 import BlockedPopup from './BlockedPopup';
 

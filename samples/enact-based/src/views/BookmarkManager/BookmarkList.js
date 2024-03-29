@@ -26,7 +26,7 @@ import Spotlight from '@enact/spotlight';
 
 import BookmarkItem from './BookmarkItem';
 import Sortable from '../../components/Sortable';
-import {moveBookmarkSelected, deselectAllBookmarks} from 'js-browser-lib/ReduxComponents/actions';
+import {moveBookmarkSelected, deselectAllBookmarks} from 'js-browser-lib/redux-components/actions';
 
 import css from './BookmarkList.module.less';
 

@@ -24,8 +24,8 @@ import Button from '@enact/agate/Button';
 import {isWindowReady} from '@enact/core/snapshot';
 import {Component} from 'react';
 import {connect} from 'react-redux';
-import Ipc from 'js-browser-lib/Ipc';
-import {TabTypes} from 'js-browser-lib/TabsConsts';
+import Ipc from 'js-browser-lib/ipc';
+import {TabTypes} from 'js-browser-lib/tabs-consts';
 
 import css from './ZoomControl.module.less';
 

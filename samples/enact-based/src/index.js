@@ -18,16 +18,16 @@ import {Provider} from 'react-redux';
 import {render} from 'react-dom';
 
 import App from './App';
-import configureStore from 'js-browser-lib/ReduxComponents/store';
-import {UIOverlay} from 'js-browser-lib/UIOverlay/UIOverlay';
-import {ExitFullscreenButtonBase} from 'js-browser-lib/ExitFullscreenButtonBase';
-import {Menu as MenuBase} from 'js-browser-lib/MenuBase';
-import {ChromeExtensionsBase} from 'js-browser-lib/ChromeExtensionsBase';
-import {DialogBase} from 'js-browser-lib/DialogBase';
-import {initLogging} from 'js-browser-lib/Logger';
+import configureStore from 'js-browser-lib/redux-components/store';
+import {UIOverlay} from 'js-browser-lib/uioverlay/uioverlay';
+import {ExitFullscreenButtonBase} from 'js-browser-lib/exit-fullscreen-button-base';
+import {Menu as MenuBase} from 'js-browser-lib/menu-base';
+import {ChromeExtensionsBase} from 'js-browser-lib/chrome-extensions-base';
+import {DialogBase} from 'js-browser-lib/dialog-base';
+import {initLogging} from 'js-browser-lib/logger';
 import {isWindowReady} from '@enact/core/snapshot';
-import {ZoomControl as ZoomControlBase} from 'js-browser-lib/ZoomBase'
-import {UrlSuggestionsBase} from 'js-browser-lib/UrlSuggestionsBase';
+import {ZoomControl as ZoomControlBase} from 'js-browser-lib/zoom-base'
+import {UrlSuggestionsBase} from 'js-browser-lib/url-suggestions-base';
 import {UserPermissionBase} from 'js-browser-lib/UserPermissionBase';
 import {BookmarkDialogBase} from 'js-browser-lib/BookmarkDialogBase';
 import {BlockedPopupBase} from 'js-browser-lib/BlockedPopupBase';

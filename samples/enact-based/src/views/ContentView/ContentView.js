@@ -26,7 +26,7 @@ import React from 'react';
 
 import BookmarkBar from '../../components/BookmarkBar';
 import ExitFullScreenButton from '../../components/ExitFullScreenButton';
-import {TabTypes} from 'js-browser-lib/BrowserModel';
+import {TabTypes} from 'js-browser-lib/browser-model';
 import ContentItem from './ContentItem';
 
 import css from './ContentView.module.less';

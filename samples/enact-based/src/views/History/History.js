@@ -31,7 +31,7 @@ import Spotlight from '@enact/spotlight';
 import VirtualList from '@enact/agate/VirtualList';
 
 import HistoryItem from './HistoryItem';
-import {selectAllHistory, deselectAllHistory} from 'js-browser-lib/ReduxComponents/actions';
+import {selectAllHistory, deselectAllHistory} from 'js-browser-lib/redux-components/actions';
 
 import css from './History.module.less';
 

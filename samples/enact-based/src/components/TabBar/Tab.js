@@ -32,7 +32,7 @@ import Button from '@enact/agate/Button';
 import Skinnable from '@enact/agate/Skinnable';
 
 import redIndicator from '../../../assets/popup/Record_Icon.svg';
-import {TabTypes} from 'js-browser-lib/BrowserModel';
+import {TabTypes} from 'js-browser-lib/browser-model';
 
 import css from './Tab.module.less';
 
