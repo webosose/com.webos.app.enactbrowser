@@ -16,6 +16,7 @@ import ChromeExtensionsModel from './components/ChromeExtensionsModel';
 import MenuModel from './components/MenuModel';
 import createDialogModel from './components/DialogModel';
 import UserPermissionModel from './components/UserPermissionModel';
+import BookmarkDialogModel from './components/BookmarkDialogModel';
 import Ipc from '../../src/Ipc';
 import {initLogging} from 'js-browser-lib/Logger';
 import AppDecorator from '../../samples/enact-based/src/components/AppDecorator'
@@ -49,6 +50,7 @@ const model = {
     dialog: createDialogModel(),
     zoomControl: new ZoomControlModel(),
     userPermission: new UserPermissionModel(),
+    bookmarkDialog: new BookmarkDialogModel(),
 };
 
 const PrerenderApp = AppDecorator(ThemeDecorator({i18n: false}, <div />));

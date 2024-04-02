@@ -21,6 +21,7 @@ import {isWindowReady} from '@enact/core/snapshot';
 import {ZoomControl as ZoomControlBase} from 'js-browser-lib/ZoomBase'
 import {UrlSuggestionsBase} from 'js-browser-lib/UrlSuggestionsBase';
 import {UserPermissionBase} from 'js-browser-lib/UserPermissionBase';
+import {BookmarkDialogBase} from 'js-browser-lib/BookmarkDialogBase';
 
 if (typeof window !== 'undefined') {
 	initLogging();
@@ -35,6 +36,8 @@ const chromeExtensionsMenu = (isWindowReady() && typeof window.neva !== 'undefin
 const dialog = new DialogBase(new UIOverlay());
 const urlSuggestionsBar = new UrlSuggestionsBase(uioverlay);
 const userPermission = new UserPermissionBase(uioverlay);
+const bookmarkDialog = new BookmarkDialogBase(uioverlay);
+
 if (typeof window !== 'undefined') {
 	window.dialogOverlay = dialog;
 	window.urlSuggestionsBar = urlSuggestionsBar;
@@ -51,6 +54,7 @@ let appElement = (
 			chromeExtensionsMenu={chromeExtensionsMenu}
 			dialog={dialog}
 			userPermission={userPermission}
+			bookmarkDialog={bookmarkDialog}
 		/>
 	</Provider>
 );

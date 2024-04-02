@@ -1,5 +1,5 @@
 {
-    "com.webos.app.enactbrowser-*": [
+    "com.webos.app.enactbrowser*": [
         "media",
         "application.operation",
         "settings.query"

@@ -15,6 +15,7 @@ import ChromeExtensions from '../Views/ChromeExtensions';
 import Dialog from '../Views/Dialog';
 import ZoomControlMenu from '../Views/ZoomControlMenu';
 import UserPermissionPopup from '../Views/UserPermissionPopup';
+import BookmarkDialog from '../Views/BookmarkDialog/BookmarkDialog';
 import AppDecorator from '../../../samples/enact-based/src/components/AppDecorator'
 import ThemeDecorator from '@enact/agate/ThemeDecorator';
 
@@ -77,6 +78,10 @@ function App({model}) {
 
         case 'user_permission':
             content = (<UserPermissionPopup model={model.userPermission} onUpdate={updateDocumentSize}/>);
+            break;
+
+        case 'bookmark_dialog':
+            content = (<BookmarkDialog model={model.bookmarkDialog} onUpdate={updateDocumentSize}/>);
             break;
 
         default:

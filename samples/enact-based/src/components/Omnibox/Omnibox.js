@@ -11,9 +11,7 @@
  *
  */
 
-import $L from '@enact/i18n/$L';
 import {connect} from 'react-redux';
-import Popup from '@enact/agate/Popup';
 import PropTypes from 'prop-types';
 import {Component} from 'react';
 import Spotlight from '@enact/spotlight';
@@ -40,12 +38,26 @@ class OmniboxBase extends Component {
 	constructor (props) {
 		super(props);
 		this.state = {
-			addBookmarkCompleted: false,
 			open: false,
-			removeBookmarkCompleted: false,
 			value: props.url ? props.url : '',
 			isEditing: false,
+		};
+	}
+
+	webOSBridge = null;
+	debounce = null;
+	isOpenBookmark = false;
+
+	componentDidMount() {
+		if (typeof window !== 'undefined' && window.WebOSServiceBridge) {
+			this.webOSBridge = new window.WebOSServiceBridge();
 		}
+		window.document.addEventListener('click', (ev) => {
+			if (this.isOpenBookmark) {
+				this.props.bookmarkDialog.hide();
+				clearTimeout(this.debounce);
+			}
+		});
 	}
 
 	onNavigate = (ev) => {
@@ -79,19 +91,34 @@ class OmniboxBase extends Component {
 		ev.stopPropagation();
 	}
 
-	onBookmarkAdd = () => {
-		this.props.browser.addBookmark();
-		this.setState({addBookmarkCompleted: true});
-		setTimeout(() => {
-			this.setState({addBookmarkCompleted: false});
+	onBookmarkAndLaunchPointAdd = ({isAddToHome}) => {
+		if (isAddToHome && this.webOSBridge) {
+			this.webOSBridge.call(
+				'luna://com.webos.service.applicationmanager/addLaunchPoint',
+				`{"id": "com.webos.app.enactbrowser", "title": "${this.props.title}", "params": {"target": "${this.props.url}"}}`
+			);
+		}
+		this.debounce = setTimeout(() => {
+			this.props.bookmarkDialog.hide();
 		}, 1500);
 	}
 
-	onBookmarkRemove = () => {
+	onBookmarkAdd = (ev) => {
+		clearTimeout(this.debounce);
+		this.props.browser.addBookmark();
+		this.props.bookmarkDialog.show({addBookmarkToHome: true});
+		this.props.bookmarkDialog.ipc.ipcObject.on('add_bookmark_to_home', this.onBookmarkAndLaunchPointAdd);
+		this.isOpenBookmark = true;
+		ev.stopPropagation();
+	}
+
+	onBookmarkRemove = (ev) => {
+		clearTimeout(this.debounce);
 		this.props.browser.removeBookmark();
-		this.setState({removeBookmarkCompleted: true});
-		setTimeout(() => {
-			this.setState({removeBookmarkCompleted: false});
+		this.props.bookmarkDialog.show({removeBookmarkCompleted: true});
+		ev.stopPropagation();
+		this.debounce = setTimeout(() => {
+			this.props.bookmarkDialog.hide();
 		}, 1500);
 	}
 
@@ -118,10 +145,7 @@ class OmniboxBase extends Component {
 	}
 
 	render () {
-		const
-			{isLoading, reloadDisabled, isBookmarked, browser, ...rest} = this.props,
-			{addBookmarkCompleted, removeBookmarkCompleted} = this.state;
-
+		const {isLoading, reloadDisabled, isBookmarked, browser, ...rest} = this.props;
 		delete rest.bookmarksData;
 		delete rest.browser;
 		delete rest.dispatch;
@@ -160,18 +184,6 @@ class OmniboxBase extends Component {
 						size={"large"}
 					/>
 				</form>
-				<Popup
-					open={addBookmarkCompleted}
-					noAutoDismiss
-				>
-					<span>{$L('Bookmark has been added.')}</span>
-				</Popup>
-				<Popup
-					open={removeBookmarkCompleted}
-					noAutoDismiss
-				>
-					<span>{$L('Bookmark has been deleted.')}</span>
-				</Popup>
 			</div>
 		);
 	}
@@ -181,7 +193,7 @@ const mapStateToProps = ({tabsState, bookmarksState}) => {
 	const {selectedIndex, ids, tabs} = tabsState;
 
 	if (ids.length > 0) {
-		const {navState, type} = tabs[ids[selectedIndex]];
+		const {navState, type, title} = tabs[ids[selectedIndex]];
 		if (navState) {
 			return {
 				bookmarksData: bookmarksState.data,
@@ -193,6 +205,7 @@ const mapStateToProps = ({tabsState, bookmarksState}) => {
 				selectedId: ids[selectedIndex],
 				selectedIndex,
 				url: navState.url,
+				title,
 			}
 		}
 	} else {
@@ -204,7 +217,6 @@ const mapStateToProps = ({tabsState, bookmarksState}) => {
 		};
 	}
 };
-
 
 const Omnibox = connect(mapStateToProps, null)(OmniboxBase);
 
