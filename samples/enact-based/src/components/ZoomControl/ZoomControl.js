@@ -12,14 +12,16 @@
  */
 
 import $L from '@enact/i18n/$L';
-import {Component} from 'react';
-import { isWindowReady } from '@enact/core/snapshot';
-
 import Button from '@enact/agate/Button';
+import {isWindowReady} from '@enact/core/snapshot';
+import {Component} from 'react';
+import {connect} from 'react-redux';
 import Ipc from 'js-browser-lib/Ipc';
+import {TabTypes} from 'js-browser-lib/TabsConsts';
+
 import css from './ZoomControl.module.less';
 
-class ZoomControl extends Component {
+class ZoomControlBase extends Component {
 	constructor (props) {
 		super(props);
 		this.state = {
@@ -73,5 +75,13 @@ class ZoomControl extends Component {
 		);
 	}
 }
+
+const mapStateToProps = ({tabsState}) => {
+	const {selectedIndex, ids, tabs} = tabsState;
+	const disabled = !ids.length || tabs[ids[selectedIndex]].type !== TabTypes.WEBVIEW;
+	return {disabled};
+};
+
+const ZoomControl = connect(mapStateToProps, null)(ZoomControlBase);
 
 export default ZoomControl;
