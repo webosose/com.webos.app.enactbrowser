@@ -15,7 +15,7 @@
 		"test": "enact test start --single-run",
 		"test-watch": "enact test start"
 	},
-	"license": "UNLICENSED",
+	"license": "Apache-2.0",
 	"private": true,
 	"repository": "",
 	"eslintConfig": {

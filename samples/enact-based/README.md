@@ -66,7 +66,7 @@ Unless otherwise specified, all content, including all source code files and
 documentation files in this repository are:
 
 Copyright (c) 2018 LG Electronics, Inc.
-SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
+SPDX-License-Identifier: Apache-2.0
 
 You may not use this content except in compliance with the License.
 You may obtain a copy of the License at
