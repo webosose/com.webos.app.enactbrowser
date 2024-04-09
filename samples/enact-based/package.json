@@ -17,7 +17,8 @@
     "license": "enact license",
     "test": "enact test start --single-run --browsers PhantomJS",
     "test-json": "enact test start --single-run --browsers PhantomJS --reporters json",
-    "test-watch": "enact test start --browsers PhantomJS"
+    "test-watch": "enact test start --browsers PhantomJS",
+    "check-finishing-lines": "node ./scripts/check-finishing-new-lines.js ../../."
   },
   "license": "Apache-2.0",
   "private": true,

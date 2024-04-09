@@ -11,6 +11,8 @@ ENACT_NPM=${ENACT_NPM:-npm}
 
 echo build main browser
 
+export ILIB_BASE_PATH="./resources"
+$ENACT_NPM run check-finishing-lines
 $ENACT_NPM install
 ENACT_DEV=$(readlink -f node_modules/@enact/cli/bin/enact.js)
 $ENACT_DEV -v
