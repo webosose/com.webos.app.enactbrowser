@@ -101,6 +101,8 @@ class BrowserBase {
         this.tabs.onContentDelete = this._handleContentDelete;
         this.tabs.addEventListener('update', this._handleTabsStateUpdate);
         this.zoomFactor = 1;
+        this.contentSession = shell.session('persist:webcontent');
+        this.contentSession.touch();
 
         if (typeof window !== 'undefined' && typeof window.neva !== 'undefined') {
             this.ipc = new Ipc("ipc_chrome_extensions");
