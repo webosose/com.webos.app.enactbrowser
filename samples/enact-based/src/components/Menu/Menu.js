@@ -35,17 +35,27 @@ class Menu extends Component {
 		setTimeout(()=> {this.setState({isOpened});}, 100);
 	}
 
+	componentDidMount() {
+		this.menu.menuIpc.ipcObject.on('click', () => {
+			if (this.state.isOpened) {
+				this.setState({isOpened: false});
+			}
+		})
+	}
+
 	componentDidUpdate () {
 		if (this.state.isOpened) {
 			this.menu.showAbove("nevaBrowserMenuButton");
 
 			if (typeof window !== 'undefined') {
-				window.document.addEventListener('click', () => {
-					console.log(`Menu::on document click event`);
-					if (this.state.isOpened) {
-						this.setState({isOpened: false});
-					}
-				}, {once: true});
+				['click', 'tab-select'].forEach(ev => {
+					window.document.addEventListener(ev, () => {
+						console.log(`Menu::on document ${ev} event`);
+						if (this.state.isOpened) {
+							this.setState({isOpened: false});
+						}
+					}, {once: true});
+				})
 			}
 		} else {
 			this.menu.hide();
