@@ -65,6 +65,7 @@ class PageContentsWrapper {
         this.canGoForward = false;
         this.eventListeners = [];
         this.id = params.id;
+        this.sessionName = params.partition;
 
         this.tabView = this.createPageContents(params);
 
@@ -182,7 +183,7 @@ class PageContentsWrapper {
         };
 
         if (typeof window !== 'undefined' && typeof window.nevaExtensionsManager !== 'undefined') {
-            let extensionsService = window.nevaExtensionsManager.getExtensionsServiceFor(params.partition);
+            let extensionsService = window.nevaExtensionsManager.getExtensionsServiceFor(this.sessionName);
             if (typeof extensionsService !== 'undefined') {
                 extensionsService.extensionTabCreated(this.getPageContentsId())
             }
@@ -424,7 +425,7 @@ class PageContentsWrapper {
         }
 
         if (typeof window !== 'undefined' && typeof window.nevaExtensionsManager !== 'undefined') {
-            let extensionsService = window.nevaExtensionsManager.getExtensionsServiceFor(params.partition);
+            let extensionsService = window.nevaExtensionsManager.getExtensionsServiceFor(this.sessionName);
             extensionsService.extensionTabActivated(this.getPageContentsId());
         }
     }
@@ -533,7 +534,7 @@ class PageContentsWrapper {
     beforeWebviewDelete() {
         console.log(`beforeWebviewDelete`);
         if (typeof window !== 'undefined' && typeof window.nevaExtensionsManager !== 'undefined') {
-            let extensionsService = window.nevaExtensionsManager.getExtensionsServiceFor(params.partition);
+            let extensionsService = window.nevaExtensionsManager.getExtensionsServiceFor(this.sessionName);
             if (typeof extensionsService !== 'undefined') {
                 extensionsService.extensionTabClosed(this.getPageContentsId());
             }
