@@ -46,7 +46,7 @@ class WebViewBase extends Component {
 			suppressDialog: false,
 			state: "navigating",
 			post_render_task: null,
-			vkbHeight: 0,
+			vkbInset: 0,
 			webContentFullscreen: false,
 		};
 
@@ -59,7 +59,7 @@ class WebViewBase extends Component {
 			shell.shellWindow.on('vkb-change-state', (isShown) => {
 				console.log(`'vkb-change-state ${isShown}`);
 				if (!isShown) {
-					this.props.webView.tabView.pageContents.scrollByY(-this.state.vkbInset);
+					this.props.webView.tabView.pageContents.scrollByY(this.state.vkbInset === 0 ? 0 : -this.state.vkbInset);
 					this.setState({vkbInset: 0});
 				}
 			});
