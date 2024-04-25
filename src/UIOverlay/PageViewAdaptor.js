@@ -10,15 +10,23 @@
 
 function createView() {
     console.log("[PageViewAdaptor] createView");
-    let view = new PageView({
-        "page-contents-params": {
-            "allow-file-access": true,
-            "allow-universal-access": true,
-            "api": ["v8/browser_shell_ipc"],
-            "partition": "",
-            "page-contents-type": "ui"
-        }
-    });
+
+    const pageContentsParams = {
+        "allow-file-access": true,
+        "allow-universal-access": true,
+        "api": ["v8/browser_shell_ipc"],
+        "partition": "",
+        "page-contents-type": "ui"
+    };
+
+    const isInBrowserRenderer = !!window.shell.launchArgs.uioverlay_in_browser_renderer;
+
+    if (isInBrowserRenderer) {
+        const browserPageContents =  shell.shellWindow.pageView.pageContents;
+        pageContentsParams["site-page-contents"] = browserPageContents;
+    }
+
+    const view = new PageView({"page-contents-params": pageContentsParams});
     window.shell.shellWindow.pageView.addChildView(view);
     view.pageContents.loadFile("uioverlay/index.html");
     view.pageContents.setPageBaseBackgroundColor('#FFFFFF00');
