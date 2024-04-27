@@ -120,6 +120,7 @@ function checkFinalNewLine(path) {
             /.*\.less$/,
             /.*\.sh$/,
             /.*\.bash$/,
+            /.*\.json$/,
         ]
 
         return expressions.reduce((acc, exp) => acc || (path.match(exp) !== null), false)
