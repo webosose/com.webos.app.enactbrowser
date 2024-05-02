@@ -6,8 +6,6 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
-/*global CustomEvent*/
-
 class InputSuggectionListModel {
     constructor(ipcPromise) {
         if (typeof CustomEvent !== 'undefined') { // it is for prerenderer.

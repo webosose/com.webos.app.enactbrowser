@@ -7,7 +7,6 @@
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
 /* global ShellIpc */
-/* global CustomEvent */
 
 class ZoomControlModel {
     constructor() {

@@ -10,7 +10,6 @@
  * Contains the declaration for the Tab component.
  *
  */
-/* global CustomEvent */
 
 import classNames from 'classnames';
 import kind from '@enact/core/kind';

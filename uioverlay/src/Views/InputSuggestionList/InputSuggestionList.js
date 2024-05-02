@@ -6,8 +6,6 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
-/*global CustomEvent*/
-
 import {Component} from 'react';
 
 import SuggestedItem from '../../../../samples/enact-based/src/components/Omnibox/SuggestedItem';
