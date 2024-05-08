@@ -23,22 +23,24 @@ class UserPermissionBase {
             l = cw * 10,
             w = cw * 15;
 
-        return this.uioverlay.switchContent('user_permission')
-            .then(() => this.uioverlay.setBounds({
+        return this.uioverlay.show({
+            target: 'user_permission',
+            bounds: {
                 x: l,
                 y: h,
                 w: w,
-            }, 'user_permission'))
-            .then(() => this.ipc.post('updatePermission', permissionProps))
-            .then(() => this.uioverlay.setVisible(true, 'user_permission'))
-            .then(() => {
-                this.uioverlay.view.pageContents.setFocus();
+            }
+        })
+            .then((layer) => {
+                this.ipc.post('updatePermission', permissionProps);
+                layer.view.pageContents.setFocus();
+                return layer;
             });
     }
 
     hide() {
         console.log('UserPermissionBase::hide');
-        this.uioverlay.setVisible(false, 'user_permission');
+        this.uioverlay.hide({target: 'user_permission'});
     }
 }
 
