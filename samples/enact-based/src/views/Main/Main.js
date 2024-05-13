@@ -84,6 +84,7 @@ class MainBase extends Component {
 		// eslint-disable-next-line react/no-did-mount-set-state
 		this.setState({browser});
 
+		document.addEventListener('webOSRelaunch', this.onRelaunch);
 		document.addEventListener('keydown', ({key, keyCode}) => {
 			console.log(`Key pressed. keyCode: ${keyCode}`);
 			const rcuBackKeyCode = 461;
@@ -106,6 +107,22 @@ class MainBase extends Component {
 			selectedWebview.focus();
 		} else {
 			Spotlight.resume();
+		}
+	}
+
+	onRelaunch = (ev) => {
+		if (ev.detail && ev.detail.url) {
+			const {browser} = this.state,
+				url = ev.detail.url,
+				validUrl = browser.searchService.possiblyUrl(url)
+					? url
+					: browser.searchService.getSearchUrl(url);
+
+			if (browser.tabs.count() < browser.tabs.maxTabs) {
+				browser.createTab(TabTypes.WEBVIEW, validUrl);
+			} else {
+				browser.navigate(validUrl);
+			}
 		}
 	}
 
