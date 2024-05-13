@@ -24,7 +24,7 @@ let webviewHostInjectionComplete = false;
 						console.log(`installApp`);
 						callback(true);
 					}
-				}
+				};
 			}
 
 			document.addEventListener('requestInstallableManager', ({ detail }) => {
@@ -32,18 +32,18 @@ let webviewHostInjectionComplete = false;
 					window.navigator.installablemanager.getInfo((installable, installed) => {
 						document.dispatchEvent(new CustomEvent('replayInstallableManager', {
 							detail: { installable, installed }
-						}))
-					})
+						}));
+					});
 
 				} else if (detail.method === 'installApp') {
 					window.navigator.installablemanager.installApp((pSuccess) => {
 						document.dispatchEvent(new CustomEvent('replayInstallableManager', {
 							detail: { pSuccess }
-						}))
-					})
+						}));
+					});
 				}
 			});
-		}
+		};
 
 		// inject script for installablemanager
 		var script = document.createElement('script');
@@ -91,7 +91,7 @@ let webviewHostInjectionComplete = false;
 			postTitle(embedder);
 		};
 
-		actions['getInfo'] = function (ev) {
+		actions.getInfo = function (ev) {
 			try {
 				document.addEventListener('replayInstallableManager', ({ detail }) => {
 					ev.source.postMessage({
@@ -100,7 +100,7 @@ let webviewHostInjectionComplete = false;
 						installable: detail.installable,
 						installed: detail.installed
 					}, '*');
-				})
+				});
 
 				document.dispatchEvent(new CustomEvent('requestInstallableManager', {
 					detail: { method: 'getInfo' }
@@ -108,9 +108,9 @@ let webviewHostInjectionComplete = false;
 			} catch (e) {
 				console.log(e);
 			}
-		}
+		};
 
-		actions['installApp'] = function (ev) {
+		actions.installApp = function (ev) {
 			try {
 				document.addEventListener('replayInstallableManager', ({ detail }) => {
 					ev.source.postMessage({
@@ -118,7 +118,7 @@ let webviewHostInjectionComplete = false;
 						action: ev.data.action,
 						pSuccess: detail.pSuccess
 					}, '*');
-				})
+				});
 
 				document.dispatchEvent(new CustomEvent('requestInstallableManager', {
 					detail: { method: 'installApp' }
@@ -126,7 +126,7 @@ let webviewHostInjectionComplete = false;
 			} catch (e) {
 				console.log(e);
 			}
-		}
+		};
 
 		actions.getFavicons = function (ev) {
 			let links = document.querySelectorAll('link[rel*="icon"]');
