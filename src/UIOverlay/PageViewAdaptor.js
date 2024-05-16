@@ -19,9 +19,11 @@ function createView() {
         "page-contents-type": "ui"
     };
 
-    const isInBrowserRenderer = !!window.shell.launchArgs.uioverlay_in_browser_renderer;
+    const isInSeparatedProcess = window.shell.launchArgs.uioverlay_in_separated_process;
+    const isInBrowserRendererProcess = (typeof isInSeparatedProcess) === "undefined" ?
+        true : !isInSeparatedProcess;
 
-    if (isInBrowserRenderer) {
+    if (isInBrowserRendererProcess) {
         const browserPageContents =  shell.shellWindow.pageView.pageContents;
         pageContentsParams["site-page-contents"] = browserPageContents;
     }
