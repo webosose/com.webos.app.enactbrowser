@@ -78,6 +78,10 @@ class TabsReduxStore {
     setAuthDialog = (id, authDialog) => {
         this.store.dispatch(updateTabState(id, {authDialog}));
     }
+
+    setPopupState = (id, popupState) => {
+        this.store.dispatch(updateTabState(id, {popupState}));
+    }
 }
 
 class ReduxTabs extends TabsBase {

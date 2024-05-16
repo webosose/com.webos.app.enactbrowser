@@ -351,7 +351,7 @@ class BrowserBase {
         webview.addEventListener('did-stop-loading', () => this._handleLoadStop(state.id));
         webview.addEventListener('did-finish-load', this._handleFinishLoading(state.id));
         webview.addEventListener('did-finish-navigation', this._handleFinishNavigation(state.id));
-        webview.addEventListener('newwindow', this._handleNewWindow());
+        webview.addEventListener('newwindow', this._handleNewWindow(state.id));
         webview.addEventListener('did-update-favicon-url', this._handleUpdateFaviconUrl(state.id, webview));
         webview.addEventListener('open-url-from-tab', this._handleOpenUrlFromTab());
         webview.addEventListener('did-fail-load', this._handleFailLoad(state.id));
@@ -429,11 +429,17 @@ class BrowserBase {
     };
 
     // handles new tab request from webView
-    _handleNewWindow = () => (childPage, info) => {
+    _handleNewWindow = (tabId) => (childPage, info) => {
         console.log(`newwindow event`, info);
-
-        if (info.userGesture !== true) {
+        if (info.userGesture !== true && info.popupBlocked) {
             console.log(`cancel newwindow request (automatic pop-up)`);
+            if (tabId) {
+                this.tabs.getTab(tabId)
+                    .setPopupState({
+                        popupBlocked: info.popupBlocked,
+                        targetUrl: info.targetUrl
+                    });
+            }
             return;
         }
 

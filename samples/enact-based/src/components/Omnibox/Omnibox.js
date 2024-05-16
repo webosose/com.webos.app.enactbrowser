@@ -21,6 +21,7 @@ import Icon from '@enact/agate/Icon';
 import Button from '@enact/agate/Button';
 import {TabTypes} from '../../NevaLib/BrowserModel';
 import AddressBar from './AddressBar';
+import BlockedPopup from './BlockedPopup';
 
 import css from './Omnibox.module.less';
 
@@ -33,6 +34,7 @@ class OmniboxBase extends Component {
 		selectedId: PropTypes.string,
 		selectedIndex: PropTypes.number,
 		url: PropTypes.string,
+		isBlocked: PropTypes.bool,
 	}
 
 	constructor (props) {
@@ -145,7 +147,7 @@ class OmniboxBase extends Component {
 	}
 
 	render () {
-		const {isLoading, reloadDisabled, isBookmarked, browser, ...rest} = this.props;
+		const {isLoading, reloadDisabled, isBookmarked, browser, isBlocked, ...rest} = this.props;
 		delete rest.bookmarksData;
 		delete rest.browser;
 		delete rest.dispatch;
@@ -163,12 +165,14 @@ class OmniboxBase extends Component {
 						size={"large"}>
 						{this.getOmniboxIcon()}
 					</Icon>
+					{(isBlocked && !isLoading) && 
+						<BlockedPopup browser={browser} blockedPopup={this.props.blockedPopup} />}
 					{reloadDisabled ?
 						null :
 						<Button
 							css={css}
 							backgroundOpacity="transparent"
-							className={classNames(css.iconButton, css, css.small, css.bookmarkButton)}
+							className={classNames(css.iconButton, css.small, css.bookmarkButton)}
 							onClick={isBookmarked ? this.onBookmarkRemove : this.onBookmarkAdd}
 							icon={isBookmarked ? 'star' : 'starhollow'}
 							size={"large"}
@@ -193,7 +197,7 @@ const mapStateToProps = ({tabsState, bookmarksState}) => {
 	const {selectedIndex, ids, tabs} = tabsState;
 
 	if (ids.length > 0) {
-		const {navState, type, title} = tabs[ids[selectedIndex]];
+		const {navState, type, title, popupState} = tabs[ids[selectedIndex]];
 		if (navState) {
 			return {
 				bookmarksData: bookmarksState.data,
@@ -206,6 +210,7 @@ const mapStateToProps = ({tabsState, bookmarksState}) => {
 				selectedIndex,
 				url: navState.url,
 				title,
+				isBlocked: popupState && popupState.popupBlocked,
 			}
 		}
 	} else {
@@ -213,7 +218,8 @@ const mapStateToProps = ({tabsState, bookmarksState}) => {
 			isLoading: true,
 			reloadDisabled: true,
 			url: '',
-			isBookmarked: false
+			isBookmarked: false,
+			isBlocked: false,
 		};
 	}
 };

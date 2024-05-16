@@ -14,8 +14,10 @@ import {HistoryMixin} from 'js-browser-lib/HistoryMixin';
 import Ipc from 'js-browser-lib/Ipc';
 import {TabTitles, TabTypes} from 'js-browser-lib/TabsConsts';
 
+import {isWindowReady} from '@enact/core/snapshot';
+
 import Bookmarks from './Bookmarks';
-import {getDefaults} from './BrowserDefaults'
+import {getDefaults} from './BrowserDefaults';
 import History from './History';
 import MostVisited from './MostVisited';
 import PreviousSessionTabs from './PreviousSessionTabs';
@@ -25,9 +27,9 @@ import {Settings, SettingsConsts, SettingsKeys} from './Settings';
 import SiteFiltering from './SiteFiltering';
 import {ReduxTabs as TabsModel} from './Tabs';
 import createTabPolicy from './TabPolicyFactory';
-import {isWindowReady} from '@enact/core/snapshot';
 import CookieManager from './CookieManager';
 import CustomUserAgent from './CustomUserAgent';
+import PopupBlocker from './PopupBlocker';
 
 Object.assign(TabTitles, {
     SITE_FILTERING_TITLE: 'Site Filtering',
@@ -89,6 +91,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
         browser.tabPolicy = undefined;
         browser.devSettingsEnabled = false;
         browser.siteFiltering = new SiteFiltering(browser.webViewFactory.getPartition(), db);
+        browser.popupBlocker = new PopupBlocker();
         browser.prevSessionTabs = new PreviousSessionTabs(
             browser, db, browser.settings.getRestorePrevSessionPolicy());
         browser.tabPolicy = createTabPolicy(
@@ -305,6 +308,12 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
                 break;
             default:
                 console.warn('Unknown tab type: ' + type);
+        }
+    }
+
+    allowPopup(tabId, url) {
+        if (this.popupBlocker.addURL(url)) {
+            this.tabs.getTab(tabId).setPopupState(null);
         }
     }
 

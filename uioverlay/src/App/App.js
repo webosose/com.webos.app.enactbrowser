@@ -16,6 +16,7 @@ import Dialog from '../Views/Dialog';
 import ZoomControlMenu from '../Views/ZoomControlMenu';
 import UserPermissionPopup from '../Views/UserPermissionPopup';
 import BookmarkDialog from '../Views/BookmarkDialog/BookmarkDialog';
+import BlockedPopup from '../Views/BlockedPopup';
 import AppDecorator from '../../../samples/enact-based/src/components/AppDecorator'
 import ThemeDecorator from '@enact/agate/ThemeDecorator';
 
@@ -85,6 +86,10 @@ function App({model}) {
 
         case 'bookmark_dialog':
             content = (<BookmarkDialog model={model.bookmarkDialog} onUpdate={updateDocumentSize}/>);
+            break;
+
+        case 'blocked_popup':
+            content = (<BlockedPopup model={model.blockedPopup} onUpdate={updateDocumentSize}/>);
             break;
 
         default:

@@ -241,7 +241,11 @@ class MainBase extends Component {
 					className={private_mode ? css['main-bar'] : null}>
 					{ fullScreen === false && <div className={css['flexbox-row']}>
 						<NavigationBox browser={browser} />
-						<Omnibox browser={browser} bookmarkDialog={this.props.bookmarkDialog}/>
+						<Omnibox
+							browser={browser}
+							bookmarkDialog={this.props.bookmarkDialog}
+							blockedPopup={this.props.blockedPopup}
+						/>
 						<ZoomControl browser={browser} zoomControl={this.props.zoomControl} disabled={zoomControlDisabled}/>
 						<Menu browser={browser} menu={this.props.menu}/>
 						{maybeChromeExtensionsMenu}

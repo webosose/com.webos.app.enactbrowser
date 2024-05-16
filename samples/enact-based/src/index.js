@@ -22,6 +22,7 @@ import {ZoomControl as ZoomControlBase} from 'js-browser-lib/ZoomBase'
 import {UrlSuggestionsBase} from 'js-browser-lib/UrlSuggestionsBase';
 import {UserPermissionBase} from 'js-browser-lib/UserPermissionBase';
 import {BookmarkDialogBase} from 'js-browser-lib/BookmarkDialogBase';
+import {BlockedPopupBase} from 'js-browser-lib/BlockedPopupBase';
 
 if (typeof window !== 'undefined') {
 	initLogging();
@@ -37,6 +38,7 @@ const dialog = new DialogBase(uioverlay);
 const urlSuggestionsBar = new UrlSuggestionsBase(uioverlay);
 const userPermission = new UserPermissionBase(uioverlay);
 const bookmarkDialog = new BookmarkDialogBase(uioverlay);
+const blockedPopup = new BlockedPopupBase(uioverlay);
 
 if (typeof window !== 'undefined') {
 	window.dialogOverlay = dialog;
@@ -55,6 +57,7 @@ let appElement = (
 			dialog={dialog}
 			userPermission={userPermission}
 			bookmarkDialog={bookmarkDialog}
+			blockedPopup={blockedPopup}
 		/>
 	</Provider>
 );

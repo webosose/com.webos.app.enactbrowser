@@ -17,6 +17,7 @@ import MenuModel from './components/MenuModel';
 import createDialogModel from './components/DialogModel';
 import UserPermissionModel from './components/UserPermissionModel';
 import BookmarkDialogModel from './components/BookmarkDialogModel';
+import BlockedPopup from './components/BlockedPopupModel';
 import Ipc from '../../src/Ipc';
 import {initLogging} from 'js-browser-lib/Logger';
 import AppDecorator from '../../samples/enact-based/src/components/AppDecorator'
@@ -57,6 +58,7 @@ const model = {
     zoomControl: new ZoomControlModel(),
     userPermission: new UserPermissionModel(),
     bookmarkDialog: new BookmarkDialogModel(),
+    blockedPopup: new BlockedPopup(),
 };
 
 const PrerenderApp = AppDecorator(ThemeDecorator({i18n: false}, <div />));

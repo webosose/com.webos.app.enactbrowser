@@ -122,44 +122,31 @@
 }
 
 .iconButton {
-	.applySkins({
-		.bg{
-			border-color: transparent;
-		}
-	});
 
 	&.small {
-		&.reloadStopButton {
-			padding: 0 24px;
-			position: absolute;
-			right: 24px;
+		padding: 0 24px;
+		position: absolute;
 
-			.icon {
-				color: @agate-black;
-			}
-
-			.focus({
-				.icon {
-					color: @agate-white;
-				}
-			})
+		.icon {
+			color: @agate-black;
 		}
 
+		.focus({
+			.icon {
+				color: @agate-white;
+			}
+		});
+
+		&.reloadStopButton {
+			right: 24px;
+		}
 
 		&.bookmarkButton {
-			padding: 0 24px;
-			position: absolute;
 			right: 81px;
+		}
 
-			.icon {
-				color: @agate-black;
-			}
-
-			.focus({
-				.icon {
-					color: @agate-white;
-				}
-			})
+		&.blockedButton {
+			right: 138px;
 		}
 	}
 }

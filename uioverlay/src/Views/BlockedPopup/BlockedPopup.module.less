@@ -1,0 +1,48 @@
+/* BlockedPopup.module.less */
+
+@import '~@enact/agate/styles/skin.less';
+@import '~@enact/agate/styles/variables.less';
+@import '~@enact/agate/styles/mixins.less';
+
+.notificationPopup {
+	background-color: #e1e1e1;
+	padding: 36px;
+	border-radius: 24px;
+	font-size: 48px;
+	font-weight: 400;
+	color: #000;
+}
+
+.header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 24px;
+}
+
+.title {
+	font-size: 54px;
+	font-weight: 500;
+}
+
+.closeIcon {
+	bottom: 12px;
+
+	.applySkins({
+		font-size: 96px;
+	})
+}
+
+.button {
+	.applySkins({
+		padding: 0 60px;
+		font-size: 48px;
+		height: 96px;
+	})
+}
+
+.buttonGrp {
+	margin-top: 42px;
+	display: flex;
+	justify-content: flex-end;
+}

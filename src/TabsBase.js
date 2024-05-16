@@ -87,6 +87,12 @@ class Tab {
             });
         }
     }
+
+    setPopupState(popupState) {
+        if (this.state.popupState !== popupState) {
+            this.tabs.store.setPopupState(this.state.id, popupState);
+        }
+    }
 }
 
 /**
@@ -257,7 +263,8 @@ class TabsBase extends EventEmitter {
             title: null,
             icon: null,
             error: null,
-            authDialog: null
+            authDialog: null,
+            popupState: null,
         };
     }
 

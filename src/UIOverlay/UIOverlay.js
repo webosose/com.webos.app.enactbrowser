@@ -16,7 +16,8 @@ class UIOverlay {
 
     constructor() {
         ["default", "dialog", "chrome_extensions", "exit_fullscreen_button",
-            "browser_menu", "zoom_control", "input_suggestion_list", "user_permission"]
+            "browser_menu", "zoom_control", "input_suggestion_list", "user_permission",
+            "blocked_popup"]
             .forEach(element => {
                 UIOverlay.sizes[element] = { x: 0, y: 0, w: 10, h: 10 }
             });
