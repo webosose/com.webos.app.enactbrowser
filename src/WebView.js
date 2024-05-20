@@ -44,7 +44,7 @@ class PageContentsWrapper {
         pageContentsParams["partition"] = params.partition ? params.partition : '';
 
         pageContentsParams["error-page-hidding"] = true;
-        pageContentsParams["api"] = ["v8/browser_shell_ipc"];
+        pageContentsParams["api"] = ["v8/browser_shell_ipc", "v8/installablemanager"];
 
         if (params.zoomFactor) {
             pageContentsParams["zoom-factor"] = params.zoomFactor;
@@ -565,6 +565,76 @@ class PageContentsWrapper {
             this.url = url;
         }
         console.warn("The load has aborted with error " + error + " : " + error_code + ' url = ' + url + ' is main frame ' + is_main_frame);
+    }
+
+    getInfo() {
+        console.log("[WebView] getInfo >>>");
+
+        return new Promise((resolve, reject) => {
+            const ipcChannelName = "ipc_pwa";
+            const ipcMessageId = "get_info_resp";
+
+            const injection = `(() => {
+                navigator.installablemanager.getInfo((installable, installed) => {
+                    const ipc = new ShellIpc("${ipcChannelName}");
+                    ipc.post("${ipcMessageId}", {
+                        installable,
+                        installed
+                    });
+                });
+            })();`
+
+            const ipc = new ShellIpc(ipcChannelName);
+
+            const onMessage = ({installable, installed}) => {
+                console.log("[WebView] getInfo responce received. ", installable, installed);
+                clearTimeout(timeout);
+                resolve({installable, installed});
+            };
+
+            const timeout = setTimeout(() => {
+                ipc.removeEventListener(ipcMessageId, onMessage);
+                reject("[PWAButton] timeout")
+            }, 5000);
+
+            ipc.once(ipcMessageId, onMessage);
+
+            this.tabView.pageContents.executeJavaScriptInMainFrame(injection);
+        });
+
+    }
+
+    installApp() {
+        console.log("[WebView] installApp >>>");
+
+        return new Promise((resolve, reject) => {
+            const ipcChannelName = "ipc_pwa";
+            const ipcMessageId = "install_app_resp";
+
+            const injection = `(() => {
+                navigator.installablemanager.installApp((pSuccess) => {
+                    const ipc = new ShellIpc(\"${ipcChannelName}\");
+                    ipc.post(\"${ipcMessageId}\", { pSuccess });
+                });
+            })();`
+
+            const ipc = new ShellIpc(ipcChannelName);
+
+            const onMessage = ({pSuccess}) => {
+                console.log("[WebView] installApp responce received. ", pSuccess);
+                clearTimeout(timeout);
+                resolve({pSuccess});
+            };
+
+            const timeout = setTimeout(() => {
+                ipc.removeEventListener(ipcMessageId, onMessage);
+                reject("[PWAButton] timeout");
+            }, 5000);
+
+            ipc.once(ipcMessageId, onMessage);
+
+            this.tabView.pageContents.executeJavaScriptInMainFrame(injection);
+        });
     }
 };
 

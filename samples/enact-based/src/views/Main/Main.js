@@ -32,6 +32,7 @@ import {setFullScreen} from '../../actions';
 import {TabBar} from '../../components/TabBar';
 import {isWindowReady} from '@enact/core/snapshot';
 import { TabTypes } from '../../NevaLib/BrowserModel';
+import PWAButton from '../../components/PWAButton';
 
 import css from './Main.module.less';
 
@@ -244,6 +245,10 @@ class MainBase extends Component {
 						<ZoomControl browser={browser} zoomControl={this.props.zoomControl} disabled={zoomControlDisabled}/>
 						<Menu browser={browser} menu={this.props.menu}/>
 						{maybeChromeExtensionsMenu}
+						{browser.webViews ?
+							<PWAButton webViews={browser.webViews} />
+							: null
+						}
 
 						<Button
 							backgroundOpacity="transparent"
