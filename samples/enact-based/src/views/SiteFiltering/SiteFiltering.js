@@ -227,93 +227,96 @@ class SiteFilteringBase extends Component {
 
 		return (
 			<Scroller {...rest} className={css.scroller}>
-				<BodyText>Site Filtering</BodyText>
-				<Group
-					childComponent={RadioItem}
-					itemProps={{inline: true}}
-					select="radio"
-					selectedProp="selected"
-					defaultSelected={optionIndex}
-					onSelect={this.onSelectSiteFiltering}
-				>
-					{filteringOptionsText}
-				</Group>
-				<div>
-					{$L('Approved Sites: Anyone can access only the sites on this list.')}
-					<br />
-					{$L('Blocked Sites: Nobody can access the sites on this list.')}
-				</div>
-				<br />
-				{(optionIndex === 1) && <BodyText>{$L('Approved Sites List')}</BodyText>}
-				{(optionIndex === 2) && <BodyText>{$L('Blocked Sites List')}</BodyText>}
-				{(optionIndex === 1 || optionIndex === 2) &&
+				<div className={css.siteFiltering}>
+					<BodyText>Site Filtering</BodyText>
+					<Group
+						className={css.flex}
+						childComponent={RadioItem}
+						itemProps={{inline: true}}
+						select="radio"
+						selectedProp="selected"
+						defaultSelected={optionIndex}
+						onSelect={this.onSelectSiteFiltering}
+					>
+						{filteringOptionsText}
+					</Group>
 					<div>
-						<Popup
-							open={this.state.deletePopupOpen}
-							noAutoDismiss
-						>
-							<span>{(data && selected && data.length === selected.length) ?
-								'Do you want to delete all websites?'
-								: 'Do you want to delete the selected website(s)?'}</span>
-							<buttons>
-								<Button onClick={this.onDeleteNo}>No</Button>
-								<Button onClick={this.onDeleteYes}>Yes</Button>
-							</buttons>
-						</Popup>
-						<form onSubmit={this.onAdd}>
-							<div className={css.inputContainer}>
-								<Input
-									className={css.input}
-									onChange={this.onChange}
-									value={this.state.urlToAdd}
-								/>
-								<Icon className={css.add} disabled={!this.validateURL()} onClick={this.onAdd}>plus</Icon>
-							</div>
-							<p className={css.error}>{this.state.urlValidation}</p>
-							<br/>
-							<Button
-								css={css}
-								onClick={this.onSelectAll}
-								disabled={!data || !data.length}
-								size={"small"}
-							>
-								{(data && selected && data.length && data.length === selected.length) ? 'Deselect All' : 'Select All'}
-							</Button>
-							<Button
-								css={css}
-								onClick={this.onDelete}
-								size={"small"}
-								disabled={!data || !data.length || !selected.length}
-							>
-								Delete
-							</Button>
-						</form>
-						{
-							(data && data.length > 0) ?
-								<VirtualList
-									data={data}
-									dataSize={data.length}
-									itemRenderer={this.renderItem}
-									className={css.list}
-									itemSize={ri.scale(70)}
-								/>
-							: null
-						}
+						{$L('Approved Sites: Anyone can access only the sites on this list.')}
+						<br />
+						{$L('Blocked Sites: Nobody can access the sites on this list.')}
 					</div>
-				}
-				<Button
-					css={css}
-					onClick={this.onOpenResetPinPopup}
-					size={"small"}
-				>
-					{$L('Reset pin')}
-				</Button>
-				<PinPopup
-					open={this.state.resetPinCodePopupOpen}
-					onClose={this.onCloseResetPinPopup}
-					onSubmit={this.onSubmitPinCode}
-					matched
-				/>
+					<br />
+					{(optionIndex === 1) && <BodyText>{$L('Approved Sites List')}</BodyText>}
+					{(optionIndex === 2) && <BodyText>{$L('Blocked Sites List')}</BodyText>}
+					{(optionIndex === 1 || optionIndex === 2) &&
+						<div>
+							<Popup
+								open={this.state.deletePopupOpen}
+								noAutoDismiss
+							>
+								<span>{(data && selected && data.length === selected.length) ?
+									'Do you want to delete all websites?'
+									: 'Do you want to delete the selected website(s)?'}</span>
+								<buttons>
+									<Button onClick={this.onDeleteNo}>No</Button>
+									<Button onClick={this.onDeleteYes}>Yes</Button>
+								</buttons>
+							</Popup>
+							<form onSubmit={this.onAdd}>
+								<div className={css.inputContainer}>
+									<Input
+										className={css.input}
+										onChange={this.onChange}
+										value={this.state.urlToAdd}
+									/>
+									<Icon className={css.add} disabled={!this.validateURL()} onClick={this.onAdd}>plus</Icon>
+								</div>
+								<p className={css.error}>{this.state.urlValidation}</p>
+								<br/>
+								<Button
+									css={css}
+									onClick={this.onSelectAll}
+									disabled={!data || !data.length}
+									size={"small"}
+								>
+									{(data && selected && data.length && data.length === selected.length) ? 'Deselect All' : 'Select All'}
+								</Button>
+								<Button
+									css={css}
+									onClick={this.onDelete}
+									size={"small"}
+									disabled={!data || !data.length || !selected.length}
+								>
+									Delete
+								</Button>
+							</form>
+							{
+								(data && data.length > 0) ?
+									<VirtualList
+										data={data}
+										dataSize={data.length}
+										itemRenderer={this.renderItem}
+										className={css.list}
+										itemSize={ri.scale(70)}
+									/>
+								: null
+							}
+						</div>
+					}
+					<Button
+						css={css}
+						onClick={this.onOpenResetPinPopup}
+						size={"small"}
+					>
+						{$L('Reset pin')}
+					</Button>
+					<PinPopup
+						open={this.state.resetPinCodePopupOpen}
+						onClose={this.onCloseResetPinPopup}
+						onSubmit={this.onSubmitPinCode}
+						matched
+					/>
+				</div>
 			</Scroller>
 		);
 	}

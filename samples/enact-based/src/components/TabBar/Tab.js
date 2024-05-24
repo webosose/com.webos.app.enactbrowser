@@ -114,7 +114,7 @@ const Tab = kind({
 				<SpottableDiv onClick={onSelect}>
 				{
 					(isLoading && isActive) ?
-						<Spinner color={skinVariants.night ? 'light' : 'dark'} size="small" /> :
+						<Spinner color={skinVariants.night ? 'light' : 'dark'} size="small" className={css.loadingIcon}/> :
 						<div
 							style={iconUrl ? {
 								backgroundImage: 'url(' + iconUrl + ')',
@@ -132,7 +132,7 @@ const Tab = kind({
 							className={css.tabCloseButton}
 							onClick={onClose}
 							icon="closex"
-							size="small"
+							size="smallest"
 						/>
 					}
 				</SpottableDiv>

@@ -3,14 +3,14 @@
 @import '~@enact/agate/styles/skin.less';
 
 .bookmarkItem {
-	height: 4rem;
+	height: 72px;
 	width: 99%;
 	display: flex;
 	align-items: center;
 }
 
 .checkbox {
-	margin: 0.6rem;
+	margin: 15px;
 	.applySkins({
 		color: white;
 	});
@@ -18,7 +18,10 @@
 
 .title {
 	width: 95%;
-	line-height: 70px;
+	.applySkins({
+		line-height: 72px;
+		height: 72px;
+	});
 }
 
 .favicon {

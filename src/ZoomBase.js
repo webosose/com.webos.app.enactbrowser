@@ -28,8 +28,8 @@ class ZoomControl {
 
         let button = document.getElementById(buttonId);
         const buttonHeight = button.offsetHeight + 20;
-        const leftBorderWidth = (document.body.clientWidth / 100) * 70;
-        const width = 170;
+        const leftBorderWidth = (document.body.clientWidth / 100) * 75;
+        const width = 90;
 
         return this.uioverlay.show({
             target: 'zoom_control', bounds: {

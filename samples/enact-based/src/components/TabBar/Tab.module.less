@@ -28,6 +28,7 @@
 	width: 100%;
 	align-items: center;
 	padding: 6px;
+	box-sizing: border-box;
 }
 
 .selected {
@@ -43,11 +44,18 @@
 	flex-grow: 1;
 	min-width: 0.8rem;
 	min-height: 0.8rem;
+	margin-right: 3px;
 }
 
 .tabTitle {
 	flex-grow: 2;
 	width: 70%;
+}
+
+.tabCloseButton {
+	.applySkins({
+		margin-right: 0;
+	});
 }
 
 @media only screen and (min-width: 1280px) and (max-width: 1580px) {
@@ -94,4 +102,9 @@
 
 .errorFavicon {
 	background-image: url('../../../assets/tab-icons/error_generic.png');
+}
+
+.loadingIcon {
+	transform: scale(0.55) translateX(-50%);
+	margin-right: -21px;
 }

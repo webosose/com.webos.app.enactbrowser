@@ -232,6 +232,7 @@ class SettingsBase extends Component {
 					<BodyText>{$L('Search Engines')}</BodyText>
 					<div className={css.indent}>
 						<Group
+							className={css.flex}
 							childComponent={RadioItem}
 							itemProps={{inline: true, className: css.inlineGroupItem}}
 							select="radio"

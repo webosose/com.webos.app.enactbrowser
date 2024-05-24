@@ -108,16 +108,16 @@ class PinPopup extends Component {
 				</div>
 				<br />
 				<br />
-				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed}>0</Button>
-				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed}>1</Button>
-				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed}>2</Button>
-				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed}>3</Button>
-				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed}>4</Button>
-				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed}>5</Button>
-				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed}>6</Button>
-				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed}>7</Button>
-				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed}>8</Button>
-				<Button disabled={disabledButtons} onClick={this.onNumberKeyPressed}>9</Button>
+				<Button disabled={disabledButtons} className={css.buttonSet} onClick={this.onNumberKeyPressed}>0</Button>
+				<Button disabled={disabledButtons} className={css.buttonSet} onClick={this.onNumberKeyPressed}>1</Button>
+				<Button disabled={disabledButtons} className={css.buttonSet} onClick={this.onNumberKeyPressed}>2</Button>
+				<Button disabled={disabledButtons} className={css.buttonSet} onClick={this.onNumberKeyPressed}>3</Button>
+				<Button disabled={disabledButtons} className={css.buttonSet} onClick={this.onNumberKeyPressed}>4</Button>
+				<Button disabled={disabledButtons} className={css.buttonSet} onClick={this.onNumberKeyPressed}>5</Button>
+				<Button disabled={disabledButtons} className={css.buttonSet} onClick={this.onNumberKeyPressed}>6</Button>
+				<Button disabled={disabledButtons} className={css.buttonSet} onClick={this.onNumberKeyPressed}>7</Button>
+				<Button disabled={disabledButtons} className={css.buttonSet} onClick={this.onNumberKeyPressed}>8</Button>
+				<Button disabled={disabledButtons} className={css.buttonSet} onClick={this.onNumberKeyPressed}>9</Button>
 				<Button onClick={this.onNumberKeyPressed}>Back</Button>
 			</Popup>
 		);
