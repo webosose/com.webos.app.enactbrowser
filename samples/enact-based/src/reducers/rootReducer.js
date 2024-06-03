@@ -14,12 +14,6 @@ const
 	},
 	initialBookmark = {
 		selected: []
-	},
-	initialApprovedSites = {
-		selected: []
-	},
-	initialBlockedSites = {
-		selected: []
 	};
 
 function historyUIState (state = initialHistory, action) {
@@ -105,73 +99,13 @@ function bookmarkUIState (state = initialBookmark, action) {
 	}
 }
 
-function approvedSitesUIState (state = initialApprovedSites, action) {
-	switch (action.type) {
-		case 'SELECT_APPROVED_SITE': {
-			const newSelected = state.selected.slice();
-			if (action.selected) {
-				newSelected.push(action.index);
-			} else {
-				newSelected.splice(newSelected.indexOf(action.index), 1);
-			}
-			return Object.assign({}, state, {
-				selected: newSelected
-			});
-		}
-		case 'SELECT_ALL_APPROVED_SITES': {
-			return Object.assign({}, state, {
-				selected: [...action.ids]
-			});
-		}
-		case 'DESELCT_ALL_APPROVED_SITES': {
-			return Object.assign({}, state, {
-				selected: []
-			});
-		}
-		default:
-			return state;
-	}
-}
-
-function blockedSitesUIState (state = initialBlockedSites, action) {
-	switch (action.type) {
-		case 'SELECT_BLOCKED_SITE': {
-			const newSelected = state.selected.slice();
-			if (action.selected) {
-				newSelected.push(action.index);
-			} else {
-				newSelected.splice(newSelected.indexOf(action.index), 1);
-			}
-			return Object.assign({}, state, {
-				selected: newSelected
-			});
-		}
-		case 'SELECT_ALL_BLOCKED_SITES': {
-			return Object.assign({}, state, {
-				selected: [...action.ids]
-			});
-		}
-		case 'DESELCT_ALL_BLOCKED_SITES': {
-			return Object.assign({}, state, {
-				selected: []
-			});
-		}
-		default:
-			return state;
-	}
-}
-
 const rootReducer = combineReducers({
 	historyUIState,
 	bookmarkUIState,
-	approvedSitesUIState,
-	blockedSitesUIState
 });
 
 export default rootReducer;
 export {
 	historyUIState,
 	bookmarkUIState,
-	approvedSitesUIState,
-	blockedSitesUIState
 };

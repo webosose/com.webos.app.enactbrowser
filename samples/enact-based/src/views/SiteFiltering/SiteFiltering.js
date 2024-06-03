@@ -19,346 +19,217 @@ import Group from '@enact/ui/Group';
 import Icon from '@enact/agate/Icon';
 import Input from '@enact/agate/Input';
 import Popup from '@enact/agate/Popup';
-import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import RadioItem from '@enact/agate/RadioItem';
-import {Component} from 'react';
+import {useState} from 'react';
 import Scroller from '@enact/agate/Scroller';
 import ri from '@enact/ui/resolution';
 import VirtualList from '@enact/agate/VirtualList';
 
-import {
-	selectAllApprovedSites,
-	deselectAllApprovedSites,
-	selectAllBlockedSites,
-	deselectAllBlockedSites
-} from '../../actions';
-import {
-	setApprovedSites,
-	removeApprovedSites,
-	setBlockedSites,
-	removeBlockedSites
-} from '../../NevaLib/Settings/actions';
 import PinPopup from '../../components/PinPopup';
 import SiteFilteringItem from './SiteFilteringItem';
-
 import css from './SiteFiltering.module.less';
 
 const filteringOptions = ['off', 'whitelist', 'blacklist'];
 const filteringOptionsText = [$L('Off'), $L('Approved Sites'), $L('Blocked Sites')];
 
-function isItemApproved(option) {
-	return option === filteringOptions[1];
-}
+function SiteFilteringBase({browser, data, siteFiltering, ...rest}) {
+	const [deletePopupOpen, setDeletePopupOpen] = useState(false);
+	const [resetPinPopupOpen, setResetPinPopupOpen] = useState(false);
+	const [urlToAdd, setUrlToAdd] = useState('');
+	const [urlValidation, setUrlValidation] = useState('');
+	const [selected, setSelected] = useState([]);
+	const optionIndex = filteringOptions.indexOf(siteFiltering);
 
-class SiteFilteringBase extends Component {
-	static propTypes = {
-		alwaysShowBookmarks: PropTypes.bool,
-		browser: PropTypes.any,
-		data: PropTypes.array,
-		selected: PropTypes.array,
-		siteFiltering: PropTypes.string,
-		selectAllSites: PropTypes.func,
-		deselectAllSites: PropTypes.func
+	const onSelectSiteFiltering = ({selected}) => {
+		const newMode = filteringOptions[selected];
+		browser.settings.setSiteFiltering(newMode)
+			.then(() => browser.siteFiltering.setMode(newMode));
+		setSelected([]);
 	}
 
-	constructor (props) {
-		super(props);
-		this.state = {
-			deletePopupOpen: false,
-			resetPinCodePopupOpen: false,
-			urlToAdd: '',
-			urlValidation: '',
-		};
-		this.loadSiteList();
+	const onToggle = (url) => (ev) => {
+		setSelected((prev) => ev.selected ? [...prev, url] : prev.filter(u => u !== url));
 	}
 
-	loadSiteList () {
-		const {
-			siteFiltering: filteringMode,
-			browser: {siteFiltering}
-		} = this.props;
-
-		if (filteringMode === filteringOptions[1]) {
-			siteFiltering.getURLs(filteringMode)
-				.then((values) => {
-					this.props.setApprovedSites(values);
-				});
-		}
-		else if (filteringMode === filteringOptions[2]) {
-			siteFiltering.getURLs(filteringMode)
-				.then((values) => {
-					this.props.setBlockedSites(values);
-				});
-		}
-	}
-
-	onSelectSiteFiltering = ({selected}) => {
-		const
-			{browser: {settings, siteFiltering}} = this.props,
-			newMode = filteringOptions[selected];
-
-		settings.setSiteFiltering(newMode)
-		.then(() => siteFiltering.setMode(newMode))
-		.then(() => this.loadSiteList());
-	}
-
-	renderItem = ({index, ...rest}) => {
-		const data = this.props.data;
+	const renderItem = ({index, ...rest}) => {
+		const url = data[index];
+		const isItemSelected = selected.some(u => u === url);
 		return (
 			<SiteFilteringItem
 				{...rest}
-				index={index}
-				url={data[index]}
-				isApproved={isItemApproved(this.props.siteFiltering)}
+				url={url}
+				selected={isItemSelected}
+				onToggle={onToggle(url)}
 			/>
-		)
+		);
 	}
 
-	deselectAll = () => {
-		if (isItemApproved(this.props.siteFiltering)) {
-			this.props.deselectAllApprovedSites();
-		} else {
-			this.props.deselectAllBlockedSites();
+	const onChange = (ev) => {
+		setUrlToAdd(ev.value);
+		if (urlValidation) {
+			setUrlValidation('');
 		}
 	}
 
-	onChange = (ev) => {
-		this.setState({urlToAdd: ev.value, urlValidation: ''});
-	}
-
-	onAdd = (ev) => {
-		if (this.validateURL()) {
-			this.addFilterPattern(this.state.urlToAdd);
-			this.setState({urlToAdd: ''});
+	const onAdd = (ev) => {
+		if (validateURL()) {
+			browser.siteFiltering.addUrl(urlToAdd);
+			setUrlToAdd('');
 		} else {
-			this.setState({urlValidation: 'Please enter valid URL.'})
+			setUrlValidation('Please enter valid URL.');
 		}
+		//prevent the form submit
 		ev.preventDefault();
 		ev.stopPropagation();
 	}
 
-	validateURL = () => {
+	const validateURL = () => {
 		const regexp = /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-zA-Z0-9]-*)*[a-zA-Z0-9]+)(?:\.(?:[a-zA-Z0-9]-*)*[a-zA-Z0-9]+)*(?:\.(?:[a-zA-Z]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
-		return regexp.test(this.state.urlToAdd);
+		return regexp.test(urlToAdd);
 	}
 
-	onSelectAll = () => {
-		const
-			{data, selected, siteFiltering} = this.props;
-		if (data.length === selected.length) {
-			this.deselectAll();
-		} else {
-			const ids = [];
-			for (let i = 0; i < data.length; i++) {
-				ids.push(i);
-			}
-			if (isItemApproved(siteFiltering)) {
-				this.props.selectAllApprovedSites(ids);
-			} else {
-				this.props.selectAllBlockedSites(ids);
-			}
-		}
+	const onSelectAll = () => {
+		setSelected(data.length === selected.length ? [] : data);
 	}
 
-	addFilterPattern = (value) => {
-		const {
-			siteFiltering: filteringMode,
-			browser: {siteFiltering}
-		} = this.props;
-
-		siteFiltering.addURL(filteringMode, value)
-			.then(() => this.loadSiteList())
-			.then(() => siteFiltering.setMode(filteringMode));
+	const onDelete = () => {
+		setDeletePopupOpen(true);
 	}
 
-	removeFilterPattern = (value) => {
-		const {
-			siteFiltering: filteringMode,
-			browser: {siteFiltering}
-		} = this.props;
-
-		siteFiltering.removeURL(filteringMode, value)
-			.then(() => this.loadSiteList())
-			.then(() => siteFiltering.setMode(filteringMode));
+	const onDeleteYes = () => {
+		setDeletePopupOpen(false);
+		browser.siteFiltering.deletURLs(selected);
+		setSelected([]);
 	}
 
-	onDelete = () => {
-		this.setState({deletePopupOpen: true});
+	const onDeleteNo = () => {
+		setDeletePopupOpen(false);
 	}
 
-	onDeleteYes = () => {
-		this.setState({deletePopupOpen: false});
-
-		const {data, selected} = this.props;
-		selected.forEach(i => this.removeFilterPattern(data[i]));
-		this.deselectAll();
+	const onOpenResetPinPopup = () => {
+		setResetPinPopupOpen(true);
 	}
 
-	onDeleteNo = () => {
-		this.setState({deletePopupOpen: false});
+	const onCloseResetPinPopup = () => {
+		setResetPinPopupOpen(false);
 	}
 
-	onOpenResetPinPopup = () => {
-		this.setState({resetPinCodePopupOpen: true});
-	}
-
-	onCloseResetPinPopup = () => {
-		this.setState({resetPinCodePopupOpen: false});
-	}
-
-	onSubmitPinCode = (pinCode) => {
-		this.props.browser.settings.setPinCode(pinCode)
+	const onSubmitPinCode = (pinCode) => {
+		browser.settings.setPinCode(pinCode)
 			.then(() => {
-				this.setState({resetPinCodePopupOpen: false});
+				setResetPinPopupOpen(false);
 			});
 	}
 
-	render () {
-		const
-			{alwaysShowBookmarks, data, selected, siteFiltering, ...rest} = this.props,
-			optionIndex = filteringOptions.indexOf(siteFiltering),
-			scrollerClass = classNames(css.scroller, {[css.shrinkHeight]: alwaysShowBookmarks});
-
-		delete rest.browser;
-		delete rest.selectAllApprovedSites;
-		delete rest.selectAllBlockedSites;
-		delete rest.deselectAllApprovedSites;
-		delete rest.deselectAllBlockedSites;
-		delete rest.setApprovedSites;
-		delete rest.setBlockedSites;
-
-		return (
-			<Scroller {...rest} className={scrollerClass}>
-				<div className={css.siteFiltering}>
-					<BodyText>Site Filtering</BodyText>
-					<Group
-						className={css.flex}
-						childComponent={RadioItem}
-						itemProps={{inline: true}}
-						select="radio"
-						selectedProp="selected"
-						defaultSelected={optionIndex}
-						onSelect={this.onSelectSiteFiltering}
-					>
-						{filteringOptionsText}
-					</Group>
-					<div>
-						{$L('Approved Sites: Anyone can access only the sites on this list.')}
-						<br />
-						{$L('Blocked Sites: Nobody can access the sites on this list.')}
-					</div>
+	return (
+		<Scroller {...rest} className={css.scroller}>
+			<div className={css.siteFiltering}>
+				<BodyText>Site Filtering</BodyText>
+				<Group
+					className={css.flex}
+					childComponent={RadioItem}
+					itemProps={{inline: true}}
+					select='radio'
+					selectedProp='selected'
+					defaultSelected={optionIndex}
+					onSelect={onSelectSiteFiltering}
+				>
+					{filteringOptionsText}
+				</Group>
+				<div>
+					{$L('Approved Sites: Anyone can access only the sites on this list.')}
 					<br />
-					{(optionIndex === 1) && <BodyText>{$L('Approved Sites List')}</BodyText>}
-					{(optionIndex === 2) && <BodyText>{$L('Blocked Sites List')}</BodyText>}
-					{(optionIndex === 1 || optionIndex === 2) &&
-						<div>
-							<Popup
-								open={this.state.deletePopupOpen}
-								noAutoDismiss
-							>
-								<span>{(data && selected && data.length === selected.length) ?
-									'Do you want to delete all websites?'
-									: 'Do you want to delete the selected website(s)?'}</span>
-								<buttons>
-									<Button onClick={this.onDeleteNo}>No</Button>
-									<Button onClick={this.onDeleteYes}>Yes</Button>
-								</buttons>
-							</Popup>
-							<form onSubmit={this.onAdd}>
-								<div className={css.inputContainer}>
-									<Input
-										className={css.input}
-										onChange={this.onChange}
-										value={this.state.urlToAdd}
-									/>
-									<Icon className={css.add} disabled={!this.validateURL()} onClick={this.onAdd}>plus</Icon>
-								</div>
-								<p className={css.error}>{this.state.urlValidation}</p>
-								<br/>
-								<Button
-									css={css}
-									onClick={this.onSelectAll}
-									disabled={!data || !data.length}
-									size={"small"}
-								>
-									{(data && selected && data.length && data.length === selected.length) ? 'Deselect All' : 'Select All'}
-								</Button>
-								<Button
-									css={css}
-									onClick={this.onDelete}
-									size={"small"}
-									disabled={!data || !data.length || !selected.length}
-								>
-									Delete
-								</Button>
-							</form>
-							{
-								(data && data.length > 0) ?
-									<VirtualList
-										data={data}
-										dataSize={data.length}
-										itemRenderer={this.renderItem}
-										className={css.list}
-										itemSize={ri.scale(70)}
-									/>
-								: null
-							}
-						</div>
-					}
-					<Button
-						css={css}
-						onClick={this.onOpenResetPinPopup}
-						size={"small"}
-					>
-						{$L('Reset pin')}
-					</Button>
-					<PinPopup
-						open={this.state.resetPinCodePopupOpen}
-						onClose={this.onCloseResetPinPopup}
-						onSubmit={this.onSubmitPinCode}
-						matched
-					/>
+					{$L('Blocked Sites: Nobody can access the sites on this list.')}
 				</div>
-			</Scroller>
-		);
-	}
+				<br />
+				{(optionIndex === 1) && <BodyText>{$L('Approved Sites List')}</BodyText>}
+				{(optionIndex === 2) && <BodyText>{$L('Blocked Sites List')}</BodyText>}
+				{(optionIndex === 1 || optionIndex === 2) &&
+					<div>
+						<Popup
+							open={deletePopupOpen}
+							noAutoDismiss
+						>
+							<span>{(data && selected && data.length === selected.length) ?
+								'Do you want to delete all websites?'
+								: 'Do you want to delete the selected website(s)?'}</span>
+							<buttons>
+								<Button onClick={onDeleteNo}>No</Button>
+								<Button onClick={onDeleteYes}>Yes</Button>
+							</buttons>
+						</Popup>
+						<form onSubmit={onAdd}>
+							<div className={css.inputContainer}>
+								<Input
+									className={css.input}
+									onChange={onChange}
+									value={urlToAdd}
+								/>
+								<Icon className={css.add} disabled={!validateURL()} onClick={onAdd}>plus</Icon>
+							</div>
+							<p className={css.error}>{urlValidation}</p>
+							<br />
+							<Button
+								css={css}
+								onClick={onSelectAll}
+								disabled={!data || !data.length}
+								size='small'
+							>
+								{(data && selected && data.length && data.length === selected.length) ? 'Deselect All' : 'Select All'}
+							</Button>
+							<Button
+								css={css}
+								onClick={onDelete}
+								size='small'
+								disabled={!data || !data.length || !selected.length}
+							>
+								Delete
+							</Button>
+						</form>
+						{(data && data.length > 0) && (
+							<VirtualList
+								data={data}
+								dataSize={data.length}
+								itemRenderer={renderItem}
+								className={css.list}
+								itemSize={ri.scale(70)}
+							/>
+						)}
+					</div>
+				}
+				<Button
+					css={css}
+					onClick={onOpenResetPinPopup}
+					size='small'
+				>
+					{$L('Reset pin')}
+				</Button>
+				<PinPopup
+					open={resetPinPopupOpen}
+					onClose={onCloseResetPinPopup}
+					onSubmit={onSubmitPinCode}
+					matched
+				/>
+			</div>
+		</Scroller>
+	);
 }
 
-const mapStateToProps = ({settingsState, approvedSitesUIState, blockedSitesUIState}) => {
+SiteFilteringBase.propTypes = {
+	browser: PropTypes.any,
+	data: PropTypes.array,
+	siteFiltering: PropTypes.string,
+}
+
+const mapStateToProps = ({settingsState, siteFilterState}) => {
 	const {siteFiltering} = settingsState;
-	if (siteFiltering === filteringOptions[1]) {
-		return {
-			siteFiltering,
-			data: settingsState.approvedSites,
-			selected: approvedSitesUIState.selected
-		};
-	} else if (siteFiltering === filteringOptions[2]) {
-		return {
-			siteFiltering,
-			data: settingsState.blockedSites,
-			selected: blockedSitesUIState.selected
-		};
-	} else if (siteFiltering === filteringOptions[0]) {
-		return {
-			siteFiltering,
-			data: [],
-			selected: []
-		};
-	}
+	return {
+		siteFiltering,
+		data: siteFilterState.urlList,
+	};
 };
 
-const mapDispatchToProps = (dispatch) => ({
-	setApprovedSites: (urls) => dispatch(setApprovedSites(urls)),
-	selectAllApprovedSites: (ids) => dispatch(selectAllApprovedSites(ids)),
-	deselectAllApprovedSites: () => dispatch(deselectAllApprovedSites()),
-	setBlockedSites: (urls) => dispatch(setBlockedSites(urls)),
-	selectAllBlockedSites: (ids) => dispatch(selectAllBlockedSites(ids)),
-	deselectAllBlockedSites: () => dispatch(deselectAllBlockedSites()),
-	removeApprovedSites: (urls) => dispatch(removeApprovedSites(urls)),
-	removeBlockedSites: (urls) => dispatch(removeBlockedSites(urls))
-});
-
-const SiteFiltering = connect(mapStateToProps, mapDispatchToProps)(SiteFilteringBase);
+const SiteFiltering = connect(mapStateToProps)(SiteFilteringBase);
 
 export default SiteFiltering;

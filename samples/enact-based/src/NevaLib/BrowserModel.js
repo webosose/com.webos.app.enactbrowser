@@ -90,8 +90,8 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
         browser.customUserAgent = new CustomUserAgent(db, this.getNavigatorCustomUserAgent());
         browser.tabPolicy = undefined;
         browser.devSettingsEnabled = false;
-        browser.siteFiltering = new SiteFiltering(browser.webViewFactory.getPartition(), db);
         browser.popupBlocker = new PopupBlocker();
+        browser.siteFiltering = new SiteFiltering(store, this.getNavigatorSiteFilter());
         browser.prevSessionTabs = new PreviousSessionTabs(
             browser, db, browser.settings.getRestorePrevSessionPolicy());
         browser.tabPolicy = createTabPolicy(
@@ -343,7 +343,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
 		return Promise.all([
 			this.setPrivateBrowsing(settingsDefault[SettingsKeys.PRIVATE_BROWSING_KEY]),
 			this.settings.setAllSettings(settingsDefault),
-			this.siteFiltering.resetFilter(),
+			this.siteFiltering.deletURLs([], true),
 			this.cookieManager.clearCookies(),
 		]);
 	}

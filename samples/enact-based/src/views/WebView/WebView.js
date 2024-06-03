@@ -115,6 +115,7 @@ class WebViewBase extends Component {
 							break;
 
 						case 'ERR_BLOCKED_BY_CLIENT':
+						case 'ERR_BLOCKED_BY_SITEFILTER':
 							state_set.show_blocked_page_notification = true;
 							break;
 

@@ -123,6 +123,10 @@ class BrowserBase {
         });
     }
 
+    getNavigatorSiteFilter() {
+        return navigator.sitefilter;
+    }
+
     getNavigatorCustomUserAgent() {
        return navigator.customuseragent;
     }

@@ -20,8 +20,6 @@ const
 		pinNumber: '',
 		alertsCountBeforePreventionRequest: 3,
 		siteFiltering: '',
-		approvedSites: [],
-		blockedSites: [],
 		useJSErrorPage: false,
 		restorePrevSessionPolicy: 'onlyLastTab',
 		maxActiveTabFamilies: 1,
@@ -73,47 +71,6 @@ function settingsState (state = initialSettingsState, action) {
 			});
 		}
 
-		/*
-			Approved sites
-		*/
-		case types.SET_APPROVED_SITES: {
-			return Object.assign({}, state, {
-				approvedSites: [...action.urls]
-			});
-		}
-		case types.ADD_APPROVED_SITE: {
-			return [...state.approvedSites.data, action.url];
-		}
-		case types.REMOVE_APPROVED_SITES: {
-			const newData = state.approvedSites.filter((elem) => (
-				!action.urls.includes(elem)
-			));
-
-			return Object.assign({}, state, {
-				approvedSites: [...newData]
-			});
-		}
-
-		/*
-			Blocked sites
-		*/
-		case types.SET_BLOCKED_SITES: {
-			return Object.assign({}, state, {
-				blockedSites: [...action.urls]
-			});
-		}
-		case types.ADD_BLOCKED_SITE: {
-			return [...state.blockedSites.data, action.url];
-		}
-		case types.REMOVE_BLOCKED_SITES: {
-			const newData = state.blockedSites.filter((elem) => (
-				!action.urls.includes(elem)
-			));
-
-			return Object.assign({}, state, {
-				blockedSites: [...newData]
-			});
-		}
 		case types.SET_USE_JS_ERROR_PAGE: {
 			return Object.assign({}, state, {
 				useJSErrorPage: action.bool
