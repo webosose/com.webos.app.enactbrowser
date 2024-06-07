@@ -23,20 +23,23 @@ class BookmarkDialogBase {
             w = cw * 30,
             l = cw * 70 - w / 2; // Align the dialog position to the center
 
-        return this.uioverlay.switchContent('bookmark_dialog')
-            .then(() => this.uioverlay.setBounds({
+        return this.uioverlay.show({
+            target: 'bookmark_dialog',
+            bounds: {
                 x: l,
                 y: h,
                 w: w,
-            }, 'bookmark_dialog'))
-            .then(() => this.ipc.post('showBookmarkDialog', bookmarkDialogProps))
-            .then(() => this.uioverlay.setVisible(true, 'bookmark_dialog'))
-            .then(() => this.uioverlay.view.pageContents.setFocus());
+            }
+        }).then((layer) => {
+            this.ipc.post('showBookmarkDialog', bookmarkDialogProps);
+            layer.view.pageContents.setFocus();
+            return;
+        });
     }
 
     hide() {
         console.log('BookmarkDialogBase::hide');
-        this.uioverlay.setVisible(false, 'bookmark_dialog');
+        this.uioverlay.hide({target: 'bookmark_dialog'});
     }
 }
 
