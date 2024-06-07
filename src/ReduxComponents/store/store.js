@@ -7,7 +7,7 @@
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
 import {createStore, combineReducers} from 'redux';
-import {historyUIState, bookmarkUIState} from '../reducers';
+import {historyUIState, bookmarkUIState} from '../rootReducer';
 import {
 	browserState,
 	tabsState,
@@ -15,7 +15,7 @@ import {
 	historyState,
 	bookmarksState,
 	siteFilterState,
-} from '../NevaLib/Browser/reducers'; // TBD: fix path to '../NevaLib'
+} from '../Browser/reducers';
 
 const combinedReducers = combineReducers({
 	browserState,

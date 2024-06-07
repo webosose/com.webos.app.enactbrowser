@@ -21,7 +21,7 @@ import {DragDropContext, Droppable} from 'react-beautiful-dnd';
 
 import Button from '@enact/agate/Button';
 import Tab from './Tab';
-import {setRedIndicator} from '../../NevaLib/Tabs/actions';
+import {setRedIndicator} from 'js-browser-lib/ReduxComponents/Tabs/actions';
 import {TabTypes} from 'js-browser-lib/BrowserModel';
 import Sortable from '../Sortable';
 import Spotlight from '@enact/spotlight';

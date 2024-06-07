@@ -74,7 +74,7 @@ function SiteFilteringBase({browser, data, siteFiltering, ...rest}) {
 
 	const onAdd = (ev) => {
 		if (validateURL()) {
-			browser.siteFiltering.addUrl(urlToAdd);
+			browser.siteFiltering.addURL(urlToAdd);
 			setUrlToAdd('');
 		} else {
 			setUrlValidation('Please enter valid URL.');
@@ -99,7 +99,7 @@ function SiteFilteringBase({browser, data, siteFiltering, ...rest}) {
 
 	const onDeleteYes = () => {
 		setDeletePopupOpen(false);
-		browser.siteFiltering.deletURLs(selected);
+		browser.siteFiltering.deleteURLs(selected);
 		setSelected([]);
 	}
 

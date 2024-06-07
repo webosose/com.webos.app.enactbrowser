@@ -6,44 +6,70 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
-import {SiteFiltering as SiteFilteringBase} from 'js-browser-lib/SiteFiltering';
-import {setSiteFilterList} from './actions';
-
 const
 	WHITE_LIST_MODE = 'whitelist',
 	BLACK_LIST_MODE = 'blacklist',
 	OFF = 'off',
 	filteringOptions = [OFF, WHITE_LIST_MODE, BLACK_LIST_MODE];
 
-class SiteFiltering {
-	static MODE = {
-		WHITE_LIST: WHITE_LIST_MODE,
-		BLACK_LIST: BLACK_LIST_MODE,
-		OFF: OFF
-	};
-
+class SiteFilteringBase {
 	constructor(store, navigatorSiteFilter) {
-		this.controller = new SiteFilteringBase(navigatorSiteFilter);
-		this.reduxStore = store;
+		this.navigatorSiteFilter = navigatorSiteFilter;
+		this.store = store;
 	}
 
-	updateUrlList = (urlList) => {
-		this.reduxStore.dispatch(setSiteFilterList(urlList));
+	getURLs() {
+		this.navigatorSiteFilter.getURLs((value) => {
+			this.store.updateUrlList(value);
+		});
 	}
 
-	addUrl(url) {
-		this.controller.addURL(url, this.updateUrlList);
+	/*
+	*  Off - 0       Approved Sites - 1      Blocked Sites -2
+	* This value need to store in the DB and call initial browser launch
+	*/
+	setMode(value) {
+		if (this.navigatorSiteFilter.setType(filteringOptions.indexOf(value))) {
+			this.getURLs();
+		}
 	}
 
-	deletURLs(urls, isDeleteAll) {
-		this.controller.deletURLs(urls, isDeleteAll, this.updateUrlList);
+	/*
+	* Add url
+	* Allowed or blocked sites decide based on the site filter state
+	*/
+	addURL(url) {
+		if (url && this.navigatorSiteFilter.addURL(url)) {
+			this.getURLs();
+		}
 	}
 
-	setMode(mode) {
-		this.controller.setState(filteringOptions.indexOf(mode), this.updateUrlList);
-		return Promise.resolve();
+	/*
+	 * Add url
+	 * Allowed or blocked sites decide based on the site filter state
+	 */
+	updateURL(oldURL, newURL) {
+		if (newURL && this.navigatorSiteFilter.updateURL(oldURL, newURL)) {
+			this.getURLs();
+		}
+	}
+
+	/*
+	 * Delete urls
+	 * Allowed or blocked sites decide based on the site filter state
+	 * Param isDeleteAll: if true, allow deleting all urls in both Approved
+	 * and Blocked modes
+	 */
+	deleteURLs(urls, isDeleteAll = false) {
+		if (urls) {
+			this.navigatorSiteFilter.deleteURLs(urls, isDeleteAll, (status) => {
+				if (status) {
+					this.getURLs();
+				}
+			});
+		}
 	}
 }
 
-export default SiteFiltering;
-export {SiteFiltering};
+export default SiteFilteringBase;
+export {SiteFilteringBase};

@@ -1,4 +1,4 @@
-// Copyright (c) 2019 LG Electronics, Inc.
+// Copyright (c) 2018-2020 LG Electronics, Inc.
 // SPDX-License-Identifier: LicenseRef-EnactBrowser-Evaluation
 //
 // You may not use this content except in compliance with the License.
@@ -6,14 +6,15 @@
 //
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
-/** main export for site filtering feature module */
+/* actions */
 
-import SiteFiltering from './SiteFiltering';
-import WhiteList from './WhiteList';
-import BlackList from './BlackList';
+import {actionTypes as types} from './constants';
+
+const setSiteFilterList = (urlList) => ({
+	type: types.SET_SITE_FILTER_LIST,
+	urlList
+});
 
 export {
-    SiteFiltering,
-    WhiteList,
-    BlackList
+	setSiteFilterList,
 };

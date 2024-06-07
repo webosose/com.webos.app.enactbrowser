@@ -23,7 +23,7 @@ import PreviousSessionTabs from './PreviousSessionTabs';
 import RecentlyClosed from './RecentlyClosed';
 import SearchService from './SearchService';
 import {Settings, SettingsConsts, SettingsKeys} from './ReduxComponents/Settings/Settings';
-import SiteFiltering from './SiteFilteringBase';
+import SiteFiltering from './ReduxComponents/SiteFiltering/SiteFiltering';
 import {ReduxTabs as TabsModel} from './ReduxComponents/Tabs/Tabs';
 import {isWindowReady} from '@enact/core/snapshot';
 import CookieManager from './CookieManager';
@@ -352,7 +352,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
 			this.cookieManager.clearCookies(),
 		];
         if (typeof this.siteFiltering !== 'undefined') {
-            tasks.push(this.siteFiltering.deletURLs([], true));
+            tasks.push(this.siteFiltering.deleteURLs([], true));
         }
 		return Promise.all(tasks);
 	}
