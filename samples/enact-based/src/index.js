@@ -26,11 +26,11 @@ import {ChromeExtensionsBase} from 'js-browser-lib/chrome-extensions-base';
 import {DialogBase} from 'js-browser-lib/dialog-base';
 import {initLogging} from 'js-browser-lib/logger';
 import {isWindowReady} from '@enact/core/snapshot';
-import {ZoomControl as ZoomControlBase} from 'js-browser-lib/zoom-base'
+import {ZoomControl as ZoomControlBase} from 'js-browser-lib/zoom-base';
 import {UrlSuggestionsBase} from 'js-browser-lib/url-suggestions-base';
-import {UserPermissionBase} from 'js-browser-lib/UserPermissionBase';
-import {BookmarkDialogBase} from 'js-browser-lib/BookmarkDialogBase';
-import {BlockedPopupBase} from 'js-browser-lib/BlockedPopupBase';
+import {UserPermissionBase} from 'js-browser-lib/user-permission-base';
+import {BookmarkDialogBase} from 'js-browser-lib/bookmark-dialog-base';
+import {BlockedPopupBase} from 'js-browser-lib/blocked-popup-base';
 
 if (typeof window !== 'undefined') {
 	initLogging();

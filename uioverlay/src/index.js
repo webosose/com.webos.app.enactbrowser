@@ -23,12 +23,12 @@ import ZoomControlModel from './components/zoom-control-model';
 import ChromeExtensionsModel from './components/chrome-extensions-model';
 import MenuModel from './components/menu-model';
 import createDialogModel from './components/dialog-model';
-import UserPermissionModel from './components/UserPermissionModel';
-import BookmarkDialogModel from './components/BookmarkDialogModel';
-import BlockedPopup from './components/BlockedPopupModel';
-import Ipc from '../../src/ipc';
+import UserPermissionModel from './components/user-permission-model';
+import BookmarkDialogModel from './components/bookmark-dialog-model';
+import BlockedPopup from './components/blocked-popup-model';
+import Ipc from 'js-browser-lib/ipc';
 import {initLogging} from 'js-browser-lib/logger';
-import AppDecorator from '../../samples/enact-based/src/components/AppDecorator'
+import AppDecorator from '../../samples/enact-based/src/components/AppDecorator';
 
 if (typeof window !== 'undefined') {
     initLogging();

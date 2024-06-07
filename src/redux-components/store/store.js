@@ -15,7 +15,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {createStore, combineReducers} from 'redux';
-import {historyUIState, bookmarkUIState} from '../rootReducer';
+import {historyUIState, bookmarkUIState} from '../root-reducer/root-reducer';
 import {
 	browserState,
 	tabsState,
@@ -23,7 +23,7 @@ import {
 	historyState,
 	bookmarksState,
 	siteFilterState,
-} from '../Browser/reducers';
+} from '../browser/reducers';
 
 const combinedReducers = combineReducers({
 	browserState,

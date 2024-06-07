@@ -16,7 +16,7 @@
 
 /*global document*/
 
-import Ipc from './Ipc.js';
+import Ipc from './ipc.js';
 
 class BookmarkDialogBase {
     constructor(uioverlay) {

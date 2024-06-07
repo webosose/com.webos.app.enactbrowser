@@ -14,7 +14,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import SiteFilteringBase from '../../SiteFilteringBase';
+import SiteFilteringBase from '../../site-filtering-base';
 import {setSiteFilterList} from './actions';
 
 class ReduxSiteFilteringStore {

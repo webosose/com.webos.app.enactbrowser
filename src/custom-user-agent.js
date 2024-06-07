@@ -14,7 +14,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {CustomUserAgentsIdbStorage} from 'js-browser-lib/CustomUserAgentsIdbStorage';
+import {CustomUserAgentsIdbStorage} from 'js-browser-lib/custom-user-agents-idb-storage';
 import {createHash} from 'crypto'; //avaiable on the current Node v16.20
 
 const VERSION_KEY = 'VERSION',

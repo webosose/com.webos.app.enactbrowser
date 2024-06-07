@@ -17,11 +17,11 @@
 /* reducers */
 
 import {actionTypes as types} from './constants';
-import tabsState from '../Tabs/reducers';
-import settingsState from '../Settings/reducers';
-import historyState from '../History/reducers';
-import bookmarksState from '../Bookmarks/reducers';
-import siteFilterState from '../SiteFiltering/reducers';
+import tabsState from '../tabs/reducers';
+import settingsState from '../settings/reducers';
+import historyState from '../history/reducers';
+import bookmarksState from '../bookmarks/reducers';
+import siteFilterState from '../site-filtering/reducers';
 
 const
 	initialBrowserState = {

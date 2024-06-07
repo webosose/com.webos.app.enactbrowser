@@ -23,20 +23,20 @@ import Ipc from './ipc';
 import {TabTitles, TabTypes} from './tabs-consts';
 import {createTabPolicy} from './memory-manager/tab-policy-factory';
 
-import Bookmarks from './ReduxComponents/Bookmarks/Bookmarks';
-import {getDefaults} from './BrowserDefaults'
-import History from './ReduxComponents/History/History';
-import MostVisited from './MostVisited';
-import PreviousSessionTabs from './PreviousSessionTabs';
-import RecentlyClosed from './RecentlyClosed';
-import SearchService from './SearchService';
-import {Settings, SettingsConsts, SettingsKeys} from './ReduxComponents/Settings/Settings';
-import SiteFiltering from './ReduxComponents/SiteFiltering/SiteFiltering';
-import {ReduxTabs as TabsModel} from './ReduxComponents/Tabs/Tabs';
+import Bookmarks from './redux-components/bookmarks/bookmarks';
+import {getDefaults} from './browser-defaults'
+import History from './redux-components/history/history';
+import MostVisited from './most-visited';
+import PreviousSessionTabs from './previous-session-tabs';
+import RecentlyClosed from './recently-closed';
+import SearchService from './search-service';
+import {Settings, SettingsConsts, SettingsKeys} from './redux-components/settings/settings';
+import SiteFiltering from './redux-components/site-filtering/site-filtering';
+import {ReduxTabs as TabsModel} from './redux-components/tabs/tabs';
 import {isWindowReady} from '@enact/core/snapshot';
-import CookieManager from './CookieManager';
-import CustomUserAgent from './CustomUserAgent';
-import PopupBlocker from './PopupBlocker';
+import CookieManager from './cookie-manager';
+import CustomUserAgent from './custom-user-agent';
+import PopupBlocker from './popup-blocker';
 
 Object.assign(TabTitles, {
     SITE_FILTERING_TITLE: 'Site Filtering',

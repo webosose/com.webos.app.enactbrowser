@@ -30,10 +30,8 @@ import {Draggable} from 'react-beautiful-dnd';
 import {connect} from 'react-redux';
 import Button from '@enact/agate/Button';
 import Skinnable from '@enact/agate/Skinnable';
-
-import redIndicator from '../../../assets/popup/Record_Icon.svg';
 import {TabTypes} from 'js-browser-lib/browser-model';
-
+import redIndicator from '../../../assets/popup/record_icon.svg';
 import css from './Tab.module.less';
 
 const

@@ -16,23 +16,23 @@
 
 /*global document*/
 
-import Ipc from './Ipc.js';
+import Ipc from './ipc.js';
 
-class BlockedPopupBase {
+class UserPermissionBase {
     constructor(uioverlay) {
         this.uioverlay = uioverlay;
-        this.ipc = new Ipc('ipc_blocked_popup');
+        this.ipc = new Ipc('ipc_user_permission');
     }
 
-    show(popupProps) {
+    show(permissionProps) {
         const inputElem = document.getElementById('omniboxInput'),
             h = inputElem ? inputElem.offsetHeight + 28 : 20,
             cw = document.body.clientWidth / 100,
-            l = cw * 60,
+            l = cw * 10,
             w = cw * 15;
 
         return this.uioverlay.show({
-            target: 'blocked_popup',
+            target: 'user_permission',
             bounds: {
                 x: l,
                 y: h,
@@ -40,16 +40,17 @@ class BlockedPopupBase {
             }
         })
             .then((layer) => {
-                this.ipc.post('updateBlockedPopup', popupProps);
+                this.ipc.post('updatePermission', permissionProps);
                 layer.view.pageContents.setFocus();
                 return layer;
             });
     }
 
     hide() {
-        this.uioverlay.hide({target: 'blocked_popup'});
+        console.log('UserPermissionBase::hide');
+        this.uioverlay.hide({target: 'user_permission'});
     }
 }
 
-export default BlockedPopupBase;
-export {BlockedPopupBase};
+export default UserPermissionBase;
+export {UserPermissionBase};
