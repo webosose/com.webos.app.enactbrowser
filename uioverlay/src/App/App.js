@@ -113,4 +113,4 @@ function App({model}) {
     )
 }
 
-export default AppDecorator(ThemeDecorator({i18n: false}, App));
+export default AppDecorator(ThemeDecorator(App));

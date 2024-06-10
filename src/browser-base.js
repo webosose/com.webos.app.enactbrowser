@@ -131,6 +131,16 @@ class BrowserBase {
                 this.setZoom(zoomFactor);
             });
             this.zoomControlIpc.on('zoom_value', () => this.sendZoomFactorToZoomMenu());
+
+            // Listen for language changes
+            window.shell.shellWindow.pageView.pageContents.on('accepted-languages-changed', (languages) => {
+                console.log(`[BrowserBase]::webOSLocaleChange MainView`, languages);
+                window.shell.shellWindow.pageView.pageContents.setFocus();
+
+                setTimeout(() => {
+                    document.dispatchEvent(new CustomEvent("webOSLocaleChange"));
+                }, 1000);
+            });
         }
 
         this.browserBaseIpc = new ShellIpc('ipc_browser_base');
@@ -224,6 +234,10 @@ class BrowserBase {
         const
             {id, navState: {isLoading}} = this.getSelectedTabState(),
             webView = this.webViews[this.tabs.getSelectedId()];
+
+        if (webView === undefined) {
+            return;
+        }
         if (isLoading) {
             webView.stop();
         }

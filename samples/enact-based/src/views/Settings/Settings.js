@@ -85,6 +85,15 @@ class SettingsBase extends Component {
 		}
 	}
 
+	componentDidMount() {
+		document.addEventListener("webOSLocaleChange", this.onLocaleChange);
+	}
+
+	onLocaleChange = () => {
+		console.log('[SettingBase]::webOSLocaleChange');
+		this.forceUpdate();
+	};
+
 	onChange = (ev) => {
 		this.setState({value: ev.value});
 	}

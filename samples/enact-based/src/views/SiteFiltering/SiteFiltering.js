@@ -29,7 +29,7 @@ import Input from '@enact/agate/Input';
 import Popup from '@enact/agate/Popup';
 import PropTypes from 'prop-types';
 import RadioItem from '@enact/agate/RadioItem';
-import {useState} from 'react';
+import {useEffect, useState, useReducer} from 'react';
 import Scroller from '@enact/agate/Scroller';
 import ri from '@enact/ui/resolution';
 import VirtualList from '@enact/agate/VirtualList';
@@ -48,6 +48,7 @@ function SiteFilteringBase({browser, data, siteFiltering, ...rest}) {
 	const [urlValidation, setUrlValidation] = useState('');
 	const [selected, setSelected] = useState([]);
 	const optionIndex = filteringOptions.indexOf(siteFiltering);
+	const [, forceUpdate] = useReducer(x => x + 1, 0);
 
 	const onSelectSiteFiltering = ({selected}) => {
 		const newMode = filteringOptions[selected];
@@ -129,6 +130,16 @@ function SiteFilteringBase({browser, data, siteFiltering, ...rest}) {
 				setResetPinPopupOpen(false);
 			});
 	}
+
+	const onLocaleChange = () => {
+		console.log('[SiteFilterBase]::webOSLocaleChange');
+		forceUpdate();
+	}
+
+	useEffect(() => {
+		document.addEventListener('webOSLocaleChange', onLocaleChange);
+		return () => window.removeEventListener('webOSLocaleChange', onLocaleChange);
+	}, []);
 
 	return (
 		<Scroller {...rest} className={css.scroller}>

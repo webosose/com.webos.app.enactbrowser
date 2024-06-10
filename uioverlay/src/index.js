@@ -69,7 +69,7 @@ const model = {
     blockedPopup: new BlockedPopup(),
 };
 
-const PrerenderApp = AppDecorator(ThemeDecorator({i18n: false}, <div />));
+const PrerenderApp = AppDecorator(ThemeDecorator(<div />));
 
 const appElement = (typeof window !== 'undefined') ? (
     <App model={model} />

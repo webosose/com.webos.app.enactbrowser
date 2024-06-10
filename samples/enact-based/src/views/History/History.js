@@ -51,10 +51,27 @@ class HistoryBase extends Component {
 		super(props);
 		this.state = {
 			completePopupOpen: false,
-			deletePopupOpen: false
+			deletePopupOpen: false,
+			locale: window.navigator ? window.navigator.language : '',
+			viewData: null
 		};
 
 		this.retrieveHistory();
+	}
+
+	componentDidMount () {
+		document.addEventListener('webOSLocaleChange', this.onLocaleChange);
+	}
+
+	onLocaleChange = () => {
+		console.log('[HistoryBase]::webOSLocaleChange');
+		this.forceUpdate();
+		setTimeout(() => {
+			this.setState({
+				locale: window.navigator ? window.navigator.language : '',
+				viewData: this.manipulateData(this.props.data)
+			});
+		}, 1000);
 	}
 
 	UNSAFE_componentWillReceiveProps (nextProps) {
@@ -62,11 +79,9 @@ class HistoryBase extends Component {
 			this.retrieveHistory();
 		}
 		if (this.props.data !== nextProps.data) {
-			this.viewData = this.manipulateData(nextProps.data);
+			this.setState({viewData: this.manipulateData(nextProps.data)});
 		}
 	}
-
-	viewData = null;
 
 	retrieveHistory = () => {
 		let now = new Date(Date.now());
@@ -75,7 +90,7 @@ class HistoryBase extends Component {
 	}
 
 	renderItem = ({index, ...rest}) => {
-		const {viewData: data} = this;
+		const {viewData: data} = this.state;
 
 		return (
 			<HistoryItem
@@ -86,6 +101,7 @@ class HistoryBase extends Component {
 				title={data[index].title}
 				date={data[index].date}
 				url={data[index].url}
+				locale={this.state.locale}
 			/>
 		)
 	}
@@ -126,7 +142,7 @@ class HistoryBase extends Component {
 			i = ev.currentTarget.dataset.index;
 
 		if (!isNaN(i)) {
-			const url = this.viewData[i].url;
+			const url = this.state.viewData[i].url;
 			browser.navigate(url);
 			Spotlight.pause();
 		}
@@ -204,9 +220,9 @@ class HistoryBase extends Component {
 					<span>{$L('Selected history has been deleted.')}</span>
 				</Popup>
 				{
-					(this.viewData && this.viewData.length > 0) ?
+					(this.state.viewData && this.state.viewData.length > 0) ?
 						<VirtualList
-							dataSize={this.viewData.length}
+							dataSize={this.state.viewData.length}
 							focusableScrollbar
 							itemRenderer={this.renderItem}
 							className={scrollerClass}

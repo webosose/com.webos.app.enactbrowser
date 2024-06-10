@@ -86,11 +86,17 @@ class TabBarBase extends Component {
 	};
 
 	componentDidMount() {
+		document.addEventListener('webOSLocaleChange', this.onLocaleChange);
 		if (window?.navigator?.mediacapture) {
 			console.log('Listening to media events...')
 			window.navigator.mediacapture.onaudiocapturestate = this.handleAudioCapture
 			window.navigator.mediacapture.onvideocapturestate = this.handleVideoCapture
 		}
+	}
+
+	onLocaleChange = () => {
+		console.log('[TabBar]::webOSLocaleChange');
+		this.forceUpdate();
 	}
 
 	triggerCustomCloseEvent = (media) => {

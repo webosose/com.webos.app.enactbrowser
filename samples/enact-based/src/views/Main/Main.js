@@ -94,6 +94,7 @@ class MainBase extends Component {
 		this.setState({browser});
 
 		document.addEventListener('webOSRelaunch', this.onRelaunch);
+		document.addEventListener('webOSLocaleChange', this.onLocaleChange);
 		document.addEventListener('keydown', ({key, keyCode}) => {
 			console.log(`Key pressed. keyCode: ${keyCode}`);
 			const rcuBackKeyCode = 461;
@@ -138,6 +139,14 @@ class MainBase extends Component {
 			}
 		}
 	}
+
+	onLocaleChange = () => {
+		console.log('[MainBase]::webOSLocaleChange');
+		this.forceUpdate();
+		setTimeout(() => {
+			this.state.browser.reloadStop();
+		}, 1000);
+	};
 
 	getSelectedWebview = () => {
 		const

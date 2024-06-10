@@ -38,7 +38,8 @@ class HistoryItemBase extends Component {
 		date: PropTypes.object,
 		title: PropTypes.string,
 		toggleHistory: PropTypes.func,
-		url: PropTypes.string
+		url: PropTypes.string,
+		locale: PropTypes.string
 	}
 
 	onToggle = (ev) => {
@@ -46,7 +47,7 @@ class HistoryItemBase extends Component {
 	}
 
 	render () {
-		const {index, id, selected, title, onClick, url, date, ...rest} = this.props;
+		const {index, id, selected, title, onClick, url, date, locale, ...rest} = this.props;
 		delete rest.toggleHistory;
 
 		if (id !== 'date') {
@@ -57,7 +58,7 @@ class HistoryItemBase extends Component {
 						onClick={onClick}
 						data-index={index}
 						className={css.title}>
-						{`${date.toLocaleTimeString(window.navigator ? window.navigator.language : undefined)} ${title} - ${url}`}
+						{`${date.toLocaleTimeString(locale)} ${title} - ${url}`}
 					</Item>
 				</div>
 			);

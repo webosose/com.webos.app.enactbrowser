@@ -37,6 +37,11 @@ class UILayer {
         channel.on('setFocusToUIOverlay', () => {
             console.log(`[UIOverlay] UILayer::constructor "setFocusToUIOverlay" message. set focus to UIOverlay`);
         });
+
+        view.pageContents.on('accepted-languages-changed', (languages) => {
+            console.log(`[UIOverlay]::webOSLocaleChange UIOverlay`, languages);
+            view.pageContents.setFocus();
+        });
     }
 
     switchContent({ target }) {
