@@ -113,15 +113,15 @@ class Dialog extends Component {
 					(messageType === 'auth') ?
 					<div>
 						<div>
-							<span>{$L('  login')}</span>
+							<span>{$L('Username')}</span>
 							<Input
 								className={css.input}
 								onChange={this.onLoginChange}
 								value={loginValue}
 							/>
 						</div>
-						<div>
-							<span>{$L('password')}</span>
+						<div className={css.password}>
+							<span>{$L('Password')}</span>
 							<Input
 								className={css.input}
 								onChange={this.onPasswdChange}
