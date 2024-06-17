@@ -260,6 +260,10 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
                     hasTargetInLaunchParams = true;
                     this.tabs.addTab(this._createWebViewPage(launchArgs.target));
                 }
+                if (launchArgs.uri) {
+                    hasTargetInLaunchParams = true;
+                    this.tabs.addTab(this._createWebViewPage(launchArgs.uri));
+                }
                 if (launchArgs.newtab) {
                     hasTargetInLaunchParams = true;
                     this.createTab(TabTypes.NEW_TAB_PAGE);

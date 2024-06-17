@@ -112,9 +112,9 @@ class MainBase extends Component {
 	}
 
 	onRelaunch = (ev) => {
-		if (ev.detail && ev.detail.url) {
+		const url = ev.detail ? (ev.detail.url || ev.detail.uri) : null;
+		if (url) {
 			const {browser} = this.state,
-				url = ev.detail.url,
 				validUrl = browser.searchService.possiblyUrl(url)
 					? url
 					: browser.searchService.getSearchUrl(url);
