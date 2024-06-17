@@ -14,4 +14,9 @@
 	bottom: 0;
 	top: 203px;
 	height: 100%;
+
+	&.shrinkHeight {
+		// shrink as much as bookmarkbar height (84px)
+		height: ~"calc(100% - 84px)";
+	}
 }

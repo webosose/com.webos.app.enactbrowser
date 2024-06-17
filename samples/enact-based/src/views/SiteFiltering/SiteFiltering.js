@@ -19,6 +19,7 @@ import Group from '@enact/ui/Group';
 import Icon from '@enact/agate/Icon';
 import Input from '@enact/agate/Input';
 import Popup from '@enact/agate/Popup';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import RadioItem from '@enact/agate/RadioItem';
 import {Component} from 'react';
@@ -52,6 +53,7 @@ function isItemApproved(option) {
 
 class SiteFilteringBase extends Component {
 	static propTypes = {
+		alwaysShowBookmarks: PropTypes.bool,
 		browser: PropTypes.any,
 		data: PropTypes.array,
 		selected: PropTypes.array,
@@ -214,8 +216,9 @@ class SiteFilteringBase extends Component {
 
 	render () {
 		const
-			{data, selected, siteFiltering, ...rest} = this.props,
-			optionIndex = filteringOptions.indexOf(siteFiltering);
+			{alwaysShowBookmarks, data, selected, siteFiltering, ...rest} = this.props,
+			optionIndex = filteringOptions.indexOf(siteFiltering),
+			scrollerClass = classNames(css.scroller, {[css.shrinkHeight]: alwaysShowBookmarks});
 
 		delete rest.browser;
 		delete rest.selectAllApprovedSites;
@@ -226,7 +229,7 @@ class SiteFilteringBase extends Component {
 		delete rest.setBlockedSites;
 
 		return (
-			<Scroller {...rest} className={css.scroller}>
+			<Scroller {...rest} className={scrollerClass}>
 				<div className={css.siteFiltering}>
 					<BodyText>Site Filtering</BodyText>
 					<Group

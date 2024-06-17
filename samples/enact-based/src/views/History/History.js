@@ -16,6 +16,7 @@ import Button from '@enact/agate/Button';
 import {connect} from 'react-redux';
 import Popup from '@enact/agate/Popup';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import {Component} from 'react';
 import ri from '@enact/ui/resolution';
 import Spotlight from '@enact/spotlight';
@@ -29,6 +30,7 @@ import css from './History.module.less';
 class HistoryBase extends Component {
 
 	static propTypes = {
+		alwaysShowBookmarks: PropTypes.bool,
 		browser: PropTypes.object,
 		data: PropTypes.array,
 		deselectAllHistory: PropTypes.func,
@@ -161,7 +163,9 @@ class HistoryBase extends Component {
 	}
 
 	render () {
-		const {data, hasSelection, ...rest} = this.props;
+		const
+			{alwaysShowBookmarks, data, hasSelection, ...rest} = this.props,
+			scrollerClass = classNames(css.list, {[css.shrinkHeight]: alwaysShowBookmarks});
 
 		delete rest.browser;
 		delete rest.deselectAllHistory;
@@ -197,7 +201,7 @@ class HistoryBase extends Component {
 							dataSize={this.viewData.length}
 							focusableScrollbar
 							itemRenderer={this.renderItem}
-							className={css.list}
+							className={scrollerClass}
 							itemSize={ri.scale(70)}
 						/>
 					: <div>{$L('There is no history.')}</div>

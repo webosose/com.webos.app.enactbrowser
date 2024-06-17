@@ -194,6 +194,9 @@ class SettingsBase extends Component {
 				privateBrowsing,
 				...rest
 			} = this.props,
+			scrollerClass = classNames(css.scroller, {
+				[css.shrinkHeight]: alwaysShowBookmarks,
+			}),
 			classes = classNames(className, css.settings),
 			startupOption = startupOptions.indexOf(startupPage);
 
@@ -202,7 +205,7 @@ class SettingsBase extends Component {
 		delete rest.homePageUrl;
 
 		return (
-			<Scroller {...rest} className={css.scroller}>
+			<Scroller {...rest} className={scrollerClass}>
 				<div className={classes}>
 					<BodyText>{$L('On Startup')}</BodyText>
 					<div className={css.indent}>

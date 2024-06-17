@@ -9,6 +9,7 @@
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import ri from '@enact/ui/resolution';
+import classNames from 'classnames';
 
 import BookmarkManager from '../BookmarkManager';
 import DevSettings from '../DevSettings';
@@ -54,12 +55,14 @@ const ContentItem = kind({
 
         switch (tab.navState.history.entries[historyIndex]) {
             case TabTypes.WEBVIEW: {
+                const webviewClass = classNames(css.webView, {[css.shrinkHeight]: !fullScreen && alwaysShowBookmarks});
+
                 if (!fullScreen && alwaysShowBookmarks) {
                     style.top = ri.scale(269) + 'px';
                 }
 
                 return (
-                    <WebView style={style} id={viewId} webView={browser.webViews[viewId]} className={css.webView}
+                    <WebView style={style} id={viewId} webView={browser.webViews[viewId]} className={webviewClass}
                         tabs={tabs} browser={browser} />
                 );
             }
@@ -75,11 +78,11 @@ const ContentItem = kind({
             case TabTypes.SETTINGS:
                 return <Settings style={style} browser={browser} />;
             case TabTypes.SITE_FILTERING:
-                return <SiteFiltering style={style} browser={browser} />;
+                return <SiteFiltering style={style} alwaysShowBookmarks={alwaysShowBookmarks} browser={browser} />;
             case TabTypes.BOOKMARKS:
-                return <BookmarkManager style={style} browser={browser} />;
+                return <BookmarkManager style={style} alwaysShowBookmarks={alwaysShowBookmarks} browser={browser} />;
             case TabTypes.HISTORY:
-                return <History style={style} browser={browser} isSelectedTab={isSelectedTab} />;
+                return <History style={style} alwaysShowBookmarks={alwaysShowBookmarks} browser={browser} isSelectedTab={isSelectedTab} />;
         }
     }
 });
