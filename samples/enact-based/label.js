@@ -76,7 +76,7 @@ var webviewHostInjectionComplete = false;
 
     // Wait for message that gives us a reference to the embedder
     window.addEventListener('message', function(ev) {
-      if (ev.data && ev.data.isNeva) {
+      if (ev.origin.startsWith('chrome-extension') && ev.data && ev.data.isNeva) {
         actions[ev.data.action](ev);
       }
     });

@@ -467,6 +467,7 @@ class BrowserBase {
         switch (info.windowOpenDisposition) {
             case 'new_foreground_tab':
                 selectNewTab = true;
+                /* falls through */
             case 'new_background_tab':
                 const state = this._createWebViewPage(info.targetUrl, childPage,
                                                       tab_family_id);
