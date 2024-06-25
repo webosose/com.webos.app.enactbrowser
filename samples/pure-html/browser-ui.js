@@ -63,10 +63,10 @@ window.onload = function() {
   browser.insertWebView("neva_view", document.body)
   doLayout();
 
-  var version = navigator.appVersion.substr(navigator.appVersion.lastIndexOf('Chrome/') + 7);
-  var match = /([0-9]*)\.([0-9]*)\.([0-9]*)\.([0-9]*)/.exec(version);
-  var majorVersion = parseInt(match[1]);
-  var buildVersion = parseInt(match[3]);
+  // var version = navigator.appVersion.substr(navigator.appVersion.lastIndexOf('Chrome/') + 7);
+  // var match = /([0-9]*)\.([0-9]*)\.([0-9]*)\.([0-9]*)/.exec(version);
+  // var majorVersion = parseInt(match[1]);
+  // var buildVersion = parseInt(match[3]);
 
   document.querySelector('#back').onclick = function() {
     browser.back();

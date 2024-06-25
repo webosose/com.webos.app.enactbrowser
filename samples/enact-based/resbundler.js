@@ -36,7 +36,7 @@ process.chdir(process.argv[2] || '.');
 
 function getSpec(locale, bundle) {
 	const loadParams = bundle!==defaultBundle ? {root: path.relative(process.cwd(), fs.realpathSync(bundle)).replace(/\.\.(\/)?/g, "_$1").replace(/\\/g, '/')} : undefined;
-	return locale.replace(/[-/]/g, '_') + ',strings.json,' + String(hashCode(loadParams));
+	return locale.replace(/[-/]/g, '_') + ',strings.json,' + String(hashCode(loadParams || {}));
 }
 
 function addHash(hash, newValue) {
