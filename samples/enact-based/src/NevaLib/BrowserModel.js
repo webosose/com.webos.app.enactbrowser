@@ -243,7 +243,6 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
         return Promise.all([
             this.settings.initialize(defaults.settings),
             this.bookmarks.initialize(defaults.bookmarks),
-            this.siteFiltering.initialize(defaults.sitefiltering)
         ]);
     }
 
