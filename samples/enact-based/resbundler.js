@@ -27,7 +27,7 @@ const locales = [
 	'zh-Hans-CN', 'zh-Hans-MY', 'zh-Hans-SG', 'zh-Hant-HK', 'zh-Hant-TW', 'ko'
 ];
 const bundles = [
-	'../resources',
+	'resources',
 ];
 const defaultBundle = 'resources';
 const outDir = process.argv[3] || 'localedata';
