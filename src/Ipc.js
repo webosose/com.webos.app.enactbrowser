@@ -26,7 +26,7 @@ class Ipc {
                     console.log(`${message} handler cause exception ${err}`);
                 }
             });
-        })
+        });
     }
 
     subscribe(message, callback) {
@@ -41,7 +41,7 @@ class Ipc {
     post(message, payload) {
         this.ipcObject.post(message, payload || {});
     }
-};
+}
 
 export default Ipc;
 export {Ipc};

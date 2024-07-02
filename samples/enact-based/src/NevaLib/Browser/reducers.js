@@ -25,7 +25,7 @@ const
 		mostVisitedSites: []
 	};
 
-function browserState (state = initialBrowserState, action) {
+function browserState (state = initialBrowserState, action = {}) {
 	switch (action.type) {
 		case types.SET_FULLSCREEN: {
 			console.log(`Browser::reducer::SET_FULLSCREEN`);

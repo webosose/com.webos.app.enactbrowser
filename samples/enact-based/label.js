@@ -23,7 +23,7 @@ var webviewHostInjectionComplete = false;
       };
       embedder.postMessage(data, '*');
     };
-    actions['getTitle'] = function(ev) {
+    actions.getTitle = function(ev) {
       var data = ev.data;
       // bind embedder
       var embedder = ev.source;
@@ -51,7 +51,7 @@ var webviewHostInjectionComplete = false;
       postTitle(embedder);
     };
 
-    actions['getFavicons'] = function(ev) {
+    actions.getFavicons = function(ev) {
       var links = document.querySelectorAll('link[rel*="icon"]');
 
       var favicons = [];

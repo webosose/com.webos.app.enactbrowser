@@ -12,10 +12,12 @@ import { createView } from "./PageViewAdaptor";
 import { UILayer } from "./UILayer";
 
 class UIOverlayFactory {
+    /* jshint ignore:start */
     static genericIpc = (typeof window) !== 'undefined' ? new ShellIpc(`ipc_uioverlay`) : null;
     static callChain = Promise.resolve();
     static instance = null;
     static channels = [];
+    /* jshint ignore:end */
 
     constructor() {
         console.log(`[UIOverlayFactory] instance created`);
@@ -29,11 +31,11 @@ class UIOverlayFactory {
     }
 
     static addToCallChain(p) {
-        return UIOverlayFactory.callChain = UIOverlayFactory.callChain.then(() => p);
+        return UIOverlayFactory.callChain = UIOverlayFactory.callChain.then(() => p); //jshint ignore:line
     }
 
     createLayer() {
-        return UIOverlayFactory.callChain = UIOverlayFactory.callChain.then(() => {
+        return UIOverlayFactory.callChain = UIOverlayFactory.callChain.then(() => { //jshint ignore:line
             return new Promise((resolve) => {
                 UIOverlayFactory.genericIpc.once("created", function(channelName) {
                     console.log(`[UIOverlay] UIOverlayFactory::constructor "created" message `, channelName);
@@ -47,7 +49,7 @@ class UIOverlayFactory {
 
                 const view = createView();
 
-            })
+            });
         }).then((layer) => {
             console.log(`[UIOverlay] UIOverlayFactory::createLayer send "ready"`);
             layer.channel.post("ready", {});

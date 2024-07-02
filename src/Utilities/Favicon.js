@@ -3,10 +3,10 @@ function blobToDataUrl(data) {
         const reader = new FileReader();
         reader.onload = (ev) => {
             resolve(ev.target.result);
-        }
+        };
         reader.onAbort = () => {
             reject();
-        }
+        };
         reader.readAsDataURL(data);
     });
 }
@@ -106,7 +106,7 @@ function fetchFaviconAsDataUrl(
 
     urls = urls.filter((value, index, self) => { // remove duplicates
         return self.indexOf(value) === index;
-    })
+    });
 
     return mapUntilFirstSuccess(urls, getImage);
 }

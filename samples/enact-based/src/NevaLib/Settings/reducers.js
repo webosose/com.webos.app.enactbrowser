@@ -29,7 +29,7 @@ const
 		maxSuspendedCritical: 0,
 	};
 
-function settingsState (state = initialSettingsState, action) {
+function settingsState (state = initialSettingsState, action = {}) {
 	switch (action.type) {
 		case types.SET_STARTUP_PAGE: {
 			return Object.assign({}, state, {

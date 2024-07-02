@@ -90,7 +90,7 @@ class UrlSuggestionsBase {
             this.uioverlay.hide({ target: 'input_suggestion_list' });
         }
     }
-};
+}
 
 export default UrlSuggestionsBase;
 export {UrlSuggestionsBase};

@@ -20,7 +20,7 @@ class MenuModel {
         return () => {
             console.log(`Menu::click()`);
             this.ipc.post('click', {menuItem: menuItem});
-        }
+        };
     }
 }
 

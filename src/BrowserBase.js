@@ -413,6 +413,7 @@ class BrowserBase {
         return this.tabs.states[id];
     }
 
+    /* jshint ignore:start */
     _handleUpdateFaviconUrl = (tabId, webview) => (favicons) => {
         // favicons => [{url, type, sizes}, ...]
         console.log(`did-update-favicon-url event occured`);
@@ -423,13 +424,13 @@ class BrowserBase {
         const tab = this.tabs.getTab(tabId);
 
         fetchFaviconAsDataUrl(favicons, `${rootUrl}/`)
-        .then((dataUrl) => {
-            tab.setIcon(dataUrl);
-            const navState = Object.assign({}, tab.state.navState, {
-                isLoading: false,
+            .then((dataUrl) => {
+                tab.setIcon(dataUrl);
+                const navState = Object.assign({}, tab.state.navState, {
+                    isLoading: false,
+                });
+                tab.setNavState(navState);
             });
-            tab.setNavState(navState);
-        });
     };
 
     // handles new tab request from webView
@@ -661,7 +662,7 @@ class BrowserBase {
             }
         }
     }
-
+    /* jshint ignore:end */
 }
 
 export {TabTypes, BrowserBase, WebViewFactoryBase};

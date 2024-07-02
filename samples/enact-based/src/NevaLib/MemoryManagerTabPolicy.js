@@ -53,8 +53,8 @@ class MemoryManagerTabPolicy {
             });
         }
         else {
-            console.error('MemoryManager interface is not implemented! \
-                Check your WebOS version!');
+            console.error(`MemoryManager interface is not implemented! \
+                Check your WebOS version!`);
         }
     }
 
@@ -72,6 +72,7 @@ class MemoryManagerTabPolicy {
         }
     }
 
+    /* jshint ignore:start */
     /*
         ev = {
             previous: '[normal|low|critical]',
@@ -89,6 +90,7 @@ class MemoryManagerTabPolicy {
         console.log('_handleLevelChanged');
         console.log(policy);
     }
+    /* jshint ignore:end */
 }
 
 export default MemoryManagerTabPolicy;

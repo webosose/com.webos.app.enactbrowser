@@ -19,7 +19,7 @@ class ExitFullscreenButtonModel {
         return () => {
             console.log(`ExitFullscreenButton::onClick >>>`);
             this.ipc.post('exit-fullscreen');
-        }
+        };
     }
 }
 

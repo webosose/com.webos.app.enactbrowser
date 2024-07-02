@@ -23,7 +23,7 @@ class Task {
 
 class TaskRunner {
 
-    static tasks = [];
+    static tasks = []; // jshint ignore:line
 
     // Create and push a task with provided promisified function. Then execute tasks.
     addFunc(func) {

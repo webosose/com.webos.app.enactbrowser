@@ -20,15 +20,15 @@ class InputSuggectionListModel {
                     document.dispatchEvent(event);
                 });
                 ipc.post('switchContentReady');
-            })
+            });
         }
 
         if (typeof window !== 'undefined') { // it is for prerenderer.
             window.document.addEventListener("clickSuggestedItem", (ev) => {
                 this.ipcPromise.then((ipc) => {
                     ipc.post('click_suggested_item', ev.detail);
-                })
-            })
+                });
+            });
         }
     }
 }

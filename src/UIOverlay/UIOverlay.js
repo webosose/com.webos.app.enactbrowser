@@ -11,15 +11,17 @@ import { UILayer } from "./UILayer";
 import { Task, TaskRunner } from "./TaskRunner";
 
 class UIOverlay {
+    /* jshint ignore:start */
     static layers = new Map();
     static sizes = [];
+    /* jshint ignore:end */
 
     constructor() {
         ["default", "dialog", "chrome_extensions", "exit_fullscreen_button",
             "browser_menu", "zoom_control", "input_suggestion_list", "user_permission",
             "blocked_popup", "bookmark_dialog"]
             .forEach(element => {
-                UIOverlay.sizes[element] = { x: 0, y: 0, w: 10, h: 10 }
+                UIOverlay.sizes[element] = { x: 0, y: 0, w: 10, h: 10 };
             });
         this.taskRunner = new TaskRunner();
     }
@@ -44,7 +46,7 @@ class UIOverlay {
                         resolve(layer);
                     });
                 });
-        }
+        };
 
         const initLayer = (layer) => {
             console.log(`${target} layer created`);
@@ -57,7 +59,7 @@ class UIOverlay {
             layer.setVisible({ target: target });
             layer.view.bringToFront();
             return layer;
-        }
+        };
 
         const hideExclusiveLayers = () => {
             // hide other mutually exclusive layers
@@ -73,14 +75,14 @@ class UIOverlay {
 
                 promisifiedHideFunctions.map(f => this.taskRunner.addFunc(f));
             }
-        }
+        };
 
         return new Promise(showFinished => {
             const finish = () => new Promise(resolve => {
                 console.log(`[UIOverlay][showhide] show ${target} <<<`);
                 showFinished(UIOverlay.layers.get(target));
                 resolve();
-            })
+            });
 
             const taskFunc = () => new Promise(taskFuncResolve => {
                 if (this.isLayerExists({ target })) {
@@ -135,7 +137,7 @@ class UIOverlay {
             resolve();
         }));
     }
-};
+}
 
 if (typeof window !== 'undefined') {
     window.UIOverlay = UIOverlay;

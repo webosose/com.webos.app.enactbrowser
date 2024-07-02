@@ -47,7 +47,7 @@ class ZoomControl {
         console.log(`hide zoom control`);
         this.uioverlay.hide({target: 'zoom_control'});
     }
-};
+}
 
 export default ZoomControl;
 export {ZoomControl};

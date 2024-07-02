@@ -40,10 +40,10 @@ class MostVisitedSitesIdbStorage {
                             resolve([store, newEntry]);
                         });
                     }
-                }
+                };
                 request.onerror = () => {
                     reject(request.error);
-                }
+                };
             });
         });
     }
@@ -63,10 +63,10 @@ class MostVisitedSitesIdbStorage {
                     else {
                         resolve([store, undefined]);
                     }
-                }
+                };
                 request.onerror = () => {
                     reject(request.error);
-                }
+                };
             });
         });
     }
@@ -88,10 +88,10 @@ class MostVisitedSitesIdbStorage {
                     else {
                         resolve([store, arr]);
                     }
-                }
+                };
                 request.onerror = () => {
                     reject(request.error);
-                }
+                };
             });
         });
     }
@@ -113,16 +113,16 @@ class MostVisitedSitesIdbStorage {
                             cursor.continue();
                         }
                         else {
-                            resolve([store, cursor.value])
+                            resolve([store, cursor.value]);
                         }
                     }
                     else {
                         resolve([store, null]);
                     }
-                }
+                };
                 request.onerror = () => {
                     reject(request.error);
-                }
+                };
             });
         });
     }
@@ -147,10 +147,10 @@ class MostVisitedSitesIdbStorage {
                     else {
                         resolve([store, arr]);
                     }
-                }
+                };
                 request.onerror = () => {
                     reject(request.error);
-                }
+                };
             });
         });
     }
@@ -172,10 +172,10 @@ class MostVisitedSitesIdbStorage {
                         cursor.delete();
                         resolve([store, url]);
                     }
-                }
+                };
                 request.onerror = () => {
                     reject(request.error);
-                }
+                };
             });
         });
     }

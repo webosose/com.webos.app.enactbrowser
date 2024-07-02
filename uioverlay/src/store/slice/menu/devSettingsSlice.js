@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit';
 
 export const devSettingsSlice = createSlice({
   name: 'devSettings',
@@ -11,7 +11,7 @@ export const devSettingsSlice = createSlice({
       state.value = action.payload;
     },
   },
-})
+});
 
 export const { set } = devSettingsSlice.actions;
 

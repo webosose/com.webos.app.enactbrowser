@@ -37,6 +37,7 @@ class PreviousTabs {
         this.tabs.removeEventListener('replace', this.handleTabReplace);
     }
 
+    /* jshint ignore:start */
     handleTabAdd = (ev) => {
         this.storage.add(this._createTabInfo(ev.tab));
     }
@@ -48,7 +49,7 @@ class PreviousTabs {
                 id: state.id,
                 type: state.type,
                 url: state.navState.url
-            })
+            });
         }
     }
 
@@ -69,6 +70,7 @@ class PreviousTabs {
         type: tab.type,
         url: tab.navState.url
     })
+    /* jshint ignore:end */
 }
 
 export default PreviousTabs;
