@@ -20,6 +20,8 @@ import {Component} from 'react';
 
 import css from './PinPopup.module.less';
 
+const BACK_BUTTON = 'Back';
+
 class PinPopup extends Component {
 	static propTypes = {
 		matched: PropTypes.any,
@@ -55,7 +57,7 @@ class PinPopup extends Component {
 	onNumberKeyPressed = (ev) => {
 		const key = ev.target.textContent;
 
-		if (key === "BACK") {
+		if (key === BACK_BUTTON) {
 			this.setState(state => ({pinValue: state.pinValue.slice(0, -1)}));
 		} else {
 			if (this.state.pinValue.length < 4) {
@@ -118,7 +120,7 @@ class PinPopup extends Component {
 				<Button disabled={disabledButtons} className={css.buttonSet} onClick={this.onNumberKeyPressed}>7</Button>
 				<Button disabled={disabledButtons} className={css.buttonSet} onClick={this.onNumberKeyPressed}>8</Button>
 				<Button disabled={disabledButtons} className={css.buttonSet} onClick={this.onNumberKeyPressed}>9</Button>
-				<Button onClick={this.onNumberKeyPressed}>Back</Button>
+				<Button className={css.buttonSet} onClick={this.onNumberKeyPressed}>{BACK_BUTTON}</Button>
 			</Popup>
 		);
 	}
