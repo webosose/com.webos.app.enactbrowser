@@ -36,6 +36,6 @@ class ExitFullscreenButtonBase {
         console.log(`ExitFullscreenButtonBase::hideExitFullscreenButton`);
         this.uioverlay.hide({target: 'exit_fullscreen_button'});
     }
-};
+}
 
 export {ExitFullscreenButtonBase};

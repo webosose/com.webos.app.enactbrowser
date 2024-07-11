@@ -21,6 +21,7 @@ class TabsReduxStore {
         this.store = reduxStore;
     }
 
+    /* jshint ignore:start */
     add = (tabState, setSelected) => {
         this.store.dispatch(addTab(tabState, setSelected));
     }
@@ -82,6 +83,7 @@ class TabsReduxStore {
     setPopupState = (id, popupState) => {
         this.store.dispatch(updateTabState(id, {popupState}));
     }
+    /* jshint ignore:end */
 }
 
 class ReduxTabs extends TabsBase {

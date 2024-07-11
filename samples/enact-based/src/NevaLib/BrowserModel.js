@@ -105,19 +105,19 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
             }
             switch(menuItem) {
                 case "history":
-                    this.createTab(TabTypes.HISTORY)
+                    this.createTab(TabTypes.HISTORY);
                     break;
 
                 case "bookmarks":
-                    this.createTab(TabTypes.BOOKMARKS)
+                    this.createTab(TabTypes.BOOKMARKS);
                     break;
 
                 case "settings":
-                    this.createTab(TabTypes.SETTINGS)
+                    this.createTab(TabTypes.SETTINGS);
                     break;
 
                 case "devSettings":
-                    this.createTab(TabTypes.DEV_SETTINGS)
+                    this.createTab(TabTypes.DEV_SETTINGS);
                     break;
             }
         });
@@ -141,7 +141,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
         })
         .then(() => {
             this.initializeExtenionAPI();
-        })
+        });
     }
 
     setExtensionButtonRef(ref) {
@@ -213,7 +213,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
 
                 popupView.setBounds(leftBorderWidth, buttonHeight, width, 200);
 
-                popupView.pageContents.setFocus()
+                popupView.pageContents.setFocus();
                 popupView.setVisible(true);
             });
 
@@ -286,7 +286,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
         });
     }
 
-    createTab(type = TabTypes.NEW_TAB_PAGE, url) {
+    createTab(type = TabTypes.NEW_TAB_PAGE, url = '') {
         switch (type) {
             case TabTypes.WEBVIEW:
                 this.tabs.addTab(this._createWebViewPage(url));
@@ -413,7 +413,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
                 this.closeTab(i);
             }
         }
-        this.clearData("private")
+        this.clearData("private");
         // Second, we should turn on/off statistics gathering for
         // for prev session tabs, most visited and recently closed
         this.setStatisticsGathering(usePrivateBrowsing);

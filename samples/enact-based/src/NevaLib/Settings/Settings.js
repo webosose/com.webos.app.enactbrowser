@@ -70,7 +70,7 @@ const setStore = (store, values) => {
     store.dispatch(setMaxSuspendedNormal(values[SettingsKeys.MAX_SUSPENDED_NORMAL]));
     store.dispatch(setMaxSuspendedLow(values[SettingsKeys.MAX_SUSPENDED_LOW]));
     store.dispatch(setMaxSuspendedCritical(values[SettingsKeys.MAX_SUSPENDED_CRITICAL]));
-}
+};
 
 // Reference implementation of settings
 class Settings extends SettingsBase {

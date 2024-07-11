@@ -16,7 +16,7 @@ const
 		selected: []
 	};
 
-function historyUIState (state = initialHistory, action) {
+function historyUIState (state = initialHistory, action = {}) {
 	switch (action.type) {
 		case 'SELECT_HISTORY': {
 			const newSelected = state.selected.slice();
@@ -44,7 +44,7 @@ function historyUIState (state = initialHistory, action) {
 	}
 }
 
-function bookmarkUIState (state = initialBookmark, action) {
+function bookmarkUIState (state = initialBookmark, action = {}) {
 	switch (action.type) {
 		case 'SELECT_BOOKMARK': {
 			const newSelected = state.selected.slice();

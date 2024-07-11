@@ -41,10 +41,10 @@ class PageContentsWrapper {
         }
 
         console.log(`WebView::_initWebView(${params.partition})`);
-        pageContentsParams["partition"] = params.partition ? params.partition : '';
+        pageContentsParams.partition = params.partition ? params.partition : '';
 
         pageContentsParams["error-page-hidding"] = true;
-        pageContentsParams["api"] = ["v8/browser_shell_ipc", "v8/installablemanager"];
+        pageContentsParams.api = ["v8/browser_shell_ipc", "v8/installablemanager"];
 
         if (params.zoomFactor) {
             pageContentsParams["zoom-factor"] = params.zoomFactor;
@@ -157,7 +157,7 @@ class PageContentsWrapper {
             this.hideDialog();
             this.unsubscribeDialogEvents();
             this.dialogData.showDialog = false;
-        }
+        };
 
         this.dialogData.buttonPressedDialogHandler = ({button, text}) => {
             console.log(`WebView::buttonPressedDialogHandler ${this.rootId}`);
@@ -174,7 +174,7 @@ class PageContentsWrapper {
         this.dialogData.resetAlertState = () => {
             this.dialogData.alertsAllowed = true;
             this.dialogData.alertsCount = 0;
-        }
+        };
 
         this.dialogData.blockDialogsHandler = () => {
             this.dialogData.alertsAllowed = false;
@@ -226,7 +226,7 @@ class PageContentsWrapper {
                 console.log(`login dialog cancel called`);
             }
         }); // messageType, messageText, controller
-    };
+    }
 
     handleDialog(messageType, messageText, controller) {
         console.log(`handleDialog ${this.rootId}>>>`);
@@ -362,7 +362,7 @@ class PageContentsWrapper {
             return Promise.resolve();
 
         let container_div = document.getElementById(rootId);
-        let r = container_div.getBoundingClientRect()
+        let r = container_div.getBoundingClientRect();
         if (r.y < 1) {
             r.y = 1; // pageView should not overlap 'exit fullscreen' button div
                      // (1px heigh)
@@ -422,8 +422,7 @@ class PageContentsWrapper {
         this.tabView.sendToBack();
         // If suspend error page's DOM it will imposible to show
         // that in other tab
-        if ((this.activeState === 'activated')
-            && (!this.isAborted)) {
+        if ((this.activeState === 'activated') && (!this.isAborted)) {
             let script = `
                 var elements = document.body.getElementsByClassName('vkbInset');
                 if (elements.length !== 0) {
@@ -434,7 +433,7 @@ class PageContentsWrapper {
                 }
             `;
             script += `document.activeElement.blur();`;
-            console.log(`WVE handle vkb (overlap). (NEVA-6205)`)
+            console.log(`WVE handle vkb (overlap). (NEVA-6205)`);
             this.tabView.pageContents.suspendMedia();
             this.tabView.pageContents.suspendDOM();
             this.activeState = 'suspended';
@@ -465,20 +464,20 @@ class PageContentsWrapper {
             this.activate();
         }
         this.url = url;
-        this.tabView.pageContents.loadURL(url)
+        this.tabView.pageContents.loadURL(url);
     }
 
     back() {
         this.unresponsive = false;
         if (this.canGoBack) {
-            this.tabView.pageContents.goBack()
+            this.tabView.pageContents.goBack();
         }
     }
 
     forward() {
         this.unresponsive = false;
         if (this.canGoForward) {
-            this.tabView.pageContents.goForward()
+            this.tabView.pageContents.goForward();
         }
     }
 
@@ -543,7 +542,7 @@ class PageContentsWrapper {
                 button : e.buttoncode
             });
             document.dispatchEvent(event);
-        })
+        });
     }
 
     handleLoadProgressChanged(ev) {
@@ -582,7 +581,7 @@ class PageContentsWrapper {
                         installed
                     });
                 });
-            })();`
+            })();`;
 
             const ipc = new ShellIpc(ipcChannelName);
 
@@ -594,7 +593,7 @@ class PageContentsWrapper {
 
             const timeout = setTimeout(() => {
                 ipc.removeEventListener(ipcMessageId, onMessage);
-                reject("[PWAButton] timeout")
+                reject("[PWAButton] timeout");
             }, 5000);
 
             ipc.once(ipcMessageId, onMessage);
@@ -616,7 +615,7 @@ class PageContentsWrapper {
                     const ipc = new ShellIpc(\"${ipcChannelName}\");
                     ipc.post(\"${ipcMessageId}\", { pSuccess });
                 });
-            })();`
+            })();`;
 
             const ipc = new ShellIpc(ipcChannelName);
 
@@ -636,10 +635,10 @@ class PageContentsWrapper {
             this.tabView.pageContents.executeJavaScriptInMainFrame(injection);
         });
     }
-};
+}
 
 function CustomWebView(params) {
     return new PageContentsWrapper(params);
-};
+}
 
 export default CustomWebView;

@@ -19,7 +19,7 @@ const
 		closedTabId: null,
 	};
 
-function tabsState (state = initialTabsState, action) {
+function tabsState (state = initialTabsState, action = {}) {
 	switch (action.type) {
 		case types.ADD_TAB: {
 			const newTabs = Object.assign({}, state.tabs, {

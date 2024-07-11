@@ -20,7 +20,7 @@ class ChromeExtensionsModel {
         return () => {
             console.log(`ChromeExtensionsModel::click()`);
             this.ipc.post('click', {chromeExtensionsItem: chromeExtensionsItem});
-        }
+        };
     }
 }
 

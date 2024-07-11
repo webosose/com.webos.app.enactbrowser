@@ -47,7 +47,7 @@ class ChromeExtensionsBase {
                     resolve();
                 });
             });
-        })
+        });
     }
 
     destroy() {}
@@ -57,7 +57,7 @@ class ChromeExtensionsBase {
         return this.uioverlay.hide({target: 'chrome_extensions'});
     }
 
-};
+}
 
 export default ChromeExtensionsBase;
 export {ChromeExtensionsBase};

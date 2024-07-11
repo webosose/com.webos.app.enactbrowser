@@ -47,6 +47,7 @@ class RecentlyClosedSites {
         });
     }
 
+    /* jshint ignore:start */
     handleTabDelete = (ev) => {
         if (ev.state.type === TabTypes.WEBVIEW && ev.state.error === null) {
             let p = this._addEntry({
@@ -65,6 +66,7 @@ class RecentlyClosedSites {
             });
         }
     }
+    /* jshint ignore:end */
 }
 
 export default RecentlyClosedSites;

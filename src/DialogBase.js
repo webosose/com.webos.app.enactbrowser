@@ -31,6 +31,6 @@ class DialogBase {
         console.log(`DialogBase::dialog`);
         this.uioverlay.hide({target: 'dialog'});
     }
-};
+}
 
 export {DialogBase};

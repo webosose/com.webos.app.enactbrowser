@@ -49,7 +49,7 @@ class Menu {
             }
             layer.view.pageContents.setFocus();
             return layer;
-        })
+        });
     }
 
     destroy() {}
@@ -59,7 +59,7 @@ class Menu {
         this.uioverlay.hide({target: 'browser_menu'});
     }
 
-};
+}
 
 export default Menu;
 export {Menu};

@@ -62,5 +62,5 @@ var createNevaBrowser = function() {
     setEventListeners : setEventListeners,
     back : back,
     forward : forward
-  }
+  };
 };

@@ -21,13 +21,13 @@ class UILayer {
             UILayer.setBounds({
                 bounds: size,
                 target: contentType
-            })
+            });
             this.applyBounds();
         });
 
         channel.on('setFocusToUIOverlay', () => {
             console.log(`[UIOverlay] UILayer::constructor "setFocusToUIOverlay" message. set focus to UIOverlay`);
-        })
+        });
     }
 
     switchContent({ target }) {
@@ -36,7 +36,7 @@ class UILayer {
         applySwitchContent({
             target: target,
             ipc: this.channel
-        })
+        });
     }
 
     static setBounds({ bounds, target }) {
@@ -53,7 +53,7 @@ class UILayer {
         applyBounds({
             view: this.view,
             bounds: UIOverlay.sizes[this.contentName]
-        })
+        });
     }
 
     setVisible() {
@@ -62,11 +62,11 @@ class UILayer {
         applySetVisible({
             visible: true,
             view: this.view
-        })
+        });
     }
 
     deactivate() {
-        applyDeactivate({ view: this.view })
+        applyDeactivate({ view: this.view });
     }
 }
 

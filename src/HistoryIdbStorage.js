@@ -35,7 +35,7 @@ class HistoryIdbStorage {
                         cursor.continue();
                     }
                 }
-            }
+            };
             return Promise.resolve([store, true]);
         });
     }

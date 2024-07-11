@@ -66,7 +66,7 @@ class PreviousTabsIdbStorage {
                 return store.request('delete', [result[1].id]);
             }).then(() => {
                 return store.request('add', [{pos, ...newInfo}]);
-            })
+            });
         });
     }
 }

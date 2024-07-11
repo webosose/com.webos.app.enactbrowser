@@ -58,7 +58,7 @@ const addApprovedSite = (url) => ({
 const removeApprovedSites = (urls) => ({
 	type: types.REMOVE_APPROVED_SITES,
 	urls
-})
+});
 
 const setBlockedSites = (urls) => ({
 	type: types.SET_BLOCKED_SITES,
@@ -131,4 +131,4 @@ export {
 	setMaxSuspendedNormal,
 	setMaxSuspendedLow,
 	setMaxSuspendedCritical,
-}
+};

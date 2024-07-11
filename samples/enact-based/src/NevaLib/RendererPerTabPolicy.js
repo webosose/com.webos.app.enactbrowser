@@ -18,6 +18,7 @@ class RendererPerTabPolicy {
         tabs.addEventListener('delete', this._handleTabDelete);
     }
 
+    /* jshint ignore:start */
     // do <action> with all members of tab family with <family_id>.
     manageTabFamily = (action) => (family_id) => {
         this.webViews.forEach((webView, index) => {
@@ -91,6 +92,7 @@ class RendererPerTabPolicy {
             return result !== undefined;
         });
     }
+    /* jshint ignore:end */
 }
 
 export default RendererPerTabPolicy;

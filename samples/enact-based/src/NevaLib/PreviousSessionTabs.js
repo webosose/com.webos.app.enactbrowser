@@ -40,7 +40,7 @@ class PreviousSessionTabs {
             else {
                 browser.createTab();
             }
-        })
+        });
     }
 
     turnOn() {
