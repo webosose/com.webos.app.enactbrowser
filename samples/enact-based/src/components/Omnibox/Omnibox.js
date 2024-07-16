@@ -91,6 +91,7 @@ class OmniboxBase extends Component {
 		this.props.browser.reloadStop();
 		Spotlight.pause();
 		ev.stopPropagation();
+		window.document.dispatchEvent(new Event("click"));
 	}
 
 	onBookmarkAndLaunchPointAdd = ({isAddToHome}) => {
@@ -112,6 +113,7 @@ class OmniboxBase extends Component {
 		this.props.bookmarkDialog.ipc.ipcObject.on('add_bookmark_to_home', this.onBookmarkAndLaunchPointAdd);
 		this.isOpenBookmark = true;
 		ev.stopPropagation();
+		window.document.dispatchEvent(new Event("click"));
 	}
 
 	onBookmarkRemove = (ev) => {
@@ -119,6 +121,7 @@ class OmniboxBase extends Component {
 		this.props.browser.removeBookmark();
 		this.props.bookmarkDialog.show({removeBookmarkCompleted: true});
 		ev.stopPropagation();
+		window.document.dispatchEvent(new Event("click"));
 		this.debounce = setTimeout(() => {
 			this.props.bookmarkDialog.hide();
 		}, 1500);

@@ -37,13 +37,11 @@ function UserPermission({ userPermission }) {
 
     useEffect(() => {
         if (isOpened) {
-            ['click', 'tab-select'].forEach(type => {
-                window.document.addEventListener(type, () => {
-                    if (isOpened) {
-                        setIsOpened(false);
-                    }
-                }, {once: true});
-            });
+            window.document.addEventListener('click', () => {
+                if (isOpened) {
+                    setIsOpened(false);
+                }
+            }, {once: true});
         }
         else {
             userPermission.hide();

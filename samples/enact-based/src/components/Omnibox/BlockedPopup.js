@@ -35,14 +35,12 @@ function BlockedPopupBase(props) {
     useEffect(() => {
         if (isOpened) {
             blockedPopup.show({targetUrl: props.targetUrl});
-            ['click', 'tab-select'].forEach(ev => {
-                window.document.addEventListener(ev, () => {
-                    console.log(`BlockedPopup::on document ${ev} event`);
-                    if (isOpened) {
-                        setIsOpened(false);
-                    }
-                }, {once: true});
-            });
+            window.document.addEventListener('click', () => {
+                console.log(`BlockedPopup::on document click event`);
+                if (isOpened) {
+                    setIsOpened(false);
+                }
+            }, {once: true});
         }
         else {
             blockedPopup.hide();

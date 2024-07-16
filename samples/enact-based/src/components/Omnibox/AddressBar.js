@@ -114,6 +114,7 @@ function AddressBarBase({url, browser, onUrlChanged, urlSuggestions, searchEngin
 		getSuggestions(value);
 		setIsEditing(value !== "");
 		ev.stopPropagation();
+		window.document.dispatchEvent(new Event("click"));
 	}, [value, getSuggestions]);
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const onChange = useCallback((ev) => {
