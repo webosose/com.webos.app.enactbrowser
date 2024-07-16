@@ -543,7 +543,6 @@ class BrowserBase {
             titleChange = true;
         }
 
-        navState.url = url;
         navState.isLoading = true;
 
         tab.setNavState(navState);
