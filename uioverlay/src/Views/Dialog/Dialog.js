@@ -5,6 +5,7 @@ import {Dialog as DialogBase} from '../../../../samples/enact-based/src/componen
 function Dialog({model}) {
     const [messageType, setMessageType] = useState('');
     const [messageText, setMessageText] = useState('');
+    const [defaultPromptText, setDefaultPromptText] = useState('');
     const [alertsCount, setAlertsCount] = useState(0);
 
     const onDialogOk = useCallback((text) => {
@@ -35,11 +36,12 @@ function Dialog({model}) {
     useEffect(() => {
         setMessageType(model.dialogProps.messageType);
         setMessageText(model.dialogProps.messageText);
+        setDefaultPromptText(model.dialogProps.defaultPromptText);
         setAlertsCount(model.dialogProps.alertsCount);
     }, [model.dialogProps]);
 
     const dialog = {
-        defaultPromptText: "",
+        defaultPromptText,
         isAlertsAllowed: true,
         alertsCount: alertsCount,
         alertsCountBeforePreventionRequest: 3,

@@ -29,10 +29,17 @@ class Dialog extends Component {
 	constructor (props) {
 		super(props);
 		this.state = {
-			value: props.dialog.defaultPromptText || '',
+			value: '',
 			passwdValue: '',
 			loginValue: ''
 		};
+	}
+
+	componentDidUpdate(prevProps) {
+		const {defaultPromptText} = this.props.dialog;
+		if (defaultPromptText !== prevProps.dialog.defaultPromptText) {
+			this.setState({value: defaultPromptText});
+		}
 	}
 
 	onOk = () => {

@@ -143,6 +143,7 @@ class PageContentsWrapper {
             showDialog: false,
             messageType: "",
             messageText: "",
+            defaultPromptText: "",
             controller: null,
             responsive: true
         };
@@ -228,12 +229,13 @@ class PageContentsWrapper {
         }); // messageType, messageText, controller
     }
 
-    handleDialog(messageType, messageText, controller) {
+    handleDialog(messageType, messageText, controller, defaultPromptText) {
         console.log(`handleDialog ${this.rootId}>>>`);
         this.dialogData.alertsCount ++;
         this.dialogData.messageType = messageType;
         this.dialogData.messageText = messageText;
         this.dialogData.controller = controller;
+        this.dialogData.defaultPromptText = defaultPromptText || "";
 
         if (this.dialogData.alertsAllowed) {
             this.dialogData.showDialog = true;
@@ -256,6 +258,7 @@ class PageContentsWrapper {
         dialog.show({
             messageType: this.dialogData.messageType,
             messageText: this.dialogData.messageText,
+            defaultPromptText: this.dialogData.defaultPromptText,
             alertsCount: this.dialogData.alertsCount,
             alertsCountBeforePreventionRequest: 3
         }, {});
