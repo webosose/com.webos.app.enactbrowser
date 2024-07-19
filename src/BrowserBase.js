@@ -549,6 +549,8 @@ class BrowserBase {
 
         if (titleChange) {
             tab.setTitle(url);
+            // Reset tab icon
+            tab.setIcon(null);
         }
     }
 
