@@ -18,6 +18,11 @@ import WebView from './WebView.js';
 import {IdGenerator, TabsBase as TabsModel} from './TabsBase.js';
 import initLogging from './Logger';
 
+function isValidPdfURL(url) {
+    const PDF_URL_REGEX = /^chrome-extension:\/\/[a-z]{32}\/http(s?):\/\/.+\.pdf$/i;
+    return PDF_URL_REGEX.test(url);
+}
+
 function isValidURLSchema(url) {
     const result = url.match(/^(http|https|file)+?:\/\/\S+/);
     console.log(`isInternetProtocolSchema`, result);
@@ -595,6 +600,8 @@ class BrowserBase {
             });
             if (isValidURLSchema(url)) {
                 navState.url = url;
+            } else if (isValidPdfURL(url)) {
+                navState.url = url.split(/^chrome-extension:\/\/[a-z]{32}\//)[1];
             }
             tab.setNavState(navState);
             this.webViews[tabId].emit('needToUpdateUI');
