@@ -78,6 +78,13 @@ class Tab {
         }
     }
 
+    setFinishLoading() {
+        this.tabs.emitEvent('update', {
+            state: updateState(this),
+            diff: {isFinishLoading: true},
+        });
+    }
+
     setAuthDialog(authDialog) {
         if (this.state.authDialog !== authDialog) {
             this.tabs.store.setAuthDialog(this.state.id, authDialog);

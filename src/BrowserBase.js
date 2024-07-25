@@ -608,8 +608,12 @@ class BrowserBase {
         }
     }
 
-    _handleFinishLoading = (tabId) => (url) => {
-        console.log(`BrowserBase::_handleFinishLoading ${url}`);
+    _handleFinishLoading = (tabId) => (url, is_main_frame) => {
+        console.log(`BrowserBase::_handleFinishLoading ${url} is_main_frame ${is_main_frame}`);
+        if (is_main_frame) {
+            const tab = this.tabs.getTab(tabId);
+            tab.setFinishLoading();
+        }
     }
 
     _handleFinishNavigation = (tabId) => (url) => {
