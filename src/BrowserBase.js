@@ -361,10 +361,10 @@ class BrowserBase {
         webview.addEventListener('did-fail-load', this._handleFailLoad(state.id));
         webview.addEventListener('did-push-history-navigation', this._handlePushHistoryNavigation(state.id));
 
-        webview.addEventListener('page-title-updated', (title) => {
+        webview.addEventListener('page-title-updated', (title, url) => {
             console.log(`page title updated event: ${title}`);
             const tab = this.tabs.getTab(state.id);
-            this._updateTitle(tab, title);
+            this._updateTitle(tab, title, url);
         });
         webview.addEventListener('zoomchange', (newZoomFactor) => {
             console.log('Tab', this.tabs.getIndexById(state.id), 'zoom changed', newZoomFactor);

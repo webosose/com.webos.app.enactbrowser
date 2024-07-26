@@ -48,10 +48,10 @@ const HistoryMixin = (superclass) => (class extends superclass {
             BrowserConsts.HISTORY_URL), true);
     }
 
-    _updateTitle(tab, title) {
+    _updateTitle(tab, title, url) {
         super._updateTitle(tab, title);
         if (!this.settings.getPrivateBrowsing()) {
-            this.history.updateEntryTitle(tab.state.navState.url, title);
+            this.history.updateEntryTitle(url, title);
         }
     }
 });
