@@ -51,18 +51,6 @@ class SiteItem extends Component {
 
 	constructor (props) {
 		super(props);
-
-		this.state = {
-			showingCloseButton: false
-		};
-	}
-
-	onMouseEnter = () => {
-		this.setState({showingCloseButton: true});
-	}
-
-	onMouseLeave = () => {
-		this.setState({showingCloseButton: false});
 	}
 
 	onClick = () => {
@@ -82,17 +70,13 @@ class SiteItem extends Component {
 					className={css.siteItem}
 					caption={title}
 					disabled={!title}
-					onMouseEnter={this.onMouseEnter}
-					onMouseLeave={this.onMouseLeave}
 					placeholder={placeholder}
 					src={source}
 				/>
 				{
-					this.state.showingCloseButton && title ?
+					title ?
 					<CloseButton
 						onClick={this.onClick}
-						onMouseEnter={this.onMouseEnter}
-						onMouseLeave={this.onMouseLeave}
 					/> : null
 				}
 			</div>
