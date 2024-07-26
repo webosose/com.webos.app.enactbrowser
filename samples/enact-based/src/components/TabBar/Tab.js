@@ -83,6 +83,7 @@ const Tab = kind({
 	handlers: {
 		onClose: (ev, {browser, index}) => {
 			ev.stopPropagation();
+			window.document.dispatchEvent(new Event("click"));
 			browser.closeTab(index);
 			browser.sendZoomFactorToZoomMenu();
 		},
@@ -91,8 +92,8 @@ const Tab = kind({
 				browser.selectTab(index);
 				Spotlight.pause();
 				ev.stopPropagation();
+				window.document.dispatchEvent(new Event("click"));
 				browser.sendZoomFactorToZoomMenu();
-				document.dispatchEvent(new CustomEvent('tab-select'));
 			}
 		}
 	},
