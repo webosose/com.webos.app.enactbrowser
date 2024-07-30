@@ -320,8 +320,8 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
         }
     }
 
-    // At now we have only 2 type of partitions and in "private" mode mostVisited
-    // and recentlyClosed are not fill.
+    // At now we have only 2 type of partitions and in "private" mode mostVisited,
+    // history and recentlyClosed are not fill.
     clearData(partitionId) {
         console.log(`BrowserModel::clearData(${partitionId})`);
         if (partitionId === "private") {
@@ -331,6 +331,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
         } else {
             return Promise.all([
                 super.clearData(partitionId),
+                super.clearAllHistory(),
                 this.mostVisited.removeAll(),
                 this.recentlyClosed.removeAll()
             ]);
