@@ -7,17 +7,39 @@
 // https://github.com/webosose/com.webos.app.enactbrowser/blob/master/LICENSE
 
 import {useEffect, useState} from 'react';
+import mic from '../../../assets/default/user_permission_mic.svg';
+import camera from '../../../assets/default/user_permission_camera.svg';
+import geolocation from '../../../assets/default/user_permission_location.svg';
+
+const permissionList = {
+    3: {
+        label: 'Use your camera',
+        icon: camera
+    },
+    8: {
+        label: 'Know your location',
+        icon: geolocation
+    },
+    11: {
+        label: 'Use your microphone',
+        icon: mic
+    },
+};
 
 function UserPermission({ userPermission }) {
     const [isOpened, setIsOpened] = useState(false);
 
-    const detectMedia = (ev, ev1) => {
+    const detectMedia = (ev, ev1 = []) => {
         console.log('detected media details are...==>', ev, ev1);
-        setIsOpened(true);
-        userPermission.show({
-            domain: ev,
-            permissions: ev1,
-        });
+        // Prevent the permission popup shown if ev1 does not contain any predefined permissions.
+        const requestedPermissionList = ev1.filter((num) => permissionList[num]);
+        if (requestedPermissionList.length) {
+            setIsOpened(true);
+            userPermission.show({
+                domain: ev,
+                permissions: requestedPermissionList,
+            });
+        }
     };
 
     useEffect(() => {
@@ -52,3 +74,4 @@ function UserPermission({ userPermission }) {
 }
 
 export default UserPermission;
+export {permissionList};

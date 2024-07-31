@@ -11,26 +11,9 @@ import Icon from '@enact/agate/Icon';
 import Button from '@enact/agate/Button';
 import $L from '@enact/i18n/$L';
 
-import mic from '../../../../samples/enact-based/assets/default/user_permission_mic.svg';
-import camera from '../../../../samples/enact-based/assets/default/user_permission_camera.svg';
-import geolocation from '../../../../samples/enact-based/assets/default/user_permission_location.svg';
+import {permissionList} from '../../../../samples/enact-based/src/components/UserPermission/UserPermission';
 
 import css from './UserPermissionPopup.module.less';
-
-const itemsBase = {
-    3: {
-        label: 'Use your camera',
-        icon: camera
-    },
-    8: {
-        label: 'Know your location',
-        icon: geolocation
-    },
-    11: {
-        label: 'Use your microphone',
-        icon: mic
-    },
-};
 
 function UserPermissionPopup({model, onUpdate}) {
     const [domain, setDomain] = useState('');
@@ -39,7 +22,7 @@ function UserPermissionPopup({model, onUpdate}) {
     useEffect(() => {
         document.addEventListener('updatePermissionEvent', (ev) => {
             const {domain, permissions: requestPermissions} = ev.detail; // ev.detail.permissions = [3,8,11]
-            const items = requestPermissions.map(num => itemsBase[num]);
+            const items = requestPermissions.map(num => permissionList[num]);
             setDomain(domain);
             setPermissions(items);
         });
