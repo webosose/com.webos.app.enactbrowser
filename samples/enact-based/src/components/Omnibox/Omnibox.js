@@ -40,7 +40,7 @@ class OmniboxBase extends Component {
 	constructor (props) {
 		super(props);
 		this.state = {
-			open: false,
+			isOpenBookmark: false,
 			value: props.url ? props.url : '',
 			isEditing: false,
 		};
@@ -48,26 +48,35 @@ class OmniboxBase extends Component {
 
 	webOSBridge = null;
 	debounce = null;
-	isOpenBookmark = false;
 
 	componentDidMount() {
 		if (typeof window !== 'undefined' && window.WebOSServiceBridge) {
 			this.webOSBridge = new window.WebOSServiceBridge();
 		}
-		window.document.addEventListener('click', (ev) => {
-			if (this.isOpenBookmark) {
-				this.props.bookmarkDialog.hide();
-				clearTimeout(this.debounce);
+	}
+
+	componentDidUpdate(_, prevState) {
+		if (prevState.isOpenBookmark !== this.state.isOpenBookmark) {
+			if (this.state.isOpenBookmark) {
+				window.document.addEventListener('click', this.hideBookmarkDialog);
+			} else {
+				window.document.removeEventListener('click', this.hideBookmarkDialog);
 			}
-		});
+		}
+	}
+
+	hideBookmarkDialog = () => {
+		if (this.state.isOpenBookmark) {
+			this.props.bookmarkDialog.hide();
+			this.setState({isOpenBookmark: false});
+			clearTimeout(this.debounce);
+		}
 	}
 
 	onNavigate = (ev) => {
 		console.log(`Omnibox::onNavigate >>>`);
 		ev.preventDefault();
 		this.setState({isEditing: false});
-		this.prevOpen = false;
-		this.setState({open: false});
 
 		const {browser} = this.props;
 		let url = this.state.value;
@@ -101,9 +110,7 @@ class OmniboxBase extends Component {
 				`{"id": "com.webos.app.enactbrowser", "title": "${this.props.title}", "params": {"target": "${this.props.url}"}}`
 			);
 		}
-		this.debounce = setTimeout(() => {
-			this.props.bookmarkDialog.hide();
-		}, 1500);
+		this.delayHideBookmarkRemove();
 	}
 
 	onBookmarkAdd = (ev) => {
@@ -111,19 +118,23 @@ class OmniboxBase extends Component {
 		this.props.browser.addBookmark();
 		this.props.bookmarkDialog.show({addBookmarkToHome: true});
 		this.props.bookmarkDialog.ipc.ipcObject.on('add_bookmark_to_home', this.onBookmarkAndLaunchPointAdd);
-		this.isOpenBookmark = true;
+		this.setState({isOpenBookmark: true});
 		ev.stopPropagation();
-		window.document.dispatchEvent(new Event("click"));
 	}
 
 	onBookmarkRemove = (ev) => {
 		clearTimeout(this.debounce);
 		this.props.browser.removeBookmark();
 		this.props.bookmarkDialog.show({removeBookmarkCompleted: true});
+		this.setState({isOpenBookmark: true});
+		this.delayHideBookmarkRemove();
 		ev.stopPropagation();
-		window.document.dispatchEvent(new Event("click"));
+	}
+
+	delayHideBookmarkRemove = () => {
 		this.debounce = setTimeout(() => {
 			this.props.bookmarkDialog.hide();
+			this.setState({isOpenBookmark: false});
 		}, 1500);
 	}
 

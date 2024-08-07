@@ -63,10 +63,11 @@ class UIOverlay {
 
         const hideExclusiveLayers = () => {
             // hide other mutually exclusive layers
-            const exclusiveLayers = ["chrome_extensions", "browser_menu", "zoom_control"];
+            const exclusiveLayers = ["chrome_extensions", "browser_menu", "zoom_control",
+                "input_suggestion_list", "user_permission", "blocked_popup", "bookmark_dialog"];
             if (exclusiveLayers.includes(target)) {
                 const promisifiedHideFunctions = exclusiveLayers
-                    .filter(t => t !== target)
+                    .filter(t => t !== target && this.isLayerExists({ target: t }))
                     .map(t => () => new Promise((resolve, reject) => {
                         this.hide({ target: t })
                             .then(() => resolve())
