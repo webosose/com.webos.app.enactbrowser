@@ -35,6 +35,34 @@ class ZoomControlBase extends Component {
 		}
 	}
 
+	componentDidUpdate(_, prevState) {
+		if (prevState.isOpened !== this.state.isOpened) {
+			if (this.state.isOpened) {
+				window.document.addEventListener('click', this.onClickListener);
+			} else {
+				window.document.removeEventListener('click', this.onClickListener);
+			}
+		}
+	}
+
+	componentWillUnmount() {
+		if (this.state.isOpened) {
+			this.props.zoomControl.hide();
+			window.document.removeEventListener('click', this.onClickListener);
+		}
+	}
+
+	onClickListener = (event) => {
+		const zoomControlElement = window.document.getElementById('nevaBrowserZoomControlButton');
+		const isClickOutside = !zoomControlElement || !zoomControlElement.contains(event.target);
+		const isOpened = this.state.isOpened;
+		console.log(`[ZoomControl] onClickListener`, {target: event.target, isOpened, isClickOutside});
+		if (isClickOutside && isOpened) {
+			this.props.zoomControl.hide();
+			this.setState({isOpened: false});
+		}
+	}
+
 	getZoomFactor = () => {
 		let zoomFactor = 1;
 		try {
@@ -50,27 +78,24 @@ class ZoomControlBase extends Component {
 		return zoomFactor;
 	}
 
-	toggleMenu = (event) => {
+	toggleMenu = () => {
 		if (!this.props.browser.isWebViewTabSelected()) {
-			console.log(`Zoom menu will not be shown because no webview tab selected.`);
+			console.log(`[ZoomControl] Zoom menu will not be shown because no webview tab selected.`);
 			return;
 		}
-		event.stopPropagation();
 		const isOpened = this.state.isOpened;
+		console.log(`[ZoomControl] toggleMenu isOpened = `, isOpened);
 		if (this.state.isOpened) {
 			this.props.zoomControl.hide();
+			this.setState({isOpened: false});
 		} else {
 			this.props.browser.sendZoomFactorToZoomMenu();
-			document.addEventListener('click', () => {
-				this.props.zoomControl.hide();
-				this.setState({isOpened: false});
-			}, {once: true});
-
 			this.props.zoomControl.showAbove("nevaBrowserZoomControlButton", {
 				zoomFactor: this.getZoomFactor()
+			}).then(() => {
+				this.setState({isOpened: true});
 			});
 		}
-		this.setState({isOpened: !isOpened});
 	}
 
 	render () {

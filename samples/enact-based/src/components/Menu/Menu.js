@@ -35,6 +35,23 @@ class Menu extends Component {
 		}
 	}
 
+	componentDidUpdate(_, prevState) {
+		if (prevState.isOpened !== this.state.isOpened) {
+			if (this.state.isOpened) {
+				this.addClickListeners();
+			} else {
+				this.removeClickListeners();
+			}
+		}
+	}
+
+	componentWillUnmount() {
+		if (this.state.isOpened) {
+			this.menu.hide();
+			this.removeClickListeners();
+		}
+	}
+
 	addClickListeners() {
 		console.log(`[Menu] addClickListeners`);
 		if (this.menuIpc) {
@@ -56,23 +73,23 @@ class Menu extends Component {
 
 		if (!this.state.isOpened) {
 			this.menu.showAbove("nevaBrowserMenuButton").then(() => {
-				this.addClickListeners();
 				this.setState({isOpened: true});
 			});
 		} else {
 			this.menu.hide();
 			this.setState({isOpened: false});
-			this.removeClickListeners();
 		}
 	}
 
 	onClickListener = (event) => {
-		console.log(`[Menu] onClickListener`, event);
-		if (event && event.stopPropagation) {
-			event.stopPropagation();
+		const menuElement = window.document.getElementById('nevaBrowserMenuButton');
+		const isClickOutside = !menuElement || !menuElement.contains(event.target);
+		const isOpened = this.state.isOpened;
+		console.log(`[Menu] onClickListener`, {target: event.target, isClickOutside, isOpened});
+		if (isClickOutside && isOpened) {
+			this.menu.hide();
+			this.setState({isOpened: false});
 		}
-		this.setState({isOpened: false});
-		this.menu.hide();
 	}
 
     render () {

@@ -96,11 +96,9 @@ class OmniboxBase extends Component {
 		this.setState({value: url});
 	}
 
-	onReloadStop = (ev) => {
+	onReloadStop = () => {
 		this.props.browser.reloadStop();
 		Spotlight.pause();
-		ev.stopPropagation();
-		window.document.dispatchEvent(new Event("click"));
 	}
 
 	onBookmarkAndLaunchPointAdd = ({isAddToHome}) => {
@@ -113,22 +111,20 @@ class OmniboxBase extends Component {
 		this.delayHideBookmarkRemove();
 	}
 
-	onBookmarkAdd = (ev) => {
+	onBookmarkAdd = () => {
 		clearTimeout(this.debounce);
 		this.props.browser.addBookmark();
 		this.props.bookmarkDialog.show({addBookmarkToHome: true});
 		this.props.bookmarkDialog.ipc.ipcObject.on('add_bookmark_to_home', this.onBookmarkAndLaunchPointAdd);
 		this.setState({isOpenBookmark: true});
-		ev.stopPropagation();
 	}
 
-	onBookmarkRemove = (ev) => {
+	onBookmarkRemove = () => {
 		clearTimeout(this.debounce);
 		this.props.browser.removeBookmark();
 		this.props.bookmarkDialog.show({removeBookmarkCompleted: true});
 		this.setState({isOpenBookmark: true});
 		this.delayHideBookmarkRemove();
-		ev.stopPropagation();
 	}
 
 	delayHideBookmarkRemove = () => {

@@ -20,44 +20,49 @@ function ChromeExtensionsMenu({chromeExtensionsMenu, browser}) {
 	const extBtnRef = useRef(null);
 	const [isOpened, setIsOpened] = useState(false);
 
-	// eslint-disable-line react-hooks/exhaustive-deps
-	const onClick = useCallback((event) => {
-
-		const clickEventListener = () => {
-			console.log(`ChromeExtensionsMenu::on document click event`);
-			chromeExtensionsMenu.hide()
-				.then(() => {
-					setIsOpened(false);
-				});
-		}
-
-		const addClickEventListener = () => {
-			if (typeof window !== 'undefined') {
-				window.document.addEventListener('click', clickEventListener);
-			}
-		}
-
-		const removeClickEventListener = () => {
-			if (typeof window !== 'undefined') {
-				window.document.removeEventListener('click', clickEventListener);
-			}
-		}
-
-		event.stopPropagation();
+	const onClick = useCallback(() => {
 		if (isOpened) {
 			chromeExtensionsMenu.hide()
 				.then(() => {
-					removeClickEventListener();
 					setIsOpened(false);
 				})
 		} else {
 			chromeExtensionsMenu.showAbove(extBtnRef.current)
 				.then(() => {
-					addClickEventListener();
 					setIsOpened(true);
 				})
 		}
 	}, [isOpened, chromeExtensionsMenu, extBtnRef]);
+
+	const onDocumentClick = useCallback((ev) => {
+		const extensionMenuElement = window.document.getElementById('chromeExtensionsMenu');
+		const isClickOutside = !extensionMenuElement || !extensionMenuElement.contains(ev.target);
+		console.log(`[ChromeExtensionsMenu] onDocumentClick`, {target: ev.target, isClickOutside});
+		if (isClickOutside) {
+			chromeExtensionsMenu.hide().then(() => {
+				setIsOpened(false);
+			});
+		}
+	}, [chromeExtensionsMenu, extBtnRef]);
+
+	const addClickListeners = () => {
+		window.document.addEventListener('click', onDocumentClick);
+		if (chromeExtensionsMenu && chromeExtensionsMenu.ipc) {
+			chromeExtensionsMenu.ipc.ipcObject.once("click", onDocumentClick);
+		}
+	}
+
+	const removeClickListeners = () => {
+		window.document.removeEventListener('click', onDocumentClick);
+		if (chromeExtensionsMenu && chromeExtensionsMenu.ipc) {
+			chromeExtensionsMenu.ipc.ipcObject.removeEventListener("click", onDocumentClick);
+		}
+	}
+
+	useEffect(() => {
+		if (isOpened) addClickListeners();
+		return () => removeClickListeners();
+	}, [isOpened]);
 
 	useEffect(() => {
 		if (browser.setExtensionButtonRef) {
@@ -68,6 +73,7 @@ function ChromeExtensionsMenu({chromeExtensionsMenu, browser}) {
 	return (
 		<div ref={extBtnRef}>
 			<Button
+				id="chromeExtensionsMenu"
 				backgroundOpacity="transparent"
 				className={css.chromeExtensionsMenuButton}
 				onClick={onClick}
