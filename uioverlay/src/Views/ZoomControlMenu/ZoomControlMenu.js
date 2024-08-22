@@ -37,17 +37,14 @@ function ZoomControlMenu({model, onUpdate, ...rest}) {
     useEffect(onUpdate, [model, onUpdate, zoomValueIndex]);
 
     useEffect(() => {
-        document.addEventListener('zoomFactorChangedFromBrowserSide', (ev) => {
-            console.log(`zoom factor changed from browser side ${ev.detail}`);
-            setZoomValueIndex(zoomFactors.indexOf(ev.detail));
-        });
-        const onZoomValue = ({zoomFactor}) => {
-            setZoomValueIndex(zoomFactors.indexOf(zoomFactor));
-        }
-        model.ipc.on("zoom_value", onZoomValue);
-
-        return () => model.ipc.removeEventListener('zoom_value', onZoomValue);
-    },[model.ipc]);
+        model.ipc.post('zoom_value');
+        const onZoomValue = (e) => {
+            console.log(`zoom factor changed from browser side ${e.detail}`);
+            setZoomValueIndex(zoomFactors.indexOf(e.detail));
+        };
+        document.addEventListener('zoomFactorChangedFromBrowserSide', onZoomValue);
+        return () => document.removeEventListener('zoomFactorChangedFromBrowserSide', onZoomValue);
+    }, [model.ipc]);
 
     const onChange = useCallback(({value}) => {
         console.log(`Zoom changed (${value})`);

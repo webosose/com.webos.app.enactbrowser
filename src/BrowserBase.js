@@ -119,6 +119,7 @@ class BrowserBase {
                 console.log(`got zoom factor change ${zoomFactor} from zoom menu`);
                 this.setZoom(zoomFactor);
             });
+            this.zoomControlIpc.on('zoom_value', () => this.sendZoomFactorToZoomMenu());
         }
 
         this.browserBaseIpc = new ShellIpc('ipc_browser_base');

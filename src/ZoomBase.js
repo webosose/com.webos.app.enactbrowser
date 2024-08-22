@@ -37,8 +37,7 @@ class ZoomControl {
                 y: buttonHeight,
                 w: width
             }
-        }).then((layer) => layer.view.pageContents.setFocus())
-        .then(() => this.menuIpc.post('zoom_value', {zoomFactor}));
+        }).then((layer) => layer.view.pageContents.setFocus());
     }
 
     destroy() {}
