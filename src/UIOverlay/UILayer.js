@@ -14,6 +14,7 @@ class UILayer {
         this.channel = channel;
         this.view = view;
         this.contentName = "default";
+        this.justCreated = true;
 
         channel.on("documentSize", ({ contentType, size }) => {
             console.log(`[UIOverlay] UILayer::constructor "documentSize" message(${contentType}, ${size})`);

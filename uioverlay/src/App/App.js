@@ -49,6 +49,7 @@ function App({model}) {
             console.log(`subscribe to switchContent`);
             ipc.subscribe('switchContent', ({type}) => {
                 console.log(`switch content to ${type}`);
+                ipc.post('contentSwitched', {type});
                 setContentType(type);
             })
         });

@@ -31,7 +31,15 @@ class BookmarkDialogBase {
                 w: w,
             }
         }).then((layer) => {
-            this.ipc.post('showBookmarkDialog', bookmarkDialogProps);
+            if (layer.justCreated) {
+                layer.channel.on('contentSwitched', (e) => {
+                    if (e.type === 'bookmark_dialog') {
+                        this.ipc.post('showBookmarkDialog', bookmarkDialogProps);
+                    }
+                });
+            } else {
+                this.ipc.post('showBookmarkDialog', bookmarkDialogProps);
+            }
             layer.view.pageContents.setFocus();
             return;
         });

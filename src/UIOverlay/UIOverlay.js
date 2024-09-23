@@ -87,7 +87,9 @@ class UIOverlay {
 
             const taskFunc = () => new Promise(taskFuncResolve => {
                 if (this.isLayerExists({ target })) {
-                    taskFuncResolve(UIOverlay.layers.get(target));
+                    const layer = UIOverlay.layers.get(target);
+                    layer.justCreated = false;
+                    taskFuncResolve(layer);
                     return;
                 }
 
