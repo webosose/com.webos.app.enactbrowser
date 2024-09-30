@@ -91,11 +91,15 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
         browser.tabPolicy = undefined;
         browser.devSettingsEnabled = false;
         browser.popupBlocker = new PopupBlocker();
-        browser.siteFiltering = new SiteFiltering(store, this.getNavigatorSiteFilter());
         browser.prevSessionTabs = new PreviousSessionTabs(
             browser, db, browser.settings.getRestorePrevSessionPolicy());
         browser.tabPolicy = createTabPolicy(
             tabsModel, browser.webViews, browser.settings);
+
+        const navSiteFilter = this.getNavigatorSiteFilter();
+        if (typeof navSiteFilter !== 'undefined') {
+            browser.siteFiltering = new SiteFiltering(store, this.getNavigatorSiteFilter());
+        }
 
         this.menuIpc = new Ipc("ipc_menu");
         this.menuIpc.subscribe('click', ({menuItem}) => {
@@ -132,7 +136,9 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
             }
         })
         .then(() => {
-            browser.siteFiltering.setMode(browser.settings.getSiteFiltering());
+            if (typeof browser.siteFiltering !== 'undefined') {
+                browser.siteFiltering.setMode(browser.settings.getSiteFiltering());
+            }
             browser.searchService.engine = browser.settings.getSearchEngine();
             browser.customUserAgent.fetchUserAgents();
             browser.setStatisticsGathering(browser.settings.getPrivateBrowsing());
@@ -341,12 +347,15 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
 
     restoreSettings () {
 		const settingsDefault = getDefaults().settings;
-		return Promise.all([
+        const tasks = [
 			this.setPrivateBrowsing(settingsDefault[SettingsKeys.PRIVATE_BROWSING_KEY]),
 			this.settings.setAllSettings(settingsDefault),
-			this.siteFiltering.deletURLs([], true),
 			this.cookieManager.clearCookies(),
-		]);
+		];
+        if (typeof this.siteFiltering !== 'undefined') {
+            tasks.push(this.siteFiltering.deletURLs([], true));
+        }
+		return Promise.all(tasks);
 	}
 
     openDevSettings() {

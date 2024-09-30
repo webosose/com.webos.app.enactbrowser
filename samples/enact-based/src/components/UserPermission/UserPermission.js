@@ -43,18 +43,21 @@ function UserPermission({ userPermission }) {
     };
 
     useEffect(() => {
-        // Event listener 'detectMedia' function is registered for listening to media detection event.
-        window.navigator.userpermission.onshowprompt = detectMedia;
+        // Check if the feature is available in some cases, for example, Apollo
+        if (typeof window.navigator.userpermission !== 'undefined') {
+            // Event listener 'detectMedia' function is registered for listening to media detection event.
+            window.navigator.userpermission.onshowprompt = detectMedia;
 
-        const onSubmit = (data) => {
-            userPermission.hide();
-            window.navigator.userpermission.onpromptresponse(data);
-        };
+            const onSubmit = (data) => {
+                userPermission.hide();
+                window.navigator.userpermission.onpromptresponse(data);
+            };
 
-        userPermission.ipc.ipcObject.on('submit', onSubmit);
-        return () => {
-            userPermission.ipc.ipcObject.removeEventListener('submit', onSubmit);
-        };
+            userPermission.ipc.ipcObject.on('submit', onSubmit);
+            return () => {
+                userPermission.ipc.ipcObject.removeEventListener('submit', onSubmit);
+            };
+        }
     }, []);
 
     useEffect(() => {

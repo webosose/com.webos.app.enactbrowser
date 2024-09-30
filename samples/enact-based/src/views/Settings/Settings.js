@@ -192,6 +192,7 @@ class SettingsBase extends Component {
 				alwaysShowBookmarks,
 				siteFiltering,
 				privateBrowsing,
+				browser,
 				...rest
 			} = this.props,
 			scrollerClass = classNames(css.scroller, {
@@ -200,7 +201,6 @@ class SettingsBase extends Component {
 			classes = classNames(className, css.settings),
 			startupOption = startupOptions.indexOf(startupPage);
 
-		delete rest.browser;
 		delete rest.dispatch;
 		delete rest.homePageUrl;
 
@@ -254,9 +254,13 @@ class SettingsBase extends Component {
 					<OnOffButton onClick={this.onTogglePrivateBrowsing} selected={privateBrowsing} />
 					<br />
 
-					<BodyText className={css.menu}>{$L('Site Filtering')}</BodyText>
-					<OnOffButton onClick={this.startSiteFiltering} selected={(siteFiltering !== 'off')} />
-					<br />
+					{typeof browser.siteFiltering !== 'undefined' && (
+						<>
+							<BodyText className={css.menu}>{$L('Site Filtering')}</BodyText>
+							<OnOffButton onClick={this.startSiteFiltering} selected={(siteFiltering !== 'off')} />
+							<br />
+						</>
+					)}
 
 					<Popup
 						open={this.state.clearPopupOpen}
