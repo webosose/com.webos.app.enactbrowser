@@ -17,11 +17,15 @@
 import React from "react";
 import { useState, useEffect, useCallback } from "react";
 import $L from '@enact/i18n/$L';
-import {Input as InputBase} from '@enact/agate/Input';
+import { InputBase } from '@enact/agate/Input';
+import { InputSpotlightDecorator } from '@enact/agate/Input/InputSpotlightDecorator';
+import Skinnable from '@enact/agate/Skinnable';
 import Spotlight from '@enact/spotlight';
 import {connect} from 'react-redux';
 
 import css from './Omnibox.module.less';
+
+const SpotlightInput = InputSpotlightDecorator({ noLockPointer: true }, Skinnable(InputBase));
 
 class Input extends React.Component {
 	constructor(props) {
@@ -29,7 +33,7 @@ class Input extends React.Component {
 	}
 
 	render() {
-		return <InputBase style={{maxWidth: "100%"}} {...this.props} />
+		return <SpotlightInput style={{maxWidth: "100%"}} {...this.props} />
 	}
 };
 
@@ -67,6 +71,7 @@ function AddressBarBase({
 	const [value, setValue] = useState("");
 	const [isEditing, setIsEditing] = useState(false);
 	const [isActive, setIsActive] = useState(false);
+	const [isFirstInputClick, setIsFirstInputClick] = useState(false);
 
 	console.log(`[AddressBar] isActive: ${isActive}, \
 isEditing: ${isEditing}, \
@@ -124,11 +129,16 @@ browserLoadingCompleted: ${browserLoadingCompleted}`);
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const onClick = useCallback((ev) => {
-		console.log(`[AddressBar] AddressBar::onClick`);
+		console.log(`[AddressBar] onClick`);
 		getSuggestions(value);
 		setIsEditing(value !== "");
 		ev.stopPropagation();
-		window.document.dispatchEvent(new Event("click"));
+		// Dispatch a click event on the document the first time
+		// to reset the initial state of the component listening to this event
+		if (!isFirstInputClick) {
+			setIsFirstInputClick(true);
+			window.document.dispatchEvent(new Event("click"));
+		}
 	}, [value, getSuggestions]);
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const onChange = useCallback((ev) => {
@@ -175,7 +185,9 @@ browserLoadingCompleted: ${browserLoadingCompleted}`);
 	}, [value]);
 
 	const onDeactivate = useCallback(() => {
-		console.log(`[AddressBar] AddressBar::onDeactivate`);
+		console.log(`[AddressBar] onDeactivate`);
+		setIsEditing(false);
+		setIsFirstInputClick(false);
 		setIsActive(false);
 	}, []);
 
