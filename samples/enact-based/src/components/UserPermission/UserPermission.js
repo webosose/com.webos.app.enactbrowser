@@ -12,15 +12,15 @@ import camera from '../../../assets/default/user_permission_camera.svg';
 import geolocation from '../../../assets/default/user_permission_location.svg';
 
 const permissionList = {
-    3: {
+    'camera': {
         label: 'Use your camera',
         icon: camera
     },
-    8: {
+    'geolocation': {
         label: 'Know your location',
         icon: geolocation
     },
-    11: {
+    'mic': {
         label: 'Use your microphone',
         icon: mic
     },
