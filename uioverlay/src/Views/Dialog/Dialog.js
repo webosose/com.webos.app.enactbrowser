@@ -34,11 +34,18 @@ function Dialog({model}) {
 
     useEffect(() => { setAlertsCount(model.alertsCount) }, [model.alertsCount]);
     useEffect(() => {
-        setMessageType(model.dialogProps.messageType);
-        setMessageText(model.dialogProps.messageText);
-        setDefaultPromptText(model.dialogProps.defaultPromptText);
-        setAlertsCount(model.dialogProps.alertsCount);
-    }, [model.dialogProps]);
+        const updateDialogProps = (e) => {
+            const dialogProps = e.detail;
+            setMessageType(dialogProps.messageType);
+            setMessageText(dialogProps.messageText);
+            setDefaultPromptText(dialogProps.defaultPromptText);
+            setAlertsCount(dialogProps.alertsCount);
+        };
+        document.addEventListener('updateDialogPropsEvent', updateDialogProps, {once: true});
+        return () => {
+            document.removeEventListener('updateDialogPropsEvent', updateDialogProps);
+        };
+    }, []);
 
     const dialog = {
         defaultPromptText,
@@ -52,11 +59,7 @@ function Dialog({model}) {
         blockDialogs: blockDialogs
     }
 
-    return (
-            <DialogBase
-                dialog={dialog}
-            />
-    );
+    return messageType ? <DialogBase dialog={dialog} /> : null;
 }
 
 export default Dialog;

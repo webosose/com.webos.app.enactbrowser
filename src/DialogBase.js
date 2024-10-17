@@ -24,7 +24,13 @@ class DialogBase {
                 h: bounds.height
             }
         })
-            .then(() => this.ipc.post('ipc_dialog', dialogProps));
+            .then((layer) => {
+                layer.channel.once('contentSwitched', (e) => {
+                    if (e.type === 'dialog') {
+                        this.ipc.post('ipc_dialog', dialogProps);
+                    }
+                });
+            });
     }
 
     hide() {

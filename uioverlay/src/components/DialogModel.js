@@ -23,8 +23,8 @@ let context = {
 function createDialogModel() {
     if (typeof ShellIpc !== 'undefined') {
         context.ipc = createIpcChannel();
-        context.ipc.on('ipc_dialog', (dialogProps) => {
-            context.dialogProps = dialogProps;
+        context.ipc.once('ipc_dialog', (dialogProps) => {
+            document.dispatchEvent(new CustomEvent('updateDialogPropsEvent', {detail: dialogProps}));
         });
     }
     context.alertsCount = 0;

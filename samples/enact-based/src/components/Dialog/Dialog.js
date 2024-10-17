@@ -140,7 +140,7 @@ class Dialog extends Component {
 				}
 				{
 					(alertsCount >= alertsCountBeforePreventionRequest) ?
-						<div>
+						<div className={css.preventWarning}>
 							<Checkbox className={css.checkbox} css={css} onToggle={this.onToggle}/>
 							<span>{$L('Prevent dialogs from opening on this page')}</span>
 						</div>
