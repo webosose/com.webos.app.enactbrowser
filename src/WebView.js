@@ -185,7 +185,7 @@ class PageContentsWrapper {
         if (typeof window !== 'undefined' && typeof window.nevaExtensionsManager !== 'undefined') {
             let extensionsService = window.nevaExtensionsManager.getExtensionsServiceFor(this.sessionName);
             if (typeof extensionsService !== 'undefined') {
-                extensionsService.extensionTabCreated(this.getPageContentsId())
+                extensionsService.extensionTabCreated(this.getPageContentsId());
             }
         }
     }
@@ -573,7 +573,7 @@ class PageContentsWrapper {
                 button : e.buttoncode
             });
             document.dispatchEvent(event);
-        })
+        });
 
         this.notifyExtensionOnTabUpdated('loading');
     }

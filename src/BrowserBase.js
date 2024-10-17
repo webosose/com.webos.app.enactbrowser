@@ -114,7 +114,7 @@ class BrowserBase {
                     extensionsService.selectExtension(webView.getPageContentsId(), extensionInfo.id);
                 }
             });
-        };
+        }
 
         if (isWindowReady()) {
             this.zoomControlIpc = new ShellIpc('ipc_ZoomControl');
