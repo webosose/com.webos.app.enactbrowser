@@ -39,7 +39,6 @@ import SiteFilteringItem from './SiteFilteringItem';
 import css from './SiteFiltering.module.less';
 
 const filteringOptions = ['off', 'whitelist', 'blacklist'];
-const filteringOptionsText = [$L('Off'), $L('Approved Sites'), $L('Blocked Sites')];
 
 function SiteFilteringBase({browser, data, siteFiltering, ...rest}) {
 	const [deletePopupOpen, setDeletePopupOpen] = useState(false);
@@ -144,7 +143,7 @@ function SiteFilteringBase({browser, data, siteFiltering, ...rest}) {
 	return (
 		<Scroller {...rest} className={css.scroller}>
 			<div className={css.siteFiltering}>
-				<BodyText>Site Filtering</BodyText>
+				<BodyText>{$L('Site Filtering')}</BodyText>
 				<Group
 					className={css.flex}
 					childComponent={RadioItem}
@@ -154,7 +153,7 @@ function SiteFilteringBase({browser, data, siteFiltering, ...rest}) {
 					defaultSelected={optionIndex}
 					onSelect={onSelectSiteFiltering}
 				>
-					{filteringOptionsText}
+					{[$L('Off'), $L('Approved Sites'), $L('Blocked Sites')]}
 				</Group>
 				<div>
 					{$L('Approved Sites: Anyone can access only the sites on this list.')}
@@ -195,7 +194,7 @@ function SiteFilteringBase({browser, data, siteFiltering, ...rest}) {
 								disabled={!data || !data.length}
 								size='small'
 							>
-								{(data && selected && data.length && data.length === selected.length) ? 'Deselect All' : 'Select All'}
+								{(data && selected && data.length && data.length === selected.length) ? $L('Deselect All') : $L('Select All')}
 							</Button>
 							<Button
 								css={css}
@@ -203,7 +202,7 @@ function SiteFilteringBase({browser, data, siteFiltering, ...rest}) {
 								size='small'
 								disabled={!data || !data.length || !selected.length}
 							>
-								Delete
+								{$L('Delete')}
 							</Button>
 						</form>
 						{(data && data.length > 0) && (

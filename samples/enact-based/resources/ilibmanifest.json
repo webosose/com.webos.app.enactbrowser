@@ -3,6 +3,10 @@
 		"en/appinfo.json",
 		"en/strings.json",
 		"ko/appinfo.json",
-		"ko/strings.json"
+		"ko/strings.json",
+		"ru/appinfo.json",
+		"ru/strings.json",
+		"vi/appinfo.json",
+		"vi/strings.json"
 	]
 }

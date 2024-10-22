@@ -30,6 +30,8 @@ import {Draggable} from 'react-beautiful-dnd';
 import {connect} from 'react-redux';
 import Button from '@enact/agate/Button';
 import Skinnable from '@enact/agate/Skinnable';
+import $L from '@enact/i18n/$L';
+
 import {TabTypes} from 'js-browser-lib/browser-model';
 import redIndicator from '../../../assets/popup/record_icon.svg';
 import css from './Tab.module.less';
@@ -130,7 +132,7 @@ const Tab = kind({
 							className={classNames(css.tabFavicon, iconClassName)}
 						/>
 				}
-					<TitleDiv className={css.tabTitle} marqueeOn="hover">{title}</TitleDiv>
+					<TitleDiv className={css.tabTitle} marqueeOn="hover">{$L(title)}</TitleDiv>
 					{showRedIndicator && <img src={redIndicator} width={25} />}
 					{
 						closable &&

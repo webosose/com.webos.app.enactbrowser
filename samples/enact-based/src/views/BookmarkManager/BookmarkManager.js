@@ -114,7 +114,7 @@ class BookmarkManagerBase extends Component {
 
 		return (
 			<div className={css.bookmarkManager} {...rest}>
-				<Button css={css} onClick={this.onSelectAll} disabled={!data.length} size={"small"}>{(data.length && data.length === hasSelection) ? $L('DESELECT ALL') : $L('SELECT ALL')}</Button>
+				<Button css={css} onClick={this.onSelectAll} disabled={!data.length} size={"small"}>{(data.length && data.length === hasSelection) ? $L('Deselect All') : $L('Select All')}</Button>
 				<Button css={css} onClick={this.onDelete} disabled={!data.length || !hasSelection} size={"small"}>{$L('Delete')}</Button>
 				<Popup
 					open={this.state.deletePopupOpen}

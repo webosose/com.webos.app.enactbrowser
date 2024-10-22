@@ -17,7 +17,7 @@
 import {useEffect, useState} from 'react';
 import Icon from '@enact/agate/Icon';
 import Button from '@enact/agate/Button';
-import $L from '@enact/i18n/$L';
+import $L, {toIString} from '@enact/i18n/$L';
 
 import {permissionList} from '../../../../samples/enact-based/src/components/UserPermission/UserPermission';
 
@@ -41,7 +41,7 @@ function UserPermissionPopup({model, onUpdate}) {
     return (
         <div className={css.notificationPopup}>
             <div className={css.header}>
-                <label className={css.title}>{domain} wants to</label>
+                <label className={css.title}>{toIString($L('wants to')).format({domain})}</label>
                 <Icon
                     onClick={model.submit(3)}
                     className={css.closeIcon} css={css}
@@ -50,7 +50,7 @@ function UserPermissionPopup({model, onUpdate}) {
             {permissions.map((item, i) => item ? (
                 <div key={`permission_item-${i}`} className={css.item}>
                     <span className={css.icon}><img src={item.icon} /></span>
-                    {item.label}
+                    {$L(item.label)}
                 </div>
             ) : null)}
             <div className={css.buttonGrp}>
