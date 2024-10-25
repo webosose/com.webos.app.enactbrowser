@@ -102,7 +102,7 @@ class BrowserBase {
         this.tabs.addEventListener('update', this._handleTabsStateUpdate);
         this.zoomFactor = 1;
         this.contentSession = shell.session('persist:webcontent');
-        this.contentSession.touch();
+        if (typeof this.contentSession.touch !== 'undefined') this.contentSession.touch();
 
         if (typeof window !== 'undefined' && typeof window.nevaExtensionsManager !== 'undefined') {
             this.ipc = new Ipc("ipc_chrome_extensions");
