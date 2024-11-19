@@ -77,6 +77,15 @@ class SiteFilteringBase {
 			});
 		}
 	}
+
+	/*
+	 * Disable the filtering mode
+	 * and delete all urls
+	 */
+	resetDefault() {
+		this.navigatorSiteFilter.setType(filteringOptions.indexOf(OFF));
+		this.deleteURLs([], true);
+	}
 }
 
 export default SiteFilteringBase;

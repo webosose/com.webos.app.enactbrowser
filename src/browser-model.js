@@ -360,7 +360,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
 			this.cookieManager.clearCookies(),
 		];
 		if (typeof this.siteFiltering !== 'undefined') {
-			tasks.push(this.siteFiltering.deleteURLs([], true));
+			tasks.push(this.siteFiltering.resetDefault());
 		}
 		return Promise.all(tasks);
 	}
