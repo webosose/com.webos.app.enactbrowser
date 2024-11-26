@@ -38,5 +38,6 @@
 			"actions": ["view"],
 			"uris": ["http://", "https://"]
 		}
-	]
+	],
+	"nativeLifeCycleInterfaceVersion": 2
 }

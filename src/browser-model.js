@@ -265,6 +265,7 @@ class Browser extends BookmarksMixin(HistoryMixin(BrowserBase)) {
         this.clearData("private").then(() => {
             if (isWindowReady()) {
                 const launchArgs = window.shell.launchArgs;
+                Object.assign(launchArgs, launchArgs.parameters);
                 if (launchArgs['user-agent']) {
                     console.log(`UA string: ${launchArgs['user-agent']}`);
                     this.useragentOverride = launchArgs['user-agent'];
