@@ -65,6 +65,7 @@ class LastSelectedTab {
         this.tabs.removeEventListener('update', this.handleTabUpdate);
     }
 
+    /* jshint ignore:start */
     handleTabSelect = () => {
         this.setSelectedTab(this.tabs.getSelectedTab().state);
     }
@@ -74,6 +75,7 @@ class LastSelectedTab {
             this.setSelectedTab(ev.state);
         }
     }
+    /* jshint ignore:end */
 }
 
 export default LastSelectedTab;

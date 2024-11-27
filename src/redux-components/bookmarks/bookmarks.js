@@ -29,6 +29,7 @@ class ReduxBookmarksStore {
         this.store = reduxStore;
     }
 
+    /* jshint ignore:start */
     isBookmarked = (url) => {
         return this.store.getState().bookmarksState.data.some(
             (bookmark) => bookmark.url === url
@@ -71,6 +72,7 @@ class ReduxBookmarksStore {
         return [];
     }
 
+    /* jshint ignore:end */
 }
 
 const MAX_BOOKMARKS = 50;

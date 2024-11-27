@@ -14,16 +14,17 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {TabTitles, TabTypes} from './tabs-consts';
 import {EventEmitter} from './utilities/main';
 
 //Helper class to generate 'unique' ids for TabStates
 class IdGenerator {
+    /* jshint ignore:start */
     static _idCounter = 0;
     static getNextId = () => {
         IdGenerator._idCounter++;
         return IdGenerator._idCounter.toString();
     }
+    /* jshint ignore:end */
 }
 
 function diff(base, compared) {

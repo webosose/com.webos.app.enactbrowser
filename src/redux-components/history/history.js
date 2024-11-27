@@ -26,9 +26,11 @@ class HistoryReduxStore {
         this.store = reduxStore;
     }
 
+    /* jshint ignore:start */
     update = (data) => {
         this.store.dispatch(setRetrievedHistoryData(data));
     }
+    /* jshint ignore:end */
 }
 
 class History extends HistoryBase {

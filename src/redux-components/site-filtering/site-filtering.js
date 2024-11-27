@@ -22,9 +22,11 @@ class ReduxSiteFilteringStore {
         this.store = reduxStore;
     }
 
+    /* jshint ignore:start */
     updateUrlList = (urls) => {
 		this.store.dispatch(setSiteFilterList(urls));
 	}
+    /* jshint ignore:end */
 }
 
 class SiteFiltering extends SiteFilteringBase {

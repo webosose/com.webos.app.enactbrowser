@@ -101,6 +101,7 @@ class Settings extends SettingsBase {
             });
     }
 
+    /* jshint ignore:start */
     setStartupPage = (opt) => {
         return this.storage.set(SettingsKeys.STARTUP_PAGE_KEY, opt)
             .then(() => {
@@ -286,7 +287,8 @@ class Settings extends SettingsBase {
             this.setFilterEmptySites(),
         ]);
     }
+    /* jshint ignore:end */
 }
 
 export default Settings;
-export {Settings, SettingsKeys, SettingsConsts}
+export {Settings, SettingsKeys, SettingsConsts};

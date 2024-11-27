@@ -24,7 +24,7 @@ import {TabTitles, TabTypes} from './tabs-consts';
 import {createTabPolicy} from './memory-manager/tab-policy-factory';
 
 import Bookmarks from './redux-components/bookmarks/bookmarks';
-import {getDefaults} from './browser-defaults'
+import {getDefaults} from './browser-defaults';
 import History from './redux-components/history/history';
 import MostVisited from './most-visited';
 import PreviousSessionTabs from './previous-session-tabs';

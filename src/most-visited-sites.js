@@ -143,11 +143,12 @@ class MostVisitedSites {
         this.tabs.removeEventListener('update', this.handleTabUpdate);
     }
 
+    /* jshint ignore:start */
     handleTabUpdate = (ev) => {
         if (ev.diff.isFinishLoading && ev.state.error === null) {
             this.storage.add({
-                    url:  ev.state.navState.url,
-                    title:  ev.state.title
+                url: ev.state.navState.url,
+                title: ev.state.title
             }).then((entry) => {
                 if (this.thumbnails) {
                     this.tryAddThumbnail(ev.state, entry);
@@ -156,11 +157,12 @@ class MostVisitedSites {
         }
         else if (ev.diff.title) {
             this.storage.update({
-                url:  ev.state.navState.url,
-                title:  ev.state.title
+                url: ev.state.navState.url,
+                title: ev.state.title
             });
         }
     }
+    /* jshint ignore:end */
 }
 
 export default MostVisitedSites;

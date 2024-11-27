@@ -21,14 +21,18 @@
  * 'echo $?' command can be used to check the process return value.
  */
 
-const { error, log } = require('console')
-const fs = require('fs')
+/* jshint ignore:start */
+
+const { error, log } = require('console');
+const fs = require('fs');
 
 // Need debug messages?
 const needDebugMessages = false
+let debug = require('console').debug;;
 
-const debug = needDebugMessages ?
-    require('console').debug : () => { }
+if (!needDebugMessages) {
+    debug = () => {};
+}
 
 /**
  * Check whether path is disrectory of file
@@ -154,3 +158,4 @@ function checkFinalNewLine(path) {
         process.exitCode = 0
     }
 })()
+/* jshint ignore:end */
