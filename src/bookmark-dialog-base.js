@@ -49,7 +49,7 @@ class BookmarkDialogBase {
                 this.ipc.post('showBookmarkDialog', bookmarkDialogProps);
             }
             layer.view.pageContents.setFocus();
-            return;
+            return layer;
         });
     }
 

@@ -73,8 +73,10 @@ class OmniboxBase extends Component {
 		}
 	}
 
-	hideBookmarkDialog = () => {
-		if (this.state.isOpenBookmark) {
+	hideBookmarkDialog = (ev) => {
+		const bookmarkIconElement = window.document.getElementById('bookmarkIcon');
+		const isNonBookmarkIconClicked = !bookmarkIconElement || !bookmarkIconElement.contains(ev.target);
+		if (this.state.isOpenBookmark && isNonBookmarkIconClicked) {
 			this.props.bookmarkDialog.hide();
 			this.setState({isOpenBookmark: false});
 			clearTimeout(this.debounce);
@@ -122,16 +124,21 @@ class OmniboxBase extends Component {
 	onBookmarkAdd = () => {
 		clearTimeout(this.debounce);
 		this.props.browser.addBookmark();
-		this.props.bookmarkDialog.show({addBookmarkToHome: true});
-		this.props.bookmarkDialog.ipc.ipcObject.on('add_bookmark_to_home', this.onBookmarkAndLaunchPointAdd);
-		this.setState({isOpenBookmark: true});
+		this.props.bookmarkDialog.show({addBookmarkToHome: true})
+			.then(() => {
+				this.setState({isOpenBookmark: true});
+			});
+		this.props.bookmarkDialog.ipc.ipcObject
+			.on('add_bookmark_to_home', this.onBookmarkAndLaunchPointAdd);
 	}
 
 	onBookmarkRemove = () => {
 		clearTimeout(this.debounce);
 		this.props.browser.removeBookmark();
-		this.props.bookmarkDialog.show({removeBookmarkCompleted: true});
-		this.setState({isOpenBookmark: true});
+		this.props.bookmarkDialog.show({removeBookmarkCompleted: true})
+			.then(() => {
+				this.setState({isOpenBookmark: true});
+			});
 		this.delayHideBookmarkRemove();
 	}
 
@@ -183,11 +190,12 @@ class OmniboxBase extends Component {
 						size={"large"}>
 						{this.getOmniboxIcon()}
 					</Icon>
-					{(isBlocked && !isLoading) && 
+					{(isBlocked && !isLoading) &&
 						<BlockedPopup browser={browser} blockedPopup={this.props.blockedPopup} />}
 					{reloadDisabled ?
 						null :
 						<Button
+							id="bookmarkIcon"
 							css={css}
 							backgroundOpacity="transparent"
 							className={classNames(css.iconButton, css.small, css.bookmarkButton)}
