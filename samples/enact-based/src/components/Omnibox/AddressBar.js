@@ -22,6 +22,7 @@ import { InputSpotlightDecorator } from '@enact/agate/Input/InputSpotlightDecora
 import Skinnable from '@enact/agate/Skinnable';
 import Spotlight from '@enact/spotlight';
 import {connect} from 'react-redux';
+import {is} from "@enact/core/keymap";
 
 import css from './Omnibox.module.less';
 
@@ -175,18 +176,39 @@ browserLoadingCompleted: ${browserLoadingCompleted}`);
 		}
 	}, [isEditing]);
 
-	const onActivate = useCallback(() => {
-		console.log(`[AddressBar] onActivate (value: ${value})`);
-		if (value !== "") {
-			console.log(`[AddressBar] onActivate::show suggestions bar`);
-			setIsEditing(true);
+	const onKeyDown = (ev) => {
+		const
+			{ keyCode, target } = ev,
+			{ value, selectionStart, tagName } = target;
+
+		// Check if the suggestion list should be shown
+		// when the input is first focused through Spotlight navigation
+		const isEnterKey = is('enter', keyCode);
+		if (isEnterKey && !isFirstInputClick) {
+			setIsFirstInputClick(true);
+			setIsEditing(value !== "");
 		}
+
+		//  Close the suggestion list when the input loses focus through Spotlight navigation
+		if (tagName.toUpperCase() === 'INPUT') {
+			const
+				isLeftKey = is('left', keyCode),
+				isRightKey = is('right', keyCode),
+				xSpotlightMove = (isLeftKey && selectionStart === 0) || (isRightKey && selectionStart === value.length);
+
+			if (xSpotlightMove) {
+				setIsEditing(false);
+			}
+		}
+	};
+
+	const onActivate = useCallback(() => {
+		console.log(`[AddressBar] onActivate`);
 		setIsActive(true);
-	}, [value]);
+	}, []);
 
 	const onDeactivate = useCallback(() => {
 		console.log(`[AddressBar] onDeactivate`);
-		setIsEditing(false);
 		setIsFirstInputClick(false);
 		setIsActive(false);
 	}, []);
@@ -211,6 +233,7 @@ browserLoadingCompleted: ${browserLoadingCompleted}`);
 			value={value}
 			onActivate={onActivate}
 			onDeactivate={onDeactivate}
+			onKeyDown={onKeyDown}
 			disabled={!browserLoadingCompleted}
 		/>
 	);
