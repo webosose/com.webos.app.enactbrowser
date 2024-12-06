@@ -26,6 +26,7 @@ import css from './UserPermissionPopup.module.less';
 function UserPermissionPopup({model, onUpdate}) {
     const [domain, setDomain] = useState('');
     const [permissions, setPermissions] = useState([]);
+    let debounce;
 
     useEffect(() => {
         document.addEventListener('updatePermissionEvent', (ev) => {
@@ -36,7 +37,13 @@ function UserPermissionPopup({model, onUpdate}) {
         });
     });
 
-    useEffect(onUpdate, [model, onUpdate, permissions]);
+    useEffect(() => {
+        clearTimeout(debounce);
+        debounce = setTimeout(onUpdate, 100);
+        return () => {
+            clearTimeout(debounce);
+        };
+    }, [onUpdate, permissions]);
 
     return (
         <div className={css.notificationPopup}>

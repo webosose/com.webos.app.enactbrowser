@@ -45,10 +45,12 @@ class BookmarkDialog extends Component {
     }
 
     componentDidUpdate() {
-        this.props.onUpdate();
+        clearTimeout(this.debounce);
+        this.debounce = setTimeout(this.props.onUpdate, 100);
     }
 
     componentWillUnmount() {
+        clearTimeout(this.debounce);
         document.removeEventListener('showBookmarkDialogEvent', this.onUpdateState);
     }
 

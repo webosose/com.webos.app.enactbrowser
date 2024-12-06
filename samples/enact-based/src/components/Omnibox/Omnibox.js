@@ -138,8 +138,8 @@ class OmniboxBase extends Component {
 		this.props.bookmarkDialog.show({removeBookmarkCompleted: true})
 			.then(() => {
 				this.setState({isOpenBookmark: true});
+				this.delayHideBookmarkRemove();
 			});
-		this.delayHideBookmarkRemove();
 	}
 
 	delayHideBookmarkRemove = () => {

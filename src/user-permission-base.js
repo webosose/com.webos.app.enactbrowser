@@ -40,7 +40,15 @@ class UserPermissionBase {
             }
         })
             .then((layer) => {
-                this.ipc.post('updatePermission', permissionProps);
+                if (layer.justCreated) {
+                    layer.channel.on('contentSwitched', (e) => {
+                        if (e.type === 'user_permission') {
+                            this.ipc.post('updatePermission', permissionProps);
+                        }
+                    });
+                } else {
+                    this.ipc.post('updatePermission', permissionProps);
+                }
                 layer.view.pageContents.setFocus();
                 return layer;
             });
