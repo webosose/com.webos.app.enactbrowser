@@ -321,13 +321,13 @@ class SettingsBase extends Component {
 					>
 						<p>{$L('This action will:')}</p>
 						<p>
-							• {$L('Reset some settings')}<br />
+							• {$L('Reset all settings to factory defaults')}<br />
 							• {$L('Delete cookies and other temporary site data')}<br />
 							{privateBrowsing && (
 								<>• {$L('Close all current web pages')}</>
 							)}
 						</p>
-						<p>{$L('Bookmarks, history won\'t be affected.')}</p>
+						<p>{$L('Bookmarks and history will not be affected.')}</p>
 						<buttons>
 							<Button onClick={this.onResetNo}>{$L('NO')}</Button>
 							<Button onClick={this.onResetYes}>{$L('YES')}</Button>
