@@ -282,11 +282,19 @@ class SettingsBase extends Component {
 					<Popup
 						open={this.state.clearPopupOpen}
 						noAutoDismiss
+						title={this.state.clearing ? null : $L('Do you want to clear all browsing data?')}
 					>
 						{this.state.clearing ?
 							<span>{$L('Clearing all browsing data...')}</span>
 							:
-							<span>{$L('Do you want to clear all browsing data?')}</span>
+							<>
+								<p>{$L('This action will:')}</p>
+								<p>
+									• {$L('Clear browsing history')}<br />
+									• {$L('Delete cookies and other site data')}<br />
+									• {$L('Delete cached images and files')}
+								</p>
+							</>
 						}
 						{this.state.clearing ?
 							null :
