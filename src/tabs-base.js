@@ -157,15 +157,17 @@ class TabsBase extends EventEmitter {
     deleteTab(index) {
         const contentId = this.getIdByIndex(index);
         const state = this.getTab(contentId).state;
-        const idsLength = this.count();
-
+        const prevSelectedId = this.store.getSelectedIndex();
         this.store.close(index);
 
         let selectedIndex = this.store.getSelectedIndex();
         const tab = this.getTab(this.getIdByIndex(selectedIndex));
 
         this.emitEvent('delete', {state, index});
-        this.emitEvent('select', {selectedIndex, state: tab.state});
+        // Emit 'select' event only if the active tab is closed.
+        if (prevSelectedId === index) {
+            this.emitEvent('select', {state: tab.state});
+        }
         this._callOnContentDelete(contentId);
         console.log(`WVE delete WVE (NEVA-6475)`)
     }
@@ -204,6 +206,9 @@ class TabsBase extends EventEmitter {
             this.store.replace(index, newState);
             this.emitEvent('replace', {index, state: newState, oldState});
             this.emitEvent('delete', {state: oldState});
+            if (this.store.getSelectedIndex() === index) {
+                this.emitEvent('select', {state: newState});
+            }
             // check which pageViews (pageView Ids) should be closed
             const oldIds = oldState.navState.history.views;
             const newIds = newState.navState.history.views;
@@ -212,17 +217,13 @@ class TabsBase extends EventEmitter {
 
             console.log(`replaceTab. selected index: ${this.store.getSelectedIndex()}, index: ${index}`);
             console.log(newState);
-
-            if (this.store.getSelectedIndex() === index) {
-                this.emitEvent('select', {index, state: newState});
-            }
         }
     }
 
     selectTab(index) {
         this.store.select(index);
         const tab = this.getTab(this.getIdByIndex(index));
-        this.emitEvent('select', {index, state: tab.state});
+        this.emitEvent('select', {state: tab.state});
     }
 
     getTab(id) {

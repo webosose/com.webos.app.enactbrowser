@@ -499,6 +499,8 @@ class PageContentsWrapper {
         }
         this.url = url;
         this.tabView.pageContents.loadURL(url);
+        this.unsubscribeDialogEvents();
+        this.hideDialog();
     }
 
     back() {
