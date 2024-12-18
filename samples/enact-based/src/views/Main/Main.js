@@ -68,6 +68,7 @@ class MainBase extends Component {
 		if (isWindowReady()) {
 			try {
 				const launchArgs = window.shell.launchArgs;
+				Object.assign(launchArgs, launchArgs.parameters);
 				if (launchArgs.fullMode) {
 					this.state.fullScreen = true;
 					this.onFullScreen();
