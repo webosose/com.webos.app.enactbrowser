@@ -14,7 +14,10 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useReducer } from 'react';
+import ThemeDecorator from '@enact/agate/ThemeDecorator';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
+import Ipc from 'js-browser-lib/ipc';
 
 import Menu from '../Views/Menu';
 import InputSuggestionList from '../Views/InputSuggestionList';
@@ -26,12 +29,12 @@ import UserPermissionPopup from '../Views/UserPermissionPopup';
 import BookmarkDialog from '../Views/BookmarkDialog/BookmarkDialog';
 import BlockedPopup from '../Views/BlockedPopup';
 import AppDecorator from '../../../samples/enact-based/src/components/AppDecorator'
-import ThemeDecorator from '@enact/agate/ThemeDecorator';
 
-function App({model}) {
+function AppBase({model, locale, updateLocale}) {
     console.log(`App render`);
 
     const [contentType, setContentType] = useState("default");
+    const [, forceUpdate] = useReducer(x => x + 1, 0);
 
     const updateDocumentSize = useCallback(() => {
         const element = document.getElementById('app');
@@ -47,11 +50,26 @@ function App({model}) {
         }
     }, [contentType, model.ipc]);
 
+    const loadResource = ({nextLocale}) => {
+        console.log(`[UIOverlay]::webOSLocaleChange`, {nextLocale, locale});
+        updateLocale(nextLocale);
+        setTimeout(() => {
+            forceUpdate();
+        }, 1000);
+    }
+
     useEffect(() => {
         if (contentType !== "dialog") {
             updateDocumentSize()
         }
     });
+
+    useEffect(() => {
+        if (model.localeIpc) {
+            model.localeIpc.subscribe('webOSLocaleChange', loadResource);
+        }
+    }, [model.localeIpc]);
+
     useEffect(() => {
         model.ipc.then((ipc) => {
             console.log(`subscribe to switchContent`);
@@ -112,5 +130,10 @@ function App({model}) {
         </div>
     )
 }
+
+const App = I18nContextDecorator(
+    {updateLocaleProp: 'updateLocale', localeProp: 'locale'},
+    AppBase
+);
 
 export default AppDecorator(ThemeDecorator(App));

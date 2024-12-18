@@ -140,6 +140,10 @@ class BrowserBase {
                 setTimeout(() => {
                     document.dispatchEvent(new CustomEvent("webOSLocaleChange"));
                 }, 1000);
+                // Send locale change event to Overlay
+                this.ipc = new Ipc("localeChange");
+                const nextLocale = languages.split(',')[0];
+                this.ipc.post('webOSLocaleChange', {nextLocale: nextLocale});
             });
         }
 

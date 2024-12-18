@@ -40,6 +40,7 @@ function makeUniqueId() {
 
 let genericIpc = new Ipc('ipc_uioverlay');
 let ipcChannelName = makeUniqueId();
+let localeIpc = new Ipc('localeChange');
 let ipc;
 
 if (typeof window !== 'undefined') {
@@ -60,6 +61,7 @@ const model = {
     menu: new MenuModel(),
     ipc: ipc,
     genericIpc: genericIpc,
+    localeIpc: localeIpc,
     exitFullscreenButton: new ExitFullscreenButtonModel(),
     chromeExtensions: new ChromeExtensionsModel(),
     dialog: createDialogModel(),
