@@ -1,4 +1,4 @@
-// Copyright 2018 LG Electronics, Inc.
+// Copyright 2024 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,47 +14,15 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-/* Settings.module.less */
+/* OverlapVKB.module.less */
 
 @import '~@enact/agate/styles/skin.less';
 
-.settings {
-	width: 100%;
-	padding: 0 100px 20px 100px;
-	flex: 1;
-	box-sizing: border-box;
-}
-
-.indent {
-	padding-left: 33px;
-}
-
-.homePageInput {
-	padding-left: 36px;
-}
-
-.inlineGroupItem {
-	.applySkins({
-		border-bottom-color: transparent;
-	})
-}
-
-p {
-	-webkit-margin-after: 15px;
-	-webkit-margin-before: 15px;
-}
-
-.menu {
-	display: inline-block;
-	margin-right: 24px;
-}
-
-.button {
-	.applySkins({
-		font-weight: 700;
-	});
-}
-
-.flex {
-	display: flex;
+.scroller {
+	// the total height of Omnibox and TabBar (236px)
+	height: ~"calc(100vh - " 236px ~")";
+	&.shrinkHeight {
+		// shrink as much as bookmarkbar height (84px)
+		height: ~"calc(100vh - " 238px + 84px ~")";
+	}
 }

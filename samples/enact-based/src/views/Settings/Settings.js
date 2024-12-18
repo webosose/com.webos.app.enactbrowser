@@ -31,10 +31,10 @@ import Popup from '@enact/agate/Popup';
 import PropTypes from 'prop-types';
 import RadioItem from '@enact/agate/RadioItem';
 import {Component} from 'react';
-import Scroller from '@enact/agate/Scroller';
 import ToggleButton from '@enact/agate/ToggleButton';
 
 import PinPopup from '../../components/PinPopup';
+import OverlapVKB from '../../components/OverlapVKB';
 import css from './Settings.module.less';
 
 const OnOffButton = kind({
@@ -212,9 +212,6 @@ class SettingsBase extends Component {
 				browser,
 				...rest
 			} = this.props,
-			scrollerClass = classNames(css.scroller, {
-				[css.shrinkHeight]: alwaysShowBookmarks,
-			}),
 			classes = classNames(className, css.settings),
 			startupOption = startupOptions.indexOf(startupPage);
 
@@ -222,7 +219,7 @@ class SettingsBase extends Component {
 		delete rest.homePageUrl;
 
 		return (
-			<Scroller {...rest} className={scrollerClass}>
+			<OverlapVKB {...rest} alwaysShowBookmarks={alwaysShowBookmarks}>
 				<div className={classes}>
 					<BodyText>{$L('On Startup')}</BodyText>
 					<div className={css.indent}>
@@ -352,9 +349,8 @@ class SettingsBase extends Component {
 						onSubmit={this.onSubmitPinCode}
 						matched={this.state.matchedPin}
 					/>
-
 				</div>
-			</Scroller>
+			</OverlapVKB>
 		);
 	}
 

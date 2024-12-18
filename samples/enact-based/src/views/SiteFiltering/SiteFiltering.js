@@ -30,11 +30,11 @@ import Popup from '@enact/agate/Popup';
 import PropTypes from 'prop-types';
 import RadioItem from '@enact/agate/RadioItem';
 import {useEffect, useState, useReducer} from 'react';
-import Scroller from '@enact/agate/Scroller';
 import ri from '@enact/ui/resolution';
 import VirtualList from '@enact/agate/VirtualList';
 
 import PinPopup from '../../components/PinPopup';
+import OverlapVKB from '../../components/OverlapVKB';
 import SiteFilteringItem from './SiteFilteringItem';
 import css from './SiteFiltering.module.less';
 
@@ -141,7 +141,7 @@ function SiteFilteringBase({browser, data, siteFiltering, ...rest}) {
 	}, []);
 
 	return (
-		<Scroller {...rest} className={css.scroller}>
+		<OverlapVKB {...rest}>
 			<div className={css.siteFiltering}>
 				<BodyText>{$L('Site Filtering')}</BodyText>
 				<Group
@@ -230,7 +230,7 @@ function SiteFilteringBase({browser, data, siteFiltering, ...rest}) {
 					matched
 				/>
 			</div>
-		</Scroller>
+		</OverlapVKB>
 	);
 }
 
