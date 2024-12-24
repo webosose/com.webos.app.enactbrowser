@@ -99,10 +99,11 @@ class MainBase extends Component {
 		document.addEventListener('keydown', ({key, keyCode}) => {
 			console.log(`Key pressed. keyCode: ${keyCode}`);
 			const rcuBackKeyCode = 461;
-			if (keyCode === rcuBackKeyCode) {
-				browser.back();
-			} else if (key === 'Escape') {
+			// Escape key has the 461 keycode on some platforms
+			if (key === 'Escape' || (keyCode === rcuBackKeyCode && this.state.fullScreen)) {
 				this.onExitFullScreen();
+			} else if (keyCode === rcuBackKeyCode) {
+				browser.back();
 			}
 		});
 
